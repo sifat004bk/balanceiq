@@ -28,7 +28,7 @@ class MessageList extends StatelessWidget {
             Icon(
               AppTheme.getBotIcon(botId),
               size: 80,
-              color: AppTheme.getBotColor(botId).withOpacity(0.5),
+              color: AppTheme.getBotColor(botId).withValues(alpha: 0.5),
             ),
             const SizedBox(height: 16),
             Text(
@@ -123,7 +123,7 @@ class MessageList extends StatelessWidget {
           width: 8,
           height: 8,
           decoration: BoxDecoration(
-            color: Colors.grey.withOpacity(0.4 + (value * 0.4)),
+            color: Colors.grey.withValues(alpha: 0.4 + (value * 0.4)),
             shape: BoxShape.circle,
           ),
         );

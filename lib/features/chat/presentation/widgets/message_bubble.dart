@@ -79,7 +79,7 @@ class MessageBubble extends StatelessWidget {
                       if (message.imageUrl != null &&
                           message.imageUrl!.isNotEmpty) ...[
                         const SizedBox(height: 8),
-                        ClipRRRect(
+                        ClipRRect(
                           borderRadius: BorderRadius.circular(8),
                           child: _buildImage(message.imageUrl!),
                         ),

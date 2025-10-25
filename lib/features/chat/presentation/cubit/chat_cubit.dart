@@ -35,12 +35,31 @@ class ChatCubit extends Cubit<ChatState> {
       final currentState = state as ChatLoaded;
       emit(currentState.copyWith(isSending: true));
 
-      final result = await sendMessage(
+      // Start the send operation (this saves user message to local DB first)
+      final sendFuture = sendMessage(
         botId: botId,
         content: content,
         imagePath: imagePath,
         audioPath: audioPath,
       );
+
+      // Reload messages immediately to show user message
+      // (it's already saved to local DB by the repository)
+      await Future.delayed(const Duration(milliseconds: 100));
+      if (!isClosed) {
+        final messagesResult = await getMessages(botId);
+        messagesResult.fold(
+          (_) {}, // Ignore error on this initial reload
+          (messages) {
+            if (!isClosed) {
+              emit(ChatLoaded(messages: messages, isSending: true));
+            }
+          },
+        );
+      }
+
+      // Wait for the bot response
+      final result = await sendFuture;
 
       result.fold(
         (failure) {

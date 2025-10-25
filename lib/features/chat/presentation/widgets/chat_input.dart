@@ -29,12 +29,31 @@ class _ChatInputState extends State<ChatInput> {
   String? _selectedImagePath;
   String? _recordedAudioPath;
   bool _isRecording = false;
+  bool _hasContent = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _textController.addListener(_onTextChanged);
+  }
 
   @override
   void dispose() {
+    _textController.removeListener(_onTextChanged);
     _textController.dispose();
     _audioRecorder.dispose();
     super.dispose();
+  }
+
+  void _onTextChanged() {
+    final newHasContent = _textController.text.trim().isNotEmpty ||
+                         _selectedImagePath != null ||
+                         _recordedAudioPath != null;
+    if (newHasContent != _hasContent) {
+      setState(() {
+        _hasContent = newHasContent;
+      });
+    }
   }
 
   Future<void> _pickImage() async {
@@ -47,6 +66,7 @@ class _ChatInputState extends State<ChatInput> {
       if (image != null) {
         setState(() {
           _selectedImagePath = image.path;
+          _hasContent = true;
         });
       }
     } catch (e) {
@@ -64,6 +84,7 @@ class _ChatInputState extends State<ChatInput> {
       if (image != null) {
         setState(() {
           _selectedImagePath = image.path;
+          _hasContent = true;
         });
       }
     } catch (e) {
@@ -79,6 +100,7 @@ class _ChatInputState extends State<ChatInput> {
         setState(() {
           _recordedAudioPath = path;
           _isRecording = false;
+          _hasContent = true;
         });
       }
     } else {
@@ -123,6 +145,7 @@ class _ChatInputState extends State<ChatInput> {
     setState(() {
       _selectedImagePath = null;
       _recordedAudioPath = null;
+      _hasContent = false;
     });
   }
 
@@ -199,6 +222,7 @@ class _ChatInputState extends State<ChatInput> {
                       onTap: () {
                         setState(() {
                           _selectedImagePath = null;
+                          _hasContent = _textController.text.trim().isNotEmpty || _recordedAudioPath != null;
                         });
                       },
                       child: Container(
@@ -238,6 +262,7 @@ class _ChatInputState extends State<ChatInput> {
                     onPressed: () {
                       setState(() {
                         _recordedAudioPath = null;
+                        _hasContent = _textController.text.trim().isNotEmpty || _selectedImagePath != null;
                       });
                     },
                   ),
@@ -291,7 +316,7 @@ class _ChatInputState extends State<ChatInput> {
                   splashRadius: 24,
                 ),
                 // Send button
-                if (_textController.text.isNotEmpty || _selectedImagePath != null || _recordedAudioPath != null)
+                if (_hasContent)
                   Container(
                     margin: const EdgeInsets.only(left: 4),
                     decoration: BoxDecoration(

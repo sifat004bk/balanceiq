@@ -9,6 +9,7 @@ class MessageList extends StatelessWidget {
   final String botId;
   final String botName;
   final bool isSending;
+  final ScrollController? scrollController;
 
   const MessageList({
     super.key,
@@ -16,6 +17,7 @@ class MessageList extends StatelessWidget {
     required this.botId,
     required this.botName,
     this.isSending = false,
+    this.scrollController,
   });
 
   @override
@@ -53,6 +55,7 @@ class MessageList extends StatelessWidget {
     }
 
     return ListView.builder(
+      controller: scrollController,
       padding: const EdgeInsets.all(16),
       itemCount: messages.length + (isSending ? 1 : 0),
       itemBuilder: (context, index) {

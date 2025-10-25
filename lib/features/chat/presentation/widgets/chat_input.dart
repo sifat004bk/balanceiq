@@ -168,67 +168,65 @@ class _ChatInputState extends State<ChatInput> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         color: Theme.of(context).scaffoldBackgroundColor,
-        border: Border(
-          top: BorderSide(
-            color: isDark ? Colors.grey[800]! : Colors.grey[300]!,
-          ),
-        ),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           // Preview selected image
           if (_selectedImagePath != null) ...[
-            Stack(
-              children: [
-                Container(
-                  height: 100,
-                  width: 100,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    image: DecorationImage(
-                      image: FileImage(File(_selectedImagePath!)),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 4,
-                  right: 4,
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _selectedImagePath = null;
-                      });
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: const BoxDecoration(
-                        color: Colors.black54,
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.close,
-                        color: Colors.white,
-                        size: 16,
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: Stack(
+                children: [
+                  Container(
+                    height: 100,
+                    width: 100,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      image: DecorationImage(
+                        image: FileImage(File(_selectedImagePath!)),
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
-                ),
-              ],
+                  Positioned(
+                    top: 4,
+                    right: 4,
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _selectedImagePath = null;
+                        });
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: const BoxDecoration(
+                          color: Colors.black54,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.close,
+                          color: Colors.white,
+                          size: 16,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: 8),
           ],
           // Preview audio recording
           if (_recordedAudioPath != null) ...[
             Container(
+              margin: const EdgeInsets.only(bottom: 12),
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(8),
+                color: isDark ? Colors.grey[800] : Colors.grey[200],
+                borderRadius: BorderRadius.circular(20),
               ),
               child: Row(
                 children: [
@@ -246,49 +244,69 @@ class _ChatInputState extends State<ChatInput> {
                 ],
               ),
             ),
-            const SizedBox(height: 8),
           ],
-          // Input row
-          Row(
-            children: [
-              // Image button
-              IconButton(
-                icon: const Icon(Icons.add_photo_alternate),
-                onPressed: _showImageSourceDialog,
-                color: Colors.grey[600],
-              ),
-              // Audio button
-              IconButton(
-                icon: Icon(_isRecording ? Icons.stop : Icons.mic),
-                onPressed: _toggleRecording,
-                color: _isRecording ? Colors.red : Colors.grey[600],
-              ),
-              // Text input
-              Expanded(
-                child: TextField(
-                  controller: _textController,
-                  decoration: InputDecoration(
-                    hintText: 'Ask me about your ${widget.botId.replaceAll('_', ' ')}...',
-                    border: InputBorder.none,
-                    filled: true,
-                    fillColor: isDark ? Colors.grey[800] : Colors.grey[200],
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
+          // Input row - Gemini style
+          Container(
+            decoration: BoxDecoration(
+              color: isDark ? const Color(0xFF2C2C2C) : const Color(0xFFF0F4F9),
+              borderRadius: BorderRadius.circular(28),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+            child: Row(
+              children: [
+                // Add button (image)
+                IconButton(
+                  icon: const Icon(Icons.add, size: 24),
+                  onPressed: _showImageSourceDialog,
+                  color: isDark ? Colors.grey[400] : Colors.grey[700],
+                  splashRadius: 24,
+                ),
+                // Text input
+                Expanded(
+                  child: TextField(
+                    controller: _textController,
+                    decoration: InputDecoration(
+                      hintText: 'Ask ${widget.botId.replaceAll('_', ' ')}',
+                      hintStyle: TextStyle(
+                        color: isDark ? Colors.grey[500] : Colors.grey[600],
+                        fontSize: 16,
+                      ),
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 12,
+                      ),
+                    ),
+                    maxLines: null,
+                    textInputAction: TextInputAction.send,
+                    onSubmitted: (_) => _sendMessage(),
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                ),
+                // Mic button
+                IconButton(
+                  icon: Icon(_isRecording ? Icons.stop_circle : Icons.mic, size: 24),
+                  onPressed: _toggleRecording,
+                  color: _isRecording ? Colors.red : (isDark ? Colors.grey[400] : Colors.grey[700]),
+                  splashRadius: 24,
+                ),
+                // Send button
+                if (_textController.text.isNotEmpty || _selectedImagePath != null || _recordedAudioPath != null)
+                  Container(
+                    margin: const EdgeInsets.only(left: 4),
+                    decoration: BoxDecoration(
+                      color: widget.botColor,
+                      shape: BoxShape.circle,
+                    ),
+                    child: IconButton(
+                      icon: const Icon(Icons.arrow_upward, size: 20),
+                      onPressed: _sendMessage,
+                      color: Colors.white,
+                      splashRadius: 20,
                     ),
                   ),
-                  maxLines: null,
-                  textInputAction: TextInputAction.send,
-                  onSubmitted: (_) => _sendMessage(),
-                ),
-              ),
-              // Send button
-              IconButton(
-                icon: const Icon(Icons.send),
-                onPressed: _sendMessage,
-                color: widget.botColor,
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../models/message_model.dart';
 
@@ -15,8 +16,9 @@ abstract class ChatRemoteDataSource {
 
 class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   final Dio dio;
+  final SharedPreferences sharedPreferences;
 
-  ChatRemoteDataSourceImpl(this.dio);
+  ChatRemoteDataSourceImpl(this.dio, this.sharedPreferences);
 
   @override
   Future<MessageModel> sendMessage({
@@ -26,11 +28,26 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     String? audioPath,
   }) async {
     try {
-      // Prepare the request payload
+      // Get user information from SharedPreferences
+      final userId = sharedPreferences.getString(AppConstants.keyUserId) ?? 'anonymous';
+      final userName = sharedPreferences.getString(AppConstants.keyUserName) ?? 'User';
+      final userEmail = sharedPreferences.getString(AppConstants.keyUserEmail) ?? '';
+
+      // Parse name into first and last name
+      final nameParts = userName.split(' ');
+      final firstName = nameParts.isNotEmpty ? nameParts.first : 'User';
+      final lastName = nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '';
+
+      // Prepare the request payload matching webhook's expected format
       final Map<String, dynamic> payload = {
+        'user_id': userId,
         'bot_id': botId,
+        'content': content,
+        'text': content,
         'message': content,
-        'timestamp': DateTime.now().toIso8601String(),
+        'first_name': firstName,
+        'last_name': lastName,
+        'username': userEmail.split('@').first,
       };
 
       // Add image as base64 if provided
@@ -39,7 +56,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
         if (await imageFile.exists()) {
           final bytes = await imageFile.readAsBytes();
           final base64Image = base64Encode(bytes);
-          payload['image'] = base64Image;
+          payload['image_base64'] = base64Image;
         }
       }
 
@@ -49,7 +66,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
         if (await audioFile.exists()) {
           final bytes = await audioFile.readAsBytes();
           final base64Audio = base64Encode(bytes);
-          payload['audio'] = base64Audio;
+          payload['audio_base64'] = base64Audio;
         }
       }
 
@@ -68,7 +85,17 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         // Parse the response from n8n
-        final responseData = response.data as Map<String, dynamic>;
+        // n8n webhook returns an array, so we get the first item
+        dynamic rawData = response.data;
+        Map<String, dynamic> responseData;
+
+        if (rawData is List && rawData.isNotEmpty) {
+          responseData = rawData.first as Map<String, dynamic>;
+        } else if (rawData is Map<String, dynamic>) {
+          responseData = rawData;
+        } else {
+          throw Exception('Unexpected response format from webhook');
+        }
 
         // Create a message model from the bot's response
         final botMessage = MessageModel(

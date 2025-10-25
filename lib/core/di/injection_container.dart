@@ -86,7 +86,7 @@ Future<void> init() async {
   );
 
   sl.registerLazySingleton<ChatRemoteDataSource>(
-    () => ChatRemoteDataSourceImpl(sl()),
+    () => ChatRemoteDataSourceImpl(sl(), sl()),
   );
 
   //! Core

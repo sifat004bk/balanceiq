@@ -15,12 +15,14 @@ class ChatCubit extends Cubit<ChatState> {
 
   Future<void> loadMessages(String botId) async {
     currentBotId = botId;
-    emit(ChatLoading());
+    if (!isClosed) emit(ChatLoading());
     final result = await getMessages(botId);
-    result.fold(
-      (failure) => emit(ChatError(message: failure.message)),
-      (messages) => emit(ChatLoaded(messages: messages)),
-    );
+    if (!isClosed) {
+      result.fold(
+        (failure) => emit(ChatError(message: failure.message)),
+        (messages) => emit(ChatLoaded(messages: messages)),
+      );
+    }
   }
 
   Future<void> sendNewMessage({
@@ -42,16 +44,20 @@ class ChatCubit extends Cubit<ChatState> {
 
       result.fold(
         (failure) {
-          emit(ChatError(
-            message: failure.message,
-            messages: currentState.messages,
-          ));
-          // Reload messages after error
-          loadMessages(botId);
+          if (!isClosed) {
+            emit(ChatError(
+              message: failure.message,
+              messages: currentState.messages,
+            ));
+            // Reload messages after error
+            loadMessages(botId);
+          }
         },
         (botMessage) {
           // Reload messages to include both user and bot messages
-          loadMessages(botId);
+          if (!isClosed) {
+            loadMessages(botId);
+          }
         },
       );
     }

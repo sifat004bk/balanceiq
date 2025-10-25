@@ -33,7 +33,7 @@ class AppConstants {
   // API Configuration
   static const String n8nWebhookUrl = String.fromEnvironment(
     'N8N_WEBHOOK_URL',
-    defaultValue: 'https://your-n8n-instance.com/webhook/balance-iq',
+    defaultValue: 'https://primary-production-7383b.up.railway.app/webhook/b1cfaa07-8bf1-4005-90e0-9759144705f2',
   );
 
   // Message Types

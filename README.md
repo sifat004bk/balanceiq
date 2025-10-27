@@ -54,11 +54,13 @@ lib/
 ## Setup Instructions
 
 ### Prerequisites
-- Flutter SDK (3.8.0 or higher)
-- Dart SDK
-- Xcode (for iOS development)
-- Android Studio (for Android development)
-- n8n workflow instance
+- **Flutter SDK**: 3.27.0 (using FVM - Flutter Version Management)
+- **Dart SDK**: 3.6.0 (comes with Flutter)
+- **FVM**: For managing Flutter versions ([Install FVM](https://fvm.app/documentation/getting-started/installation))
+- **Xcode**: For iOS development (macOS only)
+- **Android Studio**: For Android development
+- **JDK**: Version 11 or higher
+- **n8n workflow instance**: For AI bot responses
 
 ### Installation
 
@@ -68,18 +70,81 @@ lib/
    cd balanceIQ
    ```
 
-2. **Install dependencies**
+2. **Install Flutter 3.27.0 using FVM**
    ```bash
-   flutter pub get
+   # Install FVM if you haven't already
+   # macOS/Linux:
+   brew tap leoafarias/fvm
+   brew install fvm
+
+   # Windows: Follow instructions at https://fvm.app/documentation/getting-started/installation
+
+   # Install Flutter 3.27.0
+   fvm install 3.27.0
+
+   # Use Flutter 3.27.0 for this project
+   fvm use 3.27.0
    ```
 
-3. **Configure n8n Webhook URL**
+3. **Install dependencies**
+   ```bash
+   fvm flutter pub get
+   ```
+
+4. **Configure Google Sign-In (IMPORTANT)**
+
+   Google Sign-In requires your device's SHA-1 certificate fingerprint to be registered in Firebase.
+
+   **Step 1: Get your SHA-1 fingerprint**
+
+   Run this command to get your debug keystore's SHA-1:
+
+   **macOS/Linux:**
+   ```bash
+   keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android | grep -A 2 "SHA1:"
+   ```
+
+   **Windows:**
+   ```bash
+   keytool -list -v -keystore %USERPROFILE%\.android\debug.keystore -alias androiddebugkey -storepass android -keypass android
+   ```
+
+   You'll see output like:
+   ```
+   SHA1: 9B:6D:5E:9D:07:F1:EC:35:4B:35:F9:9C:09:B2:5A:1A:09:63:95:62
+   SHA256: EE:A1:93:2C:D1:BE:35:7F:C2:CF:99:BA:E5:D0:0A:6E:62:7D:7E:C5:EA:AD:2E:85:86:55:52:8D:2B:48:EB:A2
+   ```
+
+   **Step 2: Add your SHA-1 to Firebase**
+
+   1. Go to [Firebase Console](https://console.firebase.google.com/project/balanceiq-60956/settings/general)
+   2. Scroll to "Your apps" section
+   3. Click on the Android app: `com.balanceiq.balance_iq`
+   4. Click "Add fingerprint" button
+   5. Paste your **SHA-1** fingerprint
+   6. (Optional) Add your **SHA-256** fingerprint as well
+   7. Click "Save"
+
+   **Step 3: No need to update google-services.json**
+
+   The existing `google-services.json` file in the repository will work fine! Firebase recognizes all registered SHA-1 fingerprints on the backend, so you don't need to download or update the file.
+
+   **For iOS:**
+   - The OAuth configuration is already set up in [ios/Runner/Info.plist](ios/Runner/Info.plist)
+   - No additional setup required
+
+5. **Configure Apple Sign-In (iOS only)**
+
+   - Enable Sign in with Apple in Xcode capabilities
+   - The configuration is already set up in the project
+
+6. **Configure n8n Webhook URL**
 
    The app uses an n8n webhook for AI responses. You can configure the webhook URL in two ways:
 
    **Option 1: Environment Variable (Recommended)**
    ```bash
-   flutter run --dart-define=N8N_WEBHOOK_URL=https://your-n8n-instance.com/webhook/balance-iq
+   fvm flutter run --dart-define=N8N_WEBHOOK_URL=https://your-n8n-instance.com/webhook/balance-iq
    ```
 
    **Option 2: Update Constants File**
@@ -89,36 +154,31 @@ lib/
    static const String n8nWebhookUrl = 'https://your-n8n-instance.com/webhook/balance-iq';
    ```
 
-4. **Configure Google Sign-In**
-
-   **For Android:**
-   - Follow the [Google Sign-In setup guide](https://pub.dev/packages/google_sign_in#android-integration)
-   - Add your SHA-1 fingerprint to Firebase Console
-   - Download and add `google-services.json` to `android/app/`
-
-   **For iOS:**
-   - Follow the [Google Sign-In setup guide](https://pub.dev/packages/google_sign_in#ios-integration)
-   - Add your OAuth client ID to [ios/Runner/Info.plist](ios/Runner/Info.plist)
-
-5. **Configure Apple Sign-In (iOS only)**
-
-   - Enable Sign in with Apple in Xcode capabilities
-   - Follow the [Sign in with Apple setup guide](https://pub.dev/packages/sign_in_with_apple)
-
 ### Running the App
 
+**IMPORTANT**: Always use `fvm flutter` instead of just `flutter` to ensure you're using the correct Flutter version (3.27.0).
+
 ```bash
+# Check connected devices
+fvm flutter devices
+
 # Run in debug mode
-flutter run
+fvm flutter run
+
+# Run on a specific device
+fvm flutter run -d <device-id>
 
 # Run with custom n8n webhook URL
-flutter run --dart-define=N8N_WEBHOOK_URL=https://your-webhook-url.com
+fvm flutter run --dart-define=N8N_WEBHOOK_URL=https://your-webhook-url.com
 
 # Build for release (Android)
-flutter build apk --release
+fvm flutter build apk --release
 
 # Build for release (iOS)
-flutter build ios --release
+fvm flutter build ios --release
+
+# Clean build files (if you encounter issues)
+fvm flutter clean && fvm flutter pub get
 ```
 
 ## Permissions
@@ -234,17 +294,76 @@ The app uses **Cubit** for state management:
 ## Troubleshooting
 
 ### Build Issues
-- Run `flutter clean` and then `flutter pub get`
-- Ensure you have the latest Flutter SDK
+- Run `fvm flutter clean` and then `fvm flutter pub get`
+- Ensure you're using Flutter 3.27.0: `fvm flutter --version`
+- Delete the `build` folder and rebuild
+- Check that NDK version 27.0.12077973 is installed in Android Studio
 
-### Sign-In Issues
-- Verify Google/Apple Sign-In configuration
-- Check Firebase Console settings
-- Ensure SHA-1 fingerprint is added (Android)
+### Google Sign-In Issues
+
+**Error: `PlatformException(sign_in_failed, ApiException: 10)`**
+
+This means your SHA-1 fingerprint is not registered in Firebase. Follow these steps:
+
+1. Get your SHA-1 fingerprint:
+   ```bash
+   # macOS/Linux
+   keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android | grep -A 2 "SHA1:"
+
+   # Windows
+   keytool -list -v -keystore %USERPROFILE%\.android\debug.keystore -alias androiddebugkey -storepass android -keypass android
+   ```
+
+2. Add it to [Firebase Console](https://console.firebase.google.com/project/balanceiq-60956/settings/general)
+   - Click on Android app `com.balanceiq.balance_iq`
+   - Click "Add fingerprint"
+   - Paste your SHA-1
+   - Click Save
+
+3. **No need to update google-services.json** - Firebase handles multiple SHA-1s on the backend
+
+4. Rebuild and run the app:
+   ```bash
+   fvm flutter clean
+   fvm flutter pub get
+   fvm flutter run
+   ```
+
+**Other Sign-In Issues:**
+- Verify Google Sign-In is enabled in Firebase Console > Authentication > Sign-in method
+- Check that `google-services.json` exists in `android/app/`
+- Ensure you have internet connectivity
 
 ### Database Issues
 - The database is automatically created on first launch
 - To reset: Uninstall and reinstall the app
+- Database location: App's internal storage directory
+
+### Flutter Version Issues
+- Always use `fvm flutter` commands, not just `flutter`
+- Verify version: `fvm flutter --version` should show `3.27.0`
+- If wrong version, run: `fvm use 3.27.0`
+
+## Important Notes
+
+### SHA-1 Fingerprints for Team Development
+
+Each developer needs to add their own SHA-1 fingerprint to Firebase for Google Sign-In to work during development. However:
+
+- **For Development**: Each teammate adds their debug keystore SHA-1 to Firebase
+- **For Distribution**: When you build an APK/AAB and share it with users:
+  - The APK is signed with **your keystore** (debug or release)
+  - Users can login without adding their SHA-1
+  - Only the keystore used to sign the APK needs to be in Firebase
+
+- **For Production**:
+  - Add your **release keystore** SHA-1 to Firebase before publishing
+  - If using Google Play App Signing, add the **Play App Signing certificate** SHA-1 as well
+  - Find it in: Google Play Console > App signing > App signing key certificate
+
+### Android NDK Version
+
+This project uses **NDK 27.0.12077973** as configured in [android/app/build.gradle.kts](android/app/build.gradle.kts#L12). This is required by the plugins used in the project. Make sure this NDK version is installed in Android Studio.
 
 ## Contributing
 

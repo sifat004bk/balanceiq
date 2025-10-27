@@ -6,6 +6,7 @@ import 'package:uuid/uuid.dart';
 
 // Core
 import '../database/database_helper.dart';
+import '../theme/theme_cubit.dart';
 
 // Features - Auth
 import '../../features/auth/data/datasources/auth_local_datasource.dart';
@@ -30,6 +31,9 @@ import '../../features/chat/presentation/cubit/chat_cubit.dart';
 final sl = GetIt.instance;
 
 Future<void> init() async {
+  //! Core - Theme
+  sl.registerFactory(() => ThemeCubit(sl()));
+
   //! Features - Auth
   // Cubit
   sl.registerFactory(

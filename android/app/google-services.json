@@ -12,7 +12,20 @@
           "package_name": "com.balanceiq.balance_iq"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "256291809699-dqahq70tmfem7ne276el9d30j0mp4qae.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.balanceiq.balance_iq",
+            "certificate_hash": "9b6d5e9d07f1ec354b35f99c09b25a1a09639562"
+          }
+        },
+        {
+          "client_id": "256291809699-ig2j7bg673nehupng83idrori516b6i9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDAKstAsGjoOg3nypmzrqgB1fckHvLYJKU"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "256291809699-ig2j7bg673nehupng83idrori516b6i9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

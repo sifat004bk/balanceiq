@@ -263,29 +263,118 @@ class ProfileModal extends StatelessWidget {
 
   void _showLogoutConfirmation(BuildContext context) {
     final authCubit = context.read<AuthCubit>();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     showDialog(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Logout'),
-        content: const Text('Are you sure you want to logout?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
+      barrierColor: Colors.black.withValues(alpha: 0.8),
+      builder: (dialogContext) => Dialog(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 400),
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.3),
+                blurRadius: 20,
+                spreadRadius: 5,
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(dialogContext); // Close dialog
-              Navigator.pop(context); // Close profile modal
-              authCubit.logout(); // Then logout
-            },
-            child: const Text(
-              'Logout',
-              style: TextStyle(color: Colors.red),
-            ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Icon
+              Container(
+                width: 64,
+                height: 64,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.logout,
+                  color: Theme.of(context).primaryColor,
+                  size: 32,
+                ),
+              ),
+              const SizedBox(height: 24),
+              // Title
+              Text(
+                'Are you sure you want to log out?',
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+              // Subtitle
+              Text(
+                'You will be returned to the login screen.',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Colors.grey[600],
+                    ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 32),
+              // Yes, Log Out Button
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(dialogContext); // Close dialog
+                    Navigator.pop(context); // Close profile modal
+                    authCubit.logout(); // Then logout
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).primaryColor,
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: const Text(
+                    'Yes, Log Out',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              // Cancel Button
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: ElevatedButton(
+                  onPressed: () => Navigator.pop(dialogContext),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: (isDark ? Colors.grey[800] : Colors.grey[200])?.withValues(alpha: 0.6),
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: const Text(
+                    'Cancel',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

@@ -19,6 +19,10 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
     await sharedPreferences.setString(AppConstants.keyUserId, user.id);
     await sharedPreferences.setString(AppConstants.keyUserEmail, user.email);
     await sharedPreferences.setString(AppConstants.keyUserName, user.name);
+    if (user.photoUrl != null) {
+      await sharedPreferences.setString(AppConstants.keyUserPhotoUrl, user.photoUrl!);
+    }
+    await sharedPreferences.setString(AppConstants.keyUserAuthProvider, user.authProvider);
     await sharedPreferences.setBool(AppConstants.keyIsLoggedIn, true);
   }
 
@@ -29,13 +33,16 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
       final userId = sharedPreferences.getString(AppConstants.keyUserId);
       final email = sharedPreferences.getString(AppConstants.keyUserEmail);
       final name = sharedPreferences.getString(AppConstants.keyUserName);
+      final photoUrl = sharedPreferences.getString(AppConstants.keyUserPhotoUrl);
+      final authProvider = sharedPreferences.getString(AppConstants.keyUserAuthProvider);
 
       if (userId != null && email != null && name != null) {
         return UserModel(
           id: userId,
           email: email,
           name: name,
-          authProvider: 'google', // Default, should be stored if needed
+          photoUrl: photoUrl,
+          authProvider: authProvider ?? 'google',
           createdAt: DateTime.now(),
         );
       }
@@ -48,6 +55,8 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
     await sharedPreferences.remove(AppConstants.keyUserId);
     await sharedPreferences.remove(AppConstants.keyUserEmail);
     await sharedPreferences.remove(AppConstants.keyUserName);
+    await sharedPreferences.remove(AppConstants.keyUserPhotoUrl);
+    await sharedPreferences.remove(AppConstants.keyUserAuthProvider);
     await sharedPreferences.setBool(AppConstants.keyIsLoggedIn, false);
   }
 

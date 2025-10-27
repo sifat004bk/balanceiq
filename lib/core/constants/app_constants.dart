@@ -27,6 +27,8 @@ class AppConstants {
   static const String keyUserId = 'user_id';
   static const String keyUserEmail = 'user_email';
   static const String keyUserName = 'user_name';
+  static const String keyUserPhotoUrl = 'user_photo_url';
+  static const String keyUserAuthProvider = 'user_auth_provider';
   static const String keyIsLoggedIn = 'is_logged_in';
   static const String keyThemeMode = 'theme_mode';
 

@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../auth/presentation/cubit/auth_cubit.dart';
+import '../../../auth/presentation/cubit/auth_state.dart';
 import '../../../chat/presentation/pages/chat_page.dart';
+import '../widgets/profile_modal.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -22,10 +27,37 @@ class HomePage extends StatelessWidget {
                     AppConstants.appName,
                     style: Theme.of(context).textTheme.displayMedium,
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.account_circle, size: 32),
-                    onPressed: () {
-                      // TODO: Navigate to profile/settings
+                  // User Profile Avatar
+                  BlocBuilder<AuthCubit, AuthState>(
+                    builder: (context, state) {
+                      if (state is AuthAuthenticated) {
+                        return GestureDetector(
+                          onTap: () => showProfileModal(context, state.user),
+                          child: CircleAvatar(
+                            radius: 20,
+                            backgroundImage: state.user.photoUrl != null
+                                ? CachedNetworkImageProvider(state.user.photoUrl!)
+                                : null,
+                            backgroundColor: Theme.of(context).primaryColor,
+                            child: state.user.photoUrl == null
+                                ? Text(
+                                    state.user.name.isNotEmpty
+                                        ? state.user.name[0].toUpperCase()
+                                        : '?',
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                : null,
+                          ),
+                        );
+                      }
+                      return IconButton(
+                        icon: const Icon(Icons.account_circle, size: 32),
+                        onPressed: () {},
+                      );
                     },
                   ),
                 ],

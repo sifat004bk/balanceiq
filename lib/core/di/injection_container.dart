@@ -14,6 +14,8 @@ import '../../features/auth/data/repositories/auth_repository_impl.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
 import '../../features/auth/domain/usecases/sign_in_with_google.dart';
 import '../../features/auth/domain/usecases/sign_in_with_apple.dart';
+import '../../features/auth/domain/usecases/sign_out.dart';
+import '../../features/auth/domain/usecases/get_current_user.dart';
 import '../../features/auth/presentation/cubit/auth_cubit.dart';
 
 // Features - Chat
@@ -34,12 +36,16 @@ Future<void> init() async {
     () => AuthCubit(
       signInWithGoogle: sl(),
       signInWithApple: sl(),
+      signOutUseCase: sl(),
+      getCurrentUser: sl(),
     ),
   );
 
   // Use cases
   sl.registerLazySingleton(() => SignInWithGoogle(sl()));
   sl.registerLazySingleton(() => SignInWithApple(sl()));
+  sl.registerLazySingleton(() => SignOut(sl()));
+  sl.registerLazySingleton(() => GetCurrentUser(sl()));
 
   // Repository
   sl.registerLazySingleton<AuthRepository>(

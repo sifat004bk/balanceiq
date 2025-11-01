@@ -57,14 +57,23 @@ class MessageList extends StatelessWidget {
     return ListView.builder(
       controller: scrollController,
       padding: const EdgeInsets.all(16),
+      reverse: true, // Start from bottom
       itemCount: messages.length + (isSending ? 1 : 0),
       itemBuilder: (context, index) {
-        if (index == messages.length && isSending) {
-          // Show typing indicator
+        // Reverse the index since list is reversed
+        final reversedIndex = messages.length - 1 - index + (isSending ? 1 : 0);
+
+        if (isSending && index == 0) {
+          // Show typing indicator at top (which is bottom visually)
           return _buildTypingIndicator(context);
         }
 
-        final message = messages[index];
+        final actualIndex = isSending ? reversedIndex - 1 : reversedIndex;
+        if (actualIndex < 0 || actualIndex >= messages.length) {
+          return const SizedBox.shrink();
+        }
+
+        final message = messages[actualIndex];
         final isUser = message.sender == AppConstants.senderUser;
 
         return MessageBubble(

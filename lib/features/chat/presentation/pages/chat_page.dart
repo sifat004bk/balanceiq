@@ -77,12 +77,16 @@ class _ChatViewState extends State<ChatView> {
 
   void _scrollToBottom() {
     if (_scrollController.hasClients) {
-      Future.delayed(const Duration(milliseconds: 300), () {
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOut,
-        );
+      // Use WidgetsBinding to ensure layout is complete
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_scrollController.hasClients) {
+          // Since list is reversed, scroll to minScrollExtent (top = newest messages)
+          _scrollController.animateTo(
+            0.0, // Scroll to top of reversed list (which shows newest messages)
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+          );
+        }
       });
     }
   }
@@ -130,7 +134,8 @@ class _ChatViewState extends State<ChatView> {
             child: BlocConsumer<ChatCubit, ChatState>(
               listener: (context, state) {
                 // Auto-scroll to bottom when new message arrives
-                if (state is ChatLoaded && !state.isSending) {
+                // No need for first load logic - reverse list handles it
+                if (state is ChatLoaded) {
                   _scrollToBottom();
                 }
               },

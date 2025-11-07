@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/theme/app_theme.dart';
-import '../../../../core/constants/app_constants.dart';
 import '../cubit/chat_cubit.dart';
 import '../cubit/chat_state.dart';
 import '../widgets/message_list.dart';
@@ -45,34 +42,11 @@ class ChatView extends StatefulWidget {
 
 class _ChatViewState extends State<ChatView> {
   final ScrollController _scrollController = ScrollController();
-  String? _userPhotoUrl;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadUserProfile();
-  }
 
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
-  }
-
-  Future<void> _loadUserProfile() async {
-    try {
-      final googleSignIn = sl<GoogleSignIn>();
-      final currentUser = googleSignIn.currentUser;
-
-      if (currentUser != null && currentUser.photoUrl != null) {
-        setState(() {
-          _userPhotoUrl = currentUser.photoUrl;
-        });
-      }
-    } catch (e) {
-      // If Google Sign-In fails, try to get from SharedPreferences
-      // You might want to save the photo URL during sign-in
-    }
   }
 
   void _scrollToBottom() {
@@ -93,37 +67,37 @@ class _ChatViewState extends State<ChatView> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text(widget.botName),
+        title: Text(
+          widget.botName,
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+        ),
         centerTitle: true,
+        backgroundColor: isDark ? AppTheme.backgroundDark : AppTheme.backgroundLight,
+        elevation: 0,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1),
+          child: Container(
+            color: isDark
+                ? const Color(0xFF374151).withValues(alpha: 0.3)
+                : const Color(0xFFE5E7EB).withValues(alpha: 0.3),
+            height: 1,
+          ),
+        ),
         actions: [
-          // User profile image
-          if (_userPhotoUrl != null)
-            Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: CircleAvatar(
-                radius: 18,
-                backgroundImage: NetworkImage(_userPhotoUrl!),
-              ),
-            )
-          else
-            Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: CircleAvatar(
-                radius: 18,
-                backgroundColor: AppTheme.getBotColor(widget.botId),
-                child: const Icon(Icons.person, size: 20, color: Colors.white),
-              ),
-            ),
           IconButton(
-            icon: const Icon(Icons.more_vert),
+            icon: const Icon(Icons.more_horiz),
             onPressed: () {
-              // TODO: Show menu for clear chat, etc.
+              // TODO: Show menu for clear chat, settings, etc.
             },
           ),
         ],

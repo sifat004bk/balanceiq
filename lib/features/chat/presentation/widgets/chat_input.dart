@@ -194,6 +194,14 @@ class _ChatInputState extends State<ChatInput> {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         color: Theme.of(context).scaffoldBackgroundColor,
+        border: Border(
+          top: BorderSide(
+            color: isDark
+                ? const Color(0xFF374151).withValues(alpha: 0.3)
+                : const Color(0xFFE5E7EB).withValues(alpha: 0.3),
+            width: 1,
+          ),
+        ),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -202,44 +210,50 @@ class _ChatInputState extends State<ChatInput> {
           if (_selectedImagePath != null) ...[
             Padding(
               padding: const EdgeInsets.only(bottom: 12),
-              child: Stack(
-                children: [
-                  Container(
-                    height: 100,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      image: DecorationImage(
-                        image: FileImage(File(_selectedImagePath!)),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    top: 4,
-                    right: 4,
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _selectedImagePath = null;
-                          _hasContent = _textController.text.trim().isNotEmpty || _recordedAudioPath != null;
-                        });
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: const BoxDecoration(
-                          color: Colors.black54,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.close,
-                          color: Colors.white,
-                          size: 16,
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Stack(
+                  children: [
+                    Container(
+                      height: 80,
+                      width: 80,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        image: DecorationImage(
+                          image: FileImage(File(_selectedImagePath!)),
+                          fit: BoxFit.cover,
                         ),
                       ),
                     ),
-                  ),
-                ],
+                    Positioned(
+                      top: -4,
+                      right: -4,
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _selectedImagePath = null;
+                            _hasContent = _textController.text.trim().isNotEmpty || _recordedAudioPath != null;
+                          });
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: isDark ? Colors.grey[700]! : Colors.grey[300]!,
+                            ),
+                          ),
+                          child: Icon(
+                            Icons.close,
+                            color: isDark ? Colors.grey[400] : Colors.grey[700],
+                            size: 16,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
@@ -247,16 +261,23 @@ class _ChatInputState extends State<ChatInput> {
           if (_recordedAudioPath != null) ...[
             Container(
               margin: const EdgeInsets.only(bottom: 12),
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
-                color: isDark ? Colors.grey[800] : Colors.grey[200],
-                borderRadius: BorderRadius.circular(20),
+                color: isDark ? const Color(0xFF1F2937) : const Color(0xFFF3F4F6),
+                borderRadius: BorderRadius.circular(12),
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.mic, size: 20),
-                  const SizedBox(width: 8),
-                  const Expanded(child: Text('Audio recorded')),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: isDark ? const Color(0xFF374151) : const Color(0xFFE5E7EB),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(Icons.description, size: 20),
+                  ),
+                  const SizedBox(width: 12),
+                  const Expanded(child: Text('Audio recorded', style: TextStyle(fontSize: 16))),
                   IconButton(
                     icon: const Icon(Icons.close, size: 20),
                     onPressed: () {
@@ -270,35 +291,36 @@ class _ChatInputState extends State<ChatInput> {
               ),
             ),
           ],
-          // Input row - Gemini style
-          Container(
-            decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF2C2C2C) : const Color(0xFFF0F4F9),
-              borderRadius: BorderRadius.circular(28),
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-            child: Row(
-              children: [
-                // Add button (image)
-                IconButton(
-                  icon: const Icon(Icons.add, size: 24),
-                  onPressed: _showImageSourceDialog,
-                  color: isDark ? Colors.grey[400] : Colors.grey[700],
-                  splashRadius: 24,
-                ),
-                // Text input
-                Expanded(
+          // Input row
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              // Add button (image/media)
+              IconButton(
+                icon: const Icon(Icons.add_circle, size: 28),
+                onPressed: _showImageSourceDialog,
+                color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280),
+                padding: const EdgeInsets.all(8),
+              ),
+              const SizedBox(width: 8),
+              // Text input
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: isDark ? const Color(0xFF1F2937) : const Color(0xFFF3F4F6),
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: TextField(
                     controller: _textController,
                     decoration: InputDecoration(
-                      hintText: 'Ask ${widget.botId.replaceAll('_', ' ')}',
+                      hintText: 'Ask me anything...',
                       hintStyle: TextStyle(
-                        color: isDark ? Colors.grey[500] : Colors.grey[600],
+                        color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280),
                         fontSize: 16,
                       ),
                       border: InputBorder.none,
                       contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 8,
                         vertical: 12,
                       ),
                     ),
@@ -307,30 +329,26 @@ class _ChatInputState extends State<ChatInput> {
                     style: const TextStyle(fontSize: 16),
                   ),
                 ),
-                // Mic button
-                IconButton(
-                  icon: Icon(_isRecording ? Icons.stop_circle : Icons.mic, size: 24),
-                  onPressed: _toggleRecording,
-                  color: _isRecording ? Colors.red : (isDark ? Colors.grey[400] : Colors.grey[700]),
-                  splashRadius: 24,
+              ),
+              const SizedBox(width: 8),
+              // Send button
+              Container(
+                decoration: BoxDecoration(
+                  color: _hasContent
+                      ? const Color(0xFF13ec80)
+                      : (isDark ? const Color(0xFF374151) : const Color(0xFFE5E7EB)),
+                  shape: BoxShape.circle,
                 ),
-                // Send button
-                if (_hasContent)
-                  Container(
-                    margin: const EdgeInsets.only(left: 4),
-                    decoration: BoxDecoration(
-                      color: widget.botColor,
-                      shape: BoxShape.circle,
-                    ),
-                    child: IconButton(
-                      icon: const Icon(Icons.arrow_upward, size: 20),
-                      onPressed: _sendMessage,
-                      color: Colors.white,
-                      splashRadius: 20,
-                    ),
-                  ),
-              ],
-            ),
+                child: IconButton(
+                  icon: const Icon(Icons.arrow_upward, size: 20),
+                  onPressed: _hasContent ? _sendMessage : null,
+                  color: _hasContent
+                      ? const Color(0xFF102219)
+                      : (isDark ? const Color(0xFF6B7280) : const Color(0xFF9CA3AF)),
+                  padding: const EdgeInsets.all(12),
+                ),
+              ),
+            ],
           ),
         ],
       ),

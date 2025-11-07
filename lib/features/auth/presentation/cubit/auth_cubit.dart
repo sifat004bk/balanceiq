@@ -1,8 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uuid/uuid.dart';
 import '../../domain/usecases/sign_in_with_google.dart';
 import '../../domain/usecases/sign_in_with_apple.dart';
 import '../../domain/usecases/sign_out.dart';
 import '../../domain/usecases/get_current_user.dart';
+import '../../domain/entities/user.dart';
 import 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
@@ -59,5 +61,24 @@ class AuthCubit extends Cubit<AuthState> {
       (failure) => emit(AuthError(failure.message)),
       (_) => emit(AuthUnauthenticated()),
     );
+  }
+
+  // Mock sign-in (always succeeds) - For development/testing
+  Future<void> signInWithMock({required String email, required String name}) async {
+    emit(AuthLoading());
+
+    // Simulate network delay
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    final mockUser = User(
+      id: const Uuid().v4(),
+      email: email,
+      name: name,
+      photoUrl: null,
+      authProvider: 'mock',
+      createdAt: DateTime.now(),
+    );
+
+    emit(AuthAuthenticated(mockUser));
   }
 }

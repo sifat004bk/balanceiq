@@ -1,7 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../domain/entities/message.dart';
 import '../../domain/usecases/get_messages.dart';
 import '../../domain/usecases/send_message.dart';
 import 'chat_state.dart';
+import '../../../../core/constants/app_constants.dart';
 
 class ChatCubit extends Cubit<ChatState> {
   final GetMessages getMessages;
@@ -33,33 +35,28 @@ class ChatCubit extends Cubit<ChatState> {
   }) async {
     if (state is ChatLoaded) {
       final currentState = state as ChatLoaded;
-      emit(currentState.copyWith(isSending: true));
 
-      // Start the send operation (this saves user message to local DB first)
-      final sendFuture = sendMessage(
+      // Create optimistic user message to show immediately
+      final userMessage = Message(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        botId: botId,
+        sender: AppConstants.senderUser,
+        content: content,
+        timestamp: DateTime.now(),
+        imageUrl: imagePath,
+      );
+
+      // Add user message immediately to UI
+      final updatedMessages = [userMessage, ...currentState.messages];
+      emit(ChatLoaded(messages: updatedMessages, isSending: true));
+
+      // Send message and get bot response
+      final result = await sendMessage(
         botId: botId,
         content: content,
         imagePath: imagePath,
         audioPath: audioPath,
       );
-
-      // Reload messages immediately to show user message
-      // (it's already saved to local DB by the repository)
-      await Future.delayed(const Duration(milliseconds: 100));
-      if (!isClosed) {
-        final messagesResult = await getMessages(botId);
-        messagesResult.fold(
-          (_) {}, // Ignore error on this initial reload
-          (messages) {
-            if (!isClosed) {
-              emit(ChatLoaded(messages: messages, isSending: true));
-            }
-          },
-        );
-      }
-
-      // Wait for the bot response
-      final result = await sendFuture;
 
       result.fold(
         (failure) {
@@ -73,7 +70,7 @@ class ChatCubit extends Cubit<ChatState> {
           }
         },
         (botMessage) {
-          // Reload messages to include both user and bot messages
+          // Reload messages to get the actual saved messages from DB
           if (!isClosed) {
             loadMessages(botId);
           }

@@ -11,18 +11,11 @@ class NewOnboardingPage extends StatefulWidget {
 
 class _NewOnboardingPageState extends State<NewOnboardingPage> {
   final PageController _pageController = PageController();
-  int _currentPage = 0;
 
   @override
   void dispose() {
     _pageController.dispose();
     super.dispose();
-  }
-
-  void _onPageChanged(int page) {
-    setState(() {
-      _currentPage = page;
-    });
   }
 
   void _navigateToLogin() {
@@ -65,7 +58,6 @@ class _NewOnboardingPageState extends State<NewOnboardingPage> {
             Expanded(
               child: PageView(
                 controller: _pageController,
-                onPageChanged: _onPageChanged,
                 children: [
                   _buildSlide(
                     icon: Icons.auto_awesome,

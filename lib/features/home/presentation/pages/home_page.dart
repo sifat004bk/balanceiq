@@ -443,7 +443,7 @@ class _HomePageState extends State<HomePage> {
           // TODO: Handle navigation to different sections
         },
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 8),
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
           decoration: BoxDecoration(
             color: isSelected
                 ? AppTheme.primaryColor.withValues(alpha: 0.1)
@@ -452,6 +452,7 @@ class _HomePageState extends State<HomePage> {
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
                 icon,
@@ -465,6 +466,7 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 4),
               Text(
                 label,
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 10,
                   fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,

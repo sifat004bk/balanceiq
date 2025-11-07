@@ -46,116 +46,139 @@ class MessageBubble extends StatelessWidget {
               crossAxisAlignment:
                   isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
               children: [
-                // Sender name
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 4, left: 4, right: 4),
-                  child: Text(
-                    isUser ? 'You' : botName,
-                    style: Theme.of(context).textTheme.bodySmall,
+                // Sender name (only for bot)
+                if (!isUser)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 4, left: 4, right: 4),
+                    child: Text(
+                      botName,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                    ),
                   ),
-                ),
-                // Message bubble
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: isUser
-                        ? AppTheme.userMessageColor
-                        : isDark
-                            ? AppTheme.botMessageDarkColor
-                            : AppTheme.botMessageLightColor,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Message text
-                      if (message.content.isNotEmpty)
-                        isUser
-                            ? Text(
-                                message.content,
-                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                      color: Colors.white,
-                                    ),
-                              )
-                            : MarkdownBody(
-                                data: message.content,
-                                selectable: true,
-                                styleSheet: MarkdownStyleSheet(
-                                  p: Theme.of(context).textTheme.bodyMedium,
-                                  h1: Theme.of(context).textTheme.headlineLarge,
-                                  h2: Theme.of(context).textTheme.headlineMedium,
-                                  h3: Theme.of(context).textTheme.headlineSmall,
-                                  h4: Theme.of(context).textTheme.titleLarge,
-                                  h5: Theme.of(context).textTheme.titleMedium,
-                                  h6: Theme.of(context).textTheme.titleSmall,
-                                  code: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                        fontFamily: 'monospace',
-                                        backgroundColor: isDark
-                                            ? Colors.grey[800]
-                                            : Colors.grey[200],
-                                      ),
-                                  codeblockDecoration: BoxDecoration(
-                                    color: isDark ? Colors.grey[900] : Colors.grey[100],
-                                    borderRadius: BorderRadius.circular(8),
+                // Message content
+                if (isUser)
+                  // User message with bubble
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    decoration: const BoxDecoration(
+                      color: AppTheme.userMessageColor,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(18),
+                        topRight: Radius.circular(18),
+                        bottomLeft: Radius.circular(18),
+                        bottomRight: Radius.circular(4),
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          message.content,
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                color: isDark ? const Color(0xFF102219) : const Color(0xFF102219),
+                              ),
+                        ),
+                        if (message.imageUrl != null &&
+                            message.imageUrl!.isNotEmpty) ...[
+                          const SizedBox(height: 8),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: _buildImage(message.imageUrl!),
+                          ),
+                        ],
+                      ],
+                    ),
+                  )
+                else
+                  // Bot message without bubble (ChatGPT style)
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (message.content.isNotEmpty)
+                          MarkdownBody(
+                            data: message.content,
+                            selectable: true,
+                            styleSheet: MarkdownStyleSheet(
+                              p: Theme.of(context).textTheme.bodyMedium,
+                              h1: Theme.of(context).textTheme.headlineLarge,
+                              h2: Theme.of(context).textTheme.headlineMedium,
+                              h3: Theme.of(context).textTheme.headlineSmall,
+                              h4: Theme.of(context).textTheme.titleLarge,
+                              h5: Theme.of(context).textTheme.titleMedium,
+                              h6: Theme.of(context).textTheme.titleSmall,
+                              code: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    fontFamily: 'monospace',
+                                    backgroundColor: isDark
+                                        ? Colors.grey[800]
+                                        : Colors.grey[200],
                                   ),
-                                  blockquote: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                        color: Colors.grey[600],
-                                        fontStyle: FontStyle.italic,
-                                      ),
-                                  blockquoteDecoration: BoxDecoration(
-                                    color: isDark
-                                        ? Colors.grey[800]?.withValues(alpha: 0.3)
-                                        : Colors.grey[200]?.withValues(alpha: 0.3),
-                                    border: Border(
-                                      left: BorderSide(
-                                        color: botColor,
-                                        width: 4,
-                                      ),
-                                    ),
+                              codeblockDecoration: BoxDecoration(
+                                color: isDark ? Colors.grey[900] : Colors.grey[100],
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              blockquote: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: isDark ? Colors.grey[400] : Colors.grey[600],
+                                    fontStyle: FontStyle.italic,
                                   ),
-                                  listBullet: Theme.of(context).textTheme.bodyMedium,
-                                  tableBody: Theme.of(context).textTheme.bodyMedium,
-                                  tableHead: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                  a: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                        color: botColor,
-                                        decoration: TextDecoration.underline,
-                                      ),
-                                  em: const TextStyle(fontStyle: FontStyle.italic),
-                                  strong: const TextStyle(fontWeight: FontWeight.bold),
-                                  horizontalRuleDecoration: BoxDecoration(
-                                    border: Border(
-                                      top: BorderSide(
-                                        color: isDark ? Colors.grey[700]! : Colors.grey[300]!,
-                                        width: 1,
-                                      ),
-                                    ),
+                              blockquoteDecoration: BoxDecoration(
+                                color: isDark
+                                    ? Colors.grey[800]?.withValues(alpha: 0.3)
+                                    : Colors.grey[200]?.withValues(alpha: 0.3),
+                                border: Border(
+                                  left: BorderSide(
+                                    color: AppTheme.primaryColor,
+                                    width: 4,
                                   ),
                                 ),
                               ),
-                      // Image if available
-                      if (message.imageUrl != null &&
-                          message.imageUrl!.isNotEmpty) ...[
-                        const SizedBox(height: 8),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: _buildImage(message.imageUrl!),
-                        ),
+                              listBullet: Theme.of(context).textTheme.bodyMedium,
+                              tableBody: Theme.of(context).textTheme.bodyMedium,
+                              tableHead: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                              a: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: AppTheme.primaryColor,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                              em: const TextStyle(fontStyle: FontStyle.italic),
+                              strong: const TextStyle(fontWeight: FontWeight.bold),
+                              horizontalRuleDecoration: BoxDecoration(
+                                border: Border(
+                                  top: BorderSide(
+                                    color: isDark ? Colors.grey[700]! : Colors.grey[300]!,
+                                    width: 1,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        if (message.imageUrl != null &&
+                            message.imageUrl!.isNotEmpty) ...[
+                          const SizedBox(height: 8),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: _buildImage(message.imageUrl!),
+                          ),
+                        ],
                       ],
-                    ],
+                    ),
                   ),
-                ),
-                // Timestamp
-                Padding(
-                  padding: const EdgeInsets.only(top: 4, left: 4, right: 4),
-                  child: Text(
-                    _formatTimestamp(message.timestamp),
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          fontSize: 10,
-                        ),
+                // Timestamp (only for user messages)
+                if (isUser)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4, left: 4, right: 4),
+                    child: Text(
+                      _formatTimestamp(message.timestamp),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            fontSize: 10,
+                            color: isDark ? Colors.grey[500] : Colors.grey[600],
+                          ),
+                    ),
                   ),
-                ),
               ],
             ),
           ),

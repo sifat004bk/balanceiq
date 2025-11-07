@@ -87,8 +87,6 @@ class MessageList extends StatelessWidget {
   }
 
   Widget _buildTypingIndicator(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Row(
@@ -102,24 +100,15 @@ class MessageList extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 12),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            decoration: BoxDecoration(
-              color: isDark
-                  ? AppTheme.botMessageDarkColor
-                  : AppTheme.botMessageLightColor,
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _buildDot(),
-                const SizedBox(width: 4),
-                _buildDot(delay: 150),
-                const SizedBox(width: 4),
-                _buildDot(delay: 300),
-              ],
-            ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildDot(),
+              const SizedBox(width: 4),
+              _buildDot(delay: 150),
+              const SizedBox(width: 4),
+              _buildDot(delay: 300),
+            ],
           ),
         ],
       ),

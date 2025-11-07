@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  // Colors
-  static const Color primaryColor = Color(0xFF4A90E2);
-  static const Color accentColor = Color(0xFF50E3C2);
-  static const Color backgroundLight = Color(0xFFF5F5F5);
-  static const Color backgroundDark = Color(0xFF101c22);
+  // New Design System Colors
+  static const Color primaryColor = Color(0xFF13ec80); // Primary green
+  static const Color accentColor = Color(0xFF13ec80);
+  static const Color backgroundLight = Color(0xFFf6f8f7); // Light theme background
+  static const Color backgroundDark = Color(0xFF102219); // Dark theme background
+
+  // Text Colors
+  static const Color textLightTheme = Color(0xFF111827);
+  static const Color textDarkTheme = Color(0xFFE5E7EB);
+  static const Color textSubtleLight = Color(0xFF6B7280);
+  static const Color textSubtleDark = Color(0xFF9CA3AF);
 
   // Bot Colors
   static const Color balanceTrackerColor = Color(0xFF4CAF50); // Green

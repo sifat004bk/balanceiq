@@ -7,7 +7,12 @@ import 'core/theme/theme_cubit.dart';
 import 'core/theme/theme_state.dart';
 import 'features/auth/presentation/cubit/auth_cubit.dart';
 import 'features/auth/presentation/cubit/auth_state.dart';
-import 'features/auth/presentation/pages/onboarding_page.dart';
+import 'features/auth/presentation/pages/new_onboarding_page.dart';
+import 'features/auth/presentation/pages/new_login_page.dart';
+import 'features/auth/presentation/pages/new_signup_page.dart';
+import 'features/auth/presentation/pages/email_verification_page.dart';
+import 'features/auth/presentation/pages/verification_success_page.dart';
+import 'features/auth/presentation/pages/loading_page.dart';
 import 'features/home/presentation/pages/home_page.dart';
 
 void main() async {
@@ -53,6 +58,23 @@ class MyApp extends StatelessWidget {
             darkTheme: AppTheme.darkTheme(),
             themeMode: themeMode,
             home: const AuthWrapper(),
+            routes: {
+              '/onboarding': (context) => const NewOnboardingPage(),
+              '/login': (context) => const NewLoginPage(),
+              '/signup': (context) => const NewSignUpPage(),
+              '/verification-success': (context) => const VerificationSuccessPage(),
+              '/loading': (context) => const LoadingPage(),
+              '/home': (context) => const HomePage(),
+            },
+            onGenerateRoute: (settings) {
+              if (settings.name == '/email-verification') {
+                final email = settings.arguments as String? ?? 'user@example.com';
+                return MaterialPageRoute(
+                  builder: (context) => EmailVerificationPage(email: email),
+                );
+              }
+              return null;
+            },
           );
         },
       ),
@@ -77,7 +99,7 @@ class AuthWrapper extends StatelessWidget {
         } else if (state is AuthAuthenticated) {
           return const HomePage();
         } else {
-          return const OnboardingPage();
+          return const NewOnboardingPage();
         }
       },
     );

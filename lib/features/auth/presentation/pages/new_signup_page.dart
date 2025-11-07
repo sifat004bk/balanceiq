@@ -40,11 +40,11 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
   }
 
   void _handleGoogleSignUp() {
-    context.read<AuthCubit>().signInWithGoogle();
+    context.read<AuthCubit>().signInGoogle();
   }
 
   void _handleAppleSignUp() {
-    context.read<AuthCubit>().signInWithApple();
+    context.read<AuthCubit>().signInApple();
   }
 
   @override

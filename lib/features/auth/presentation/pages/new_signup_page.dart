@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../cubit/auth_cubit.dart';
+import '../cubit/auth_state.dart';
 
 class NewSignUpPage extends StatefulWidget {
   const NewSignUpPage({super.key});
@@ -51,13 +52,28 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
+    return BlocListener<AuthCubit, AuthState>(
+      listener: (context, state) {
+        if (state is AuthAuthenticated) {
+          // Navigate to home when authenticated via Google/Apple
+          Navigator.of(context).pushReplacementNamed('/home');
+        } else if (state is AuthError) {
+          // Show error message
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      },
+      child: Scaffold(
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
               children: [
                 const SizedBox(height: 24),
                 // Logo
@@ -561,6 +577,7 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
           ),
         ),
       ),
+    ),
     );
   }
 }

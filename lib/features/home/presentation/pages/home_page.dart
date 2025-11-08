@@ -23,82 +23,74 @@ class _HomePageState extends State<HomePage> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      body: Stack(
-        children: [
-          // Main Content with SafeArea
-          SafeArea(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  // Header
-                  _buildHeader(context, isDark),
+      body: SafeArea(
+        bottom: false,
+        child: Column(
+          children: [
+            // Main scrollable content
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    // Header
+                    _buildHeader(context, isDark),
 
-                  // Premium Card
-                  _buildPremiumCard(context, isDark),
+                    // Premium Card
+                    _buildPremiumCard(context, isDark),
 
-                  // Feature Grid
-                  _buildFeatureGrid(context, isDark),
+                    // Feature Grid
+                    _buildFeatureGrid(context, isDark),
 
-                  // Bottom padding to avoid overlap with bottom nav
-                  const SizedBox(height: 100),
-                ],
-              ),
-            ),
-          ),
-
-          // Floating Chat Button
-          Positioned(
-            bottom: 112,
-            right: 16,
-            child: FloatingActionButton(
-              onPressed: () {
-                // Navigate to default chat bot
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => ChatPage(
-                      botId: AppConstants.balanceTrackerID,
-                      botName: AppConstants.balanceTracker,
-                    ),
-                  ),
-                );
-              },
-              backgroundColor: AppTheme.primaryColor,
-              child: Icon(
-                Icons.chat,
-                color: isDark ? AppTheme.backgroundDark : AppTheme.backgroundDark,
-              ),
-            ),
-          ),
-
-          // Bottom Navigation Bar - positioned at absolute bottom
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: SafeArea(
-              top: false,
-              child: Container(
-                padding: const EdgeInsets.only(
-                  left: 16,
-                  right: 16,
-                  bottom: 16,
-                  top: 8,
+                    // Bottom padding to avoid overlap with bottom nav
+                    const SizedBox(height: 16),
+                  ],
                 ),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      (isDark ? AppTheme.backgroundDark : AppTheme.backgroundLight).withValues(alpha: 0.0),
-                      (isDark ? AppTheme.backgroundDark : AppTheme.backgroundLight),
-                    ],
+              ),
+            ),
+
+            // Bottom Navigation Bar
+            Container(
+              padding: EdgeInsets.only(
+                left: 16,
+                right: 16,
+                bottom: MediaQuery.of(context).padding.bottom > 0
+                    ? MediaQuery.of(context).padding.bottom
+                    : 16,
+                top: 8,
+              ),
+              decoration: BoxDecoration(
+                color: isDark ? AppTheme.backgroundDark : AppTheme.backgroundLight,
+                border: Border(
+                  top: BorderSide(
+                    color: isDark
+                        ? const Color(0xFF374151).withValues(alpha: 0.3)
+                        : const Color(0xFFE5E7EB).withValues(alpha: 0.3),
+                    width: 1,
                   ),
                 ),
-                child: _buildBottomNav(context, isDark),
+              ),
+              child: _buildBottomNav(context, isDark),
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Navigate to default chat bot
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => ChatPage(
+                botId: AppConstants.balanceTrackerID,
+                botName: AppConstants.balanceTracker,
               ),
             ),
-          ),
-        ],
+          );
+        },
+        backgroundColor: AppTheme.primaryColor,
+        child: Icon(
+          Icons.chat,
+          color: isDark ? AppTheme.backgroundDark : AppTheme.backgroundDark,
+        ),
       ),
     );
   }

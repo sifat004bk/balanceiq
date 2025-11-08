@@ -36,44 +36,30 @@ class ChatCubit extends Cubit<ChatState> {
       final currentState = state as ChatLoaded;
 
       // Start sending in background (repository saves user message immediately)
-      final sendFuture = sendMessage(
+      // Don't await - let it run in background
+      sendMessage(
         botId: botId,
         content: content,
         imagePath: imagePath,
         audioPath: audioPath,
-      );
+      ).then((result) {
+        // After API completes, reload messages to show bot response
+        if (!isClosed) {
+          loadMessages(botId);
+        }
+      });
 
-      // Give repository time to save user message to DB
-      await Future.delayed(const Duration(milliseconds: 150));
+      // Wait a bit for the user message to be saved to DB
+      await Future.delayed(const Duration(milliseconds: 300));
 
-      // Reload messages to get fresh data from DB
+      // Reload messages to show user message with typing indicator
       final messagesResult = await getMessages(botId);
-
-      // Show user message with typing indicator
       if (!isClosed) {
         messagesResult.fold(
           (failure) => emit(ChatError(message: failure.message)),
           (messages) => emit(ChatLoaded(messages: messages, isSending: true)),
         );
       }
-
-      // Wait for API response
-      final result = await sendFuture;
-
-      result.fold(
-        (failure) {
-          if (!isClosed) {
-            // Reload messages even on error (removes typing indicator)
-            loadMessages(botId);
-          }
-        },
-        (botMessage) {
-          // Reload messages to get bot response from DB
-          if (!isClosed) {
-            loadMessages(botId);
-          }
-        },
-      );
     }
   }
 

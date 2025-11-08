@@ -206,87 +206,107 @@ class _ChatInputState extends State<ChatInput> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Preview selected image
-          if (_selectedImagePath != null) ...[
-            Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Stack(
-                  children: [
-                    Container(
-                      height: 80,
-                      width: 80,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        image: DecorationImage(
-                          image: FileImage(File(_selectedImagePath!)),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      top: -4,
-                      right: -4,
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _selectedImagePath = null;
-                            _hasContent = _textController.text.trim().isNotEmpty || _recordedAudioPath != null;
-                          });
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: isDark ? Colors.grey[700]! : Colors.grey[300]!,
-                            ),
-                          ),
-                          child: Icon(
-                            Icons.close,
-                            color: isDark ? Colors.grey[400] : Colors.grey[700],
-                            size: 16,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-          // Preview audio recording
-          if (_recordedAudioPath != null) ...[
+          // Preview attachments (unified layout for both image and audio)
+          if (_selectedImagePath != null || _recordedAudioPath != null) ...[
             Container(
               margin: const EdgeInsets.only(bottom: 12),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF1F2937) : const Color(0xFFF3F4F6),
-                borderRadius: BorderRadius.circular(12),
-              ),
               child: Row(
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: isDark ? const Color(0xFF374151) : const Color(0xFFE5E7EB),
-                      borderRadius: BorderRadius.circular(12),
+                  if (_selectedImagePath != null)
+                    Stack(
+                      children: [
+                        Container(
+                          height: 80,
+                          width: 80,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            image: DecorationImage(
+                              image: FileImage(File(_selectedImagePath!)),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          top: -4,
+                          right: -4,
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _selectedImagePath = null;
+                                _hasContent = _textController.text.trim().isNotEmpty || _recordedAudioPath != null;
+                              });
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.2),
+                                    blurRadius: 4,
+                                  ),
+                                ],
+                              ),
+                              child: Icon(
+                                Icons.close,
+                                color: isDark ? Colors.grey[400] : Colors.grey[700],
+                                size: 16,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    child: const Icon(Icons.description, size: 20),
-                  ),
-                  const SizedBox(width: 12),
-                  const Expanded(child: Text('Audio recorded', style: TextStyle(fontSize: 16))),
-                  IconButton(
-                    icon: const Icon(Icons.close, size: 20),
-                    onPressed: () {
-                      setState(() {
-                        _recordedAudioPath = null;
-                        _hasContent = _textController.text.trim().isNotEmpty || _selectedImagePath != null;
-                      });
-                    },
-                  ),
+                  if (_selectedImagePath != null && _recordedAudioPath != null)
+                    const SizedBox(width: 12),
+                  if (_recordedAudioPath != null)
+                    Expanded(
+                      child: Container(
+                        height: 80,
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        decoration: BoxDecoration(
+                          color: isDark ? const Color(0xFF1F2937) : const Color(0xFFF3F4F6),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: isDark ? const Color(0xFF374151) : const Color(0xFFE5E7EB),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: const Icon(Icons.mic, size: 20),
+                            ),
+                            const SizedBox(width: 12),
+                            const Expanded(
+                              child: Text(
+                                'Audio recorded',
+                                style: TextStyle(fontSize: 14),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _recordedAudioPath = null;
+                                  _hasContent = _textController.text.trim().isNotEmpty || _selectedImagePath != null;
+                                });
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(4),
+                                child: Icon(
+                                  Icons.close,
+                                  size: 20,
+                                  color: isDark ? Colors.grey[400] : Colors.grey[600],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),

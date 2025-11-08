@@ -74,24 +74,32 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Navigate to default chat bot
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => ChatPage(
-                botId: AppConstants.balanceTrackerID,
-                botName: AppConstants.balanceTracker,
+      floatingActionButton: Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).padding.bottom > 0
+              ? MediaQuery.of(context).padding.bottom + 80
+              : 80,
+        ),
+        child: FloatingActionButton(
+          onPressed: () {
+            // Navigate to default chat bot
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => ChatPage(
+                  botId: AppConstants.balanceTrackerID,
+                  botName: AppConstants.balanceTracker,
+                ),
               ),
-            ),
-          );
-        },
-        backgroundColor: AppTheme.primaryColor,
-        child: Icon(
-          Icons.chat,
-          color: isDark ? AppTheme.backgroundDark : AppTheme.backgroundDark,
+            );
+          },
+          backgroundColor: AppTheme.primaryColor,
+          child: Icon(
+            Icons.chat,
+            color: isDark ? AppTheme.backgroundDark : AppTheme.backgroundDark,
+          ),
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 

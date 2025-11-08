@@ -33,6 +33,8 @@ class ChatCubit extends Cubit<ChatState> {
     String? audioPath,
   }) async {
     if (state is ChatLoaded) {
+      final currentState = state as ChatLoaded;
+
       // Start sending in background (repository saves user message immediately)
       final sendFuture = sendMessage(
         botId: botId,
@@ -44,8 +46,16 @@ class ChatCubit extends Cubit<ChatState> {
       // Give repository time to save user message to DB
       await Future.delayed(const Duration(milliseconds: 150));
 
-      // Reload to show user message
-      await loadMessages(botId);
+      // Reload messages to get fresh data from DB
+      final messagesResult = await getMessages(botId);
+
+      // Show user message with typing indicator
+      if (!isClosed) {
+        messagesResult.fold(
+          (failure) => emit(ChatError(message: failure.message)),
+          (messages) => emit(ChatLoaded(messages: messages, isSending: true)),
+        );
+      }
 
       // Wait for API response
       final result = await sendFuture;
@@ -53,7 +63,7 @@ class ChatCubit extends Cubit<ChatState> {
       result.fold(
         (failure) {
           if (!isClosed) {
-            // Reload messages even on error
+            // Reload messages even on error (removes typing indicator)
             loadMessages(botId);
           }
         },

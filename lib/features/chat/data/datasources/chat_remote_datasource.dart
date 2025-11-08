@@ -28,8 +28,10 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     String? audioPath,
   }) async {
     try {
+      // Hardcoded user ID for development/testing
+      final userId = '6130001838';
+
       // Get user information from SharedPreferences
-      final userId = sharedPreferences.getString(AppConstants.keyUserId) ?? 'anonymous';
       final userName = sharedPreferences.getString(AppConstants.keyUserName) ?? 'User';
       final userEmail = sharedPreferences.getString(AppConstants.keyUserEmail) ?? '';
 

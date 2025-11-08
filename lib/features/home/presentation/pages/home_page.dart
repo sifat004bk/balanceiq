@@ -77,8 +77,8 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: Padding(
         padding: EdgeInsets.only(
           bottom: MediaQuery.of(context).padding.bottom > 0
-              ? MediaQuery.of(context).padding.bottom + 80
-              : 80,
+              ? MediaQuery.of(context).padding.bottom + 54
+              : 54,
         ),
         child: FloatingActionButton(
           onPressed: () {

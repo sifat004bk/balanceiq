@@ -1,3 +1,5 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 class AppConstants {
   // App Info
   static const String appName = 'BalanceIQ';
@@ -33,9 +35,9 @@ class AppConstants {
   static const String keyThemeMode = 'theme_mode';
 
   // API Configuration
-  static const String n8nWebhookUrl = String.fromEnvironment(
+  static String get n8nWebhookUrl => dotenv.get(
     'N8N_WEBHOOK_URL',
-    defaultValue: 'https://primary-production-7383b.up.railway.app/webhook/b1cfaa07-8bf1-4005-90e0-9759144705f2',
+    fallback: 'https://primary-production-7383b.up.railway.app/webhook/b1cfaa07-8bf1-4005-90e0-9759144705f2',
   );
 
   // Message Types

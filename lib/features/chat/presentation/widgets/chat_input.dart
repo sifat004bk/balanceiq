@@ -340,6 +340,7 @@ class _ChatInputState extends State<ChatInput> {
                         fontSize: 16,
                       ),
                       border: InputBorder.none,
+                      filled: false,
                       contentPadding: const EdgeInsets.symmetric(
                         vertical: 12,
                       ),

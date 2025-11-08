@@ -75,26 +75,27 @@ class _HomePageState extends State<HomePage> {
             bottom: 0,
             left: 0,
             right: 0,
-            child: Container(
-              padding: EdgeInsets.only(
-                left: 16,
-                right: 16,
-                bottom: MediaQuery.of(context).padding.bottom > 0
-                    ? MediaQuery.of(context).padding.bottom
-                    : 16,
-                top: 8,
-              ),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    (isDark ? AppTheme.backgroundDark : AppTheme.backgroundLight).withValues(alpha: 0.0),
-                    (isDark ? AppTheme.backgroundDark : AppTheme.backgroundLight),
-                  ],
+            child: SafeArea(
+              top: false,
+              child: Container(
+                padding: const EdgeInsets.only(
+                  left: 16,
+                  right: 16,
+                  bottom: 16,
+                  top: 8,
                 ),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      (isDark ? AppTheme.backgroundDark : AppTheme.backgroundLight).withValues(alpha: 0.0),
+                      (isDark ? AppTheme.backgroundDark : AppTheme.backgroundLight),
+                    ],
+                  ),
+                ),
+                child: _buildBottomNav(context, isDark),
               ),
-              child: _buildBottomNav(context, isDark),
             ),
           ),
         ],

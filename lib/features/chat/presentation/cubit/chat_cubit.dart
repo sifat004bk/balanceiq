@@ -1,17 +1,21 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uuid/uuid.dart';
 import '../../domain/entities/message.dart';
 import '../../domain/usecases/get_messages.dart';
 import '../../domain/usecases/send_message.dart';
 import 'chat_state.dart';
+import '../../../../core/constants/app_constants.dart';
 
 class ChatCubit extends Cubit<ChatState> {
   final GetMessages getMessages;
   final SendMessage sendMessage;
+  final Uuid uuid;
   String? currentBotId;
 
   ChatCubit({
     required this.getMessages,
     required this.sendMessage,
+    required this.uuid,
   }) : super(ChatInitial());
 
   Future<void> loadMessages(String botId) async {
@@ -35,30 +39,34 @@ class ChatCubit extends Cubit<ChatState> {
     if (state is ChatLoaded) {
       final currentState = state as ChatLoaded;
 
-      // Start sending in background (repository saves user message immediately)
-      // Don't await - let it run in background
-      sendMessage(
+      // Create temporary user message for immediate display
+      final tempUserMessage = Message(
+        id: uuid.v4(),
+        botId: botId,
+        sender: AppConstants.senderUser,
+        content: content,
+        imageUrl: imagePath,
+        audioUrl: audioPath,
+        timestamp: DateTime.now(),
+        isSending: false,
+        hasError: false,
+      );
+
+      // Immediately show user message in UI
+      final updatedMessages = [...currentState.messages, tempUserMessage];
+      emit(ChatLoaded(messages: updatedMessages, isSending: true));
+
+      // Send message in background (repository will save with different ID)
+      final result = await sendMessage(
         botId: botId,
         content: content,
         imagePath: imagePath,
         audioPath: audioPath,
-      ).then((result) {
-        // After API completes, reload messages to show bot response
-        if (!isClosed) {
-          loadMessages(botId);
-        }
-      });
+      );
 
-      // Wait a bit for the user message to be saved to DB
-      await Future.delayed(const Duration(milliseconds: 300));
-
-      // Reload messages to show user message with typing indicator
-      final messagesResult = await getMessages(botId);
+      // After API completes, reload from DB to get actual messages
       if (!isClosed) {
-        messagesResult.fold(
-          (failure) => emit(ChatError(message: failure.message)),
-          (messages) => emit(ChatLoaded(messages: messages, isSending: true)),
-        );
+        loadMessages(botId);
       }
     }
   }

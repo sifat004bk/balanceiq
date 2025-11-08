@@ -74,6 +74,7 @@ Future<void> init() async {
     () => ChatCubit(
       getMessages: sl(),
       sendMessage: sl(),
+      uuid: sl(),
     ),
   );
 

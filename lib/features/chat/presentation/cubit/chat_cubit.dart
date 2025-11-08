@@ -18,9 +18,9 @@ class ChatCubit extends Cubit<ChatState> {
     required this.uuid,
   }) : super(ChatInitial());
 
-  Future<void> loadMessages(String botId) async {
+  Future<void> loadMessages(String botId, {bool showLoading = true}) async {
     currentBotId = botId;
-    if (!isClosed) emit(ChatLoading());
+    if (!isClosed && showLoading) emit(ChatLoading());
     final result = await getMessages(botId);
     if (!isClosed) {
       result.fold(
@@ -65,8 +65,9 @@ class ChatCubit extends Cubit<ChatState> {
       );
 
       // After API completes, reload from DB to get actual messages
+      // Don't show loading state to avoid clearing the optimistic message
       if (!isClosed) {
-        loadMessages(botId);
+        loadMessages(botId, showLoading: false);
       }
     }
   }

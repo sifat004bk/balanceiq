@@ -1,0 +1,145 @@
+import 'package:balance_iq/features/home/domain/entities/dashbaord_summary.dart';
+import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/material.dart';
+
+class SpendingTrendChart extends StatelessWidget {
+  final List<SpendingTrendPoint> spendingTrend;
+
+  const SpendingTrendChart({
+    super.key,
+    required this.spendingTrend,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (spendingTrend.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    final maxAmount = spendingTrend.isEmpty
+        ? 100.0
+        : spendingTrend.map((e) => e.amount).reduce((a, b) => a > b ? a : b);
+
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.2), // bg-white dark:bg-black/20
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Spending Trend',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 16),
+          SizedBox(
+            height: 140,
+            child: LineChart(
+              LineChartData(
+                gridData: FlGridData(show: false),
+                titlesData: FlTitlesData(
+                  leftTitles: AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  rightTitles: AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  topTitles: AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  bottomTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      interval: 5,
+                      getTitlesWidget: (value, meta) {
+                        if (value == 1 ||
+                            value == 5 ||
+                            value == 10 ||
+                            value == 15 ||
+                            value == 20 ||
+                            value == 25 ||
+                            value == 30) {
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 8),
+                            child: Text(
+                              value.toInt().toString(),
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.6),
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          );
+                        }
+                        return const SizedBox.shrink();
+                      },
+                    ),
+                  ),
+                ),
+                borderData: FlBorderData(show: false),
+                minX: 1,
+                maxX: 30,
+                minY: 0,
+                maxY: maxAmount * 1.2,
+                lineBarsData: [
+                  LineChartBarData(
+                    spots: spendingTrend
+                        .map((point) =>
+                            FlSpot(point.day.toDouble(), point.amount))
+                        .toList(),
+                    isCurved: true,
+                    curveSmoothness: 0.35,
+                    color: const Color(0xFF2BEE4B),
+                    barWidth: 3,
+                    isStrokeCapRound: true,
+                    dotData: FlDotData(show: false),
+                    belowBarData: BarAreaData(
+                      show: true,
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          const Color(0xFF2BEE4B).withOpacity(0.3),
+                          const Color(0xFF2BEE4B).withOpacity(0.0),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+                lineTouchData: LineTouchData(
+                  touchTooltipData: LineTouchTooltipData(
+                    getTooltipColor: (touchedSpot) =>
+                        const Color(0xFF2BEE4B).withOpacity(0.9),
+                    tooltipRoundedRadius: 8,
+                    tooltipPadding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                    getTooltipItems: (touchedSpots) {
+                      return touchedSpots.map((spot) {
+                        return LineTooltipItem(
+                          'Day ${spot.x.toInt()}\n\$${spot.y.toStringAsFixed(2)}',
+                          const TextStyle(
+                            color: Color(0xFF102213),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),
+                        );
+                      }).toList();
+                    },
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

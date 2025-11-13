@@ -1,507 +1,200 @@
+import 'package:balance_iq/core/di/injection_container.dart' as di;
+import 'package:balance_iq/features/auth/data/datasources/auth_local_datasource.dart';
+import 'package:balance_iq/features/home/presentation/cubit/dashboard_cubit.dart';
+import 'package:balance_iq/features/home/presentation/cubit/dashboard_state.dart';
+import 'package:balance_iq/features/home/presentation/pages/error_page.dart';
+import 'package:balance_iq/features/home/presentation/pages/welcome_page.dart';
+import 'package:balance_iq/features/home/presentation/widgets/accounts_breakdown_widget.dart';
+import 'package:balance_iq/features/home/presentation/widgets/balance_card_widget.dart';
+import 'package:balance_iq/features/home/presentation/widgets/biggest_category_widget.dart';
+import 'package:balance_iq/features/home/presentation/widgets/biggest_expense_widget.dart';
+import 'package:balance_iq/features/home/presentation/widgets/dashboard_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import '../../../../core/constants/app_constants.dart';
-import '../../../../core/theme/app_theme.dart';
-import '../../../auth/presentation/cubit/auth_cubit.dart';
-import '../../../auth/presentation/cubit/auth_state.dart';
-import '../../../chat/presentation/pages/chat_page.dart';
-import '../widgets/profile_modal.dart';
+
+import '../widgets/financial_ratio_widget.dart';
+import '../widgets/spending_trend_chart.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({
+    super.key,
+  });
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
+  String _userName = 'User';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserName();
+    _loadDashboard();
+  }
+
+  Future<void> _loadUserName() async {
+    try {
+      final authLocalDataSource = di.sl<AuthLocalDataSource>();
+      final user = await authLocalDataSource.getCachedUser();
+
+      if (user != null) {
+        final nameParts = user.name.split(' ');
+        setState(() {
+          _userName = nameParts.isNotEmpty ? nameParts[0] : 'User';
+        });
+      }
+    } catch (e) {
+      // Keep default name if user data not available
+    }
+  }
+
+  void _loadDashboard() {
+    context.read<DashboardCubit>().loadDashboard();
+  }
+
+  Future<void> _refreshDashboard() async {
+    await context.read<DashboardCubit>().refreshDashboard();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Scaffold(
+      backgroundColor: const Color(0xFF102213), // background-dark
       body: SafeArea(
-        bottom: false,
-        child: Column(
-          children: [
-            // Main scrollable content
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
+        child: BlocBuilder<DashboardCubit, DashboardState>(
+          builder: (context, state) {
+            if (state is DashboardLoading) {
+              return const DashboardShimmer();
+            }
+
+            if (state is DashboardError) {
+              // Check if it's an empty data error
+              if (state.message.contains('No dashboard data')) {
+                return WelcomePage(
+                  userName: _userName,
+                  onGetStarted: _loadDashboard,
+                );
+              }
+
+              // Show 404 error page for other errors
+              return Error404Page(
+                errorMessage: state.message,
+                onRetry: _loadDashboard,
+              );
+            }
+
+            if (state is DashboardLoaded) {
+              final summary = state.summary;
+
+              return RefreshIndicator(
+                onRefresh: _refreshDashboard,
+                color: const Color(0xFF2BEE4B), // primary color
+                backgroundColor: Colors.black.withOpacity(0.2),
+                child: ListView(
+                  padding: const EdgeInsets.all(0),
                   children: [
-                    // Header
-                    _buildHeader(context, isDark),
+                    const SizedBox(height: 8),
 
-                    // Premium Card
-                    _buildPremiumCard(context, isDark),
+                    // Balance Card with header
+                    BalanceCard(
+                      netBalance: summary.netBalance,
+                      totalIncome: summary.totalIncome,
+                      totalExpense: summary.totalExpense,
+                      period: summary.period,
+                      userName: _userName,
+                    ),
+                    const SizedBox(height: 24),
 
-                    // Feature Grid
-                    _buildFeatureGrid(context, isDark),
+                    // Spending Trend Chart
+                    if (summary.spendingTrend.isNotEmpty) ...[
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: SpendingTrendChart(
+                          spendingTrend: summary.spendingTrend,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                    ],
 
-                    // Bottom padding to avoid overlap with bottom nav
+                    // Financial Ratios
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: FinancialRatiosWidget(
+                        expenseRatio: summary.expenseRatio,
+                        savingsRate: summary.savingsRate,
+                      ),
+                    ),
                     const SizedBox(height: 16),
+
+                    // Accounts Breakdown
+                    if (summary.accountsBreakdown.isNotEmpty) ...[
+                      AccountsBreakdownWidget(
+                        accountsBreakdown: summary.accountsBreakdown,
+                      ),
+                      const SizedBox(height: 16),
+                    ],
+
+                    // Biggest Expense and Category
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Column(
+                        children: [
+                          BiggestExpenseWidget(
+                            amount: summary.biggestExpenseAmount,
+                            description: summary.biggestExpenseDescription,
+                            category: summary.expenseCategory,
+                            account: summary.expenseAccount,
+                          ),
+                          const SizedBox(height: 16),
+                          BiggestCategoryWidget(
+                            categoryName: summary.biggestCategoryName,
+                            amount: summary.biggestCategoryAmount,
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 120), // Space for FAB and bottom nav
                   ],
                 ),
-              ),
-            ),
+              );
+            }
 
-            // Bottom Navigation Bar
-            Container(
-              padding: EdgeInsets.only(
-                left: 16,
-                right: 16,
-                bottom: MediaQuery.of(context).padding.bottom > 0
-                    ? MediaQuery.of(context).padding.bottom
-                    : 16,
-                top: 8,
-              ),
-              decoration: BoxDecoration(
-                color: isDark ? AppTheme.backgroundDark : AppTheme.backgroundLight,
-                border: Border(
-                  top: BorderSide(
-                    color: isDark
-                        ? const Color(0xFF374151).withValues(alpha: 0.3)
-                        : const Color(0xFFE5E7EB).withValues(alpha: 0.3),
-                    width: 1,
-                  ),
-                ),
-              ),
-              child: _buildBottomNav(context, isDark),
+            return const SizedBox.shrink();
+          },
+        ),
+      ),
+      floatingActionButton: Container(
+        width: 64,
+        height: 64,
+        decoration: BoxDecoration(
+          color: const Color(0xFF2BEE4B),
+          borderRadius: BorderRadius.circular(32),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFF2BEE4B).withOpacity(0.3),
+              blurRadius: 20,
+              offset: const Offset(0, 8),
             ),
           ],
         ),
-      ),
-      floatingActionButton: Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).padding.bottom > 0
-              ? MediaQuery.of(context).padding.bottom + 54
-              : 54,
-        ),
-        child: FloatingActionButton(
-          onPressed: () {
-            // Navigate to default chat bot
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => ChatPage(
-                  botId: AppConstants.balanceTrackerID,
-                  botName: AppConstants.balanceTracker,
-                ),
-              ),
-            );
-          },
-          backgroundColor: AppTheme.primaryColor,
-          child: Icon(
-            Icons.chat,
-            color: isDark ? AppTheme.backgroundDark : AppTheme.backgroundDark,
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(32),
+            onTap: () {
+              // Navigate to add transaction
+            },
+            child: const Icon(
+              Icons.add,
+              color: Color(0xFF102213),
+              size: 36,
+            ),
           ),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-    );
-  }
-
-  Widget _buildHeader(BuildContext context, bool isDark) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          // Logo
-          Row(
-            children: [
-              Icon(
-                Icons.hub,
-                color: AppTheme.primaryColor,
-                size: 32,
-              ),
-            ],
-          ),
-
-          // Welcome text
-          Expanded(
-            child: BlocBuilder<AuthCubit, AuthState>(
-              builder: (context, state) {
-                String userName = 'User';
-                if (state is AuthAuthenticated) {
-                  userName = state.user.name.split(' ').first;
-                }
-                return Text(
-                  'Welcome, $userName!',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                  textAlign: TextAlign.center,
-                );
-              },
-            ),
-          ),
-
-          // Profile Button
-          BlocBuilder<AuthCubit, AuthState>(
-            builder: (context, state) {
-              if (state is AuthAuthenticated) {
-                return GestureDetector(
-                  onTap: () => showProfileModal(context, state.user),
-                  child: CircleAvatar(
-                    radius: 20,
-                    backgroundImage: state.user.photoUrl != null
-                        ? CachedNetworkImageProvider(state.user.photoUrl!)
-                        : null,
-                    backgroundColor: AppTheme.primaryColor,
-                    child: state.user.photoUrl == null
-                        ? Icon(
-                            Icons.account_circle,
-                            size: 24,
-                            color: isDark ? AppTheme.textDarkTheme : AppTheme.textLightTheme,
-                          )
-                        : null,
-                  ),
-                );
-              }
-              return IconButton(
-                icon: const Icon(Icons.account_circle, size: 24),
-                onPressed: () {},
-              );
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPremiumCard(BuildContext context, bool isDark) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF193326) : Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Unlock All Features',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  'Upgrade to Premium for exclusive access to FinanceGuru and more.',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: isDark
-                            ? AppTheme.textSubtleDark
-                            : AppTheme.textSubtleLight,
-                      ),
-                ),
-              ),
-              const SizedBox(width: 12),
-              ElevatedButton(
-                onPressed: () {
-                  // TODO: Navigate to premium/payment page
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.primaryColor,
-                  foregroundColor: isDark
-                      ? AppTheme.backgroundDark
-                      : AppTheme.backgroundDark,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 10,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                ),
-                child: const Text(
-                  'Go Premium',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFeatureGrid(BuildContext context, bool isDark) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: GridView.count(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        crossAxisCount: 2,
-        mainAxisSpacing: 16,
-        crossAxisSpacing: 16,
-        childAspectRatio: 1.1,
-        children: [
-          _buildFeatureCard(
-            context,
-            isDark,
-            title: 'FinanceGuru',
-            subtitle: 'Your personal finance AI.',
-            icon: Icons.account_balance,
-            isPremium: true,
-            botId: AppConstants.balanceTrackerID,
-          ),
-          _buildFeatureCard(
-            context,
-            isDark,
-            title: 'WooCommerce',
-            subtitle: 'Automate your e-commerce.',
-            icon: Icons.shopping_cart,
-            isPremium: false,
-            botId: AppConstants.investmentGuruID,
-          ),
-          _buildFeatureCard(
-            context,
-            isDark,
-            title: 'Scia Media',
-            subtitle: 'Content creation on autopilot.',
-            icon: Icons.camera_roll,
-            isPremium: true,
-            botId: AppConstants.budgetPlannerID,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFeatureCard(
-    BuildContext context,
-    bool isDark, {
-    required String title,
-    required String subtitle,
-    required IconData icon,
-    required bool isPremium,
-    required String botId,
-  }) {
-    return GestureDetector(
-      onTap: () {
-        // Navigate to chat with this bot
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) => ChatPage(
-              botId: botId,
-              botName: title,
-            ),
-          ),
-        );
-      },
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: isDark ? const Color(0xFF193326) : Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: isPremium
-                ? (isDark
-                    ? AppTheme.primaryColor.withValues(alpha: 0.3)
-                    : Colors.transparent)
-                : (isDark ? const Color(0xFF374151) : const Color(0xFFE5E7EB)),
-          ),
-          boxShadow: isPremium
-              ? [
-                  BoxShadow(
-                    color: AppTheme.primaryColor.withValues(alpha: 0.2),
-                    blurRadius: 15,
-                    offset: const Offset(0, 0),
-                  ),
-                ]
-              : null,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Premium badge
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: isPremium
-                        ? AppTheme.primaryColor.withValues(alpha: 0.2)
-                        : (isDark
-                            ? const Color(0xFF374151)
-                            : const Color(0xFFE5E7EB)),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    isPremium ? 'Premium' : 'Free',
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                      color: isPremium
-                          ? AppTheme.primaryColor
-                          : (isDark
-                              ? AppTheme.textSubtleDark
-                              : AppTheme.textSubtleLight),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 8),
-
-            // Icon
-            Icon(
-              icon,
-              color: isPremium ? AppTheme.primaryColor : (isDark ? AppTheme.textDarkTheme : AppTheme.textLightTheme),
-              size: 32,
-            ),
-
-            const Spacer(),
-
-            // Title
-            Text(
-              title,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-
-            const SizedBox(height: 4),
-
-            // Subtitle
-            Text(
-              subtitle,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: isDark
-                        ? AppTheme.textSubtleDark
-                        : AppTheme.textSubtleLight,
-                  ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBottomNav(BuildContext context, bool isDark) {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: (isDark
-                ? const Color(0xFF1E1E1E)
-                : Colors.white)
-            .withValues(alpha: 0.9),
-        borderRadius: BorderRadius.circular(28),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.1),
-            blurRadius: 10,
-            spreadRadius: 0,
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _buildNavItem(
-            context,
-            isDark,
-            icon: Icons.home,
-            label: 'Home',
-            index: 0,
-          ),
-          _buildNavItem(
-            context,
-            isDark,
-            icon: Icons.bolt,
-            label: 'Automations',
-            index: 1,
-          ),
-          _buildNavItem(
-            context,
-            isDark,
-            icon: Icons.person,
-            label: 'Profile',
-            index: 2,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNavItem(
-    BuildContext context,
-    bool isDark, {
-    required IconData icon,
-    required String label,
-    required int index,
-  }) {
-    final isSelected = _selectedIndex == index;
-
-    return Expanded(
-      child: GestureDetector(
-        onTap: () {
-          setState(() {
-            _selectedIndex = index;
-          });
-          // TODO: Handle navigation to different sections
-        },
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-          decoration: BoxDecoration(
-            color: isSelected
-                ? AppTheme.primaryColor.withValues(alpha: 0.1)
-                : Colors.transparent,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                icon,
-                color: isSelected
-                    ? AppTheme.primaryColor
-                    : (isDark
-                        ? AppTheme.textSubtleDark
-                        : AppTheme.textSubtleLight),
-                size: 24,
-              ),
-              const SizedBox(height: 4),
-              Text(
-                label,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 10,
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                  color: isSelected
-                      ? AppTheme.primaryColor
-                      : (isDark
-                          ? AppTheme.textSubtleDark
-                          : AppTheme.textSubtleLight),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }

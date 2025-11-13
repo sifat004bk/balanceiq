@@ -6,6 +6,8 @@ class DashboardShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return ListView(
       padding: const EdgeInsets.all(0),
       children: [
@@ -17,9 +19,9 @@ class DashboardShimmer extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildShimmerBox(48, 48, isCircle: true),
-              _buildShimmerBox(120, 24),
-              _buildShimmerBox(48, 48, isCircle: true),
+              _buildShimmerBox(context, 48, 48, isCircle: true),
+              _buildShimmerBox(context, 120, 24),
+              _buildShimmerBox(context, 48, 48, isCircle: true),
             ],
           ),
         ),
@@ -29,9 +31,9 @@ class DashboardShimmer extends StatelessWidget {
         Center(
           child: Column(
             children: [
-              _buildShimmerBox(100, 16),
+              _buildShimmerBox(context, 100, 16),
               const SizedBox(height: 8),
-              _buildShimmerBox(200, 48),
+              _buildShimmerBox(context, 200, 48),
             ],
           ),
         ),
@@ -42,9 +44,9 @@ class DashboardShimmer extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
             children: [
-              Expanded(child: _buildCardShimmer(120)),
+              Expanded(child: _buildCardShimmer(context, 120)),
               const SizedBox(width: 16),
-              Expanded(child: _buildCardShimmer(120)),
+              Expanded(child: _buildCardShimmer(context, 120)),
             ],
           ),
         ),
@@ -53,7 +55,7 @@ class DashboardShimmer extends StatelessWidget {
         // Spending trend shimmer
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: _buildCardShimmer(220),
+          child: _buildCardShimmer(context, 220),
         ),
         const SizedBox(height: 16),
 
@@ -62,9 +64,9 @@ class DashboardShimmer extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
             children: [
-              Expanded(child: _buildCardShimmer(100)),
+              Expanded(child: _buildCardShimmer(context, 100)),
               const SizedBox(width: 16),
-              Expanded(child: _buildCardShimmer(100)),
+              Expanded(child: _buildCardShimmer(context, 100)),
             ],
           ),
         ),
@@ -76,17 +78,17 @@ class DashboardShimmer extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildShimmerBox(180, 20),
+              _buildShimmerBox(context, 180, 20),
               const SizedBox(height: 16),
               SizedBox(
                 height: 100,
                 child: Row(
                   children: [
-                    _buildCardShimmer(100, width: 140),
+                    _buildCardShimmer(context, 100, width: 140),
                     const SizedBox(width: 12),
-                    _buildCardShimmer(100, width: 140),
+                    _buildCardShimmer(context, 100, width: 140),
                     const SizedBox(width: 12),
-                    _buildCardShimmer(100, width: 140),
+                    _buildCardShimmer(context, 100, width: 140),
                   ],
                 ),
               ),
@@ -100,9 +102,9 @@ class DashboardShimmer extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             children: [
-              _buildCardShimmer(160),
+              _buildCardShimmer(context, 160),
               const SizedBox(height: 16),
-              _buildCardShimmer(140),
+              _buildCardShimmer(context, 140),
             ],
           ),
         ),
@@ -111,16 +113,22 @@ class DashboardShimmer extends StatelessWidget {
     );
   }
 
-  Widget _buildShimmerBox(double width, double height,
-      {bool isCircle = false}) {
+  Widget _buildShimmerBox(
+    BuildContext context,
+    double width,
+    double height, {
+    bool isCircle = false,
+  }) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Shimmer.fromColors(
-      baseColor: Colors.white.withOpacity(0.05),
-      highlightColor: Colors.white.withOpacity(0.1),
+      baseColor: colorScheme.onSurface.withOpacity(0.05),
+      highlightColor: colorScheme.onSurface.withOpacity(0.1),
       child: Container(
         width: width,
         height: height,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: colorScheme.onSurface,
           borderRadius: isCircle
               ? BorderRadius.circular(height / 2)
               : BorderRadius.circular(8),
@@ -129,15 +137,21 @@ class DashboardShimmer extends StatelessWidget {
     );
   }
 
-  Widget _buildCardShimmer(double height, {double? width}) {
+  Widget _buildCardShimmer(
+    BuildContext context,
+    double height, {
+    double? width,
+  }) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Shimmer.fromColors(
-      baseColor: Colors.white.withOpacity(0.05),
-      highlightColor: Colors.white.withOpacity(0.1),
+      baseColor: colorScheme.onSurface.withOpacity(0.05),
+      highlightColor: colorScheme.onSurface.withOpacity(0.1),
       child: Container(
         width: width,
         height: height,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: colorScheme.onSurface,
           borderRadius: BorderRadius.circular(16),
         ),
       ),

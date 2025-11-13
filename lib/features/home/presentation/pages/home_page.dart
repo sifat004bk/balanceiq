@@ -1,6 +1,5 @@
-import 'package:balance_iq/core/di/injection_container.dart' as di;
-import 'package:balance_iq/features/auth/data/datasources/auth_local_datasource.dart';
-import 'package:balance_iq/features/home/presentation/cubit/dashboard_cubit.dart';
+import 'package:balance_iq/core/theme/app_theme.dart';
+import 'package:balance_iq/features/chat/presentation/pages/chat_page.dart';
 import 'package:balance_iq/features/home/presentation/cubit/dashboard_state.dart';
 import 'package:balance_iq/features/home/presentation/pages/error_page.dart';
 import 'package:balance_iq/features/home/presentation/pages/welcome_page.dart';
@@ -12,6 +11,7 @@ import 'package:balance_iq/features/home/presentation/widgets/dashboard_shimmer.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../cubit/dashboard_cubit.dart';
 import '../widgets/financial_ratio_widget.dart';
 import '../widgets/spending_trend_chart.dart';
 
@@ -30,24 +30,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _loadUserName();
     _loadDashboard();
-  }
-
-  Future<void> _loadUserName() async {
-    try {
-      final authLocalDataSource = di.sl<AuthLocalDataSource>();
-      final user = await authLocalDataSource.getCachedUser();
-
-      if (user != null) {
-        final nameParts = user.name.split(' ');
-        setState(() {
-          _userName = nameParts.isNotEmpty ? nameParts[0] : 'User';
-        });
-      }
-    } catch (e) {
-      // Keep default name if user data not available
-    }
   }
 
   void _loadDashboard() {
@@ -60,8 +43,10 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: const Color(0xFF102213), // background-dark
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: BlocBuilder<DashboardCubit, DashboardState>(
           builder: (context, state) {
@@ -90,8 +75,9 @@ class _HomePageState extends State<HomePage> {
 
               return RefreshIndicator(
                 onRefresh: _refreshDashboard,
-                color: const Color(0xFF2BEE4B), // primary color
-                backgroundColor: Colors.black.withOpacity(0.2),
+                color: AppTheme.primaryColor,
+                backgroundColor:
+                    Theme.of(context).colorScheme.surface.withOpacity(0.2),
                 child: ListView(
                   padding: const EdgeInsets.all(0),
                   children: [
@@ -103,7 +89,7 @@ class _HomePageState extends State<HomePage> {
                       totalIncome: summary.totalIncome,
                       totalExpense: summary.totalExpense,
                       period: summary.period,
-                      userName: _userName,
+                      monthName: summary.period,
                     ),
                     const SizedBox(height: 24),
 
@@ -169,26 +155,34 @@ class _HomePageState extends State<HomePage> {
         width: 64,
         height: 64,
         decoration: BoxDecoration(
-          color: const Color(0xFF2BEE4B),
+          color: AppTheme.primaryColor,
           borderRadius: BorderRadius.circular(32),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF2BEE4B).withOpacity(0.3),
+              color: AppTheme.primaryColor.withOpacity(0.3),
               blurRadius: 20,
               offset: const Offset(0, 8),
             ),
           ],
         ),
         child: Material(
-          color: Colors.transparent,
+          color: Theme.of(context).colorScheme.surface.withOpacity(0),
           child: InkWell(
             borderRadius: BorderRadius.circular(32),
             onTap: () {
-              // Navigate to add transaction
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ChatPage(
+                    botId: "nai kichu",
+                    botName: 'BalanceIq',
+                  ),
+                ),
+              );
             },
-            child: const Icon(
+            child: Icon(
               Icons.add,
-              color: Color(0xFF102213),
+              color: isDark ? AppTheme.textDark : AppTheme.backgroundDark,
               size: 36,
             ),
           ),

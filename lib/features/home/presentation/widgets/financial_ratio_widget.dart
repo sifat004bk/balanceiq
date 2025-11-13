@@ -1,3 +1,4 @@
+import 'package:balance_iq/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class FinancialRatiosWidget extends StatelessWidget {
@@ -12,38 +13,43 @@ class FinancialRatiosWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Row(
       children: [
         Expanded(
           child: _buildRatioCard(
+            context,
             title: 'Expense Ratio',
             value: expenseRatio,
-            backgroundColor:
-                Colors.red.withOpacity(0.15).withRed(150), // red-900/40
-            textColor: Colors.white,
+            backgroundColor: colorScheme.error.withOpacity(0.15),
+            textColor: colorScheme.onSurface,
           ),
         ),
         const SizedBox(width: 16),
         Expanded(
           child: _buildRatioCard(
+            context,
             title: 'Savings Rate',
             value: savingsRate,
-            backgroundColor: const Color(0xFF2BEE4B)
-                .withOpacity(0.15)
-                .withGreen(150), // green-900/60
-            textColor: Colors.white,
+            backgroundColor: AppTheme.primaryColor.withOpacity(0.15),
+            textColor: colorScheme.onSurface,
           ),
         ),
       ],
     );
   }
 
-  Widget _buildRatioCard({
+  Widget _buildRatioCard(
+    BuildContext context, {
     required String title,
     required double value,
     required Color backgroundColor,
     required Color textColor,
   }) {
+    final textTheme = Theme.of(context).textTheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -55,16 +61,15 @@ class FinancialRatiosWidget extends StatelessWidget {
         children: [
           Text(
             title,
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.7), // gray-500/300
-              fontSize: 14,
+            style: textTheme.bodyMedium?.copyWith(
+              color:
+                  isDark ? AppTheme.textSubtleDark : AppTheme.textSubtleLight,
             ),
           ),
           const SizedBox(height: 8),
           Text(
             '${value.toStringAsFixed(1)}%',
-            style: TextStyle(
-              color: textColor,
+            style: textTheme.headlineSmall?.copyWith(
               fontSize: 24,
               fontWeight: FontWeight.bold,
             ),

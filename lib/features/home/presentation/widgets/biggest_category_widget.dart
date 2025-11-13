@@ -1,3 +1,4 @@
+import 'package:balance_iq/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class BiggestCategoryWidget extends StatelessWidget {
@@ -12,10 +13,14 @@ class BiggestCategoryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.2),
+        color: colorScheme.surface.withOpacity(isDark ? 0.2 : 0.5),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -25,12 +30,12 @@ class BiggestCategoryWidget extends StatelessWidget {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: const Color(0xFF2BEE4B).withOpacity(0.2),
+              color: AppTheme.primaryColor.withOpacity(0.2),
               shape: BoxShape.circle,
             ),
-            child: const Icon(
+            child: Icon(
               Icons.category,
-              color: Color(0xFF2BEE4B),
+              color: AppTheme.primaryColor,
               size: 24,
             ),
           ),
@@ -43,17 +48,16 @@ class BiggestCategoryWidget extends StatelessWidget {
               children: [
                 Text(
                   'Biggest Category',
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.6),
-                    fontSize: 14,
+                  style: textTheme.bodyMedium?.copyWith(
+                    color: isDark
+                        ? AppTheme.textSubtleDark
+                        : AppTheme.textSubtleLight,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   _formatCategoryName(categoryName),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
+                  style: textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
                   maxLines: 1,
@@ -66,8 +70,7 @@ class BiggestCategoryWidget extends StatelessWidget {
           // Amount
           Text(
             '\$${amount.toStringAsFixed(0)}',
-            style: const TextStyle(
-              color: Colors.white,
+            style: textTheme.titleMedium?.copyWith(
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),

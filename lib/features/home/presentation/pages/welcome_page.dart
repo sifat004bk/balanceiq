@@ -1,3 +1,4 @@
+import 'package:balance_iq/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class WelcomePage extends StatelessWidget {
@@ -12,14 +13,18 @@ class WelcomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            const Color(0xFF102213),
-            const Color(0xFF102213).withOpacity(0.8),
+            Theme.of(context).scaffoldBackgroundColor,
+            Theme.of(context).scaffoldBackgroundColor.withOpacity(0.8),
           ],
         ),
       ),
@@ -35,30 +40,28 @@ class WelcomePage extends StatelessWidget {
                   width: 48,
                   height: 48,
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.1),
+                    color: colorScheme.surface.withOpacity(0.1),
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: const Color(0xFF2BEE4B),
+                      color: AppTheme.primaryColor,
                       width: 2,
                     ),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.person,
-                    color: Colors.white,
+                    color: colorScheme.onSurface,
                     size: 24,
                   ),
                 ),
                 Text(
                   'Hello $userName',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
+                  style: textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 IconButton(
                   icon: const Icon(Icons.notifications_outlined),
-                  color: Colors.white,
+                  color: colorScheme.onSurface,
                   onPressed: () {},
                 ),
               ],
@@ -78,7 +81,7 @@ class WelcomePage extends StatelessWidget {
                       width: 200,
                       height: 200,
                       decoration: BoxDecoration(
-                        color: const Color(0xFF2BEE4B).withOpacity(0.1),
+                        color: AppTheme.primaryColor.withOpacity(0.1),
                         shape: BoxShape.circle,
                       ),
                       child: Center(
@@ -86,13 +89,13 @@ class WelcomePage extends StatelessWidget {
                           width: 140,
                           height: 140,
                           decoration: BoxDecoration(
-                            color: const Color(0xFF2BEE4B).withOpacity(0.2),
+                            color: AppTheme.primaryColor.withOpacity(0.2),
                             shape: BoxShape.circle,
                           ),
                           child: const Icon(
                             Icons.account_balance_wallet_outlined,
                             size: 80,
-                            color: Color(0xFF2BEE4B),
+                            color: AppTheme.primaryColor,
                           ),
                         ),
                       ),
@@ -100,10 +103,9 @@ class WelcomePage extends StatelessWidget {
                     const SizedBox(height: 48),
 
                     // Welcome text
-                    const Text(
+                    Text(
                       'Welcome to BalanceIQ',
-                      style: TextStyle(
-                        color: Colors.white,
+                      style: textTheme.displayMedium?.copyWith(
                         fontSize: 32,
                         fontWeight: FontWeight.bold,
                       ),
@@ -112,9 +114,10 @@ class WelcomePage extends StatelessWidget {
                     const SizedBox(height: 16),
                     Text(
                       'Start tracking your finances and\ntake control of your money',
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.7),
-                        fontSize: 16,
+                      style: textTheme.bodyLarge?.copyWith(
+                        color: isDark
+                            ? AppTheme.textSubtleDark
+                            : AppTheme.textSubtleLight,
                         height: 1.5,
                       ),
                       textAlign: TextAlign.center,
@@ -123,18 +126,21 @@ class WelcomePage extends StatelessWidget {
 
                     // Features
                     _buildFeatureItem(
+                      context,
                       icon: Icons.attach_money,
                       title: 'Track Expenses',
                       description: 'Monitor your spending in real-time',
                     ),
                     const SizedBox(height: 24),
                     _buildFeatureItem(
+                      context,
                       icon: Icons.trending_up,
                       title: 'Smart Insights',
                       description: 'Get AI-powered financial advice',
                     ),
                     const SizedBox(height: 24),
                     _buildFeatureItem(
+                      context,
                       icon: Icons.savings_outlined,
                       title: 'Reach Goals',
                       description: 'Save smarter with personalized plans',
@@ -148,19 +154,24 @@ class WelcomePage extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: onGetStarted,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF2BEE4B),
-                          foregroundColor: const Color(0xFF102213),
+                          backgroundColor: AppTheme.primaryColor,
+                          foregroundColor: isDark
+                              ? AppTheme.textDark
+                              : AppTheme.backgroundDark,
                           elevation: 8,
-                          shadowColor: const Color(0xFF2BEE4B).withOpacity(0.3),
+                          shadowColor: AppTheme.primaryColor.withOpacity(0.3),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                           ),
                         ),
-                        child: const Text(
+                        child: Text(
                           'Get Started',
-                          style: TextStyle(
+                          style: textTheme.titleMedium?.copyWith(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
+                            color: isDark
+                                ? AppTheme.textDark
+                                : AppTheme.backgroundDark,
                           ),
                         ),
                       ),
@@ -175,23 +186,27 @@ class WelcomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildFeatureItem({
+  Widget _buildFeatureItem(
+    BuildContext context, {
     required IconData icon,
     required String title,
     required String description,
   }) {
+    final textTheme = Theme.of(context).textTheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Row(
       children: [
         Container(
           width: 56,
           height: 56,
           decoration: BoxDecoration(
-            color: const Color(0xFF2BEE4B).withOpacity(0.1),
+            color: AppTheme.primaryColor.withOpacity(0.1),
             borderRadius: BorderRadius.circular(16),
           ),
           child: Icon(
             icon,
-            color: const Color(0xFF2BEE4B),
+            color: AppTheme.primaryColor,
             size: 28,
           ),
         ),
@@ -202,18 +217,17 @@ class WelcomePage extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
+                style: textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
               ),
               const SizedBox(height: 4),
               Text(
                 description,
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.6),
-                  fontSize: 14,
+                style: textTheme.bodyMedium?.copyWith(
+                  color: isDark
+                      ? AppTheme.textSubtleDark
+                      : AppTheme.textSubtleLight,
                 ),
               ),
             ],

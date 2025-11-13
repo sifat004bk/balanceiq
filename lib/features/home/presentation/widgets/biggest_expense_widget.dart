@@ -1,3 +1,4 @@
+import 'package:balance_iq/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class BiggestExpenseWidget extends StatelessWidget {
@@ -16,10 +17,14 @@ class BiggestExpenseWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.2),
+        color: colorScheme.surface.withOpacity(isDark ? 0.2 : 0.5),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -29,12 +34,12 @@ class BiggestExpenseWidget extends StatelessWidget {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: Colors.red.withOpacity(0.2),
+              color: colorScheme.error.withOpacity(0.2),
               shape: BoxShape.circle,
             ),
             child: Icon(
               Icons.arrow_upward,
-              color: Colors.red,
+              color: colorScheme.error,
               size: 24,
             ),
           ),
@@ -47,17 +52,16 @@ class BiggestExpenseWidget extends StatelessWidget {
               children: [
                 Text(
                   'Biggest Expense',
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.6),
-                    fontSize: 14,
+                  style: textTheme.bodyMedium?.copyWith(
+                    color: isDark
+                        ? AppTheme.textSubtleDark
+                        : AppTheme.textSubtleLight,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   description,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
+                  style: textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
                   maxLines: 1,
@@ -70,10 +74,10 @@ class BiggestExpenseWidget extends StatelessWidget {
           // Amount
           Text(
             '-\$${amount.toStringAsFixed(0)}',
-            style: TextStyle(
-              color: Colors.red,
+            style: textTheme.titleMedium?.copyWith(
               fontSize: 18,
               fontWeight: FontWeight.bold,
+              color: colorScheme.error,
             ),
           ),
         ],

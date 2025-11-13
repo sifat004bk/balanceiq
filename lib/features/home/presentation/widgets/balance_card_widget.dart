@@ -1,3 +1,4 @@
+import 'package:balance_iq/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class BalanceCard extends StatelessWidget {
@@ -5,7 +6,7 @@ class BalanceCard extends StatelessWidget {
   final double totalIncome;
   final double totalExpense;
   final String period;
-  final String userName;
+  final String monthName;
 
   const BalanceCard({
     super.key,
@@ -13,11 +14,15 @@ class BalanceCard extends StatelessWidget {
     required this.totalIncome,
     required this.totalExpense,
     required this.period,
-    this.userName = 'User',
+    required this.monthName,
   });
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       children: [
         // Header with profile and notification
@@ -35,31 +40,30 @@ class BalanceCard extends StatelessWidget {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                      const Color(0xFF2BEE4B).withOpacity(0.3),
-                      const Color(0xFF2BEE4B).withOpacity(0.1),
+                      AppTheme.primaryColor.withOpacity(0.3),
+                      AppTheme.primaryColor.withOpacity(0.1),
                     ],
                   ),
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: const Color(0xFF2BEE4B),
+                    color: AppTheme.primaryColor,
                     width: 2,
                   ),
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.person,
-                  color: Colors.white,
+                  color: colorScheme.onSurface,
                   size: 24,
                 ),
               ),
 
               // Hello Name
               Text(
-                'Hello $userName',
-                style: const TextStyle(
-                  color: Colors.white,
+                monthName,
+                style: textTheme.titleMedium?.copyWith(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  letterSpacing: 0.27, // tracking-[0.015em]
+                  letterSpacing: 0.27,
                 ),
               ),
 
@@ -68,17 +72,17 @@ class BalanceCard extends StatelessWidget {
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: Colors.transparent,
+                  color: colorScheme.surface.withOpacity(0),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Material(
-                  color: Colors.transparent,
+                  color: colorScheme.surface.withOpacity(0),
                   child: InkWell(
                     borderRadius: BorderRadius.circular(12),
                     onTap: () {},
-                    child: const Icon(
+                    child: Icon(
                       Icons.notifications_outlined,
-                      color: Colors.white,
+                      color: colorScheme.onSurface,
                       size: 24,
                     ),
                   ),
@@ -92,21 +96,19 @@ class BalanceCard extends StatelessWidget {
         // Net Balance Section
         Text(
           'Net Balance',
-          style: TextStyle(
-            color: Colors.white.withOpacity(0.6), // gray-500
-            fontSize: 14,
+          style: textTheme.bodyMedium?.copyWith(
+            color: isDark ? AppTheme.textSubtleDark : AppTheme.textSubtleLight,
             fontWeight: FontWeight.w400,
           ),
         ),
         const SizedBox(height: 4),
         Text(
           '\$${_formatCurrency(netBalance)}',
-          style: const TextStyle(
-            color: Colors.white,
+          style: textTheme.displayLarge?.copyWith(
             fontSize: 40,
             fontWeight: FontWeight.bold,
             height: 1.2,
-            letterSpacing: -0.8, // tracking-tight
+            letterSpacing: -0.8,
           ),
         ),
         const SizedBox(height: 32),
@@ -118,27 +120,21 @@ class BalanceCard extends StatelessWidget {
             children: [
               Expanded(
                 child: _buildIncomeExpenseCard(
+                  context,
                   icon: Icons.south,
                   label: 'Income',
                   amount: totalIncome,
-                  backgroundColor: const Color(0xFF2BEE4B).withOpacity(0.2),
-                  darkBackgroundColor:
-                      const Color(0xFF2BEE4B).withOpacity(0.15).withGreen(150),
-                  iconColor: const Color(0xFF2BEE4B),
-                  textColor: Colors.white,
+                  iconColor: AppTheme.primaryColor,
                 ),
               ),
               const SizedBox(width: 16),
               Expanded(
                 child: _buildIncomeExpenseCard(
+                  context,
                   icon: Icons.north,
                   label: 'Expense',
                   amount: totalExpense,
-                  backgroundColor: Colors.red.withOpacity(0.2),
-                  darkBackgroundColor:
-                      Colors.red.withOpacity(0.15).withRed(150),
-                  iconColor: Colors.red,
-                  textColor: Colors.white,
+                  iconColor: colorScheme.error,
                 ),
               ),
             ],
@@ -148,19 +144,21 @@ class BalanceCard extends StatelessWidget {
     );
   }
 
-  Widget _buildIncomeExpenseCard({
+  Widget _buildIncomeExpenseCard(
+    BuildContext context, {
     required IconData icon,
     required String label,
     required double amount,
-    required Color backgroundColor,
-    required Color darkBackgroundColor,
     required Color iconColor,
-    required Color textColor,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: darkBackgroundColor,
+        color: iconColor.withOpacity(isDark ? 0.15 : 0.2),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -184,9 +182,7 @@ class BalanceCard extends StatelessWidget {
               const SizedBox(width: 8),
               Text(
                 label,
-                style: TextStyle(
-                  color: textColor,
-                  fontSize: 16,
+                style: textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -195,8 +191,7 @@ class BalanceCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             '\$${_formatCurrency(amount)}',
-            style: TextStyle(
-              color: textColor,
+            style: textTheme.titleLarge?.copyWith(
               fontSize: 20,
               fontWeight: FontWeight.bold,
               letterSpacing: -0.2,

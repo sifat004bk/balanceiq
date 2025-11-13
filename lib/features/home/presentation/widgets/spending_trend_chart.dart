@@ -1,3 +1,4 @@
+import 'package:balance_iq/core/theme/app_theme.dart';
 import 'package:balance_iq/features/home/domain/entities/dashbaord_summary.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,10 @@ class SpendingTrendChart extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     final maxAmount = spendingTrend.isEmpty
         ? 100.0
         : spendingTrend.map((e) => e.amount).reduce((a, b) => a > b ? a : b);
@@ -23,17 +28,15 @@ class SpendingTrendChart extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.2), // bg-white dark:bg-black/20
+        color: colorScheme.surface.withOpacity(isDark ? 0.2 : 0.5),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Spending Trend',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
+            style: textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -69,8 +72,10 @@ class SpendingTrendChart extends StatelessWidget {
                             padding: const EdgeInsets.only(top: 8),
                             child: Text(
                               value.toInt().toString(),
-                              style: TextStyle(
-                                color: Colors.white.withOpacity(0.6),
+                              style: textTheme.bodySmall?.copyWith(
+                                color: isDark
+                                    ? AppTheme.textSubtleDark
+                                    : AppTheme.textSubtleLight,
                                 fontSize: 13,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -95,7 +100,7 @@ class SpendingTrendChart extends StatelessWidget {
                         .toList(),
                     isCurved: true,
                     curveSmoothness: 0.35,
-                    color: const Color(0xFF2BEE4B),
+                    color: AppTheme.primaryColor,
                     barWidth: 3,
                     isStrokeCapRound: true,
                     dotData: FlDotData(show: false),
@@ -105,8 +110,8 @@ class SpendingTrendChart extends StatelessWidget {
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                         colors: [
-                          const Color(0xFF2BEE4B).withOpacity(0.3),
-                          const Color(0xFF2BEE4B).withOpacity(0.0),
+                          AppTheme.primaryColor.withOpacity(0.3),
+                          AppTheme.primaryColor.withOpacity(0.0),
                         ],
                       ),
                     ),
@@ -115,7 +120,7 @@ class SpendingTrendChart extends StatelessWidget {
                 lineTouchData: LineTouchData(
                   touchTooltipData: LineTouchTooltipData(
                     getTooltipColor: (touchedSpot) =>
-                        const Color(0xFF2BEE4B).withOpacity(0.9),
+                        AppTheme.primaryColor.withOpacity(0.9),
                     tooltipRoundedRadius: 8,
                     tooltipPadding: const EdgeInsets.symmetric(
                       horizontal: 12,
@@ -125,8 +130,10 @@ class SpendingTrendChart extends StatelessWidget {
                       return touchedSpots.map((spot) {
                         return LineTooltipItem(
                           'Day ${spot.x.toInt()}\n\$${spot.y.toStringAsFixed(2)}',
-                          const TextStyle(
-                            color: Color(0xFF102213),
+                          TextStyle(
+                            color: isDark
+                                ? AppTheme.textDark
+                                : AppTheme.backgroundDark,
                             fontWeight: FontWeight.bold,
                             fontSize: 12,
                           ),

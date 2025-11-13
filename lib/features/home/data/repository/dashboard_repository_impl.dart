@@ -42,7 +42,7 @@ class DashboardRepositoryImpl implements DashboardRepository {
       // Fetch dashboard data
       final DashboardSummary dashboard =
           await remoteDataSource.getDashboardSummary(
-        userId: "6130001838",
+        userId: "8130001838", //TODO: Change this
         botId: botId,
         firstName: firstName,
         lastName: lastName,

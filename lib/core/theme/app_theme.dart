@@ -45,7 +45,7 @@ class AppTheme {
         onPrimary: investmentGuruColor,
       ),
       appBarTheme: const AppBarTheme(
-        backgroundColor: backgroundLight,
+        backgroundColor: backgroundDark,
         foregroundColor: textDark,
         elevation: 0,
         centerTitle: true,

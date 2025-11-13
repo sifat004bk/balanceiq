@@ -1,8 +1,9 @@
+import 'package:balance_iq/core/di/injection_container.dart';
 import 'package:balance_iq/core/theme/app_theme.dart';
+import 'package:balance_iq/features/auth/data/datasources/auth_local_datasource.dart';
 import 'package:balance_iq/features/chat/presentation/pages/chat_page.dart';
 import 'package:balance_iq/features/home/presentation/cubit/dashboard_state.dart';
 import 'package:balance_iq/features/home/presentation/pages/error_page.dart';
-import 'package:balance_iq/features/home/presentation/pages/welcome_page.dart';
 import 'package:balance_iq/features/home/presentation/widgets/accounts_breakdown_widget.dart';
 import 'package:balance_iq/features/home/presentation/widgets/balance_card_widget.dart';
 import 'package:balance_iq/features/home/presentation/widgets/biggest_category_widget.dart';
@@ -13,7 +14,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../cubit/dashboard_cubit.dart';
 import '../widgets/financial_ratio_widget.dart';
+import '../widgets/home_appbar.dart';
 import '../widgets/spending_trend_chart.dart';
+import 'welcome_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -24,11 +27,25 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String _userName = 'User';
+  String? _profileUrl;
 
   @override
   void initState() {
     super.initState();
+    _loadUser();
     _loadDashboard();
+  }
+
+  Future<void> _loadUser() async {
+    final authLocalDataSource = sl<AuthLocalDataSource>();
+    final cachedUser = await authLocalDataSource.getCachedUser();
+
+    if (cachedUser != null) {
+      setState(() {
+        _userName = cachedUser.name;
+        _profileUrl = cachedUser.photoUrl;
+      });
+    }
   }
 
   void _loadDashboard() {
@@ -45,164 +62,119 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: SafeArea(
-        child: BlocBuilder<DashboardCubit, DashboardState>(
-          builder: (context, state) {
-            if (state is DashboardLoading) {
-              return const DashboardShimmer();
-            }
+      body: BlocBuilder<DashboardCubit, DashboardState>(
+        builder: (context, state) {
+          if (state is DashboardLoading) {
+            return const DashboardShimmer();
+          }
 
-            if (state is DashboardError) {
-              if (state.message.contains('No dashboard data')) {
-                return WelcomePage(
-                  userName: _userName,
-                  onGetStarted: _loadDashboard,
-                );
-              }
-              return Error404Page(
-                errorMessage: state.message,
-                onRetry: _loadDashboard,
+          if (state is DashboardError) {
+            if (state.message.contains('No dashboard data')) {
+              return WelcomePage(
+                userName: _userName,
+                onGetStarted: _loadDashboard,
               );
             }
+            return Error404Page(
+              errorMessage: state.message,
+              onRetry: _loadDashboard,
+            );
+          }
 
-            if (state is DashboardLoaded) {
-              final summary = state.summary;
+          if (state is DashboardLoaded) {
+            final summary = state.summary;
 
-              return RefreshIndicator(
-                onRefresh: _refreshDashboard,
-                color: AppTheme.primaryColor,
-                backgroundColor:
-                    Theme.of(context).colorScheme.surface.withOpacity(0.2),
-                child: CustomScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  slivers: [
-                    // --- Animated AppBar ---
-                    SliverAppBar(
-                      floating: true,
-                      snap: true,
-                      elevation: 0,
-                      backgroundColor:
-                          Theme.of(context).scaffoldBackgroundColor,
-                      centerTitle: true,
-                      title: Text(
-                        summary.period,
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 0.27,
-                                ),
-                      ),
-                      // TODO: Add user profile picture and onpressed to settings
-                      leading: Padding(
-                        padding: const EdgeInsets.only(
-                            left: 12), // little breathing room
-                        child: InkWell(
-                          onTap: () {},
-                          borderRadius: BorderRadius.circular(24),
-                          child: Container(
-                            width: 40,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: AppTheme.primaryColor,
-                                width: 2,
-                              ),
-                            ),
-                            child: const Icon(
-                              Icons.person,
-                              size: 22,
-                            ),
-                          ),
+            return RefreshIndicator(
+              onRefresh: _refreshDashboard,
+              color: AppTheme.primaryColor,
+              backgroundColor:
+                  Theme.of(context).colorScheme.surface.withOpacity(0.2),
+              child: CustomScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                slivers: [
+                  // --- Animated AppBar ---
+                  // TODO: Add onTaps
+                  HomeAppbar(
+                    summary: summary,
+                    onTapProfileIcon: () {},
+                    onTapNotificationIcon: () {},
+                    profileUrl: _profileUrl ?? '',
+                  ),
+
+                  // --- Dashboard Body ---
+                  SliverToBoxAdapter(
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 8),
+
+                        // Balance Card
+                        BalanceCard(
+                          netBalance: summary.netBalance,
+                          totalIncome: summary.totalIncome,
+                          totalExpense: summary.totalExpense,
+                          period: summary.period,
                         ),
-                      ),
-                      actions: [
-                        IconButton(
-                          icon: const Icon(Icons.notifications_outlined),
-                          onPressed: () {},
-                        ),
-                        const SizedBox(width: 8),
-                      ],
-                    ),
+                        const SizedBox(height: 24),
 
-                    // --- Dashboard Body ---
-                    SliverToBoxAdapter(
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 8),
-
-                          // Balance Card
-                          BalanceCard(
-                            netBalance: summary.netBalance,
-                            totalIncome: summary.totalIncome,
-                            totalExpense: summary.totalExpense,
-                            period: summary.period,
-                          ),
-                          const SizedBox(height: 24),
-
-                          // Spending Trend Chart
-                          if (summary.spendingTrend.isNotEmpty) ...[
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16),
-                              child: SpendingTrendChart(
-                                spendingTrend: summary.spendingTrend,
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                          ],
-
-                          // Financial Ratios
+                        // Spending Trend Chart
+                        if (summary.spendingTrend.isNotEmpty) ...[
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: FinancialRatiosWidget(
-                              expenseRatio: summary.expenseRatio,
-                              savingsRate: summary.savingsRate,
+                            child: SpendingTrendChart(
+                              spendingTrend: summary.spendingTrend,
                             ),
                           ),
                           const SizedBox(height: 16),
-
-                          // Accounts Breakdown
-                          if (summary.accountsBreakdown.isNotEmpty) ...[
-                            AccountsBreakdownWidget(
-                              accountsBreakdown: summary.accountsBreakdown,
-                            ),
-                            const SizedBox(height: 16),
-                          ],
-
-                          // Biggest Expense & Category
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: Column(
-                              children: [
-                                BiggestExpenseWidget(
-                                  amount: summary.biggestExpenseAmount,
-                                  description:
-                                      summary.biggestExpenseDescription,
-                                  category: summary.expenseCategory,
-                                  account: summary.expenseAccount,
-                                ),
-                                const SizedBox(height: 16),
-                                BiggestCategoryWidget(
-                                  categoryName: summary.biggestCategoryName,
-                                  amount: summary.biggestCategoryAmount,
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 120),
                         ],
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }
 
-            return const SizedBox.shrink();
-          },
-        ),
+                        // Financial Ratios
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: FinancialRatiosWidget(
+                            expenseRatio: summary.expenseRatio,
+                            savingsRate: summary.savingsRate,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+
+                        // Accounts Breakdown
+                        if (summary.accountsBreakdown.isNotEmpty) ...[
+                          AccountsBreakdownWidget(
+                            accountsBreakdown: summary.accountsBreakdown,
+                          ),
+                          const SizedBox(height: 16),
+                        ],
+
+                        // Biggest Expense & Category
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Column(
+                            children: [
+                              BiggestExpenseWidget(
+                                amount: summary.biggestExpenseAmount,
+                                description: summary.biggestExpenseDescription,
+                                category: summary.expenseCategory,
+                                account: summary.expenseAccount,
+                              ),
+                              const SizedBox(height: 16),
+                              BiggestCategoryWidget(
+                                categoryName: summary.biggestCategoryName,
+                                amount: summary.biggestCategoryAmount,
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 120),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          return const SizedBox.shrink();
+        },
       ),
       floatingActionButton: Container(
         width: 64,

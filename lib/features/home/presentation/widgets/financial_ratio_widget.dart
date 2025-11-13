@@ -32,7 +32,7 @@ class FinancialRatiosWidget extends StatelessWidget {
             context,
             title: 'Savings Rate',
             value: savingsRate,
-            backgroundColor: AppTheme.primaryColor.withOpacity(0.15),
+            backgroundColor: AppTheme.primaryColor.withOpacity(0.4),
             textColor: colorScheme.onSurface,
           ),
         ),
@@ -62,6 +62,7 @@ class FinancialRatiosWidget extends StatelessWidget {
           Text(
             title,
             style: textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.w800,
               color:
                   isDark ? AppTheme.textSubtleDark : AppTheme.textSubtleLight,
             ),

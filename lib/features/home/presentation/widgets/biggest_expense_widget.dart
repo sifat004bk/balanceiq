@@ -24,7 +24,7 @@ class BiggestExpenseWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: colorScheme.surface.withOpacity(isDark ? 0.2 : 0.5),
+        color: colorScheme.surface.withOpacity(0.7),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(

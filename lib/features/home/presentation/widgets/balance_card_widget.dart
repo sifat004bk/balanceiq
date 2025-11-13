@@ -6,7 +6,6 @@ class BalanceCard extends StatelessWidget {
   final double totalIncome;
   final double totalExpense;
   final String period;
-  final String monthName;
 
   const BalanceCard({
     super.key,
@@ -14,7 +13,6 @@ class BalanceCard extends StatelessWidget {
     required this.totalIncome,
     required this.totalExpense,
     required this.period,
-    required this.monthName,
   });
 
   @override
@@ -25,74 +23,6 @@ class BalanceCard extends StatelessWidget {
 
     return Column(
       children: [
-        // Header with profile and notification
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Profile Picture
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      AppTheme.primaryColor.withOpacity(0.3),
-                      AppTheme.primaryColor.withOpacity(0.1),
-                    ],
-                  ),
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: AppTheme.primaryColor,
-                    width: 2,
-                  ),
-                ),
-                child: Icon(
-                  Icons.person,
-                  color: colorScheme.onSurface,
-                  size: 24,
-                ),
-              ),
-
-              // Hello Name
-              Text(
-                monthName,
-                style: textTheme.titleMedium?.copyWith(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 0.27,
-                ),
-              ),
-
-              // Notification Icon
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: colorScheme.surface.withOpacity(0),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Material(
-                  color: colorScheme.surface.withOpacity(0),
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(12),
-                    onTap: () {},
-                    child: Icon(
-                      Icons.notifications_outlined,
-                      color: colorScheme.onSurface,
-                      size: 24,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 32),
-
         // Net Balance Section
         Text(
           'Net Balance',
@@ -103,7 +33,7 @@ class BalanceCard extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          '\$${_formatCurrency(netBalance)}',
+          'BDT ${_formatCurrency(netBalance)}',
           style: textTheme.displayLarge?.copyWith(
             fontSize: 40,
             fontWeight: FontWeight.bold,
@@ -124,7 +54,7 @@ class BalanceCard extends StatelessWidget {
                   icon: Icons.south,
                   label: 'Income',
                   amount: totalIncome,
-                  iconColor: AppTheme.primaryColor,
+                  iconColor: colorScheme.onPrimary,
                 ),
               ),
               const SizedBox(width: 16),
@@ -158,7 +88,7 @@ class BalanceCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: iconColor.withOpacity(isDark ? 0.15 : 0.2),
+        color: iconColor.withOpacity(isDark ? 0.4 : 0.2),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -190,7 +120,7 @@ class BalanceCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            '\$${_formatCurrency(amount)}',
+            'BDT ${_formatCurrency(amount)}',
             style: textTheme.titleLarge?.copyWith(
               fontSize: 20,
               fontWeight: FontWeight.bold,

@@ -48,9 +48,9 @@ class AccountsBreakdownWidget extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Total: BDT $total)',
+                    'Total: BDT $total',
                     style: textTheme.bodySmall?.copyWith(
-                      color: AppTheme.primaryColor,
+                      color: Theme.of(context).primaryColor,
                       fontWeight: FontWeight.w600,
                     ),
                   ),

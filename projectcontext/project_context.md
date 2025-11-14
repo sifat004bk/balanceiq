@@ -361,11 +361,40 @@ balanceIQ/
 │   │   │           ├── message_bubble.dart
 │   │   │           └── chat_input.dart
 │   │   │
-│   │   └── home/                 # Home screen
+│   │   └── home/                 # Dashboard/Home feature
+│   │       ├── data/
+│   │       │   ├── datasources/
+│   │       │   │   └── remote_datasource/
+│   │       │   │       └── dashboard_remote_datasource.dart
+│   │       │   ├── models/
+│   │       │   │   └── dashboard_summary_response.dart
+│   │       │   └── repositories/
+│   │       │       └── dashboard_repository_impl.dart
+│   │       ├── domain/
+│   │       │   ├── entities/
+│   │       │   │   └── dashbaord_summary.dart
+│   │       │   ├── repositories/
+│   │       │   │   └── dashboard_repository.dart
+│   │       │   └── usecases/
+│   │       │       └── get_user_dashbaord.dart
 │   │       └── presentation/
+│   │           ├── cubit/
+│   │           │   ├── dashboard_cubit.dart
+│   │           │   └── dashboard_state.dart
 │   │           ├── pages/
-│   │           │   └── home_page.dart
+│   │           │   ├── home_page.dart
+│   │           │   ├── welcome_page.dart
+│   │           │   └── error_page.dart
 │   │           └── widgets/
+│   │               ├── home_appbar.dart
+│   │               ├── balance_card_widget.dart
+│   │               ├── spending_trend_chart.dart
+│   │               ├── financial_ratio_widget.dart
+│   │               ├── accounts_breakdown_widget.dart
+│   │               ├── biggest_expense_widget.dart
+│   │               ├── biggest_category_widget.dart
+│   │               ├── dashboard_shimmer.dart
+│   │               ├── chat_input_button.dart
 │   │               └── profile_modal.dart
 │   │
 │   └── main.dart                 # Application entry point
@@ -525,7 +554,296 @@ reversedIndex = messages.length - 1 - index + (isSending ? 1 : 0)
 - Send button (enabled when content is not empty)
 - Permission handling for camera, microphone, storage
 
-### 9. Remote Data Sources
+### 9. Dashboard Components
+
+**Purpose**: The Dashboard feature provides real-time financial overview with comprehensive metrics and visualizations.
+
+#### Dashboard Architecture
+
+**Clean Architecture Layers**:
+
+```
+Presentation Layer:
+├── Cubit: DashboardCubit (state management)
+├── States: DashboardInitial, DashboardLoading, DashboardLoaded, DashboardError
+├── Pages: HomePage, WelcomePage, Error404Page
+└── Widgets: 9 specialized dashboard widgets
+
+Domain Layer:
+├── Entity: DashboardSummary (18+ financial metrics)
+├── Repository: DashboardRepository (abstract)
+└── Use Case: GetDashboardSummary
+
+Data Layer:
+├── Repository Impl: DashboardRepositoryImpl
+├── Remote DataSource: DashboardRemoteDataSource
+└── Model: DashboardSummaryResponse
+```
+
+#### Dashboard Entity (DashboardSummary)
+
+**18 Financial Metrics**:
+
+```dart
+class DashboardSummary {
+  // Core Financial Metrics
+  final double totalIncome;         // Total income for period
+  final double totalExpense;        // Total expenses for period
+  final double netBalance;          // Income - Expenses
+
+  // Financial Ratios
+  final double expenseRatio;        // Expenses/Income percentage
+  final double savingsRate;         // Savings/Income percentage
+
+  // Transaction Statistics
+  final int incomeTransactions;     // Number of income transactions
+  final int expenseTransactions;    // Number of expense transactions
+  final double avgIncome;           // Average income per transaction
+  final double avgExpense;          // Average expense per transaction
+
+  // Spending Analysis
+  final List<SpendingTrendPoint> spendingTrend;  // Daily spending data
+  final Map<String, double> categories;          // Category breakdown
+  final Map<String, double> accountsBreakdown;   // Account balances
+
+  // Top Expenses
+  final double biggestExpenseAmount;
+  final String biggestExpenseDescription;
+  final String expenseCategory;
+  final String expenseAccount;
+  final String biggestCategoryName;
+  final double biggestCategoryAmount;
+
+  // Period Info
+  final String period;              // e.g., "January 2025"
+  final int daysRemainingInMonth;
+}
+```
+
+#### DashboardCubit
+
+**File**: [lib/features/home/presentation/cubit/dashboard_cubit.dart](../lib/features/home/presentation/cubit/dashboard_cubit.dart:1)
+
+**Purpose**: Manages dashboard state and loads financial data.
+
+**Key Methods**:
+- `loadDashboard()`: Fetches dashboard data via use case, emits Loading → Loaded/Error
+- `refreshDashboard()`: Alias for loadDashboard() used by RefreshIndicator
+
+**State Machine**:
+```dart
+DashboardInitial → loadDashboard() → DashboardLoading
+                                   → DashboardLoaded(summary) or DashboardError(message)
+```
+
+#### Dashboard Repository Implementation
+
+**File**: [lib/features/home/data/repository/dashboard_repository_impl.dart](../lib/features/home/data/repository/dashboard_repository_impl.dart:1)
+
+**Critical Flow**:
+```dart
+1. Get cached user from AuthLocalDataSource
+2. Validate user ID exists
+3. Split user's full name into firstName/lastName
+4. Call DashboardRemoteDataSource with:
+   - userId (currently hardcoded: "8130001838")
+   - botId: "balance_iq"
+   - firstName, lastName, username
+5. Handle errors with specific failure types:
+   - AuthFailure: User not logged in
+   - ServerFailure: API errors, timeouts, format errors
+```
+
+**Error Handling**:
+- Format exceptions (JSON parsing errors)
+- No dashboard data available
+- Connection timeouts
+- No internet connection
+- Server errors
+- Catch-all for unexpected errors
+
+#### HomePage Implementation
+
+**File**: [lib/features/home/presentation/pages/home_page.dart](../lib/features/home/presentation/pages/home_page.dart:1)
+
+**Purpose**: Main dashboard screen with pull-to-refresh and state management.
+
+**Key Features**:
+1. **BlocBuilder with DashboardCubit**: Reactive UI based on dashboard state
+2. **RefreshIndicator**: Pull-to-refresh functionality
+3. **CustomScrollView**: Smooth scrolling with collapsible app bar
+4. **Conditional Rendering**:
+   - `DashboardInitial/Loading` → DashboardShimmer (loading skeleton)
+   - `DashboardLoaded` with data → Full dashboard widgets
+   - `DashboardLoaded` with no data → WelcomePage
+   - `DashboardError` → Error404Page
+
+**Widget Hierarchy**:
+```
+Scaffold
+└── BlocBuilder<DashboardCubit, DashboardState>
+    ├── (Loading) DashboardShimmer
+    ├── (Error) Error404Page
+    ├── (No Data) WelcomePage
+    └── (Loaded) RefreshIndicator
+        └── CustomScrollView
+            ├── HomeAppbar (SliverAppBar)
+            ├── SliverPadding
+            │   ├── BalanceCard
+            │   ├── SpendingTrendChart
+            │   ├── FinancialRatiosWidget
+            │   ├── AccountsBreakdownWidget
+            │   ├── BiggestExpenseWidget
+            │   └── BiggestCategoryWidget
+            └── ChatInputButton (bottomSheet)
+```
+
+**Initialization Flow**:
+```dart
+initState():
+  1. Load user profile
+  2. Load dashboard data via DashboardCubit
+```
+
+#### Dashboard Widgets
+
+**1. HomeAppbar** ([home_appbar.dart](../lib/features/home/presentation/widgets/home_appbar.dart:1))
+- **Type**: SliverAppBar (animated collapsible)
+- **Features**: Profile picture, period display, notification icon
+- **Behavior**: Floats and snaps when scrolling
+
+**2. BalanceCard** ([balance_card_widget.dart](../lib/features/home/presentation/widgets/balance_card_widget.dart:1))
+- **Displays**: Net balance, total income, total expense
+- **Styling**: Large prominent balance, income/expense cards with icons
+- **Currency Format**: BDT with K/M abbreviations (e.g., 5.2K, 1.5M)
+
+**3. SpendingTrendChart** ([spending_trend_chart.dart](../lib/features/home/presentation/widgets/spending_trend_chart.dart:1))
+- **Library**: fl_chart (LineChart)
+- **Shows**: Daily spending over 30 days
+- **Features**:
+  - Curved line with gradient fill
+  - Interactive tooltips
+  - Bottom axis with day labels (1, 5, 10, 15, 20, 25, 30)
+  - Auto-scaling Y-axis
+
+**4. FinancialRatiosWidget** ([financial_ratio_widget.dart](../lib/features/home/presentation/widgets/financial_ratio_widget.dart:1))
+- **Displays**: Expense Ratio and Savings Rate (as percentages)
+- **Layout**: Two cards side-by-side
+- **Styling**: Color-coded (red for expense, blue for savings)
+
+**5. AccountsBreakdownWidget** ([accounts_breakdown_widget.dart](../lib/features/home/presentation/widgets/accounts_breakdown_widget.dart:1))
+- **Purpose**: Shows balance across different accounts
+- **Layout**: Horizontal scrollable list
+- **Features**:
+  - Neumorphism design
+  - Smart account detection (Cash, Bank, Credit Card, Investment)
+  - Account-specific icons and colors
+  - Percentage of total balance
+  - Handles negative balances
+- **Sorting**: Accounts sorted by balance (descending)
+
+**6. BiggestExpenseWidget** ([biggest_expense_widget.dart](../lib/features/home/presentation/widgets/biggest_expense_widget.dart:1))
+- **Displays**: Single largest expense transaction
+- **Info**: Amount, description, category, account
+- **Styling**: Red error color for amount
+
+**7. BiggestCategoryWidget** ([biggest_category_widget.dart](../lib/features/home/presentation/widgets/biggest_category_widget.dart:1))
+- **Displays**: Category with highest total spending
+- **Info**: Category name, total amount
+- **Features**: Name formatting (Title Case)
+
+**8. DashboardShimmer** ([dashboard_shimmer.dart](../lib/features/home/presentation/widgets/dashboard_shimmer.dart:1))
+- **Purpose**: Loading skeleton matching dashboard layout
+- **Library**: shimmer package
+- **Layout**: Mirrors actual dashboard widgets for smooth transition
+- **Fix Applied**: Horizontal ListView for account cards to prevent overflow
+
+**9. ChatInputButton** ([chat_input_button.dart](../lib/features/home/presentation/widgets/chat_input_button.dart:1))
+- **Purpose**: Sticky bottom button to open chat
+- **Navigation**: Opens ChatPage with botId: "nai kichu", botName: "BalanceIq"
+- **Styling**: Floating button with gradient icon
+
+#### WelcomePage
+
+**File**: [lib/features/home/presentation/pages/welcome_page.dart](../lib/features/home/presentation/pages/welcome_page.dart:1)
+
+**When Shown**: First-time users with no dashboard data
+
+**Features**:
+- Welcome illustration (wallet icon)
+- App introduction text
+- Three key features:
+  1. Track Expenses
+  2. Smart Insights
+  3. Reach Goals
+- "Get Started" button → Opens chat for first expense entry
+
+#### Error404Page
+
+**File**: [lib/features/home/presentation/pages/error_page.dart](../lib/features/home/presentation/pages/error_page.dart:1)
+
+**When Shown**: Dashboard load errors (network, server, etc.)
+
+**Features**:
+- Error illustration with 404 code
+- Error message display
+- Common troubleshooting tips
+- "Try Again" button → Calls onRetry to reload dashboard
+
+#### Data Flow
+
+**Complete Dashboard Load Flow**:
+
+```
+1. HomePage.initState()
+   ↓
+2. DashboardCubit.loadDashboard()
+   ↓
+3. GetDashboardSummary use case
+   ↓
+4. DashboardRepositoryImpl.getDashboardSummary()
+   ↓
+5. Get cached user (AuthLocalDataSource)
+   ↓
+6. DashboardRemoteDataSource.getDashboardSummary(userId, botId, ...)
+   ↓
+7. POST to n8n webhook (AppConstants.n8nDashboardUrl)
+   ↓
+8. Parse JSON response → DashboardSummaryResponse model
+   ↓
+9. Convert to DashboardSummary entity
+   ↓
+10. Return Either<Failure, DashboardSummary>
+    ↓
+11. DashboardCubit emits DashboardLoaded(summary)
+    ↓
+12. HomePage rebuilds with dashboard widgets
+```
+
+#### API Integration
+
+**Endpoint**: `AppConstants.n8nDashboardUrl` (from .env)
+
+**Request Payload**:
+```dart
+{
+  "user_id": "8130001838",      // TODO: Use actual user.id
+  "bot_id": "balance_iq",
+  "first_name": "John",
+  "last_name": "Doe",
+  "username": "user@email.com"
+}
+```
+
+**Response**: JSON matching DashboardSummaryResponse model
+
+#### Known Issues & TODOs
+
+1. **Hardcoded User ID**: DashboardRepositoryImpl uses hardcoded userId "8130001838" instead of actual user.id
+2. **Chat Button Bot ID**: ChatInputButton uses placeholder "nai kichu" for botId
+3. **Profile Picture**: HomeAppbar TODO to implement user profile picture
+
+### 10. Remote Data Sources
 
 #### Chat Remote Data Source (chat_remote_datasource.dart)
 

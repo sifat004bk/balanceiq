@@ -22,7 +22,17 @@ class MessageList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('📜 [MessageList] Building with ${messages.length} messages, isSending: $isSending');
+
+    // Print all messages with serial numbers
+    for (int i = 0; i < messages.length; i++) {
+      final msg = messages[i];
+      final preview = msg.content.length > 30 ? msg.content.substring(0, 30) + '...' : msg.content;
+      print('  📝 [MessageList] Message #${i + 1}/${messages.length} - ${msg.sender}: "$preview" (id: ${msg.id.substring(0, 8)})');
+    }
+
     if (messages.isEmpty && !isSending) {
+      print('💬 [MessageList] No messages, showing welcome screen');
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -54,6 +64,7 @@ class MessageList extends StatelessWidget {
       );
     }
 
+    print('🔨 [MessageList] Building ListView with ${messages.length + (isSending ? 1 : 0)} items');
     return ListView.builder(
       controller: scrollController,
       padding: const EdgeInsets.all(16),
@@ -65,6 +76,7 @@ class MessageList extends StatelessWidget {
 
         if (isSending && index == 0) {
           // Show typing indicator at top (which is bottom visually)
+          print('⏱️ [MessageList] Rendering typing indicator at index $index');
           return _buildTypingIndicator(context);
         }
 

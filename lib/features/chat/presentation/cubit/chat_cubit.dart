@@ -20,12 +20,23 @@ class ChatCubit extends Cubit<ChatState> {
 
   Future<void> loadMessages(String botId, {bool showLoading = true}) async {
     currentBotId = botId;
-    if (!isClosed && showLoading) emit(ChatLoading());
+    print('📥 [ChatCubit] loadMessages called - showLoading: $showLoading');
+    if (!isClosed && showLoading) {
+      print('⏳ [ChatCubit] Emitting ChatLoading...');
+      emit(ChatLoading());
+    }
     final result = await getMessages(botId);
     if (!isClosed) {
       result.fold(
-        (failure) => emit(ChatError(message: failure.message)),
-        (messages) => emit(ChatLoaded(messages: messages)),
+        (failure) {
+          print('❌ [ChatCubit] Error loading messages: ${failure.message}');
+          emit(ChatError(message: failure.message));
+        },
+        (messages) {
+          print('✅ [ChatCubit] Loaded ${messages.length} messages from DB');
+          print('📋 [ChatCubit] Emitting ChatLoaded with ${messages.length} messages');
+          emit(ChatLoaded(messages: messages));
+        },
       );
     }
   }
@@ -38,6 +49,7 @@ class ChatCubit extends Cubit<ChatState> {
   }) async {
     if (state is ChatLoaded) {
       final currentState = state as ChatLoaded;
+      print('📤 [ChatCubit] Starting sendNewMessage - Current messages: ${currentState.messages.length}');
 
       // Create temporary user message for immediate display
       final tempUserMessage = Message(
@@ -51,22 +63,27 @@ class ChatCubit extends Cubit<ChatState> {
         isSending: false,
         hasError: false,
       );
+      print('✨ [ChatCubit] Created temp message: ${tempUserMessage.content.length > 20 ? tempUserMessage.content.substring(0, 20) + "..." : tempUserMessage.content}');
 
       // Immediately show user message in UI
       final updatedMessages = [...currentState.messages, tempUserMessage];
+      print('📊 [ChatCubit] Emitting optimistic state - Messages: ${updatedMessages.length}, isSending: true');
       emit(ChatLoaded(messages: updatedMessages, isSending: true));
 
       // Send message in background (repository will save with different ID)
+      print('🌐 [ChatCubit] Starting API call...');
       final result = await sendMessage(
         botId: botId,
         content: content,
         imagePath: imagePath,
         audioPath: audioPath,
       );
+      print('✅ [ChatCubit] API call completed');
 
       // After API completes, reload from DB to get actual messages
       // Don't show loading state to avoid clearing the optimistic message
       if (!isClosed) {
+        print('🔄 [ChatCubit] Reloading messages from DB (showLoading: false)');
         loadMessages(botId, showLoading: false);
       }
     }

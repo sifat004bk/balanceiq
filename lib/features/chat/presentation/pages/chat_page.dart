@@ -42,6 +42,7 @@ class ChatView extends StatefulWidget {
 
 class _ChatViewState extends State<ChatView> {
   final ScrollController _scrollController = ScrollController();
+  int _previousMessageCount = 0;
 
   @override
   void dispose() {
@@ -50,10 +51,12 @@ class _ChatViewState extends State<ChatView> {
   }
 
   void _scrollToBottom() {
+    print('🔽 [ChatPage] _scrollToBottom called');
     if (_scrollController.hasClients) {
       // Use WidgetsBinding to ensure layout is complete
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (_scrollController.hasClients) {
+          print('📜 [ChatPage] Scrolling to position 0.0');
           // Since list is reversed, scroll to minScrollExtent (top = newest messages)
           _scrollController.animateTo(
             0.0, // Scroll to top of reversed list (which shows newest messages)
@@ -107,18 +110,30 @@ class _ChatViewState extends State<ChatView> {
           Expanded(
             child: BlocConsumer<ChatCubit, ChatState>(
               listener: (context, state) {
+                print('👂 [ChatPage] Listener - State: ${state.runtimeType}');
                 // Auto-scroll to bottom when new message arrives
-                // No need for first load logic - reverse list handles it
                 if (state is ChatLoaded) {
-                  _scrollToBottom();
+                  print('📨 [ChatPage] ChatLoaded - Messages: ${state.messages.length}, isSending: ${state.isSending}');
+                  print('📊 [ChatPage] Previous count: $_previousMessageCount, Current count: ${state.messages.length}');
+                  // Only scroll if message count changed (new message added)
+                  if (state.messages.length != _previousMessageCount) {
+                    print('✅ [ChatPage] Message count changed! Scrolling to bottom...');
+                    _previousMessageCount = state.messages.length;
+                    _scrollToBottom();
+                  } else {
+                    print('⏸️ [ChatPage] Message count unchanged, not scrolling');
+                  }
                 }
               },
               builder: (context, state) {
+                print('🎨 [ChatPage] Builder - State: ${state.runtimeType}');
                 if (state is ChatLoading) {
+                  print('⏳ [ChatPage] Builder - Showing loading indicator');
                   return const Center(
                     child: CircularProgressIndicator(),
                   );
                 } else if (state is ChatLoaded) {
+                  print('✅ [ChatPage] Builder - Building MessageList with ${state.messages.length} messages, isSending: ${state.isSending}');
                   return MessageList(
                     messages: state.messages,
                     botId: widget.botId,
@@ -127,6 +142,7 @@ class _ChatViewState extends State<ChatView> {
                     scrollController: _scrollController,
                   );
                 } else if (state is ChatError) {
+                  print('❌ [ChatPage] Builder - Showing error: ${state.message}');
                   return Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -153,6 +169,7 @@ class _ChatViewState extends State<ChatView> {
                     ),
                   );
                 }
+                print('⚠️ [ChatPage] Builder - Unknown state, showing empty widget');
                 return const SizedBox.shrink();
               },
             ),

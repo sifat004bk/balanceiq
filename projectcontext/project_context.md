@@ -506,9 +506,11 @@ reversedIndex = messages.length - 1 - index + (isSending ? 1 : 0)
 - Send button (enabled when content is not empty)
 - Permission handling for camera, microphone, storage
 
-### 9. Remote Data Source (chat_remote_datasource.dart)
+### 9. Remote Data Sources
 
-**Purpose**: Handles API communication with n8n webhook.
+#### Chat Remote Data Source (chat_remote_datasource.dart)
+
+**Purpose**: Handles API communication with n8n webhook for chat messages.
 
 **Request Payload**:
 ```json
@@ -543,6 +545,53 @@ reversedIndex = messages.length - 1 - index + (isSending ? 1 : 0)
 - Bad response (4xx, 5xx)
 - Network errors
 - Unexpected response format
+
+#### Dashboard Remote Data Source (dashboard_remote_datasource.dart)
+
+**Purpose**: Handles API communication with n8n webhook for dashboard data.
+
+**Request Payload**:
+```json
+{
+  "user_id": "6130001838",
+  "bot_id": "balance_tracker",
+  "first_name": "John",
+  "last_name": "Doe",
+  "username": "john.doe"
+}
+```
+
+**Response Format**:
+```json
+{
+  "data": [
+    {
+      "total_balance": 5000.00,
+      "total_income": 8000.00,
+      "total_expenses": 3000.00,
+      "savings_rate": 62.5,
+      "debt_to_income_ratio": 0.15,
+      "accounts": [...],
+      "biggest_expense": {...},
+      "biggest_category": {...},
+      "spending_trend": [...]
+    }
+  ]
+}
+```
+
+**Configuration**:
+- URL configured via `AppConstants.n8nDashboardUrl`
+- Reads from `.env` file: `N8N_DASHBOARD_URL`
+- Fallback: `https://primary-production-7383b.up.railway.app/webhook-test/get-user-dashboard`
+
+**Error Handling**:
+- Connection timeout
+- Receive timeout
+- Connection errors
+- 404: Service not found
+- 500: Server error
+- Invalid data format validation
 
 ---
 
@@ -1084,8 +1133,11 @@ keytool -list -v -keystore ~/.android/debug.keystore \
 ### Environment Variables (.env)
 
 ```bash
-# n8n Webhook URL
+# n8n Webhook URL (for chat messages)
 N8N_WEBHOOK_URL=https://your-n8n-instance.com/webhook/balance-iq
+
+# n8n Dashboard URL (for dashboard data)
+N8N_DASHBOARD_URL=https://your-n8n-instance.com/webhook-test/get-user-dashboard
 ```
 
 **Important**: `.env` file should be in project root and added to `.gitignore`.

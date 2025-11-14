@@ -1,3 +1,4 @@
+import 'package:balance_iq/core/constants/app_constants.dart';
 import 'package:balance_iq/features/home/data/models/dashboard_summary_response.dart';
 import 'package:dio/dio.dart';
 
@@ -26,7 +27,7 @@ class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
   }) async {
     try {
       final response = await dio.post<Map<String, dynamic>>(
-        'https://primary-production-7383b.up.railway.app/webhook-test/get-user-dashboard',
+        AppConstants.n8nDashboardUrl,
         data: <String, String>{
           'user_id': userId, // Fixed: Use actual userId parameter
           'bot_id': botId,

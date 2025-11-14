@@ -5,7 +5,7 @@ class AppTheme {
   static const Color primaryColor = Color(0xFF13ec80); // Primary green
   static const Color accentColor = Color(0xFF13ec80);
   static const Color backgroundLight =
-      Color(0xFFf6f8f7); // Light theme background
+      Color(0xffecf1ec); // Light theme background
   static const Color backgroundDark =
       Color.fromRGBO(21, 34, 21, 1); // Dark theme background
 

@@ -82,7 +82,8 @@ class DashboardShimmer extends StatelessWidget {
               const SizedBox(height: 16),
               SizedBox(
                 height: 100,
-                child: Row(
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
                   children: [
                     _buildCardShimmer(context, 100, width: 140),
                     const SizedBox(width: 12),

@@ -73,7 +73,7 @@ This project context is complemented by specialized guides located in the `proje
 
 ## Project Overview
 
-**BalanceIQ** is an AI-powered personal finance chatbot application built with Flutter for cross-platform mobile deployment (iOS and Android). The app provides four specialized financial assistant bots that help users manage their finances through an intuitive chat interface with support for text, image, and audio messages.
+**BalanceIQ** is an AI-powered personal finance management application built with Flutter for cross-platform mobile deployment (iOS and Android). The app features a comprehensive financial dashboard and an intelligent chatbot assistant that helps users track expenses, manage budgets, and gain insights into their financial health through an intuitive interface with support for text, image, and audio messages.
 
 ### Version
 - **App Version**: 1.0.0+1
@@ -81,7 +81,12 @@ This project context is complemented by specialized guides located in the `proje
 - **Dart SDK**: 3.6.0
 
 ### Core Purpose
-BalanceIQ aims to democratize financial literacy and management by providing personalized, AI-driven financial advice through conversational interfaces. Each bot specializes in a specific area of personal finance.
+BalanceIQ aims to democratize financial literacy and management by providing:
+- **Automated Expense Tracking**: Track spending through chat conversations with receipt scanning
+- **Financial Dashboard**: Real-time visualization of income, expenses, savings, and financial ratios
+- **AI-Powered Insights**: Personalized financial advice and spending pattern analysis
+- **Budget Management**: Set and monitor budgets with intelligent recommendations
+- **Multi-Platform Access**: Seamless experience across iOS and Android devices
 
 ---
 
@@ -115,71 +120,85 @@ The project follows **Clean Architecture** principles with clear separation of c
 
 ## Features
 
-### Four Specialized Financial Bots
+### BalanceIQ AI Assistant
 
-#### 1. Balance Tracker
+**BalanceIQ** is a single, comprehensive AI-powered financial assistant that combines all aspects of personal finance management:
+
 - **Bot ID**: `balance_tracker`
-- **Icon**: `Icons.account_balance_wallet`
-- **Color**: Blue (`0xFF3B82F6`)
-- **Purpose**: Track expenses and monitor spending patterns
-- **Capabilities**:
-  - Record daily expenses
-  - Categorize spending
-  - View spending trends
-  - Get alerts on unusual spending
+- **Primary Color**: Brand Blue (`0xFF3B82F6`)
+- **Purpose**: Complete personal finance management and tracking
 
-#### 2. Investment Guru
-- **Bot ID**: `investment_guru`
-- **Icon**: `Icons.trending_up`
-- **Color**: Green (`0xFF10B981`)
-- **Purpose**: Provide investment insights and strategies
-- **Capabilities**:
-  - Investment recommendations
-  - Portfolio analysis
-  - Market trends
-  - Risk assessment
+**Core Capabilities**:
+- **Expense Tracking**: Record and categorize daily expenses through conversation
+- **Receipt Scanning**: Upload receipt images for automatic expense extraction
+- **Budget Management**: Create, monitor, and adjust budgets
+- **Income Tracking**: Log income from multiple sources
+- **Financial Insights**: AI-powered analysis of spending patterns
+- **Savings Goals**: Set and track progress toward financial goals
+- **Financial Education**: Personalized tips and recommendations
+- **Voice Commands**: Record expenses via voice messages
+- **Smart Categorization**: Automatic expense categorization using AI
+- **Spending Alerts**: Notifications for unusual spending or budget limits
 
-#### 3. Budget Planner
-- **Bot ID**: `budget_planner`
-- **Icon**: `Icons.pie_chart`
-- **Color**: Purple (`0xFF8B5CF6`)
-- **Purpose**: Create and manage budgets
-- **Capabilities**:
-  - Budget creation
-  - Expense allocation
-  - Savings goals
-  - Budget tracking
+### Financial Dashboard
 
-#### 4. Fin Tips
-- **Bot ID**: `fin_tips`
-- **Icon**: `Icons.lightbulb_outline`
-- **Color**: Orange (`0xFFF59E0B`)
-- **Purpose**: Share financial literacy and smart money habits
-- **Capabilities**:
-  - Daily financial tips
-  - Educational content
-  - Best practices
-  - Financial news
+**Real-time Financial Overview**:
+- **Net Balance**: Current financial position at a glance
+- **Income vs Expenses**: Monthly comparison with visual indicators
+- **Spending Trends**: Chart showing spending patterns over time
+- **Account Breakdown**: Visual representation of different account balances
+- **Biggest Expenses**: Quick view of top spending categories
+- **Financial Ratios**: Savings rate and debt-to-income ratio
+- **Category Analysis**: Detailed breakdown by expense category
 
-### Core Features
+### Authentication & User Management
 
-#### Multi-Modal Communication
-- **Text Messages**: Standard text-based conversations
-- **Image Support**: Attach images (receipts, documents) up to 10 MB
-- **Audio Messages**: Record and send voice messages up to 25 MB
-- **Base64 Encoding**: Media files are encoded and sent to the backend
+**Comprehensive Authentication System**:
 
-#### Persistent Chat History
-- **Local SQLite Database**: All conversations stored locally
-- **Per-Bot History**: Separate chat history for each bot
-- **Fast Retrieval**: Indexed queries for efficient loading
-- **Offline Access**: View chat history without internet
+#### Sign-Up Flow
+- **Email/Password Registration**: Traditional account creation
+- **Google Sign-In**: Quick signup with Google account
+- **Apple Sign-In**: Native Apple ID registration (iOS)
+- **Email Verification**: Verification email sent after registration
+- **Profile Setup**: Name, email, and optional photo
+- **Welcome Pages**: Onboarding flow for new users
 
-#### Authentication
-- **Google Sign-In**: OAuth-based authentication
-- **Apple Sign-In**: Native Apple ID authentication (iOS)
+#### Sign-In Flow
+- **Email/Password Login**: Secure credential-based authentication
+- **Google Sign-In**: One-tap Google OAuth login
+- **Apple Sign-In**: Seamless Apple ID login (iOS)
+- **Remember Me**: Optional persistent session
+- **Biometric Support**: Fingerprint/Face ID (planned)
+
+#### Password Management
+- **Forgot Password**: Password reset via email
+- **Reset Link**: Secure token-based password reset
+- **Password Requirements**: Minimum 8 characters with validation
+- **Secure Storage**: Encrypted password storage
+
+#### Session Management
 - **Persistent Sessions**: User data stored in SharedPreferences
-- **User Profile**: Name, email, photo URL, and auth provider
+- **Automatic Login**: Remember user for seamless experience
+- **Secure Logout**: Clear all session data on sign out
+- **Token Management**: JWT or session token handling
+
+### Multi-Modal Communication
+
+**Chat Interface Features**:
+- **Text Messages**: Natural language expense tracking
+- **Image Support**: Upload receipts and documents (up to 10 MB)
+- **Audio Messages**: Voice-based expense recording (up to 25 MB)
+- **Base64 Encoding**: Secure media transmission to backend
+- **OCR Processing**: Extract data from receipt images
+
+### Data Persistence
+
+**Local Storage**:
+- **SQLite Database**: All financial data stored locally
+- **Chat History**: Complete conversation history
+- **Fast Retrieval**: Indexed queries for instant access
+- **Offline Access**: View dashboard and history without internet
+- **Data Sync**: Background synchronization with backend
 
 #### Theme Support
 - **Dark Mode**: Full dark theme support
@@ -1152,12 +1171,11 @@ static const String usersTable = 'users';
 static const String messagesTable = 'messages';
 ```
 
-**Bot IDs**:
+**Bot Configuration**:
 ```dart
-static const String balanceTrackerID = 'balance_tracker';
-static const String investmentGuruID = 'investment_guru';
-static const String budgetPlannerID = 'budget_planner';
-static const String finTipsID = 'fin_tips';
+// BalanceIQ uses a single AI assistant
+static const String botID = 'balance_tracker';
+static const String botName = 'BalanceIQ';
 ```
 
 **Timeouts**:

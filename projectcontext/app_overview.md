@@ -13,61 +13,59 @@
          │
          ▼
 ┌──────────────────┐
-│  Onboarding      │  ◄─── First Time Users
-│  Screen          │
+│  Welcome/        │  ◄─── First Time Users
+│  Onboarding      │
+│  Screens         │
+└────────┬─────────┘
+         │
+         ▼
+┌──────────────────┐
+│  Sign Up Page    │
 │                  │
-│  • Google Sign-In│
-│  • Apple Sign-In │
+│  Options:        │
+│  • Email/Pass    │
+│  • Google        │
+│  • Apple         │
+└────────┬─────────┘
+         │
+         │ OR (Existing Users)
+         │
+         ▼
+┌──────────────────┐
+│  Sign In Page    │
+│                  │
+│  Options:        │
+│  • Email/Pass    │
+│  • Google        │
+│  • Apple         │
+│  • Forgot Pass   │
 └────────┬─────────┘
          │
          │ Authenticated ✓
          │
          ▼
 ┌──────────────────┐
-│  Home Screen     │
+│  Home/Dashboard  │
 │                  │
-│  Choose Bot:     │
-│  ┌────────────┐  │
-│  │ Balance    │  │ ◄─── Tap to Open
-│  │ Tracker    │  │
-│  └────────────┘  │
-│  ┌────────────┐  │
-│  │ Investment │  │
-│  │ Guru       │  │
-│  └────────────┘  │
-│  ┌────────────┐  │
-│  │ Budget     │  │
-│  │ Planner    │  │
-│  └────────────┘  │
-│  ┌────────────┐  │
-│  │ Fin Tips   │  │
-│  └────────────┘  │
+│  Shows:          │
+│  • Net Balance   │
+│  • Income/Expense│
+│  • Trends Chart  │
+│  • Quick Actions │
+│  • Chat Button   │
 └────────┬─────────┘
          │
-         │ Bot Selected
+         │ Tap Chat
          │
          ▼
 ┌──────────────────┐
 │  Chat Screen     │
+│  (BalanceIQ AI)  │
 │                  │
-│  ┌────────────┐  │
-│  │ Messages   │  │ ◄─── History from SQLite
-│  │ History    │  │
-│  └────────────┘  │
-│                  │
-│  Input Options:  │
-│  [📷] [🎤] [💬] │ ◄─── Image | Audio | Text
-│                  │
-│  ──────────────  │
-│  Send ➤          │ ◄─── Sends to n8n
-│                  │
-│  ⚙️  Processing  │
-│                  │
-│  ┌────────────┐  │
-│  │ Bot Reply  │  │ ◄─── From n8n Workflow
-│  └────────────┘  │
-│                  │
-│  Saved to DB ✓   │ ◄─── Persisted locally
+│  • Text Input    │
+│  • Receipt Scan  │
+│  • Voice Record  │
+│  • AI Responses  │
 └──────────────────┘
 ```
 
@@ -78,7 +76,7 @@
 │                      DATA FLOW DIAGRAM                      │
 └─────────────────────────────────────────────────────────────┘
 
-User Input (Text/Image/Audio)
+User Action (Expense/Query)
          │
          ▼
 ┌─────────────────┐
@@ -91,19 +89,12 @@ User Input (Text/Image/Audio)
 │  ChatCubit      │ ◄─── State Management
 └────────┬────────┘
          │
-         ▼
-┌─────────────────┐
-│  SendMessage    │ ◄─── Use Case
-│  Use Case       │
-└────────┬────────┘
-         │
          ├──────────────────┬────────────────────┐
          │                  │                    │
          ▼                  ▼                    ▼
 ┌──────────────┐   ┌──────────────┐    ┌──────────────┐
-│ Save User    │   │ Send to n8n  │    │ Process      │
-│ Message to   │   │ Webhook      │    │ Media        │
-│ SQLite       │   │              │    │ (Base64)     │
+│ Save Message │   │ Send to n8n  │    │ Process      │
+│ to SQLite    │   │ Webhook      │    │ Media (OCR)  │
 └──────────────┘   └──────┬───────┘    └──────────────┘
                           │
                           │ HTTP POST
@@ -113,48 +104,41 @@ User Input (Text/Image/Audio)
                    │ n8n Workflow │ ◄─── AI Processing
                    │              │
                    │ • Parse      │
-                   │ • Process    │
+                   │ • Categorize │
+                   │ • Update DB  │
                    │ • Generate   │
+                   │   Response   │
                    └──────┬───────┘
                           │
                           │ Response
                           │
                           ▼
                    ┌──────────────┐
-                   │ Bot Response │
-                   │ (JSON)       │
+                   │ Save to DB & │
+                   │ Update       │
+                   │ Dashboard    │
                    └──────┬───────┘
                           │
                           ▼
                    ┌──────────────┐
-                   │ Save to      │
-                   │ SQLite       │
-                   └──────┬───────┘
-                          │
-                          ▼
-                   ┌──────────────┐
-                   │ Update UI    │
-                   │ (ChatCubit)  │
+                   │ Refresh UI   │
+                   │ • Chat       │
+                   │ • Dashboard  │
                    └──────────────┘
-                          │
-                          ▼
-                   User Sees Reply ✓
 ```
 
 ## 🏗️ Architecture Layers
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    CLEAN ARCHITECTURE                       │
-└─────────────────────────────────────────────────────────────┘
-
 ┌───────────────────────────────────────────────────────┐
 │  PRESENTATION LAYER (UI)                              │
 │  ┌─────────────┐  ┌──────────────┐  ┌─────────────┐  │
 │  │   Pages     │  │   Widgets    │  │   Cubit     │  │
 │  │             │  │              │  │   (State)   │  │
-│  │ • Onboard   │  │ • Message    │  │ • Auth      │  │
-│  │ • Home      │  │   Bubble     │  │ • Chat      │  │
+│  │ • SignUp    │  │ • Dashboard  │  │ • Auth      │  │
+│  │ • SignIn    │  │   Cards      │  │ • Chat      │  │
+│  │ • Welcome   │  │ • Message    │  │ • Dashboard │  │
+│  │ • Dashboard │  │   Bubble     │  │             │  │
 │  │ • Chat      │  │ • Input      │  │             │  │
 │  └─────────────┘  └──────────────┘  └─────────────┘  │
 └───────────────────────┬───────────────────────────────┘
@@ -167,8 +151,10 @@ User Input (Text/Image/Audio)
 │  │             │  │              │  │ Interfaces  │  │
 │  │ • Message   │  │ • Send       │  │ • Chat      │  │
 │  │ • User      │  │   Message    │  │ • Auth      │  │
+│  │ • Dashboard │  │ • Get        │  │ • Dashboard │  │
+│  │   Summary   │  │   Messages   │  │             │  │
 │  │             │  │ • Get        │  │             │  │
-│  │             │  │   Messages   │  │             │  │
+│  │             │  │   Dashboard  │  │             │  │
 │  └─────────────┘  └──────────────┘  └─────────────┘  │
 └───────────────────────┬───────────────────────────────┘
                         │
@@ -182,6 +168,8 @@ User Input (Text/Image/Audio)
 │  │   Model     │  │   Impl       │  │   (SQLite)  │  │
 │  │ • User      │  │ • AuthRepo   │  │ • Remote    │  │
 │  │   Model     │  │   Impl       │  │   (n8n API) │  │
+│  │ • Dashboard │  │ • Dashboard  │  │ • Firebase  │  │
+│  │   Model     │  │   Repo Impl  │  │   Auth      │  │
 │  └─────────────┘  └──────────────┘  └─────────────┘  │
 └───────────────────────────────────────────────────────┘
 ```
@@ -200,15 +188,16 @@ User Input (Text/Image/Audio)
 │     email           TEXT                 │
 │     name            TEXT                 │
 │     photo_url       TEXT (nullable)      │
-│     auth_provider   TEXT                 │
+│     auth_provider   TEXT                 │ ◄─── email | google | apple
 │     created_at      TEXT                 │
+│     password_hash   TEXT (nullable)      │ ◄─── Only for email/password
 └──────────────────────────────────────────┘
 
 ┌──────────────────────────────────────────┐
 │          MESSAGES TABLE                  │
 ├──────────────────────────────────────────┤
 │ PK  id              TEXT                 │
-│     bot_id          TEXT                 │ ◄─── 4 bot types
+│     bot_id          TEXT                 │ ◄─── Always 'balance_tracker'
 │     sender          TEXT                 │ ◄─── user | bot
 │     content         TEXT                 │
 │     image_url       TEXT (nullable)      │
@@ -216,87 +205,13 @@ User Input (Text/Image/Audio)
 │     timestamp       TEXT                 │
 │     is_sending      INTEGER              │
 │     has_error       INTEGER              │
+│     category        TEXT (nullable)      │ ◄─── NEW: Expense category
+│     amount          REAL (nullable)      │ ◄─── NEW: Transaction amount
 └──────────────────────────────────────────┘
          │
          │ indexed on
          ▼
     (bot_id, timestamp)
-```
-
-## 🤖 Bot Configuration
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                     BOTS OVERVIEW                           │
-└─────────────────────────────────────────────────────────────┘
-
-┌──────────────────┐
-│ Balance Tracker  │ ID: balance_tracker
-├──────────────────┤ Icon: account_balance_wallet
-│ Color: 🟢 Green  │ Purpose: Track expenses & spending
-│ #4CAF50          │
-└──────────────────┘
-
-┌──────────────────┐
-│ Investment Guru  │ ID: investment_guru
-├──────────────────┤ Icon: trending_up
-│ Color: 🟣 Purple │ Purpose: Investment insights
-│ #9C27B0          │
-└──────────────────┘
-
-┌──────────────────┐
-│ Budget Planner   │ ID: budget_planner
-├──────────────────┤ Icon: receipt_long
-│ Color: 🔵 Blue   │ Purpose: Budget management
-│ #2196F3          │
-└──────────────────┘
-
-┌──────────────────┐
-│ Fin Tips         │ ID: fin_tips
-├──────────────────┤ Icon: lightbulb
-│ Color: 🟡 Yellow │ Purpose: Financial tips
-│ #FFC107          │
-└──────────────────┘
-```
-
-## 🔌 n8n Integration
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                  n8n WEBHOOK INTEGRATION                    │
-└─────────────────────────────────────────────────────────────┘
-
-REQUEST (from App to n8n)
-─────────────────────────
-POST https://your-n8n-instance.com/webhook/balance-iq
-
-Headers:
-  Content-Type: application/json
-
-Body:
-{
-  "bot_id": "balance_tracker",           ◄─── Bot identifier
-  "message": "How much did I spend?",    ◄─── User's question
-  "timestamp": "2025-10-25T12:00:00Z",   ◄─── ISO 8601
-  "image": "base64...",                  ◄─── Optional
-  "audio": "base64..."                   ◄─── Optional
-}
-
-         │
-         │ n8n processes
-         ▼
-
-RESPONSE (from n8n to App)
-──────────────────────────
-Status: 200 OK
-
-Body:
-{
-  "id": "msg_12345",                     ◄─── Message ID
-  "message": "You spent $250...",        ◄─── Bot response
-  "image_url": "https://...",            ◄─── Optional chart
-  "audio_url": "https://..."             ◄─── Optional audio
-}
 ```
 
 ## 📱 Screen Breakdown
@@ -308,39 +223,66 @@ Body:
 
 MyApp (MaterialApp)
   │
-  ├─ OnboardingPage
+  ├─ WelcomePages (Onboarding)
+  │   ├─ Page 1: App Introduction
+  │   ├─ Page 2: Features Overview
+  │   └─ Page 3: Get Started CTA
+  │
+  ├─ SignUpPage
+  │   ├─ Email/Password Form
+  │   ├─ Google Sign-Up Button
+  │   ├─ Apple Sign-Up Button (iOS)
+  │   └─ Navigate to Sign In Link
+  │
+  ├─ SignInPage
+  │   ├─ Email/Password Form
+  │   ├─ Remember Me Checkbox
+  │   ├─ Forgot Password Link
   │   ├─ Google Sign-In Button
   │   ├─ Apple Sign-In Button (iOS)
-  │   └─ App Branding
+  │   └─ Navigate to Sign Up Link
   │
-  ├─ HomePage
+  ├─ ForgotPasswordPage
+  │   ├─ Email Input
+  │   ├─ Send Reset Link Button
+  │   └─ Back to Sign In Link
+  │
+  ├─ HomePage (Dashboard)
   │   ├─ App Bar
-  │   │   ├─ Title: "BalanceIQ"
-  │   │   └─ Account Icon
+  │   │   ├─ Profile Icon
+  │   │   └─ Settings Icon
   │   │
-  │   └─ Bot Selection Grid
-  │       ├─ Balance Tracker Button
-  │       ├─ Investment Guru Button
-  │       ├─ Budget Planner Button
-  │       └─ Fin Tips Button
+  │   ├─ Dashboard Widgets
+  │   │   ├─ Net Balance Card
+  │   │   ├─ Income/Expense Cards
+  │   │   ├─ Spending Trend Chart
+  │   │   ├─ Financial Ratios
+  │   │   ├─ Account Breakdown
+  │   │   └─ Recent Transactions
+  │   │
+  │   └─ Floating Chat Button
   │
-  └─ ChatPage (for each bot)
-      ├─ App Bar
-      │   ├─ Back Button
-      │   ├─ Bot Name
-      │   └─ Options Menu
-      │
-      ├─ Message List
-      │   ├─ Welcome Message (empty state)
-      │   ├─ Message Bubble (User)
-      │   ├─ Message Bubble (Bot)
-      │   └─ Typing Indicator
-      │
-      └─ Chat Input
-          ├─ Image Picker Button 📷
-          ├─ Audio Recorder Button 🎤
-          ├─ Text Input Field 💬
-          └─ Send Button ➤
+  ├─ ChatPage
+  │   ├─ App Bar
+  │   │   ├─ Back Button
+  │   │   └─ BalanceIQ Title
+  │   │
+  │   ├─ Message List
+  │   │   ├─ Welcome Message (empty state)
+  │   │   ├─ Message Bubble (User)
+  │   │   ├─ Message Bubble (Bot)
+  │   │   └─ Typing Indicator
+  │   │
+  │   └─ Chat Input
+  │       ├─ Camera Button 📷
+  │       ├─ Microphone Button 🎤
+  │       ├─ Text Input Field 💬
+  │       └─ Send Button ➤
+  │
+  └─ ErrorPage
+      ├─ Error Icon
+      ├─ Error Message
+      └─ Retry Button
 ```
 
 ## 🎨 Theme System
@@ -354,14 +296,80 @@ LIGHT MODE                   DARK MODE
 ──────────                   ─────────
 Background: #F5F5F5          Background: #101c22
 Surface: #FFFFFF             Surface: #1E1E1E
+Primary: #4A90E2             Primary: #4A90E2
 Text: #000000                Text: #FFFFFF
-Bot Bubble: #E0E0E0          Bot Bubble: #283339
-User Bubble: #4A90E2         User Bubble: #4A90E2
+Card: #FFFFFF                Card: #283339
 
-PRIMARY COLORS (Both Modes)
+BRAND COLORS (Both Modes)
 ───────────────────────────
-Primary: #4A90E2 (Blue)
-Accent: #50E3C2 (Cyan)
+Primary Blue: #4A90E2
+Success Green: #10B981
+Warning Orange: #F59E0B
+Error Red: #EF4444
+```
+
+## 🔌 n8n Integration
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                  n8n WEBHOOK INTEGRATION                    │
+└─────────────────────────────────────────────────────────────┘
+
+CHAT ENDPOINT
+─────────────
+POST N8N_WEBHOOK_URL
+
+Request:
+{
+  "user_id": "user_12345",
+  "bot_id": "balance_tracker",      ◄─── Always this
+  "content": "I spent $50 on lunch",
+  "text": "I spent $50 on lunch",
+  "message": "I spent $50 on lunch",
+  "first_name": "John",
+  "last_name": "Doe",
+  "username": "johndoe",
+  "image_base64": "...",            ◄─── Optional receipt
+  "audio_base64": "..."             ◄─── Optional voice
+}
+
+Response:
+{
+  "id": "msg_12345",
+  "message": "Got it! Added $50 lunch expense.",
+  "category": "Food & Dining",       ◄─── NEW
+  "amount": 50.00,                   ◄─── NEW
+  "image_url": null,
+  "audio_url": null
+}
+
+DASHBOARD ENDPOINT
+──────────────────
+POST N8N_DASHBOARD_URL
+
+Request:
+{
+  "user_id": "user_12345",
+  "bot_id": "balance_tracker",
+  "first_name": "John",
+  "last_name": "Doe",
+  "username": "johndoe"
+}
+
+Response:
+{
+  "data": [{
+    "total_balance": 5000.00,
+    "total_income": 8000.00,
+    "total_expenses": 3000.00,
+    "savings_rate": 62.5,
+    "debt_to_income_ratio": 0.15,
+    "accounts": [...],
+    "biggest_expense": {...},
+    "biggest_category": {...},
+    "spending_trend": [...]
+  }]
+}
 ```
 
 ## 🚀 Deployment Flow
@@ -383,7 +391,7 @@ Testing
      │
      ├─ Run: flutter test
      ├─ Run: flutter analyze
-     └─ Manual testing (TESTING.md)
+     └─ Manual testing (auth, dashboard, chat)
      │
      ▼
 Build
@@ -399,34 +407,51 @@ Deploy
      └─ Apple App Store (iOS)
 ```
 
-## 📦 Dependencies Overview
+## 📦 Key Features Summary
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    KEY DEPENDENCIES                         │
+│                    KEY FEATURES                             │
 └─────────────────────────────────────────────────────────────┘
 
-STATE MANAGEMENT        NETWORKING           DATABASE
-─────────────────      ──────────           ────────
-flutter_bloc 8.1.6     dio 5.7.0           sqflite 2.3.3
-equatable 2.0.5        http 1.2.2          path_provider 2.1.4
+✅ AUTHENTICATION
+   • Email/Password signup and login
+   • Google Sign-In
+   • Apple Sign-In (iOS)
+   • Forgot password functionality
+   • Session persistence
 
-AUTHENTICATION         MEDIA                UTILITIES
-──────────────         ─────                ─────────
-google_sign_in 6.2.2   image_picker 1.1.2  get_it 8.0.2
-sign_in_with_apple     record 5.1.2        uuid 4.5.1
-  6.1.3                permission_handler  intl 0.19.0
-                         11.3.1            dartz 0.10.1
+✅ DASHBOARD
+   • Real-time financial overview
+   • Income vs expense tracking
+   • Spending trends chart
+   • Financial ratios display
+   • Account breakdown
+   • Category analysis
 
-UI COMPONENTS
-─────────────
-cached_network_image 3.4.1
-shimmer 3.0.0
-flutter_svg 2.0.10+1
+✅ AI CHAT ASSISTANT
+   • Natural language expense tracking
+   • Receipt scanning (OCR)
+   • Voice command support
+   • Auto-categorization
+   • Smart insights
+
+✅ DATA PERSISTENCE
+   • Local SQLite database
+   • Offline access
+   • Cloud synchronization
+   • Chat history
+
+✅ UI/UX
+   • Dark/Light theme
+   • Smooth animations
+   • Loading states
+   • Error handling
+   • Responsive design
 ```
 
 ---
 
 **Visual Overview Complete** ✓
 
-This document provides a visual representation of the BalanceIQ app architecture, data flow, and component structure. Use this alongside the other documentation for a complete understanding of the project.
+This document provides a visual representation of the BalanceIQ app with its single AI assistant architecture, comprehensive authentication, and financial tracking capabilities.

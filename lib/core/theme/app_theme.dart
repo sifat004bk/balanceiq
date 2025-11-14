@@ -4,8 +4,10 @@ class AppTheme {
   // New Design System Colors
   static const Color primaryColor = Color(0xFF13ec80); // Primary green
   static const Color accentColor = Color(0xFF13ec80);
-  static const Color backgroundLight = Color(0xFFf6f8f7); // Light theme background
-  static const Color backgroundDark = Color(0xFF102219); // Dark theme background
+  static const Color backgroundLight =
+      Color(0xffecf1ec); // Light theme background
+  static const Color backgroundDark =
+      Color.fromRGBO(21, 34, 21, 1); // Dark theme background
 
   // Text Colors
   static const Color textLightTheme = Color(0xFF111827);
@@ -35,14 +37,18 @@ class AppTheme {
       brightness: Brightness.light,
       primaryColor: primaryColor,
       scaffoldBackgroundColor: backgroundLight,
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: Colors.transparent,
+      ),
       colorScheme: const ColorScheme.light(
         primary: primaryColor,
         secondary: accentColor,
         surface: Colors.white,
         error: Colors.red,
+        onPrimary: investmentGuruColor,
       ),
       appBarTheme: const AppBarTheme(
-        backgroundColor: backgroundLight,
+        backgroundColor: backgroundDark,
         foregroundColor: textDark,
         elevation: 0,
         centerTitle: true,
@@ -97,7 +103,8 @@ class AppTheme {
           borderRadius: BorderRadius.circular(24),
           borderSide: BorderSide.none,
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       ),
     );
   }
@@ -108,11 +115,15 @@ class AppTheme {
       brightness: Brightness.dark,
       primaryColor: primaryColor,
       scaffoldBackgroundColor: backgroundDark,
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: Colors.transparent,
+      ),
       colorScheme: const ColorScheme.dark(
         primary: primaryColor,
         secondary: accentColor,
-        surface: Color(0xFF1E1E1E),
+        surface: Color.fromRGBO(16, 27, 16, 1),
         error: Colors.red,
+        onPrimary: budgetPlannerColor,
       ),
       appBarTheme: const AppBarTheme(
         backgroundColor: backgroundDark,
@@ -170,7 +181,8 @@ class AppTheme {
           borderRadius: BorderRadius.circular(24),
           borderSide: BorderSide.none,
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       ),
     );
   }

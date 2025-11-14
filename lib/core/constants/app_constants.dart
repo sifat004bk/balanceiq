@@ -40,6 +40,11 @@ class AppConstants {
     fallback: 'https://primary-production-7383b.up.railway.app/webhook/b1cfaa07-8bf1-4005-90e0-9759144705f2',
   );
 
+  static String get n8nDashboardUrl => dotenv.get(
+    'N8N_DASHBOARD_URL',
+    fallback: 'https://primary-production-7383b.up.railway.app/webhook/get-user-dashboard',
+  );
+
   // Message Types
   static const String messageTypeText = 'text';
   static const String messageTypeImage = 'image';

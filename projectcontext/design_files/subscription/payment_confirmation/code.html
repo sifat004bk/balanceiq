@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Payment Confirmation</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            font-size: 24px;
+        }
+        @keyframes confetti-fall {
+            0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #13ec80;animation: confetti-fall 5s linear infinite;
+            top: 0;
+            border-radius: 50%;
+        }
+        .confetti:nth-child(1) { left: 10%; animation-delay: 0s; transform: scale(0.8); }
+        .confetti:nth-child(2) { left: 20%; animation-delay: -1.5s; }
+        .confetti:nth-child(3) { left: 30%; animation-delay: -3s; transform: scale(1.2); }
+        .confetti:nth-child(4) { left: 40%; animation-delay: -0.5s; }
+        .confetti:nth-child(5) { left: 50%; animation-delay: -2.5s; transform: scale(0.9); }
+        .confetti:nth-child(6) { left: 60%; animation-delay: -4s; }
+        .confetti:nth-child(7) { left: 70%; animation-delay: -1s; transform: scale(1.1); }
+        .confetti:nth-child(8) { left: 80%; animation-delay: -3.5s; }
+        .confetti:nth-child(9) { left: 90%; animation-delay: -2s; transform: scale(0.7); }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#13ec80",
+              "background-light": "#f6f8f7",
+              "background-dark": "#102219",
+            },
+            fontFamily: {
+              "display": ["Manrope", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-dark font-display">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-hidden">
+<div class="absolute inset-0 pointer-events-none">
+<div class="confetti"></div>
+<div class="confetti"></div>
+<div class="confetti"></div>
+<div class="confetti"></div>
+<div class="confetti"></div>
+<div class="confetti"></div>
+<div class="confetti"></div>
+<div class="confetti"></div>
+<div class="confetti"></div>
+</div>
+<div class="flex items-center p-4 pb-2 justify-between z-10">
+<div class="flex size-12 shrink-0 items-center justify-start">
+</div>
+<h2 class="text-slate-200 text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center">Payment Confirmation</h2>
+<div class="flex w-12 items-center justify-end">
+<button class="text-slate-400">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+</div>
+<main class="flex flex-col items-center justify-start flex-grow p-4 text-center z-10">
+<div class="relative flex h-48 w-48 items-center justify-center mb-6">
+<div class="absolute inset-0 rounded-full bg-primary/20 scale-100"></div>
+<div class="absolute inset-4 rounded-full bg-primary/30 scale-100"></div>
+<div class="absolute flex h-24 w-24 items-center justify-center rounded-full bg-primary">
+<span class="material-symbols-outlined text-background-dark !text-5xl">verified</span>
+</div>
+</div>
+<h1 class="text-white tracking-tight text-[32px] font-bold leading-tight px-4 pb-3">Subscription Activated!</h1>
+<p class="text-slate-400 text-base font-normal leading-normal pb-8 px-4 max-w-sm">Welcome to Premium! You have successfully unlocked all premium features.</p>
+<div class="w-full max-w-md rounded-lg bg-slate-900/50 p-6 border border-slate-700/50 backdrop-blur-sm">
+<div class="flex flex-col items-center text-center pb-6 border-b border-slate-700">
+<p class="text-slate-400 text-sm font-normal leading-normal mb-1">You are now subscribed to</p>
+<p class="text-white text-lg font-bold leading-tight">Premium Plan</p>
+</div>
+<div class="pt-6 space-y-4">
+<div class="flex justify-between gap-x-6">
+<p class="text-slate-400 text-sm font-normal leading-normal">Price</p>
+<p class="text-white text-sm font-semibold leading-normal text-right">$9.99 / Month</p>
+</div>
+<div class="flex justify-between gap-x-6">
+<p class="text-slate-400 text-sm font-normal leading-normal">Renewal Date</p>
+<p class="text-white text-sm font-semibold leading-normal text-right">July 25, 2024</p>
+</div>
+</div>
+</div>
+</main>
+<footer class="p-4 pt-8 sticky bottom-0 bg-transparent z-10">
+<div class="w-full max-w-md mx-auto space-y-4">
+<button class="flex h-14 w-full items-center justify-center rounded-full bg-primary px-6 text-base font-bold text-background-dark transition-colors hover:bg-opacity-90">Start Exploring</button>
+<button class="flex h-14 w-full items-center justify-center rounded-full px-6 text-base font-bold text-primary transition-colors hover:bg-primary/10">Go to Dashboard</button>
+</div>
+</footer>
+</div>
+</body></html>

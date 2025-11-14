@@ -2,11 +2,14 @@
 
 This directory contains all comprehensive project documentation for BalanceIQ.
 
+> **⚠️ IMPORTANT**: BalanceIQ has been updated to use a **single AI assistant** architecture with comprehensive **email/password + OAuth** authentication. See [UPDATED_APP_CONCEPT.md](UPDATED_APP_CONCEPT.md) for details.
+
 ## 📁 Document Structure
 
 ```
 projectcontext/
 ├── README.md                      # This file - documentation index
+├── UPDATED_APP_CONCEPT.md         # NEW - App direction changes summary
 ├── project_context.md             # Main comprehensive context (START HERE)
 ├── development_guide.md           # Development and customization guide
 ├── testing_guide.md               # QA testing checklist

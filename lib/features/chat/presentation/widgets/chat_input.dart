@@ -1,10 +1,12 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:record/record.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:record/record.dart';
+
 import '../cubit/chat_cubit.dart';
 
 class ChatInput extends StatefulWidget {
@@ -47,8 +49,8 @@ class _ChatInputState extends State<ChatInput> {
 
   void _onTextChanged() {
     final newHasContent = _textController.text.trim().isNotEmpty ||
-                         _selectedImagePath != null ||
-                         _recordedAudioPath != null;
+        _selectedImagePath != null ||
+        _recordedAudioPath != null;
     if (newHasContent != _hasContent) {
       setState(() {
         _hasContent = newHasContent;
@@ -129,7 +131,9 @@ class _ChatInputState extends State<ChatInput> {
   void _sendMessage() {
     final text = _textController.text.trim();
 
-    if (text.isEmpty && _selectedImagePath == null && _recordedAudioPath == null) {
+    if (text.isEmpty &&
+        _selectedImagePath == null &&
+        _recordedAudioPath == null) {
       return;
     }
 
@@ -233,13 +237,17 @@ class _ChatInputState extends State<ChatInput> {
                             onTap: () {
                               setState(() {
                                 _selectedImagePath = null;
-                                _hasContent = _textController.text.trim().isNotEmpty || _recordedAudioPath != null;
+                                _hasContent =
+                                    _textController.text.trim().isNotEmpty ||
+                                        _recordedAudioPath != null;
                               });
                             },
                             child: Container(
                               padding: const EdgeInsets.all(4),
                               decoration: BoxDecoration(
-                                color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+                                color: isDark
+                                    ? const Color(0xFF1E1E1E)
+                                    : Colors.white,
                                 shape: BoxShape.circle,
                                 boxShadow: [
                                   BoxShadow(
@@ -250,7 +258,9 @@ class _ChatInputState extends State<ChatInput> {
                               ),
                               child: Icon(
                                 Icons.close,
-                                color: isDark ? Colors.grey[400] : Colors.grey[700],
+                                color: isDark
+                                    ? Colors.grey[400]
+                                    : Colors.grey[700],
                                 size: 16,
                               ),
                             ),
@@ -264,9 +274,12 @@ class _ChatInputState extends State<ChatInput> {
                     Expanded(
                       child: Container(
                         height: 80,
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
                         decoration: BoxDecoration(
-                          color: isDark ? const Color(0xFF1F2937) : const Color(0xFFF3F4F6),
+                          color: isDark
+                              ? const Color(0xFF1F2937)
+                              : const Color(0xFFF3F4F6),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
@@ -274,7 +287,9 @@ class _ChatInputState extends State<ChatInput> {
                             Container(
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
-                                color: isDark ? const Color(0xFF374151) : const Color(0xFFE5E7EB),
+                                color: isDark
+                                    ? const Color(0xFF374151)
+                                    : const Color(0xFFE5E7EB),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: const Icon(Icons.mic, size: 20),
@@ -291,7 +306,9 @@ class _ChatInputState extends State<ChatInput> {
                               onTap: () {
                                 setState(() {
                                   _recordedAudioPath = null;
-                                  _hasContent = _textController.text.trim().isNotEmpty || _selectedImagePath != null;
+                                  _hasContent =
+                                      _textController.text.trim().isNotEmpty ||
+                                          _selectedImagePath != null;
                                 });
                               },
                               child: Container(
@@ -299,7 +316,9 @@ class _ChatInputState extends State<ChatInput> {
                                 child: Icon(
                                   Icons.close,
                                   size: 20,
-                                  color: isDark ? Colors.grey[400] : Colors.grey[600],
+                                  color: isDark
+                                      ? Colors.grey[400]
+                                      : Colors.grey[600],
                                 ),
                               ),
                             ),
@@ -316,18 +335,25 @@ class _ChatInputState extends State<ChatInput> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               // Add button (image/media)
-              IconButton(
-                icon: const Icon(Icons.add_circle, size: 28),
-                onPressed: _showImageSourceDialog,
-                color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280),
-                padding: const EdgeInsets.all(8),
+              Hero(
+                tag: 'chat_input',
+                child: IconButton(
+                  icon: const Icon(Icons.add_circle, size: 28),
+                  onPressed: _showImageSourceDialog,
+                  color: isDark
+                      ? const Color(0xFF9CA3AF)
+                      : const Color(0xFF6B7280),
+                  padding: const EdgeInsets.all(8),
+                ),
               ),
               const SizedBox(width: 8),
               // Text input
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: isDark ? const Color(0xFF1F2937) : const Color(0xFFF3F4F6),
+                    color: isDark
+                        ? const Color(0xFF1F2937)
+                        : const Color(0xFFF3F4F6),
                     borderRadius: BorderRadius.circular(24),
                   ),
                   padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -336,7 +362,9 @@ class _ChatInputState extends State<ChatInput> {
                     decoration: InputDecoration(
                       hintText: 'Ask me anything...',
                       hintStyle: TextStyle(
-                        color: isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280),
+                        color: isDark
+                            ? const Color(0xFF9CA3AF)
+                            : const Color(0xFF6B7280),
                         fontSize: 16,
                       ),
                       border: InputBorder.none,
@@ -357,7 +385,9 @@ class _ChatInputState extends State<ChatInput> {
                 decoration: BoxDecoration(
                   color: _hasContent
                       ? const Color(0xFF13ec80)
-                      : (isDark ? const Color(0xFF374151) : const Color(0xFFE5E7EB)),
+                      : (isDark
+                          ? const Color(0xFF374151)
+                          : const Color(0xFFE5E7EB)),
                   shape: BoxShape.circle,
                 ),
                 child: IconButton(
@@ -365,7 +395,9 @@ class _ChatInputState extends State<ChatInput> {
                   onPressed: _hasContent ? _sendMessage : null,
                   color: _hasContent
                       ? const Color(0xFF102219)
-                      : (isDark ? const Color(0xFF6B7280) : const Color(0xFF9CA3AF)),
+                      : (isDark
+                          ? const Color(0xFF6B7280)
+                          : const Color(0xFF9CA3AF)),
                   padding: const EdgeInsets.all(12),
                 ),
               ),

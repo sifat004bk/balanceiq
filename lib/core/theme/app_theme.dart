@@ -37,6 +37,9 @@ class AppTheme {
       brightness: Brightness.light,
       primaryColor: primaryColor,
       scaffoldBackgroundColor: backgroundLight,
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: Colors.transparent,
+      ),
       colorScheme: const ColorScheme.light(
         primary: primaryColor,
         secondary: accentColor,
@@ -112,6 +115,9 @@ class AppTheme {
       brightness: Brightness.dark,
       primaryColor: primaryColor,
       scaffoldBackgroundColor: backgroundDark,
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: Colors.transparent,
+      ),
       colorScheme: const ColorScheme.dark(
         primary: primaryColor,
         secondary: accentColor,

@@ -1,9 +1,7 @@
 import 'package:balance_iq/core/di/injection_container.dart';
 import 'package:balance_iq/core/theme/app_theme.dart';
 import 'package:balance_iq/features/auth/data/datasources/auth_local_datasource.dart';
-import 'package:balance_iq/features/chat/presentation/pages/chat_page.dart';
 import 'package:balance_iq/features/home/presentation/cubit/dashboard_state.dart';
-import 'package:balance_iq/features/home/presentation/pages/error_page.dart';
 import 'package:balance_iq/features/home/presentation/widgets/accounts_breakdown_widget.dart';
 import 'package:balance_iq/features/home/presentation/widgets/balance_card_widget.dart';
 import 'package:balance_iq/features/home/presentation/widgets/biggest_category_widget.dart';
@@ -13,9 +11,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../cubit/dashboard_cubit.dart';
+import '../widgets/chat_input_button.dart';
 import '../widgets/financial_ratio_widget.dart';
 import '../widgets/home_appbar.dart';
 import '../widgets/spending_trend_chart.dart';
+import 'error_page.dart';
 import 'welcome_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -58,8 +58,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: BlocBuilder<DashboardCubit, DashboardState>(
@@ -176,42 +174,18 @@ class _HomePageState extends State<HomePage> {
           return const SizedBox.shrink();
         },
       ),
-      floatingActionButton: Container(
-        width: 64,
-        height: 64,
-        decoration: BoxDecoration(
-          color: AppTheme.primaryColor,
-          borderRadius: BorderRadius.circular(32),
-          boxShadow: [
-            BoxShadow(
-              color: AppTheme.primaryColor.withOpacity(0.3),
-              blurRadius: 20,
-              offset: const Offset(0, 8),
-            ),
-          ],
-        ),
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            borderRadius: BorderRadius.circular(32),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const ChatPage(
-                    botId: "nai kichu",
-                    botName: 'BalanceIq',
-                  ),
-                ),
-              );
-            },
-            child: Icon(
-              Icons.add,
-              color: isDark ? AppTheme.textDark : AppTheme.backgroundDark,
-              size: 36,
-            ),
-          ),
-        ),
+      bottomSheet: BlocBuilder<DashboardCubit, DashboardState>(
+        buildWhen: (previous, current) => current is DashboardLoaded,
+        builder: (context, state) {
+          if (state is DashboardLoaded) {
+            return Hero(
+              tag: 'chat_input',
+              child: ChatInputButton(),
+            );
+          }
+
+          return SizedBox.shrink();
+        },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../cubit/chat_cubit.dart';
 import '../cubit/chat_state.dart';
-import '../widgets/message_list.dart';
 import '../widgets/chat_input.dart';
+import '../widgets/message_list.dart';
 
 class ChatPage extends StatelessWidget {
   final String botId;
@@ -85,7 +86,8 @@ class _ChatViewState extends State<ChatView> {
               ),
         ),
         centerTitle: true,
-        backgroundColor: isDark ? AppTheme.backgroundDark : AppTheme.backgroundLight,
+        backgroundColor:
+            isDark ? AppTheme.backgroundDark : AppTheme.backgroundLight,
         elevation: 0,
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1),
@@ -161,7 +163,9 @@ class _ChatViewState extends State<ChatView> {
                         const SizedBox(height: 16),
                         ElevatedButton(
                           onPressed: () {
-                            context.read<ChatCubit>().loadMessages(widget.botId);
+                            context
+                                .read<ChatCubit>()
+                                .loadMessages(widget.botId);
                           },
                           child: const Text('Retry'),
                         ),

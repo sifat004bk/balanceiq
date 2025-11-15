@@ -28,7 +28,15 @@ This project context is complemented by specialized guides located in the `proje
 
 ### 📚 Available Guides
 
-1. **[development_guide.md](development_guide.md)**
+1. **[project_summary/business.md](project_summary/business.md)** 🆕
+   - Comprehensive business plan and strategy
+   - Revenue model and financial projections
+   - Go-to-market strategy
+   - Competitive positioning and pricing
+   - Risk analysis and success metrics
+   - **Use this for**: Business strategy, fundraising, market planning
+
+2. **[development_guide.md](development_guide.md)**
    - How to extend and customize the app
    - Adding new bots and features
    - Modifying UI/UX components
@@ -36,7 +44,7 @@ This project context is complemented by specialized guides located in the `proje
    - Best practices and code patterns
    - **Use this for**: Development work, adding features, customization
 
-2. **[testing_guide.md](testing_guide.md)**
+3. **[testing_guide.md](testing_guide.md)**
    - Comprehensive testing checklist
    - Authentication testing
    - Chat functionality testing
@@ -45,7 +53,7 @@ This project context is complemented by specialized guides located in the `proje
    - Platform-specific tests (Android/iOS)
    - **Use this for**: QA testing, verification, quality assurance
 
-3. **[app_overview.md](app_overview.md)**
+4. **[app_overview.md](app_overview.md)**
    - Visual diagrams and flowcharts
    - Data flow diagrams
    - Architecture layer visualization

@@ -9,17 +9,22 @@
 
 ## Executive Summary
 
-This comprehensive UX research evaluation assesses BalanceIQ's user experience across authentication, dashboard, chat interface, and subscription flows. The analysis reveals a **well-designed foundation** with modern UI patterns, but identifies **critical usability gaps** in onboarding, error prevention, and accessibility that could impact user adoption and satisfaction.
+This comprehensive UX research evaluation assesses BalanceIQ's user experience across
+authentication, dashboard, chat interface, and subscription flows. The analysis reveals a *
+*well-designed foundation** with modern UI patterns, but identifies **critical usability gaps** in
+onboarding, error prevention, and accessibility that could impact user adoption and satisfaction.
 
 ### Key Findings
 
 **Strengths**:
+
 - Strong visual hierarchy and modern design language
 - Dashboard-first approach provides immediate value
 - Multi-modal authentication options
 - Comprehensive financial data visualization
 
 **Critical Issues**:
+
 - Missing validation feedback and error prevention
 - Accessibility gaps (contrast, screen reader support, touch targets)
 - Unclear user journey from onboarding to first value
@@ -46,31 +51,41 @@ This comprehensive UX research evaluation assesses BalanceIQ's user experience a
 ### 1.1 First-Time User Journey
 
 **Current Flow**:
+
 ```
 Welcome Screen → Login/Register → Dashboard → Chat (Discovery)
 ```
 
 #### Welcome/Onboarding Experience
 
-**Design Review**: Welcome screen shows "Automated World" messaging with AI/finance/e-commerce integration theme.
+**Design Review**: Welcome screen shows "Automated World" messaging with AI/finance/e-commerce
+integration theme.
 
 **Findings**:
 
 **Strengths**:
+
 - Clean, visually appealing design
 - Skip option available for returning users
 - Page indicators show progression
 - Clear CTA button ("Continue")
 
 **Issues**:
-- **Value Proposition Mismatch**: Welcome screen mentions "AI, finance, and e-commerce" but BalanceIQ is positioned as a personal finance app. This creates confusion about the product purpose.
-- **Unclear Product Benefits**: Generic automation messaging doesn't clearly communicate what users will gain (expense tracking, budgeting, financial insights)
-- **Missing Context**: No preview of key features or how the AI assistant works
-- **No Progressive Disclosure**: All users see same onboarding regardless of their financial literacy level
 
-**User Impact**: MEDIUM-HIGH - Confused users may abandon during onboarding or have incorrect expectations
+- **Value Proposition Mismatch**: Welcome screen mentions "AI, finance, and e-commerce" but
+  BalanceIQ is positioned as a personal finance app. This creates confusion about the product
+  purpose.
+- **Unclear Product Benefits**: Generic automation messaging doesn't clearly communicate what users
+  will gain (expense tracking, budgeting, financial insights)
+- **Missing Context**: No preview of key features or how the AI assistant works
+- **No Progressive Disclosure**: All users see same onboarding regardless of their financial
+  literacy level
+
+**User Impact**: MEDIUM-HIGH - Confused users may abandon during onboarding or have incorrect
+expectations
 
 **Recommended Journey**:
+
 ```
 Welcome (Value Proposition) → Feature Preview → Use Case Selection → Auth → Guided First Expense → Dashboard
 ```
@@ -81,11 +96,13 @@ Welcome (Value Proposition) → Feature Preview → Use Case Selection → Auth 
 
 #### Registration Flow
 
-**Design Review**: Registration screen includes email/password fields with social auth options (Twitter/GitHub shown instead of Google/Apple per spec).
+**Design Review**: Registration screen includes email/password fields with social auth options (
+Twitter/GitHub shown instead of Google/Apple per spec).
 
 **Findings**:
 
 **Strengths**:
+
 - Multiple authentication methods (email, social)
 - Password visibility toggle
 - Clear form structure with icons
@@ -94,37 +111,39 @@ Welcome (Value Proposition) → Feature Preview → Use Case Selection → Auth 
 **Critical Issues**:
 
 1. **Social Auth Inconsistency**:
-   - Design shows Twitter/GitHub
-   - Spec requires Google/Apple
-   - **User Impact**: Platform mismatch reduces conversion (users expect Google/Apple on mobile)
+    - Design shows Twitter/GitHub
+    - Spec requires Google/Apple
+    - **User Impact**: Platform mismatch reduces conversion (users expect Google/Apple on mobile)
 
 2. **Missing Password Requirements**:
-   - No indication of password complexity rules
-   - No real-time validation feedback
-   - Users discover requirements only after failed submission
-   - **User Impact**: HIGH - Frustration, failed registration attempts
+    - No indication of password complexity rules
+    - No real-time validation feedback
+    - Users discover requirements only after failed submission
+    - **User Impact**: HIGH - Frustration, failed registration attempts
 
 3. **No Email Validation**:
-   - No inline validation for email format
-   - No typo detection (e.g., gmail.con instead of gmail.com)
-   - **User Impact**: MEDIUM - Invalid emails lead to failed verification
+    - No inline validation for email format
+    - No typo detection (e.g., gmail.con instead of gmail.com)
+    - **User Impact**: MEDIUM - Invalid emails lead to failed verification
 
 4. **Unclear Error States**:
-   - No visible error message placement
-   - No indication of what fields are problematic
-   - **User Impact**: HIGH - Users can't self-correct errors
+    - No visible error message placement
+    - No indication of what fields are problematic
+    - **User Impact**: HIGH - Users can't self-correct errors
 
 5. **Missing Progressive Disclosure**:
-   - No explanation of why full name is needed
-   - No privacy assurance
-   - No password strength indicator
-   - **User Impact**: MEDIUM - Privacy-conscious users may hesitate
+    - No explanation of why full name is needed
+    - No privacy assurance
+    - No password strength indicator
+    - **User Impact**: MEDIUM - Privacy-conscious users may hesitate
 
 #### Login Flow
 
-**Design Review**: Login screen with email/username field, password field, forgot password link, social auth.
+**Design Review**: Login screen with email/username field, password field, forgot password link,
+social auth.
 
 **Strengths**:
+
 - Clean, professional design
 - Forgot password option clearly visible
 - Social auth alternatives
@@ -133,31 +152,33 @@ Welcome (Value Proposition) → Feature Preview → Use Case Selection → Auth 
 **Issues**:
 
 1. **Ambiguous Field Label**:
-   - "Email or Username" creates confusion
-   - Users don't know which to use
-   - No guidance on username format if that option exists
-   - **User Impact**: MEDIUM - Trial and error, login failures
+    - "Email or Username" creates confusion
+    - Users don't know which to use
+    - No guidance on username format if that option exists
+    - **User Impact**: MEDIUM - Trial and error, login failures
 
 2. **No Remember Me Option**:
-   - Users must log in every time
-   - Increases friction for frequent users
-   - **User Impact**: MEDIUM - Abandonment on repeat visits
+    - Users must log in every time
+    - Increases friction for frequent users
+    - **User Impact**: MEDIUM - Abandonment on repeat visits
 
 3. **Missing Account Recovery Info**:
-   - No indication of what happens after clicking "Forgot Password"
-   - No alternative recovery methods shown
-   - **User Impact**: LOW - Minor confusion
+    - No indication of what happens after clicking "Forgot Password"
+    - No alternative recovery methods shown
+    - **User Impact**: LOW - Minor confusion
 
 4. **No Biometric Option**:
-   - Mobile users expect fingerprint/face ID
-   - Particularly important for financial apps
-   - **User Impact**: MEDIUM - Security and convenience gap
+    - Mobile users expect fingerprint/face ID
+    - Particularly important for financial apps
+    - **User Impact**: MEDIUM - Security and convenience gap
 
 #### Email Verification Flow
 
-**Observation**: Project context mentions email verification but no design screens provided for review.
+**Observation**: Project context mentions email verification but no design screens provided for
+review.
 
 **Missing Elements**:
+
 - Email sent confirmation screen
 - Verification pending state
 - Resend verification email option
@@ -170,11 +191,13 @@ Welcome (Value Proposition) → Feature Preview → Use Case Selection → Auth 
 
 ### 1.3 Dashboard-First Experience
 
-**Design Review**: Dashboard shows comprehensive financial overview with net balance, income/expense, spending trend chart, ratios, account breakdown, and biggest expenses.
+**Design Review**: Dashboard shows comprehensive financial overview with net balance,
+income/expense, spending trend chart, ratios, account breakdown, and biggest expenses.
 
 **Findings**:
 
 **Strengths**:
+
 - **Immediate Value**: Users see their financial snapshot instantly
 - **Visual Hierarchy**: Net balance is prominently displayed
 - **Data Density**: Comprehensive information without overwhelming
@@ -185,48 +208,50 @@ Welcome (Value Proposition) → Feature Preview → Use Case Selection → Auth 
 **Issues**:
 
 1. **Empty State Not Shown**:
-   - What does a first-time user see?
-   - How does dashboard look with zero data?
-   - No onboarding guidance visible
-   - **User Impact**: HIGH - First impression is critical
+    - What does a first-time user see?
+    - How does dashboard look with zero data?
+    - No onboarding guidance visible
+    - **User Impact**: HIGH - First impression is critical
 
 2. **No Contextual Help**:
-   - Financial ratios (58.9% expense ratio, 41.1% savings rate) shown without explanation
-   - New users may not understand what these mean or whether they're good/bad
-   - No tooltips or info icons
-   - **User Impact**: MEDIUM - Missed learning opportunity
+    - Financial ratios (58.9% expense ratio, 41.1% savings rate) shown without explanation
+    - New users may not understand what these mean or whether they're good/bad
+    - No tooltips or info icons
+    - **User Impact**: MEDIUM - Missed learning opportunity
 
 3. **Passive Data Presentation**:
-   - No actionable insights or recommendations
-   - No alerts for unusual spending
-   - No progress toward goals
-   - **User Impact**: MEDIUM - Users don't know what to do next
+    - No actionable insights or recommendations
+    - No alerts for unusual spending
+    - No progress toward goals
+    - **User Impact**: MEDIUM - Users don't know what to do next
 
 4. **Chat Discovery Issue**:
-   - Chat input at bottom is small and may be overlooked
-   - No prompting to try the AI assistant
-   - New users may not realize this is the primary interaction method
-   - **User Impact**: HIGH - Core feature may be undiscovered
+    - Chat input at bottom is small and may be overlooked
+    - No prompting to try the AI assistant
+    - New users may not realize this is the primary interaction method
+    - **User Impact**: HIGH - Core feature may be undiscovered
 
 5. **Period Selector Clarity**:
-   - "This Month" dropdown exists but its purpose isn't immediately clear
-   - No indication of what other options are available
-   - **User Impact**: LOW - Minor usability issue
+    - "This Month" dropdown exists but its purpose isn't immediately clear
+    - No indication of what other options are available
+    - **User Impact**: LOW - Minor usability issue
 
 6. **Account Icons Missing**:
-   - Account breakdown shows names (Prime Bank, bKash, etc.) but no visual differentiation
-   - Hard to scan quickly
-   - **User Impact**: LOW - Reduces scannability
+    - Account breakdown shows names (Prime Bank, bKash, etc.) but no visual differentiation
+    - Hard to scan quickly
+    - **User Impact**: LOW - Reduces scannability
 
 ---
 
 ### 1.4 Chat Interaction Journey
 
-**Design Review**: Chat interface with "FinanceGuru" branding (note: should be "BalanceIQ" per spec), message history, table rendering capability, and multi-modal input.
+**Design Review**: Chat interface with "FinanceGuru" branding (note: should be "BalanceIQ" per
+spec), message history, table rendering capability, and multi-modal input.
 
 **Findings**:
 
 **Strengths**:
+
 - **Clean ChatGPT-Style Interface**: Familiar pattern
 - **Rich Content Support**: Can display tables, formatted text
 - **Attachment Options**: Image and video support via modal
@@ -236,56 +261,58 @@ Welcome (Value Proposition) → Feature Preview → Use Case Selection → Auth 
 **Critical Issues**:
 
 1. **Branding Inconsistency**:
-   - Screen shows "FinanceGuru"
-   - Spec says "BalanceIQ" is the single assistant
-   - **User Impact**: HIGH - Brand confusion, trust issues
+    - Screen shows "FinanceGuru"
+    - Spec says "BalanceIQ" is the single assistant
+    - **User Impact**: HIGH - Brand confusion, trust issues
 
 2. **First Message Barrier**:
-   - No suggested prompts or quick actions
-   - Users don't know what to ask
-   - Empty state (if exists) not shown in designs
-   - **User Impact**: HIGH - Activation barrier
+    - No suggested prompts or quick actions
+    - Users don't know what to ask
+    - Empty state (if exists) not shown in designs
+    - **User Impact**: HIGH - Activation barrier
 
 3. **No Input Guidance**:
-   - Placeholder "Ask anything here..." is too generic
-   - No examples of good questions
-   - No feature discovery (e.g., "Try: Upload a receipt")
-   - **User Impact**: MEDIUM-HIGH - Users underutilize features
+    - Placeholder "Ask anything here..." is too generic
+    - No examples of good questions
+    - No feature discovery (e.g., "Try: Upload a receipt")
+    - **User Impact**: MEDIUM-HIGH - Users underutilize features
 
 4. **Attachment Flow Unclear**:
-   - Modal shows "Photo & Video Library" but BalanceIQ spec mentions receipt scanning
-   - No indication that images will be processed with OCR
-   - No preview before sending
-   - No file size limits shown
-   - **User Impact**: MEDIUM - Confusion about capabilities
+    - Modal shows "Photo & Video Library" but BalanceIQ spec mentions receipt scanning
+    - No indication that images will be processed with OCR
+    - No preview before sending
+    - No file size limits shown
+    - **User Impact**: MEDIUM - Confusion about capabilities
 
 5. **Table Display Issues**:
-   - Table in chat is readable but not optimized for mobile
-   - Horizontal scroll may be needed
-   - No export or expand option visible
-   - **User Impact**: MEDIUM - Data interaction limited
+    - Table in chat is readable but not optimized for mobile
+    - Horizontal scroll may be needed
+    - No export or expand option visible
+    - **User Impact**: MEDIUM - Data interaction limited
 
 6. **No Error States Shown**:
-   - What happens if AI can't respond?
-   - What if image upload fails?
-   - What if request times out?
-   - **User Impact**: MEDIUM - User left confused during failures
+    - What happens if AI can't respond?
+    - What if image upload fails?
+    - What if request times out?
+    - **User Impact**: MEDIUM - User left confused during failures
 
 7. **Chat Settings Complexity**:
-   - Settings screen shows AI model selection (GPT-4 Turbo)
-   - AI personality and creativity controls
-   - **Concern**: Too technical for average users
-   - **User Impact**: LOW-MEDIUM - May intimidate non-technical users
+    - Settings screen shows AI model selection (GPT-4 Turbo)
+    - AI personality and creativity controls
+    - **Concern**: Too technical for average users
+    - **User Impact**: LOW-MEDIUM - May intimidate non-technical users
 
 ---
 
 ### 1.5 Subscription Journey
 
-**Design Review**: Three-tier pricing (Starter $9, Pro $19, Business $49) with monthly/yearly toggle.
+**Design Review**: Three-tier pricing (Starter $9, Pro $19, Business $49) with monthly/yearly
+toggle.
 
 **Findings**:
 
 **Strengths**:
+
 - **Clear Pricing Tiers**: Easy comparison
 - **Visual Hierarchy**: "Most Popular" badge guides choice
 - **Feature Lists**: Each tier clearly shows what's included
@@ -295,32 +322,32 @@ Welcome (Value Proposition) → Feature Preview → Use Case Selection → Auth 
 **Issues**:
 
 1. **Unclear Value Justification**:
-   - What are "n8n automations"?
-   - Why does user need "WooCommerce integration" in a personal finance app?
-   - "FinanceGuru integration" in Pro tier suggests multiple products
-   - **User Impact**: HIGH - Confused users won't convert
+    - What are "n8n automations"?
+    - Why does user need "WooCommerce integration" in a personal finance app?
+    - "FinanceGuru integration" in Pro tier suggests multiple products
+    - **User Impact**: HIGH - Confused users won't convert
 
 2. **Feature Naming Disconnect**:
-   - Features reference e-commerce and automations
-   - BalanceIQ is positioned as personal finance
-   - Suggests product positioning confusion
-   - **User Impact**: HIGH - Brand/product clarity issue
+    - Features reference e-commerce and automations
+    - BalanceIQ is positioned as personal finance
+    - Suggests product positioning confusion
+    - **User Impact**: HIGH - Brand/product clarity issue
 
 3. **No Free Tier or Trial**:
-   - Immediate paywall with no trial option visible
-   - Users can't test before committing
-   - **User Impact**: HIGH - Conversion barrier
+    - Immediate paywall with no trial option visible
+    - Users can't test before committing
+    - **User Impact**: HIGH - Conversion barrier
 
 4. **Missing Usage Indicators**:
-   - "Limited n8n automations" - how many?
-   - What's "Standard" vs "Advanced" AI chat?
-   - No quantification of limits
-   - **User Impact**: MEDIUM - Can't make informed decision
+    - "Limited n8n automations" - how many?
+    - What's "Standard" vs "Advanced" AI chat?
+    - No quantification of limits
+    - **User Impact**: MEDIUM - Can't make informed decision
 
 5. **No Annual Savings Calculation**:
-   - "Save 20% with yearly billing" shown
-   - But actual dollar savings not calculated
-   - **User Impact**: LOW - Missed persuasion opportunity
+    - "Save 20% with yearly billing" shown
+    - But actual dollar savings not calculated
+    - **User Impact**: LOW - Missed persuasion opportunity
 
 ---
 
@@ -331,6 +358,7 @@ Welcome (Value Proposition) → Feature Preview → Use Case Selection → Auth 
 **Findings**:
 
 **Strengths**:
+
 - **Clear Information Hierarchy**: User details, subscription, settings
 - **Subscription Visibility**: Plan and renewal date prominent
 - **Organized Settings**: Grouped by category
@@ -340,25 +368,25 @@ Welcome (Value Proposition) → Feature Preview → Use Case Selection → Auth 
 **Issues**:
 
 1. **Limited Profile Editing**:
-   - No visible way to edit profile picture
-   - No edit button for name or email
-   - **User Impact**: MEDIUM - Users expect profile customization
+    - No visible way to edit profile picture
+    - No edit button for name or email
+    - **User Impact**: MEDIUM - Users expect profile customization
 
 2. **Subscription Management Unclear**:
-   - "Manage" button shown but destination unclear
-   - Can users cancel? Upgrade? Downgrade?
-   - No preview of what actions are available
-   - **User Impact**: MEDIUM - Uncertainty around subscription control
+    - "Manage" button shown but destination unclear
+    - Can users cancel? Upgrade? Downgrade?
+    - No preview of what actions are available
+    - **User Impact**: MEDIUM - Uncertainty around subscription control
 
 3. **Settings Organization**:
-   - "Appearance" suggests theme options but not shown
-   - No app preferences (currency, language, etc.)
-   - **User Impact**: LOW - Expected features may be missing
+    - "Appearance" suggests theme options but not shown
+    - No app preferences (currency, language, etc.)
+    - **User Impact**: LOW - Expected features may be missing
 
 4. **No Data Export Clarity**:
-   - Export option exists but format unclear
-   - What data is included?
-   - **User Impact**: LOW - GDPR compliance feature needs clarity
+    - Export option exists but format unclear
+    - What data is included?
+    - **User Impact**: LOW - GDPR compliance feature needs clarity
 
 ---
 
@@ -371,6 +399,7 @@ Welcome (Value Proposition) → Feature Preview → Use Case Selection → Auth 
 **Score**: 6/10
 
 **Findings**:
+
 - ✅ Loading states appear to be implemented (shimmer on dashboard)
 - ✅ Typing indicator in chat
 - ❌ No visible feedback during form submission
@@ -380,6 +409,7 @@ Welcome (Value Proposition) → Feature Preview → Use Case Selection → Auth 
 - ❌ No network status indicator
 
 **Recommendations**:
+
 - Add real-time validation feedback on forms
 - Show upload progress bars
 - Display success/confirmation messages
@@ -393,6 +423,7 @@ Welcome (Value Proposition) → Feature Preview → Use Case Selection → Auth 
 **Score**: 7/10
 
 **Findings**:
+
 - ✅ Financial terms are generally clear (Income, Expense, Balance)
 - ✅ Icons are recognizable and standard
 - ⚠️ "n8n automations" is technical jargon in subscription
@@ -401,6 +432,7 @@ Welcome (Value Proposition) → Feature Preview → Use Case Selection → Auth 
 - ✅ Natural language chat interface
 
 **Recommendations**:
+
 - Replace technical terms with user-friendly language
 - Add explanatory tooltips for financial metrics
 - Align subscription features with personal finance use cases
@@ -413,6 +445,7 @@ Welcome (Value Proposition) → Feature Preview → Use Case Selection → Auth 
 **Score**: 5/10
 
 **Findings**:
+
 - ✅ Back buttons present on all screens
 - ✅ Skip option on onboarding
 - ❌ No "Remember Me" option on login
@@ -422,6 +455,7 @@ Welcome (Value Proposition) → Feature Preview → Use Case Selection → Auth 
 - ❌ No way to cancel in-progress file uploads (visible in design)
 
 **Recommendations**:
+
 - Add "Remember Me" checkbox
 - Implement undo for destructive actions
 - Add confirmation dialogs for irreversible actions
@@ -435,6 +469,7 @@ Welcome (Value Proposition) → Feature Preview → Use Case Selection → Auth 
 **Score**: 6/10
 
 **Findings**:
+
 - ✅ Consistent green accent color throughout
 - ✅ Button styles are uniform
 - ⚠️ Branding inconsistency (FinanceGuru vs BalanceIQ)
@@ -443,6 +478,7 @@ Welcome (Value Proposition) → Feature Preview → Use Case Selection → Auth 
 - ⚠️ Field labels vary ("Email" vs "Email or Username")
 
 **Recommendations**:
+
 - Standardize branding across all screens
 - Ensure social auth matches target platforms
 - Implement consistent navigation pattern
@@ -455,6 +491,7 @@ Welcome (Value Proposition) → Feature Preview → Use Case Selection → Auth 
 **Score**: 4/10
 
 **Findings**:
+
 - ❌ No inline validation on forms
 - ❌ No password strength requirements shown upfront
 - ❌ No email format validation before submission
@@ -464,6 +501,7 @@ Welcome (Value Proposition) → Feature Preview → Use Case Selection → Auth 
 - ❌ No budget overspending warnings
 
 **Recommendations**:
+
 - Implement real-time field validation
 - Show password requirements before user types
 - Add email domain typo detection
@@ -477,6 +515,7 @@ Welcome (Value Proposition) → Feature Preview → Use Case Selection → Auth 
 **Score**: 7/10
 
 **Findings**:
+
 - ✅ Dashboard shows all data (no need to remember)
 - ✅ Icons with labels reduce cognitive load
 - ✅ Chat history preserved
@@ -486,6 +525,7 @@ Welcome (Value Proposition) → Feature Preview → Use Case Selection → Auth 
 - ✅ Bottom navigation keeps context visible
 
 **Recommendations**:
+
 - Add suggested prompts in chat
 - Implement category autocomplete
 - Show recent transaction types for quick entry
@@ -498,6 +538,7 @@ Welcome (Value Proposition) → Feature Preview → Use Case Selection → Auth 
 **Score**: 6/10
 
 **Findings**:
+
 - ✅ Multiple auth methods available
 - ✅ Quick actions via chat
 - ❌ No keyboard shortcuts mentioned
@@ -507,6 +548,7 @@ Welcome (Value Proposition) → Feature Preview → Use Case Selection → Auth 
 - ⚠️ Advanced chat settings may be too complex for novices
 
 **Recommendations**:
+
 - Add expense templates for common transactions
 - Allow dashboard customization
 - Implement swipe gestures for common actions
@@ -519,6 +561,7 @@ Welcome (Value Proposition) → Feature Preview → Use Case Selection → Auth 
 **Score**: 8/10
 
 **Findings**:
+
 - ✅ Clean, modern interface
 - ✅ Good use of white space
 - ✅ Not cluttered despite high information density
@@ -527,6 +570,7 @@ Welcome (Value Proposition) → Feature Preview → Use Case Selection → Auth 
 - ✅ Color scheme is professional
 
 **Recommendations**:
+
 - Consider collapsible sections on dashboard for customization
 - Use progressive disclosure for advanced settings
 - Maintain current minimalist approach
@@ -538,6 +582,7 @@ Welcome (Value Proposition) → Feature Preview → Use Case Selection → Auth 
 **Score**: 3/10
 
 **Findings**:
+
 - ❌ No error states shown in designs
 - ❌ No indication of how errors will be displayed
 - ❌ No recovery suggestions visible
@@ -546,6 +591,7 @@ Welcome (Value Proposition) → Feature Preview → Use Case Selection → Auth 
 - ❌ No validation error messages designed
 
 **Recommendations**:
+
 - Design clear error states for all screens
 - Use plain language error messages
 - Always provide actionable recovery steps
@@ -559,6 +605,7 @@ Welcome (Value Proposition) → Feature Preview → Use Case Selection → Auth 
 **Score**: 5/10
 
 **Findings**:
+
 - ✅ Help Center link in profile
 - ❌ No onboarding tooltips or coach marks
 - ❌ No contextual help in dashboard
@@ -567,6 +614,7 @@ Welcome (Value Proposition) → Feature Preview → Use Case Selection → Auth 
 - ⚠️ Chat could serve as help but not positioned that way
 
 **Recommendations**:
+
 - Add first-time user tooltips
 - Create in-app help guides
 - Position AI assistant as help resource
@@ -598,11 +646,13 @@ Profile Modal (accessible from top bar):
 **Findings**:
 
 **Strengths**:
+
 - ✅ Flat hierarchy - max 2 levels deep
 - ✅ Four-item bottom nav follows mobile best practices
 - ✅ Related settings grouped logically
 
 **Issues**:
+
 - ⚠️ Chat access is hidden (small input at bottom)
 - ❌ No clear path to key tasks (add expense, set budget)
 - ⚠️ Profile access via avatar may not be discoverable
@@ -610,6 +660,7 @@ Profile Modal (accessible from top bar):
 - ⚠️ "Transactions" and "Budgets" screens not shown - can't evaluate
 
 **Recommendations**:
+
 - Make chat more prominent (FAB or dedicated tab)
 - Add quick action buttons on dashboard
 - Consider onboarding tour to reveal navigation
@@ -622,6 +673,7 @@ Profile Modal (accessible from top bar):
 #### Touch Target Sizing
 
 **Analyzed Elements**:
+
 - Buttons: Appear to meet 44x44pt minimum ✅
 - Form fields: Adequate height ✅
 - Bottom nav icons: Appear adequate ✅
@@ -635,6 +687,7 @@ Profile Modal (accessible from top bar):
 #### Form Design Patterns
 
 **Issues Identified**:
+
 - ❌ No floating labels (labels disappear when typing)
 - ❌ No field focus indicators shown
 - ⚠️ Password fields have show/hide toggle ✅
@@ -642,6 +695,7 @@ Profile Modal (accessible from top bar):
 - ❌ No character counters for limited fields
 
 **Recommendations**:
+
 - Implement floating labels or keep labels visible
 - Add focus states with clear borders/colors
 - Mark required fields with asterisks
@@ -652,6 +706,7 @@ Profile Modal (accessible from top bar):
 #### Feedback Mechanisms
 
 **Missing Feedback Patterns**:
+
 - ❌ No success confirmations
 - ❌ No toast messages
 - ❌ No haptic feedback indicators
@@ -659,6 +714,7 @@ Profile Modal (accessible from top bar):
 - ⚠️ Pull-to-refresh on dashboard (per spec) ✅
 
 **Recommendations**:
+
 - Add success toasts for completed actions
 - Implement haptic feedback for key interactions
 - Consider subtle sound feedback for AI responses
@@ -675,26 +731,32 @@ Profile Modal (accessible from top bar):
 **Impact**: User Activation
 
 **Description**:
-New users face a confusing journey from registration to seeing value. The welcome screen sets incorrect expectations (automation, e-commerce), and users land on a dashboard with no guidance on how to start.
+New users face a confusing journey from registration to seeing value. The welcome screen sets
+incorrect expectations (automation, e-commerce), and users land on a dashboard with no guidance on
+how to start.
 
 **User Quote (Anticipated)**:
 > "I signed up but don't know what to do next. Is this for business or personal finance?"
 
 **Evidence**:
+
 - Welcome screen mentions e-commerce and automation
 - Dashboard shows empty/mock data without guidance
 - Chat interface is small and easily missed
 - No onboarding checklist or guided first action
 
 **Business Impact**:
+
 - High drop-off rate after registration
 - Low activation of core chat feature
 - Increased support requests
 
 **Opportunity**:
-Create a guided first expense flow that demonstrates both chat interaction and dashboard value within first 2 minutes.
+Create a guided first expense flow that demonstrates both chat interaction and dashboard value
+within first 2 minutes.
 
 **Recommended Solution**:
+
 ```
 After Registration:
 1. Welcome: "Let's track your first expense together"
@@ -713,18 +775,21 @@ After Registration:
 **Impact**: Registration Completion Rate
 
 **Description**:
-Users create passwords that don't meet requirements, enter malformed emails, or make typos without any feedback until submission fails.
+Users create passwords that don't meet requirements, enter malformed emails, or make typos without
+any feedback until submission fails.
 
 **User Quote (Anticipated)**:
 > "Why didn't it tell me the password was too short before I filled out everything else?"
 
 **Evidence**:
+
 - No visible password requirements
 - No inline validation
 - No error state designs
 - Users must submit and retry
 
 **Business Impact**:
+
 - 20-30% registration abandonment (industry avg without validation)
 - User frustration
 - Perception of poor quality
@@ -733,6 +798,7 @@ Users create passwords that don't meet requirements, enter malformed emails, or 
 Implement real-time validation with helpful guidance to make form completion feel effortless.
 
 **Recommended Solution**:
+
 - Show password requirements before user types
 - Add green checkmarks as requirements are met
 - Validate email on blur
@@ -747,18 +813,21 @@ Implement real-time validation with helpful guidance to make form completion fee
 **Impact**: Feature Discovery and Engagement
 
 **Description**:
-The AI chat assistant - the core differentiator of BalanceIQ - is hidden at the bottom of the dashboard in a small input field. New users may not discover it.
+The AI chat assistant - the core differentiator of BalanceIQ - is hidden at the bottom of the
+dashboard in a small input field. New users may not discover it.
 
 **User Quote (Anticipated)**:
 > "I thought this was just another budgeting app. I didn't realize I could chat with it."
 
 **Evidence**:
+
 - Chat input is visually small
 - No prompting or tutorial
 - No example queries
 - Competing with bottom navigation visually
 
 **Business Impact**:
+
 - Low engagement with core feature
 - Users miss value proposition
 - Higher churn rate
@@ -767,6 +836,7 @@ The AI chat assistant - the core differentiator of BalanceIQ - is hidden at the 
 Make chat discovery inevitable through strategic design and prompting.
 
 **Recommended Solutions**:
+
 1. Add pulsing animation on first visit
 2. Show floating action button instead of inline input
 3. Display suggested queries as chips above input
@@ -781,18 +851,21 @@ Make chat discovery inevitable through strategic design and prompting.
 **Impact**: User Understanding and Trust
 
 **Description**:
-Dashboard displays financial ratios and metrics without explanation, assuming users understand concepts like expense ratio and savings rate.
+Dashboard displays financial ratios and metrics without explanation, assuming users understand
+concepts like expense ratio and savings rate.
 
 **User Quote (Anticipated)**:
 > "Is 58.9% expense ratio good or bad? What should I do about it?"
 
 **Evidence**:
+
 - Metrics shown without context
 - No tooltips or info icons
 - No actionable recommendations
 - Color coding is minimal (red/green)
 
 **Business Impact**:
+
 - Users don't understand their financial health
 - No behavior change prompted
 - App feels passive rather than helpful
@@ -801,9 +874,11 @@ Dashboard displays financial ratios and metrics without explanation, assuming us
 Transform passive data display into active financial coaching.
 
 **Recommended Solutions**:
+
 1. Add info icons with explanations
 2. Color-code metrics (red: action needed, yellow: monitor, green: good)
-3. Provide contextual tips: "Your expense ratio is higher than recommended. Consider reviewing your dining expenses."
+3. Provide contextual tips: "Your expense ratio is higher than recommended. Consider reviewing your
+   dining expenses."
 4. Add benchmark comparisons: "Similar users save 50% on average"
 5. Link metrics to chat: "Ask AI how to improve your savings rate"
 
@@ -815,18 +890,21 @@ Transform passive data display into active financial coaching.
 **Impact**: Conversion Rate
 
 **Description**:
-Subscription tiers reference features (n8n, WooCommerce, FinanceGuru) that don't align with personal finance use cases, creating confusion about product purpose.
+Subscription tiers reference features (n8n, WooCommerce, FinanceGuru) that don't align with personal
+finance use cases, creating confusion about product purpose.
 
 **User Quote (Anticipated)**:
 > "Why would I need WooCommerce for tracking my personal expenses?"
 
 **Evidence**:
+
 - Feature names don't match user needs
 - No clear explanation of benefits
 - Disconnect from personal finance positioning
 - No free tier or trial
 
 **Business Impact**:
+
 - Low conversion to paid plans
 - Users question product focus
 - Premium features undervalued
@@ -836,6 +914,7 @@ Reframe subscription tiers around clear personal finance benefits.
 
 **Recommended Solution**:
 Rename and reframe tiers:
+
 - **Starter**: "Personal" - Basic expense tracking, 100 transactions/month, email support
 - **Pro**: "Premium" - Unlimited transactions, receipt scanning, priority AI, export data
 - **Business**: "Family" - Multi-user accounts, shared budgets, financial advisor insights
@@ -851,6 +930,7 @@ Add 14-day free trial of Pro tier to demonstrate value.
 **Description**: Add game mechanics to increase daily engagement and positive financial behaviors.
 
 **Implementation Ideas**:
+
 - Streak tracking: "5 days logging expenses!"
 - Achievement badges: "First expense tracked", "Budget created", "Savings goal reached"
 - Progress bars for goals
@@ -858,6 +938,7 @@ Add 14-day free trial of Pro tier to demonstrate value.
 - Comparison with previous months (beat your own record)
 
 **Expected Impact**:
+
 - +40% daily active usage
 - +25% goal completion rate
 - Positive reinforcement of good habits
@@ -869,13 +950,16 @@ Add 14-day free trial of Pro tier to demonstrate value.
 **Description**: Transform AI from reactive (answers questions) to proactive (offers insights).
 
 **Implementation Ideas**:
+
 - Morning summary notifications: "You have $200 left in your dining budget this month"
 - Spending anomaly alerts: "You spent 50% more on transportation this week"
-- Smart suggestions: "Based on your income schedule, you'll run low on funds next week. Consider moving $100 from savings."
+- Smart suggestions: "Based on your income schedule, you'll run low on funds next week. Consider
+  moving $100 from savings."
 - Bill reminders extracted from chat history
 - End-of-month reports with trends
 
 **Expected Impact**:
+
 - +60% engagement rate
 - Positions AI as financial coach, not just tracker
 - Increases perceived value
@@ -887,6 +971,7 @@ Add 14-day free trial of Pro tier to demonstrate value.
 **Description**: Add safe social comparison and sharing without violating privacy.
 
 **Implementation Ideas**:
+
 - Anonymous benchmarking: "People in your age group save 35% on average"
 - Shared budgets for couples/families
 - Split expense features
@@ -894,6 +979,7 @@ Add 14-day free trial of Pro tier to demonstrate value.
 - Achievement sharing (optional)
 
 **Expected Impact**:
+
 - Network effects increase retention
 - Social motivation for good habits
 - Viral growth potential
@@ -905,6 +991,7 @@ Add 14-day free trial of Pro tier to demonstrate value.
 **Description**: Make receipt scanning the primary input method, reducing manual entry friction.
 
 **Implementation Ideas**:
+
 - One-tap receipt capture from dashboard
 - Auto-extract merchant, amount, category, date
 - Build merchant database for auto-categorization
@@ -912,6 +999,7 @@ Add 14-day free trial of Pro tier to demonstrate value.
 - Store digital receipt archive
 
 **Expected Impact**:
+
 - -70% time to log expense
 - Higher accuracy than manual entry
 - Unique feature differentiator
@@ -928,20 +1016,22 @@ Add 14-day free trial of Pro tier to demonstrate value.
 
 **Tested Elements**:
 
-| Element | Foreground | Background | Ratio | WCAG AA | Status |
-|---------|-----------|------------|-------|---------|--------|
-| Body text (white on dark green) | #FFFFFF | #1A3A2E | ~8.5:1 | 4.5:1 | ✅ Pass |
-| Secondary text (gray) | #9CA3AF | #1A3A2E | ~3.2:1 | 4.5:1 | ❌ Fail |
-| Primary CTA (black on green) | #000000 | #10B981 | ~8.1:1 | 4.5:1 | ✅ Pass |
-| Link text (green on dark) | #10B981 | #1F2937 | ~4.2:1 | 4.5:1 | ⚠️ Borderline |
-| "Forgot Password" link | #10B981 | #1F2937 | ~4.2:1 | 4.5:1 | ⚠️ Borderline |
+| Element                         | Foreground | Background | Ratio  | WCAG AA | Status        |
+|---------------------------------|------------|------------|--------|---------|---------------|
+| Body text (white on dark green) | #FFFFFF    | #1A3A2E    | ~8.5:1 | 4.5:1   | ✅ Pass        |
+| Secondary text (gray)           | #9CA3AF    | #1A3A2E    | ~3.2:1 | 4.5:1   | ❌ Fail        |
+| Primary CTA (black on green)    | #000000    | #10B981    | ~8.1:1 | 4.5:1   | ✅ Pass        |
+| Link text (green on dark)       | #10B981    | #1F2937    | ~4.2:1 | 4.5:1   | ⚠️ Borderline |
+| "Forgot Password" link          | #10B981    | #1F2937    | ~4.2:1 | 4.5:1   | ⚠️ Borderline |
 
 **Critical Issues**:
+
 - Secondary/placeholder text may not meet 4.5:1 ratio
 - Some green text on dark backgrounds is borderline
 - White text on green buttons needs verification
 
 **Recommendations**:
+
 - Increase contrast for secondary text to #B0B7BF or lighter
 - Test all text-background combinations with contrast checker
 - Use darker green for links on dark backgrounds
@@ -952,12 +1042,14 @@ Add 14-day free trial of Pro tier to demonstrate value.
 ##### Text Sizing and Scaling
 
 **Findings**:
+
 - ✅ Base font sizes appear adequate (14-16px body text)
 - ⚠️ No indication if text scales to 200% without horizontal scroll
 - ❌ Small text in charts/graphs may not scale well
 - ⚠️ Dense dashboard may break at larger text sizes
 
 **Recommendations**:
+
 - Test with iOS/Android system font scaling (up to 200%)
 - Ensure all layouts are responsive to text size
 - Use relative units (sp/pt) not absolute
@@ -968,12 +1060,14 @@ Add 14-day free trial of Pro tier to demonstrate value.
 ##### Non-Text Content
 
 **Findings**:
+
 - ⚠️ Icons have visual meaning but alt text not documented
 - ❌ Chart data not available in alternative format
 - ⚠️ Profile pictures need alt text
 - ❌ No indication of decorative vs informative images
 
 **Recommendations**:
+
 - Provide alt text for all meaningful images/icons
 - Mark decorative images appropriately
 - Provide data tables as alternative to charts
@@ -986,17 +1080,20 @@ Add 14-day free trial of Pro tier to demonstrate value.
 ##### Keyboard Accessibility
 
 **Findings**:
+
 - ⚠️ Touch-only designs shown, keyboard nav not documented
 - ❌ No visible focus indicators in designs
 - ❌ Tab order not specified
 - ⚠️ Modals may trap focus
 
 **Critical Issues for Desktop/Tablet Users**:
+
 - Can't determine if all interactive elements are keyboard accessible
 - No visual indication of focused element
 - Form navigation flow unclear
 
 **Recommendations**:
+
 - Design clear focus indicators (2px outline, high contrast)
 - Ensure logical tab order (top to bottom, left to right)
 - Implement focus trap in modals with Escape key to close
@@ -1008,21 +1105,23 @@ Add 14-day free trial of Pro tier to demonstrate value.
 
 **Findings**:
 
-| Element | Estimated Size | WCAG AAA (44x44pt) | Status |
-|---------|---------------|-------------------|---------|
-| Bottom nav icons | ~48x48pt | ✅ | Pass |
-| Primary buttons | ~48x44pt | ✅ | Pass |
-| Form fields | ~48x44pt | ✅ | Pass |
-| "Forgot Password" link | ~30x20pt | ❌ | Fail |
-| Table rows (chat) | ~40pt height | ⚠️ | Borderline |
-| Close buttons (X) | ~32x32pt | ❌ | Fail |
+| Element                | Estimated Size | WCAG AAA (44x44pt) | Status     |
+|------------------------|----------------|--------------------|------------|
+| Bottom nav icons       | ~48x48pt       | ✅                  | Pass       |
+| Primary buttons        | ~48x44pt       | ✅                  | Pass       |
+| Form fields            | ~48x44pt       | ✅                  | Pass       |
+| "Forgot Password" link | ~30x20pt       | ❌                  | Fail       |
+| Table rows (chat)      | ~40pt height   | ⚠️                 | Borderline |
+| Close buttons (X)      | ~32x32pt       | ❌                  | Fail       |
 
 **Critical Issues**:
+
 - Text links too small for accurate tapping
 - Close buttons (X) in modals undersized
 - Increasing touch targets may help all users (Fitts's Law)
 
 **Recommendations**:
+
 - Increase link padding to meet 44x44pt minimum
 - Make close buttons larger (40x40pt minimum)
 - Add spacing around tappable elements
@@ -1033,11 +1132,13 @@ Add 14-day free trial of Pro tier to demonstrate value.
 ##### Motion and Animation
 
 **Findings**:
+
 - ⚠️ Animations mentioned (shimmer, typing indicator) but no controls shown
 - ❌ No option to reduce motion
 - ⚠️ Auto-playing animations may cause issues
 
 **Recommendations**:
+
 - Respect prefers-reduced-motion system setting
 - Provide option in settings to disable animations
 - Don't use motion as only indicator of status
@@ -1050,12 +1151,14 @@ Add 14-day free trial of Pro tier to demonstrate value.
 ##### Clear Language
 
 **Findings**:
+
 - ✅ Most text is clear and concise
 - ⚠️ Financial jargon not explained
 - ❌ Technical terms in subscription (n8n, WooCommerce)
 - ✅ Error messages not shown but need plain language
 
 **Recommendations**:
+
 - Define financial terms on first use
 - Replace technical terms with user-friendly language
 - Write error messages at 8th-grade reading level
@@ -1066,12 +1169,14 @@ Add 14-day free trial of Pro tier to demonstrate value.
 ##### Predictable Behavior
 
 **Findings**:
+
 - ✅ Standard patterns used (back buttons, bottom nav)
 - ⚠️ No indication of what happens when buttons are pressed
 - ❌ Unexpected navigation changes not documented
 - ⚠️ Form submission behavior unclear
 
 **Recommendations**:
+
 - Keep navigation consistent across screens
 - Don't open new contexts without warning
 - Provide confirmation before irreversible actions
@@ -1082,12 +1187,14 @@ Add 14-day free trial of Pro tier to demonstrate value.
 ##### Input Assistance
 
 **Findings**:
+
 - ❌ No error prevention shown
 - ❌ No error identification demonstrated
 - ❌ No error suggestions visible
 - ⚠️ Form labels present but may not be programmatically associated
 
 **Recommendations**:
+
 - Add labels to all form fields
 - Show field requirements before errors occur
 - Provide specific error messages with recovery steps
@@ -1098,12 +1205,14 @@ Add 14-day free trial of Pro tier to demonstrate value.
 #### 4.1.4 Robust - CANNOT FULLY ASSESS ⚠️
 
 **Findings**:
+
 - ⚠️ Cannot assess without seeing implementation code
 - HTML/React semantic structure not visible in designs
 - ARIA usage unknown
 - Screen reader testing not possible with static designs
 
 **Required Testing**:
+
 - Screen reader testing (VoiceOver, TalkBack)
 - Semantic HTML validation
 - ARIA attribute review
@@ -1116,24 +1225,25 @@ Add 14-day free trial of Pro tier to demonstrate value.
 **Critical Concerns**:
 
 1. **Dashboard Scannability**:
-   - Complex layout may be difficult to navigate linearly
-   - Recommendation: Use landmarks (header, main, nav, complementary)
-   - Add skip links ("Skip to balance", "Skip to actions")
+    - Complex layout may be difficult to navigate linearly
+    - Recommendation: Use landmarks (header, main, nav, complementary)
+    - Add skip links ("Skip to balance", "Skip to actions")
 
 2. **Chart Accessibility**:
-   - Spending trend chart is visual only
-   - Recommendation: Provide data table alternative
-   - Add aria-label with summary ("Spending trend showing increase from $100 on day 1 to $150 on day 30")
+    - Spending trend chart is visual only
+    - Recommendation: Provide data table alternative
+    - Add aria-label with summary ("Spending trend showing increase from $100 on day 1 to $150 on
+      day 30")
 
 3. **Form Feedback**:
-   - Error messages may not be announced
-   - Recommendation: Use aria-live regions
-   - Associate errors with fields using aria-describedby
+    - Error messages may not be announced
+    - Recommendation: Use aria-live regions
+    - Associate errors with fields using aria-describedby
 
 4. **Chat Interface**:
-   - Message stream may be challenging to navigate
-   - Recommendation: Use proper ARIA chat role
-   - Announce new messages with aria-live="polite"
+    - Message stream may be challenging to navigate
+    - Recommendation: Use proper ARIA chat role
+    - Announce new messages with aria-live="polite"
 
 ---
 
@@ -1176,6 +1286,7 @@ Add 14-day free trial of Pro tier to demonstrate value.
 **Participants**: 8-10 users (mix of financial literacy levels)
 **Duration**: 60 minutes per session
 **Tasks**:
+
 1. Create account
 2. Log first expense
 3. Explore dashboard
@@ -1183,6 +1294,7 @@ Add 14-day free trial of Pro tier to demonstrate value.
 5. Discover chat feature
 
 **Success Metrics**:
+
 - Time to first expense logged
 - Dashboard comprehension score
 - Chat feature discovery rate
@@ -1190,6 +1302,7 @@ Add 14-day free trial of Pro tier to demonstrate value.
 - SUS (System Usability Scale) score
 
 **Key Questions**:
+
 - Do users understand the value proposition?
 - Can they successfully create an account?
 - Do they discover the chat feature?
@@ -1197,6 +1310,7 @@ Add 14-day free trial of Pro tier to demonstrate value.
 - What causes confusion or frustration?
 
 **Expected Insights**:
+
 - Onboarding friction points
 - Feature discovery issues
 - Comprehension gaps
@@ -1216,11 +1330,13 @@ Add 14-day free trial of Pro tier to demonstrate value.
 **Duration**: 2 weeks
 
 **Variants**:
+
 - **A (Control)**: Current design - inline input at dashboard bottom
 - **B (FAB)**: Floating action button in bottom-right
 - **C (Suggested Queries)**: Input with 3 suggested query chips above
 
 **Metrics**:
+
 - Chat discovery rate (% who send first message)
 - Time to first message
 - Messages per session
@@ -1228,6 +1344,7 @@ Add 14-day free trial of Pro tier to demonstrate value.
 - Feature satisfaction score
 
 **Expected Insights**:
+
 - Which design drives highest engagement
 - Impact on dashboard interaction
 - User preference data
@@ -1243,6 +1360,7 @@ Add 14-day free trial of Pro tier to demonstrate value.
 
 **Methodology**: Moderated testing with assistive technology users
 **Participants**:
+
 - 3 screen reader users (blind)
 - 2 motor impairment users (switch/voice control)
 - 2 low vision users (magnification)
@@ -1251,6 +1369,7 @@ Add 14-day free trial of Pro tier to demonstrate value.
 **Tasks**: Complete full user journey from signup to expense tracking
 
 **Success Metrics**:
+
 - WCAG compliance validation
 - Task completion rate
 - Error rate
@@ -1258,6 +1377,7 @@ Add 14-day free trial of Pro tier to demonstrate value.
 - Satisfaction score
 
 **Expected Insights**:
+
 - Critical accessibility barriers
 - Screen reader navigation issues
 - Keyboard accessibility gaps
@@ -1277,6 +1397,7 @@ Add 14-day free trial of Pro tier to demonstrate value.
 **Touchpoints**: Daily logs + 3 check-in interviews
 
 **Data Collection**:
+
 - Daily expense logging behavior
 - Chat interaction patterns
 - Dashboard usage frequency
@@ -1284,6 +1405,7 @@ Add 14-day free trial of Pro tier to demonstrate value.
 - Value perceived over time
 
 **Success Metrics**:
+
 - Daily active usage
 - Expense logging consistency
 - Feature adoption curve
@@ -1291,6 +1413,7 @@ Add 14-day free trial of Pro tier to demonstrate value.
 - NPS score over time
 
 **Expected Insights**:
+
 - Real-world usage patterns
 - Barriers to habit formation
 - Feature stickiness
@@ -1310,12 +1433,14 @@ Add 14-day free trial of Pro tier to demonstrate value.
 **Content**: All app features, settings, and sections
 
 **Analysis**:
+
 - Category agreement scores
 - Expected vs actual groupings
 - Naming preferences
 - Navigation mental models
 
 **Expected Insights**:
+
 - Optimal feature grouping
 - Navigation label clarity
 - Settings organization
@@ -1331,30 +1456,35 @@ Add 14-day free trial of Pro tier to demonstrate value.
 #### Critical Metrics to Track
 
 **Activation Metrics**:
+
 - Registration completion rate
 - Email verification rate
 - Time to first expense logged
 - First-week retention rate
 
 **Engagement Metrics**:
+
 - Daily/Weekly/Monthly active users
 - Messages sent per session
 - Dashboard visits per day
 - Feature usage distribution
 
 **Feature-Specific**:
+
 - Chat discovery rate
 - Receipt scanning adoption
 - Budget creation rate
 - Subscription conversion funnel
 
 **Quality Metrics**:
+
 - Error rate by screen
 - Form abandonment points
 - Session duration
 - Crash rate
 
 **Recommended Tools**:
+
 - Mixpanel or Amplitude for event tracking
 - Hotjar or FullStory for session replay
 - Firebase Analytics for mobile basics
@@ -1367,35 +1497,38 @@ Add 14-day free trial of Pro tier to demonstrate value.
 #### In-App Feedback Collection
 
 **Implementation**:
+
 1. **Microsurveys**: Single-question surveys at key moments
-   - After first expense: "How easy was that? 😊 😐 ☹️"
-   - After dashboard view: "Is this information helpful?"
-   - After subscription view: "What's stopping you from upgrading?"
+    - After first expense: "How easy was that? 😊 😐 ☹️"
+    - After dashboard view: "Is this information helpful?"
+    - After subscription view: "What's stopping you from upgrading?"
 
 2. **Feature Voting**: Let users vote on roadmap priorities
-   - "What feature would you like next?"
-   - Public roadmap board
+    - "What feature would you like next?"
+    - Public roadmap board
 
 3. **Bug Reporting**: Easy way to report issues
-   - Shake to report (mobile)
-   - Screenshot + description
-   - Auto-capture device info
+    - Shake to report (mobile)
+    - Screenshot + description
+    - Auto-capture device info
 
 4. **NPS Survey**: Monthly Net Promoter Score
-   - "How likely are you to recommend BalanceIQ?"
-   - Follow-up: "What's the main reason for your score?"
+    - "How likely are you to recommend BalanceIQ?"
+    - Follow-up: "What's the main reason for your score?"
 
 ---
 
 #### User Interview Program
 
 **Ongoing Research Panel**:
+
 - Recruit 50-100 engaged users willing to participate
 - Monthly interviews with 5-10 users
 - Compensate with premium subscription
 - Focus on power users and churned users
 
 **Interview Cadence**:
+
 - Week 1 users: Onboarding experience
 - Month 1 users: Habit formation
 - Month 3+ users: Long-term value
@@ -1410,12 +1543,14 @@ Add 14-day free trial of Pro tier to demonstrate value.
 **Priority 1: Fix Authentication Experience** ⏰ Week 1-2
 
 **Issues**:
+
 - Missing password requirements
 - No inline validation
 - Social auth platform mismatch
 - No error states
 
 **Action Items**:
+
 1. Add password requirements tooltip
 2. Implement real-time validation for email and password
 3. Replace Twitter/GitHub with Google/Apple sign-in
@@ -1426,6 +1561,7 @@ Add 14-day free trial of Pro tier to demonstrate value.
 
 **Owner**: UX Designer + Frontend Developer
 **Success Criteria**:
+
 - Form completion rate >85%
 - Registration error rate <10%
 - User testing validation
@@ -1435,12 +1571,14 @@ Add 14-day free trial of Pro tier to demonstrate value.
 **Priority 2: Enhance Onboarding and First Value** ⏰ Week 2-3
 
 **Issues**:
+
 - Confusing welcome message
 - No guided first action
 - Chat feature hidden
 - Empty dashboard state missing
 
 **Action Items**:
+
 1. Rewrite welcome screen copy to focus on personal finance value
 2. Design empty state for dashboard with call-to-action
 3. Create guided first expense flow
@@ -1450,6 +1588,7 @@ Add 14-day free trial of Pro tier to demonstrate value.
 
 **Owner**: UX Designer + Content Writer + Frontend Developer
 **Success Criteria**:
+
 - 70% of users log first expense within 5 minutes
 - Chat discovery rate >60%
 - First-week retention >50%
@@ -1459,12 +1598,14 @@ Add 14-day free trial of Pro tier to demonstrate value.
 **Priority 3: Accessibility Compliance** ⏰ Week 3-4
 
 **Issues**:
+
 - Color contrast failures
 - Missing alt text
 - No keyboard navigation
 - Small touch targets
 
 **Action Items**:
+
 1. Fix secondary text color contrast
 2. Add alt text to all images/icons
 3. Implement keyboard focus indicators
@@ -1475,6 +1616,7 @@ Add 14-day free trial of Pro tier to demonstrate value.
 
 **Owner**: Frontend Developer + QA
 **Success Criteria**:
+
 - WCAG 2.1 Level AA compliance
 - Screen reader testing validation
 - Keyboard navigation 100% functional
@@ -1484,11 +1626,13 @@ Add 14-day free trial of Pro tier to demonstrate value.
 **Priority 4: Error Prevention and Handling** ⏰ Week 4-5
 
 **Issues**:
+
 - No error states designed
 - No recovery guidance
 - No validation feedback
 
 **Action Items**:
+
 1. Design error states for all screens
 2. Implement field-level validation
 3. Add error messages with recovery steps
@@ -1498,6 +1642,7 @@ Add 14-day free trial of Pro tier to demonstrate value.
 
 **Owner**: UX Designer + Frontend Developer
 **Success Criteria**:
+
 - Error recovery rate >80%
 - User testing shows clear error understanding
 
@@ -1508,6 +1653,7 @@ Add 14-day free trial of Pro tier to demonstrate value.
 **Priority 5: Dashboard Enhancements**
 
 **Action Items**:
+
 1. Add tooltips/info icons for financial metrics
 2. Design and implement empty state
 3. Add contextual AI prompts in widgets
@@ -1523,6 +1669,7 @@ Add 14-day free trial of Pro tier to demonstrate value.
 **Priority 6: Chat Experience Improvements**
 
 **Action Items**:
+
 1. Add suggested queries on empty state
 2. Implement typing indicators
 3. Add quick reply buttons for common actions
@@ -1538,6 +1685,7 @@ Add 14-day free trial of Pro tier to demonstrate value.
 **Priority 7: Subscription Clarity**
 
 **Action Items**:
+
 1. Reframe subscription features for personal finance
 2. Add feature comparison table
 3. Implement 14-day free trial
@@ -1553,18 +1701,21 @@ Add 14-day free trial of Pro tier to demonstrate value.
 ### 6.3 Medium Priority (Month 2-3) - 8-12 Weeks
 
 **Priority 8: Gamification**
+
 - Achievement system
 - Streak tracking
 - Progress visualization
 - Financial health score
 
 **Priority 9: Proactive Features**
+
 - Push notifications for insights
 - Smart spending alerts
 - Bill reminders
 - Budget warnings
 
 **Priority 10: Advanced AI Features**
+
 - Receipt OCR improvements
 - Auto-categorization learning
 - Predictive budgeting
@@ -1575,12 +1726,14 @@ Add 14-day free trial of Pro tier to demonstrate value.
 ### 6.4 Low Priority (Month 4+) - Future Roadmap
 
 **Priority 11: Social Features**
+
 - Split expenses
 - Shared budgets
 - Anonymous benchmarking
 - Challenges
 
 **Priority 12: Advanced Analytics**
+
 - Custom reports
 - Exportable insights
 - Tax preparation support
@@ -1593,30 +1746,35 @@ Add 14-day free trial of Pro tier to demonstrate value.
 ### 7.1 UX Success Metrics (KPIs)
 
 **Activation**:
+
 - Registration completion rate: Target >80%
 - Email verification rate: Target >70%
 - First expense logged: Target >60% (within 24 hours)
 - First-week retention: Target >50%
 
 **Engagement**:
+
 - Daily active users (DAU): Track trend
 - Messages per session: Target >3
 - Dashboard visits per day: Target >2
 - Feature adoption rate: Target >40% for each core feature
 
 **Satisfaction**:
+
 - System Usability Scale (SUS): Target >75 (Good)
 - Net Promoter Score (NPS): Target >30
 - App store rating: Target >4.0
 - Customer satisfaction (CSAT): Target >80%
 
 **Efficiency**:
+
 - Time to log expense: Target <30 seconds
 - Error rate: Target <5% per session
 - Support ticket volume: Minimize
 - Form completion rate: Target >85%
 
 **Retention**:
+
 - Day 1 retention: Target >60%
 - Day 7 retention: Target >40%
 - Day 30 retention: Target >25%
@@ -1627,6 +1785,7 @@ Add 14-day free trial of Pro tier to demonstrate value.
 ### 7.2 Testing and Validation Schedule
 
 **Pre-Launch** (Weeks 1-6):
+
 - Week 1-2: Heuristic evaluation (completed with this document)
 - Week 2-3: Internal usability testing (team + friends/family)
 - Week 3-4: Accessibility audit with assistive technology
@@ -1635,6 +1794,7 @@ Add 14-day free trial of Pro tier to demonstrate value.
 - Week 6: Final fixes and validation
 
 **Post-Launch Month 1**:
+
 - Day 1: Analytics dashboard setup
 - Week 1: Monitor activation funnel
 - Week 2: In-app NPS survey
@@ -1642,12 +1802,14 @@ Add 14-day free trial of Pro tier to demonstrate value.
 - Week 4: Moderated follow-up interviews (5 users)
 
 **Post-Launch Month 2-3**:
+
 - Diary study (2 weeks)
 - Feature usage analysis
 - Cohort retention analysis
 - Iterative improvements based on data
 
 **Quarterly**:
+
 - Comprehensive UX review
 - WCAG compliance re-audit
 - User interview panel sessions
@@ -1660,6 +1822,7 @@ Add 14-day free trial of Pro tier to demonstrate value.
 ### 8.1 Best Practices from Competitors
 
 **Mint** (Intuit):
+
 - ✅ Strong empty state onboarding
 - ✅ Clear account linking flow
 - ✅ Proactive spending alerts
@@ -1667,6 +1830,7 @@ Add 14-day free trial of Pro tier to demonstrate value.
 - **Lesson**: Simplify initial setup, add value quickly
 
 **YNAB** (You Need A Budget):
+
 - ✅ Educational onboarding
 - ✅ Strong methodology/philosophy
 - ✅ Video tutorials
@@ -1674,6 +1838,7 @@ Add 14-day free trial of Pro tier to demonstrate value.
 - **Lesson**: Balance education with quick wins
 
 **PocketGuard**:
+
 - ✅ Simple, focused dashboard
 - ✅ Clear "In My Pocket" calculation
 - ✅ Easy goal setting
@@ -1681,6 +1846,7 @@ Add 14-day free trial of Pro tier to demonstrate value.
 - **Lesson**: Keep core value proposition simple
 
 **Cleo** (AI Finance):
+
 - ✅ Conversational AI with personality
 - ✅ Gamification and humor
 - ✅ Strong engagement tactics
@@ -1688,6 +1854,7 @@ Add 14-day free trial of Pro tier to demonstrate value.
 - **Lesson**: Balance personality with professionalism
 
 **BalanceIQ Differentiation**:
+
 - AI-first approach (not just chatbot addition)
 - Dashboard + chat integration
 - Receipt OCR as primary input
@@ -1700,12 +1867,14 @@ Add 14-day free trial of Pro tier to demonstrate value.
 ### 9.1 Summary of Critical Findings
 
 **What's Working**:
+
 - Modern, clean visual design
 - Dashboard-first approach shows promise
 - Multi-modal authentication is comprehensive
 - Information architecture is generally sound
 
 **What Needs Immediate Attention**:
+
 - Authentication experience has significant friction
 - Onboarding doesn't deliver clear value quickly
 - Accessibility has critical compliance gaps
@@ -1729,18 +1898,21 @@ Add 14-day free trial of Pro tier to demonstrate value.
 ### 9.3 30-Day Action Plan
 
 **Week 1-2**:
+
 - Fix authentication flow
 - Design error states
 - Implement inline validation
 - Fix social auth platforms
 
 **Week 3-4**:
+
 - Enhance onboarding messaging
 - Design empty states
 - Improve chat visibility
 - Address accessibility issues
 
 **Week 5-6**:
+
 - Conduct usability testing
 - Analyze results
 - Implement critical fixes
@@ -1766,24 +1938,28 @@ This comprehensive UX research report includes:
 ### 9.5 Long-Term UX Roadmap
 
 **Quarter 1** (Months 1-3):
+
 - Launch with critical fixes
 - Establish analytics and feedback loops
 - Conduct initial user research studies
 - Iterate based on early data
 
 **Quarter 2** (Months 4-6):
+
 - Implement gamification
 - Add proactive features
 - Expand AI capabilities
 - Optimize conversion funnel
 
 **Quarter 3** (Months 7-9):
+
 - Add social features
 - Advanced analytics
 - International expansion prep
 - Platform optimization
 
 **Quarter 4** (Months 10-12):
+
 - Scale successful features
 - Advanced personalization
 - Enterprise/family plans
@@ -1794,23 +1970,27 @@ This comprehensive UX research report includes:
 ## Appendix A: Research Methodology
 
 **Heuristic Evaluation**:
+
 - Framework: Nielsen's 10 Usability Heuristics
 - Evaluator: Senior UX Researcher
 - Severity ratings: Critical, High, Medium, Low
 - Evidence: Design file analysis + spec review
 
 **Accessibility Evaluation**:
+
 - Standards: WCAG 2.1 Level AA
 - Tools: Manual review (automated tools pending implementation)
 - Scope: All user-facing screens
 - Limitations: Implementation details not available for full audit
 
 **Journey Mapping**:
+
 - Method: Experience-based mapping using design files
 - Validated against: Project specs and user stories
 - Assumptions: Documented where actual user data unavailable
 
 **Competitive Analysis**:
+
 - Competitors reviewed: Mint, YNAB, PocketGuard, Cleo
 - Method: App teardown + feature comparison
 - Focus: UX patterns, onboarding, engagement tactics
@@ -1820,15 +2000,18 @@ This comprehensive UX research report includes:
 ## Appendix B: Design File Inventory Reviewed
 
 **Onboarding** (4 screens):
+
 - Welcome screen
 - Login screen
 - Registration screen
 - Email verification success (mentioned, not reviewed)
 
 **Dashboard** (1 screen):
+
 - Main dashboard with financial overview
 
 **Chat Interface** (6 screens):
+
 - Chat interface
 - Chat interface with table
 - Chat loading state
@@ -1837,12 +2020,14 @@ This comprehensive UX research report includes:
 - Delete modal
 
 **Profile** (4 screens):
+
 - Profile page
 - Settings screen
 - Manage subscription
 - Subscription usage
 
 **Subscription** (3 screens):
+
 - Subscription plans page
 - Payment method selection
 - Payment confirmation

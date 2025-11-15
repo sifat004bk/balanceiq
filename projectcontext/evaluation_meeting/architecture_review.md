@@ -9,11 +9,15 @@
 
 ## Executive Summary
 
-BalanceIQ demonstrates a **solid implementation of Clean Architecture** with clear separation of concerns across three well-defined layers. The application showcases good architectural patterns for a Flutter mobile application with robust state management, proper dependency injection, and thoughtful data persistence strategies.
+BalanceIQ demonstrates a **solid implementation of Clean Architecture** with clear separation of
+concerns across three well-defined layers. The application showcases good architectural patterns for
+a Flutter mobile application with robust state management, proper dependency injection, and
+thoughtful data persistence strategies.
 
 **Overall Architecture Quality**: 7.5/10
 
 **Key Strengths**:
+
 - Clean Architecture implementation with proper layer separation
 - Excellent use of dependency injection with GetIt
 - Well-structured feature-based organization
@@ -21,6 +25,7 @@ BalanceIQ demonstrates a **solid implementation of Clean Architecture** with cle
 - Proper state management with Cubit pattern
 
 **Critical Areas for Improvement**:
+
 - Test coverage severely lacking (only 1 widget test)
 - Hardcoded values in production code
 - Security concerns with exposed API endpoints
@@ -36,6 +41,7 @@ BalanceIQ demonstrates a **solid implementation of Clean Architecture** with cle
 **Score**: 8/10
 
 **Strengths**:
+
 - Clear three-layer architecture (Presentation, Domain, Data)
 - Dependency rule properly enforced (dependencies point inward)
 - Domain layer is framework-independent
@@ -43,6 +49,7 @@ BalanceIQ demonstrates a **solid implementation of Clean Architecture** with cle
 - Entities and models correctly separated
 
 **Implementation Evidence**:
+
 ```
 lib/features/
 ├── chat/
@@ -61,11 +68,13 @@ lib/features/
 ```
 
 **Weaknesses**:
+
 - Some business logic leaking into Cubits (presentation layer)
 - Missing use case layer for some operations (direct repository calls)
 - Domain entities have minimal business logic (anemic domain model)
 
 **Recommendations**:
+
 1. Move complex business rules from Cubits into domain use cases
 2. Enrich domain entities with business behavior (e.g., message validation)
 3. Consider implementing specification pattern for complex queries
@@ -78,6 +87,7 @@ lib/features/
 **Score**: 8.5/10
 
 **Dependency Flow Analysis**:
+
 ```
 Presentation Layer (Cubit)
     ↓ depends on
@@ -87,29 +97,36 @@ Data Layer (Repository Impl, Data Sources, Models)
 ```
 
 **Strengths**:
+
 - Dependency inversion principle properly applied
 - Repository interfaces defined in domain layer
 - Use cases encapsulate single business operations
 - Data sources properly abstracted (local vs remote)
 
 **Evidence - Good Dependency Injection**:
+
 ```dart
 // injection_container.dart
-sl.registerFactory(
-  () => ChatCubit(
-    getMessages: sl(),    // Use case dependency
-    sendMessage: sl(),    // Use case dependency
-    uuid: sl(),           // Utility dependency
-  ),
+sl.registerFactory
+(
+() => ChatCubit(
+getMessages: sl(), // Use case dependency
+sendMessage: sl(), // Use case dependency
+uuid: sl()
+, // Utility dependency
+)
+,
 );
 ```
 
 **Concerns**:
+
 - Some direct dependencies on external packages in domain layer (uuid in ChatCubit)
 - Shared preferences used directly in data sources (should be abstracted)
 - Database helper is singleton (limits testability)
 
 **Recommendations**:
+
 1. Abstract UUID generation into domain service
 2. Create storage abstraction layer for SharedPreferences
 3. Inject DatabaseHelper through constructor instead of singleton access
@@ -122,35 +139,41 @@ sl.registerFactory(
 **Score**: 7/10
 
 **Single Responsibility Principle** (8/10):
+
 - Most classes have single, well-defined responsibilities
 - Repository implementations handle both local and remote data (could be split)
 - Some Cubits handle multiple concerns (loading, sending, error handling)
 
 **Open/Closed Principle** (6/10):
+
 - Limited extensibility due to hardcoded values
 - Adding new authentication methods requires modifying existing code
 - Bot configuration is hardcoded rather than configurable
 
 **Liskov Substitution Principle** (9/10):
+
 - Repository implementations correctly substitute interfaces
 - Good use of abstract classes and interfaces
 - No apparent violations
 
 **Interface Segregation Principle** (7/10):
+
 - Repository interfaces are reasonably focused
 - Some interfaces could be split (e.g., AuthRepository has multiple unrelated methods)
 - Data sources mix concerns (authentication + persistence)
 
 **Dependency Inversion Principle** (9/10):
+
 - Excellent use of abstract repositories
 - High-level modules depend on abstractions
 - Dependency injection properly implemented throughout
 
 **Code Example - DIP Well Applied**:
+
 ```dart
 class ChatRepositoryImpl implements ChatRepository {
-  final ChatLocalDataSource localDataSource;    // Depends on abstraction
-  final ChatRemoteDataSource remoteDataSource;  // Depends on abstraction
+  final ChatLocalDataSource localDataSource; // Depends on abstraction
+  final ChatRemoteDataSource remoteDataSource; // Depends on abstraction
   final Uuid uuid;
 
   ChatRepositoryImpl({
@@ -170,31 +193,32 @@ class ChatRepositoryImpl implements ChatRepository {
 **Well-Implemented Patterns**:
 
 1. **Repository Pattern** (9/10)
-   - Clean separation between data access and business logic
-   - Both local and remote data sources
-   - Proper abstraction of persistence layer
+    - Clean separation between data access and business logic
+    - Both local and remote data sources
+    - Proper abstraction of persistence layer
 
 2. **Singleton Pattern** (7/10)
-   - DatabaseHelper uses singleton correctly
-   - Service locator (GetIt) as singleton
-   - Concern: Overuse limits testability
+    - DatabaseHelper uses singleton correctly
+    - Service locator (GetIt) as singleton
+    - Concern: Overuse limits testability
 
 3. **Factory Pattern** (8/10)
-   - GetIt factory registration for Cubits
-   - LazyFactory for use cases and repositories
-   - Good lifecycle management
+    - GetIt factory registration for Cubits
+    - LazyFactory for use cases and repositories
+    - Good lifecycle management
 
 4. **Observer Pattern** (9/10)
-   - Excellent use via BLoC/Cubit pattern
-   - Reactive state updates
-   - Proper state machine implementation
+    - Excellent use via BLoC/Cubit pattern
+    - Reactive state updates
+    - Proper state machine implementation
 
 5. **Either Monad Pattern** (8/10)
-   - Functional error handling with dartz
-   - Type-safe error propagation
-   - Clear success/failure paths
+    - Functional error handling with dartz
+    - Type-safe error propagation
+    - Clear success/failure paths
 
 **Missing Patterns That Would Help**:
+
 - Strategy Pattern for different authentication methods
 - Builder Pattern for complex entity creation
 - Decorator Pattern for adding features to data sources
@@ -202,11 +226,12 @@ class ChatRepositoryImpl implements ChatRepository {
 - Specification Pattern for complex domain queries
 
 **Example of Good Pattern Use**:
+
 ```dart
 Future<Either<Failure, List<Message>>> getMessages(String botId) async {
   try {
     final messages = await localDataSource.getMessages(botId);
-    return Right(messages);  // Either monad for error handling
+    return Right(messages); // Either monad for error handling
   } catch (e) {
     return Left(CacheFailure('Failed to load messages: $e'));
   }
@@ -224,37 +249,38 @@ Future<Either<Failure, List<Message>>> getMessages(String botId) async {
 **Current Bottlenecks**:
 
 1. **Database Scalability** (5/10)
-   - SQLite will struggle with large message histories (10,000+ messages)
-   - No pagination implemented for message loading
-   - No data archiving strategy
-   - Index only on (bot_id, timestamp) - may need more for analytics
+    - SQLite will struggle with large message histories (10,000+ messages)
+    - No pagination implemented for message loading
+    - No data archiving strategy
+    - Index only on (bot_id, timestamp) - may need more for analytics
 
 2. **API Design Scalability** (6/10)
-   - Single webhook endpoint may become bottleneck
-   - No request batching
-   - No caching strategy for repeated queries
-   - Missing retry logic with exponential backoff
+    - Single webhook endpoint may become bottleneck
+    - No request batching
+    - No caching strategy for repeated queries
+    - Missing retry logic with exponential backoff
 
 3. **State Management Scalability** (7/10)
-   - Cubit pattern works well for current scope
-   - May need upgrade to full BLoC for complex event handling
-   - No state persistence strategy (app state lost on restart)
+    - Cubit pattern works well for current scope
+    - May need upgrade to full BLoC for complex event handling
+    - No state persistence strategy (app state lost on restart)
 
 4. **Feature Scalability** (8/10)
-   - Clean architecture supports adding new features
-   - Feature-based folder structure allows parallel development
-   - Dependency injection makes features pluggable
+    - Clean architecture supports adding new features
+    - Feature-based folder structure allows parallel development
+    - Dependency injection makes features pluggable
 
 **Load Projections**:
 
-| Scenario | Current Capacity | Breaking Point | Risk Level |
-|----------|------------------|----------------|------------|
-| Messages per chat | Unlimited | ~50K messages (UI lag) | Medium |
-| Concurrent API calls | 1 at a time | N/A | Low |
-| Dashboard metrics | 18 metrics | ~50 metrics (layout issues) | Low |
-| User accounts (local) | 1 | 1 (no multi-user) | High |
+| Scenario              | Current Capacity | Breaking Point              | Risk Level |
+|-----------------------|------------------|-----------------------------|------------|
+| Messages per chat     | Unlimited        | ~50K messages (UI lag)      | Medium     |
+| Concurrent API calls  | 1 at a time      | N/A                         | Low        |
+| Dashboard metrics     | 18 metrics       | ~50 metrics (layout issues) | Low        |
+| User accounts (local) | 1                | 1 (no multi-user)           | High       |
 
 **Recommendations**:
+
 1. Implement pagination for message loading (load last 50, fetch more on scroll)
 2. Add message archiving (move messages older than 6 months to archive table)
 3. Implement API response caching with TTL
@@ -301,6 +327,7 @@ ON messages(bot_id, timestamp);
 ```
 
 **Strengths**:
+
 - Proper indexing on frequently queried columns
 - Normalized structure (no data duplication)
 - TEXT for timestamps allows ISO 8601 format
@@ -309,9 +336,9 @@ ON messages(bot_id, timestamp);
 **Critical Issues**:
 
 1. **No Foreign Key Constraints**
-   - Messages not linked to users (data integrity risk)
-   - Orphaned messages possible
-   - Cannot enforce referential integrity
+    - Messages not linked to users (data integrity risk)
+    - Orphaned messages possible
+    - Cannot enforce referential integrity
 
 2. **Missing Indexes for Common Queries**:
    ```sql
@@ -322,21 +349,22 @@ ON messages(bot_id, timestamp);
    ```
 
 3. **No Partitioning Strategy**
-   - All messages in single table
-   - No time-based partitioning
-   - No archival mechanism
+    - All messages in single table
+    - No time-based partitioning
+    - No archival mechanism
 
 4. **TEXT Storage for Timestamps**
-   - Cannot leverage database date functions efficiently
-   - Comparison operations slower than INTEGER timestamps
-   - Timezone handling complexity
+    - Cannot leverage database date functions efficiently
+    - Comparison operations slower than INTEGER timestamps
+    - Timezone handling complexity
 
 5. **No Audit Trail**
-   - No updated_at column
-   - No soft delete support
-   - No version tracking
+    - No updated_at column
+    - No soft delete support
+    - No version tracking
 
 **Schema Evolution Concerns**:
+
 - No migration strategy documented
 - Database version = 1 (no upgrade path tested)
 - Adding columns requires careful migration handling
@@ -404,6 +432,7 @@ CREATE TABLE transactions (
 ```
 
 **Migration Strategy Needed**:
+
 1. Version-based migrations in _upgradeDB method
 2. Data migration scripts for existing data
 3. Rollback capability for failed migrations
@@ -416,6 +445,7 @@ CREATE TABLE transactions (
 **Score**: 5/10
 
 **Current API Architecture**:
+
 - Single n8n webhook endpoint
 - POST-only requests
 - No versioning
@@ -435,9 +465,9 @@ CREATE TABLE transactions (
    ```
 
 2. **No Request Batching**
-   - Each message requires separate API call
-   - No bulk operations support
-   - Network inefficiency for multiple operations
+    - Each message requires separate API call
+    - No bulk operations support
+    - Network inefficiency for multiple operations
 
 3. **No Caching Strategy**
    ```dart
@@ -447,14 +477,14 @@ CREATE TABLE transactions (
    ```
 
 4. **Missing Retry Logic**
-   - Single attempt for API calls
-   - No exponential backoff
-   - Transient errors treated as permanent failures
+    - Single attempt for API calls
+    - No exponential backoff
+    - Transient errors treated as permanent failures
 
 5. **No Offline Queue**
-   - Messages lost if API fails
-   - No background sync
-   - Poor user experience in poor network conditions
+    - Messages lost if API fails
+    - No background sync
+    - Poor user experience in poor network conditions
 
 **Recommended API Improvements**:
 
@@ -564,6 +594,7 @@ class BatchedMessageSender {
 ```
 
 **Rate Limiting Recommendations**:
+
 - Implement client-side rate limiting (max 10 requests/minute)
 - Add request debouncing for rapid user actions
 - Queue requests during rate limit violations
@@ -578,6 +609,7 @@ class BatchedMessageSender {
 **Current Implementation**: Cubit (flutter_bloc)
 
 **Strengths**:
+
 - Simple and appropriate for current app complexity
 - Clear state machine definitions
 - Proper separation between state and UI
@@ -586,26 +618,27 @@ class BatchedMessageSender {
 **Scalability Concerns**:
 
 1. **State Persistence** (Critical)
-   - App state lost on restart
-   - No state hydration mechanism
-   - User loses scroll position, draft messages, etc.
+    - App state lost on restart
+    - No state hydration mechanism
+    - User loses scroll position, draft messages, etc.
 
 2. **State Synchronization**
-   - No state sharing between features
-   - Dashboard and Chat states independent (could be inconsistent)
-   - No global app state management
+    - No state sharing between features
+    - Dashboard and Chat states independent (could be inconsistent)
+    - No global app state management
 
 3. **Complex Event Handling**
-   - Current Cubit pattern may struggle with complex event sequences
-   - No event replay capability
-   - Limited debugging support
+    - Current Cubit pattern may struggle with complex event sequences
+    - No event replay capability
+    - Limited debugging support
 
 4. **Memory Management**
-   - All messages loaded into memory
-   - No virtualization strategy
-   - Large chat histories cause memory issues
+    - All messages loaded into memory
+    - No virtualization strategy
+    - Large chat histories cause memory issues
 
 **Current State Structure**:
+
 ```dart
 // chat_state.dart - Simple but not scalable
 abstract class ChatState extends Equatable {
@@ -613,10 +646,10 @@ abstract class ChatState extends Equatable {
 }
 
 class ChatLoaded extends ChatState {
-  final List<Message> messages;  // All messages in memory
+  final List<Message> messages; // All messages in memory
   final bool isSending;
 
-  // Problem: No pagination, no virtual scrolling
+// Problem: No pagination, no virtual scrolling
 }
 ```
 
@@ -625,13 +658,13 @@ class ChatLoaded extends ChatState {
 ```dart
 // 1. Paginated State
 class ChatLoaded extends ChatState {
-  final List<Message> visibleMessages;  // Only visible messages
+  final List<Message> visibleMessages; // Only visible messages
   final int totalCount;
   final bool hasMore;
   final bool isSending;
   final int currentPage;
 
-  // Supports infinite scroll
+// Supports infinite scroll
 }
 
 // 2. State Persistence with Hydrated BLoC
@@ -656,7 +689,7 @@ class AppState {
   final DashboardState dashboardState;
   final NetworkState networkState;
 
-  // Single source of truth
+// Single source of truth
 }
 
 // 4. Event Sourcing for Complex Flows
@@ -683,11 +716,12 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<MessageFailedEvent>(_onMessageFailed);
   }
 
-  // Better handling of complex event sequences
+// Better handling of complex event sequences
 }
 ```
 
 **Migration Path**:
+
 1. Keep Cubit for simple features (Theme, Auth)
 2. Upgrade Chat to full BLoC for complex event handling
 3. Implement HydratedBloc for state persistence
@@ -703,12 +737,14 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 **Score**: 8/10
 
 **Strengths**:
+
 - Clear feature-based organization
 - Consistent folder structure across features
 - Well-organized core utilities
 - Logical separation of concerns
 
 **Current Structure**:
+
 ```
 lib/
 ├── core/                    # Shared infrastructure
@@ -727,21 +763,22 @@ lib/
 **Areas for Improvement**:
 
 1. **Missing Shared Layer**
-   - No shared widgets directory
-   - Duplicate code across features
-   - No common utilities
+    - No shared widgets directory
+    - Duplicate code across features
+    - No common utilities
 
 2. **Config Management**
-   - Environment variables in .env (good)
-   - But hardcoded values still present in code
-   - No centralized config validation
+    - Environment variables in .env (good)
+    - But hardcoded values still present in code
+    - No centralized config validation
 
 3. **Asset Organization**
-   - No assets directory visible in structure
-   - Images, fonts location unclear
-   - No asset management strategy
+    - No assets directory visible in structure
+    - Images, fonts location unclear
+    - No asset management strategy
 
 **Recommended Structure Enhancement**:
+
 ```
 lib/
 ├── core/
@@ -778,41 +815,44 @@ lib/
 **Coupling Analysis**:
 
 **Low Coupling (Good)**:
+
 - Features are largely independent
 - Shared dependencies through abstraction
 - Domain layer has minimal external dependencies
 
 **Medium Coupling (Acceptable)**:
+
 - All features depend on core utilities
 - Presentation layer tightly coupled to flutter_bloc
 - Data layer coupled to specific packages (dio, sqflite)
 
 **High Coupling (Concerning)**:
+
 ```dart
 // dashboard_repository_impl.dart
 class DashboardRepositoryImpl implements DashboardRepository {
   final DashboardRemoteDataSource remoteDataSource;
-  final AuthLocalDataSource authLocalDataSource;  // Cross-feature coupling
+  final AuthLocalDataSource authLocalDataSource; // Cross-feature coupling
 
-  // Dashboard depends on Auth implementation details
+// Dashboard depends on Auth implementation details
 }
 ```
 
 **Coupling Issues**:
 
 1. **Cross-Feature Dependencies**
-   - Dashboard directly uses AuthLocalDataSource
-   - Breaks feature independence
-   - Makes testing harder
+    - Dashboard directly uses AuthLocalDataSource
+    - Breaks feature independence
+    - Makes testing harder
 
 2. **Package Coupling**
-   - Direct dependency on Dio in multiple places
-   - SharedPreferences used directly
-   - Hard to switch implementations
+    - Direct dependency on Dio in multiple places
+    - SharedPreferences used directly
+    - Hard to switch implementations
 
 3. **Cubit Coupling**
-   - ChatCubit directly depends on UUID package
-   - Should be abstracted as domain service
+    - ChatCubit directly depends on UUID package
+    - Should be abstracted as domain service
 
 **Decoupling Recommendations**:
 
@@ -820,12 +860,13 @@ class DashboardRepositoryImpl implements DashboardRepository {
 // 1. Create User Session Service (decouples features)
 abstract class UserSessionService {
   Future<User?> getCurrentUser();
+
   Future<String> getUserId();
 }
 
 class DashboardRepositoryImpl implements DashboardRepository {
   final DashboardRemoteDataSource remoteDataSource;
-  final UserSessionService userSession;  // Use abstraction
+  final UserSessionService userSession; // Use abstraction
 
   Future<Either<Failure, DashboardSummary>> getDashboard() async {
     final userId = await userSession.getUserId();
@@ -836,12 +877,13 @@ class DashboardRepositoryImpl implements DashboardRepository {
 // 2. Abstract Network Layer
 abstract class HttpClient {
   Future<Response> post(String url, {required Map<String, dynamic> data});
+
   Future<Response> get(String url);
 }
 
 class DioHttpClient implements HttpClient {
   final Dio _dio;
-  // Dio implementation hidden
+// Dio implementation hidden
 }
 
 // 3. Domain Service for UUID
@@ -858,6 +900,7 @@ class UuidIdGenerator implements IdGenerator {
 ```
 
 **Coupling Metrics**:
+
 - Afferent Coupling (Ca): 3-5 per module (acceptable)
 - Efferent Coupling (Ce): 2-4 per module (good)
 - Instability (I = Ce / (Ca + Ce)): ~0.5 (balanced)
@@ -869,6 +912,7 @@ class UuidIdGenerator implements IdGenerator {
 **Score**: 3/10 (Critical Issue)
 
 **Current State**:
+
 - Only 1 test file (widget_test.dart)
 - No unit tests for business logic
 - No integration tests
@@ -890,76 +934,80 @@ class UuidIdGenerator implements IdGenerator {
    ```
 
 3. **No Test Infrastructure**
-   - No test helpers
-   - No mock factories
-   - No test data builders
+    - No test helpers
+    - No mock factories
+    - No test data builders
 
 **What Should Be Tested (Currently Missing)**:
 
 ```dart
 // 1. Use Case Tests
-test('should send message and return bot response', () async {
-  // Arrange
-  final mockRepo = MockChatRepository();
-  final useCase = SendMessage(mockRepo);
-  when(mockRepo.sendMessage(...)).thenAnswer((_) => Right(mockMessage));
+test
+('should send message and return bot response
+'
+, () async {
+// Arrange
+final mockRepo = MockChatRepository();
+final useCase = SendMessage(mockRepo);
+when(mockRepo.sendMessage(...)).thenAnswer((_) => Right(mockMessage));
 
-  // Act
-  final result = await useCase(botId: 'test', content: 'Hello');
+// Act
+final result = await useCase(botId: 'test', content: 'Hello');
 
-  // Assert
-  expect(result, Right(mockMessage));
+// Assert
+expect(result, Right(mockMessage));
 });
 
 // 2. Repository Tests
 test('should save user message locally before API call', () async {
-  // Arrange
-  final mockLocal = MockLocalDataSource();
-  final mockRemote = MockRemoteDataSource();
-  final repo = ChatRepositoryImpl(
-    localDataSource: mockLocal,
-    remoteDataSource: mockRemote,
-  );
+// Arrange
+final mockLocal = MockLocalDataSource();
+final mockRemote = MockRemoteDataSource();
+final repo = ChatRepositoryImpl(
+localDataSource: mockLocal,
+remoteDataSource: mockRemote,
+);
 
-  // Act
-  await repo.sendMessage(botId: 'test', content: 'Hello');
+// Act
+await repo.sendMessage(botId: 'test', content: 'Hello');
 
-  // Assert
-  verify(mockLocal.saveMessage(any)).called(2); // User + Bot messages
+// Assert
+verify(mockLocal.saveMessage(any)).called(2); // User + Bot messages
 });
 
 // 3. Cubit Tests
 blocTest<ChatCubit, ChatState>(
-  'emits ChatLoaded with messages when loadMessages is called',
-  build: () => ChatCubit(getMessages: mockGetMessages, ...),
-  act: (cubit) => cubit.loadMessages('test_bot'),
-  expect: () => [
-    ChatLoading(),
-    ChatLoaded(messages: testMessages),
-  ],
+'emits ChatLoaded with messages when loadMessages is called',
+build: () => ChatCubit(getMessages: mockGetMessages, ...),
+act: (cubit) => cubit.loadMessages('test_bot'),
+expect: () => [
+ChatLoading(),
+ChatLoaded(messages: testMessages),
+],
 );
 
 // 4. Widget Tests
 testWidgets('should display message bubbles', (tester) async {
-  await tester.pumpWidget(
-    TestApp(
-      child: MessageList(
-        messages: testMessages,
-        isSending: false,
-      ),
-    ),
-  );
+await tester.pumpWidget(
+TestApp(
+child: MessageList(
+messages: testMessages,
+isSending: false,
+),
+),
+);
 
-  expect(find.byType(MessageBubble), findsNWidgets(testMessages.length));
+expect(find.byType(MessageBubble), findsNWidgets(testMessages.length));
 });
 
 // 5. Integration Tests
 testWidgets('full chat flow: send message and receive response', (tester) async {
-  // Complete end-to-end test
+// Complete end-to-end test
 });
 ```
 
 **Recommended Test Coverage Targets**:
+
 - Use Cases: 90%+
 - Repositories: 85%+
 - Cubits: 80%+
@@ -971,7 +1019,9 @@ testWidgets('full chat flow: send message and receive response', (tester) async 
 ```dart
 // test/helpers/test_helpers.dart
 class MockDatabaseHelper extends Mock implements DatabaseHelper {}
+
 class MockChatRepository extends Mock implements ChatRepository {}
+
 class MockAuthRepository extends Mock implements AuthRepository {}
 
 // test/fixtures/
@@ -991,32 +1041,33 @@ class MockAuthRepository extends Mock implements AuthRepository {}
 **Score**: 7/10
 
 **Strengths**:
+
 - Excellent project-level documentation
-  - project_context.md (1976 lines, comprehensive)
-  - app_overview.md (visual diagrams)
-  - development_guide.md (onboarding)
-  - testing_guide.md
-  - webhook_integration.md
+    - project_context.md (1976 lines, comprehensive)
+    - app_overview.md (visual diagrams)
+    - development_guide.md (onboarding)
+    - testing_guide.md
+    - webhook_integration.md
 
 **Missing Documentation**:
 
 1. **Code-Level Documentation**
-   - No dartdoc comments on public APIs
-   - No class/method documentation
-   - No parameter descriptions
-   - No return value documentation
+    - No dartdoc comments on public APIs
+    - No class/method documentation
+    - No parameter descriptions
+    - No return value documentation
 
 2. **Architecture Decision Records (ADRs)**
-   - No record of why Clean Architecture chosen
-   - No justification for Cubit over full BLoC
-   - No database choice reasoning
-   - No API design decisions documented
+    - No record of why Clean Architecture chosen
+    - No justification for Cubit over full BLoC
+    - No database choice reasoning
+    - No API design decisions documented
 
 3. **API Documentation**
-   - No OpenAPI/Swagger spec for webhook
-   - No request/response examples
-   - No error code documentation
-   - No rate limiting documentation
+    - No OpenAPI/Swagger spec for webhook
+    - No request/response examples
+    - No error code documentation
+    - No rate limiting documentation
 
 **Recommended Documentation Additions**:
 
@@ -1072,6 +1123,7 @@ abstract class ChatRepository {
 ```
 
 **Documentation Priorities**:
+
 1. Add dartdoc comments to all public APIs (High Priority)
 2. Create ADR directory with key decisions (High Priority)
 3. Generate API documentation with dartdoc (Medium Priority)
@@ -1087,6 +1139,7 @@ abstract class ChatRepository {
 **Score**: 8/10
 
 **Current Stack**:
+
 ```yaml
 Flutter: 3.27.0          # Latest stable
 Dart: 3.6.0              # Latest
@@ -1100,50 +1153,50 @@ DI: get_it 8.0.2
 **Appropriate Choices**:
 
 1. **Flutter 3.27.0** - Latest stable (Excellent)
-   - Modern features
-   - Good performance
-   - Strong community support
-   - Active development
+    - Modern features
+    - Good performance
+    - Strong community support
+    - Active development
 
 2. **flutter_bloc/Cubit** - Well-suited (Good)
-   - Industry standard for Flutter
-   - Good documentation
-   - Large ecosystem
-   - Appropriate for app complexity
+    - Industry standard for Flutter
+    - Good documentation
+    - Large ecosystem
+    - Appropriate for app complexity
 
 3. **Dio** - Good choice (Good)
-   - Feature-rich HTTP client
-   - Interceptor support
-   - Better than http package
-   - Good error handling
+    - Feature-rich HTTP client
+    - Interceptor support
+    - Better than http package
+    - Good error handling
 
 4. **sqflite** - Appropriate for mobile (Good)
-   - Standard for Flutter local storage
-   - Good performance for small datasets
-   - Easy to use
-   - Well-maintained
+    - Standard for Flutter local storage
+    - Good performance for small datasets
+    - Easy to use
+    - Well-maintained
 
 5. **GetIt** - Good service locator (Good)
-   - Simple and effective
-   - No build_runner needed
-   - Runtime dependency resolution
-   - Easy to understand
+    - Simple and effective
+    - No build_runner needed
+    - Runtime dependency resolution
+    - Easy to understand
 
 **Questionable Choices**:
 
 1. **dartz (0.10.1)** - Outdated (Concern)
-   - Last update: 2021
-   - Consider fpdart (actively maintained)
-   - But: Works well for current use case
+    - Last update: 2021
+    - Consider fpdart (actively maintained)
+    - But: Works well for current use case
 
 2. **flutter_markdown_plus (0.8.0)** - Unmaintained fork (Concern)
-   - Consider flutter_markdown (official)
-   - Risk of compatibility issues
+    - Consider flutter_markdown (official)
+    - Risk of compatibility issues
 
 3. **No Analytics Package** (Missing)
-   - No error tracking (Sentry, Crashlytics)
-   - No usage analytics
-   - No performance monitoring
+    - No error tracking (Sentry, Crashlytics)
+    - No usage analytics
+    - No performance monitoring
 
 **Recommendations**:
 
@@ -1179,6 +1232,7 @@ dependencies:
 **Score**: 6/10
 
 **Current State**:
+
 - 27 direct dependencies
 - No version constraints (using ^)
 - No dependency_overrides
@@ -1196,24 +1250,24 @@ dependencies:
    ```
 
 2. **No Dependency Auditing**
-   - No automated security checks
-   - No outdated dependency detection
-   - No license compliance checking
+    - No automated security checks
+    - No outdated dependency detection
+    - No license compliance checking
 
 3. **Transitive Dependencies**
-   - No visibility into indirect dependencies
-   - Potential version conflicts
-   - Security vulnerabilities unknown
+    - No visibility into indirect dependencies
+    - Potential version conflicts
+    - Security vulnerabilities unknown
 
 **Dependency Health Check**:
 
-| Package | Current | Latest | Status | Action |
-|---------|---------|--------|--------|--------|
-| flutter_bloc | 8.1.6 | 8.1.6 | Up-to-date | None |
-| dio | 5.7.0 | 5.7.0 | Up-to-date | None |
-| sqflite | 2.3.3+2 | 2.3.3+2 | Up-to-date | None |
-| dartz | 0.10.1 | 0.10.1 | Outdated | Consider fpdart |
-| flutter_markdown_plus | 0.8.0 | 0.8.0 | Unmaintained | Use flutter_markdown |
+| Package               | Current | Latest  | Status       | Action               |
+|-----------------------|---------|---------|--------------|----------------------|
+| flutter_bloc          | 8.1.6   | 8.1.6   | Up-to-date   | None                 |
+| dio                   | 5.7.0   | 5.7.0   | Up-to-date   | None                 |
+| sqflite               | 2.3.3+2 | 2.3.3+2 | Up-to-date   | None                 |
+| dartz                 | 0.10.1  | 0.10.1  | Outdated     | Consider fpdart      |
+| flutter_markdown_plus | 0.8.0   | 0.8.0   | Unmaintained | Use flutter_markdown |
 
 **Recommendations**:
 
@@ -1232,10 +1286,10 @@ updates:
     schedule:
       interval: "weekly"
 
-# 3. Add dependency check to CI
-# .github/workflows/ci.yml
-- name: Check for outdated dependencies
-  run: flutter pub outdated --mode=null-safety
+  # 3. Add dependency check to CI
+  # .github/workflows/ci.yml
+  - name: Check for outdated dependencies
+    run: flutter pub outdated --mode=null-safety
 ```
 
 ---
@@ -1245,12 +1299,14 @@ updates:
 **Score**: 9/10
 
 **Strengths**:
+
 - Flutter 3.27.0 (Latest stable: 3.27.0) ✓
 - Dart 3.6.0 (Latest stable: 3.6.0) ✓
 - Most packages on latest versions
 - Using FVM for version management ✓
 
 **Version Management**:
+
 ```bash
 # .fvm/fvm_config.json
 {
@@ -1259,16 +1315,19 @@ updates:
 ```
 
 **Benefits of Current Approach**:
+
 - Team uses same Flutter version
 - Consistent builds
 - Easy onboarding
 - Version-specific features available
 
 **Minor Version Concerns**:
+
 - dartz (0.10.1) - 3+ years old
 - Some packages could be updated
 
 **Recommendations**:
+
 1. Set up automated dependency updates (Renovate/Dependabot)
 2. Regular monthly dependency review
 3. Test updates in staging before production
@@ -1282,36 +1341,36 @@ updates:
 
 **Current Choices vs Alternatives**:
 
-| Current | Alternative | Consideration |
-|---------|-------------|---------------|
-| flutter_bloc | Riverpod | More modern, better DI integration |
-| sqflite | Isar/Drift | Better performance, type safety |
-| dio | http + retry | Simpler, but less features |
-| GetIt | Riverpod | State management + DI combined |
-| SharedPreferences | Hive/Isar | Faster, more features |
-| flutter_markdown_plus | flutter_markdown | Official, maintained |
+| Current               | Alternative      | Consideration                      |
+|-----------------------|------------------|------------------------------------|
+| flutter_bloc          | Riverpod         | More modern, better DI integration |
+| sqflite               | Isar/Drift       | Better performance, type safety    |
+| dio                   | http + retry     | Simpler, but less features         |
+| GetIt                 | Riverpod         | State management + DI combined     |
+| SharedPreferences     | Hive/Isar        | Faster, more features              |
+| flutter_markdown_plus | flutter_markdown | Official, maintained               |
 
 **Should Consider**:
 
 1. **Riverpod instead of BLoC + GetIt**
-   - Pros: Modern, compile-time DI, better testing
-   - Cons: Learning curve, refactoring effort
-   - Recommendation: For new features
+    - Pros: Modern, compile-time DI, better testing
+    - Cons: Learning curve, refactoring effort
+    - Recommendation: For new features
 
 2. **Isar instead of sqflite**
-   - Pros: 10x faster, type-safe, auto-migration
-   - Cons: Migration effort
-   - Recommendation: If performance becomes issue
+    - Pros: 10x faster, type-safe, auto-migration
+    - Cons: Migration effort
+    - Recommendation: If performance becomes issue
 
 3. **Firebase for backend**
-   - Pros: Real-time sync, auth, analytics
-   - Cons: Vendor lock-in, cost
-   - Recommendation: For future scaling
+    - Pros: Real-time sync, auth, analytics
+    - Cons: Vendor lock-in, cost
+    - Recommendation: For future scaling
 
 4. **GraphQL instead of REST**
-   - Pros: Flexible queries, better performance
-   - Cons: More complex, overkill for current use
-   - Recommendation: Not needed now
+    - Pros: Flexible queries, better performance
+    - Cons: More complex, overkill for current use
+    - Recommendation: Not needed now
 
 **Migration Path (If Needed)**:
 
@@ -1340,6 +1399,7 @@ class ChatNotifier extends _$ChatNotifier {
 ```
 
 **Decision Framework**:
+
 - Stick with current stack for maintenance (Low risk)
 - Consider Riverpod for major new features (Medium risk)
 - Migrate to Isar if database performance issues arise (High effort)
@@ -1356,10 +1416,10 @@ class ChatNotifier extends _$ChatNotifier {
 **P0 - Critical (Must Fix Soon)**:
 
 1. **Missing Test Coverage** (5 days)
-   - Current: 1 test file
-   - Target: 75% coverage
-   - Impact: Cannot refactor safely, bugs in production
-   - Effort: 5 developer-days
+    - Current: 1 test file
+    - Target: 75% coverage
+    - Impact: Cannot refactor safely, bugs in production
+    - Effort: 5 developer-days
    ```dart
    // Priority tests to write:
    // - ChatRepository tests
@@ -1374,16 +1434,16 @@ class ChatNotifier extends _$ChatNotifier {
    await remoteDataSource.getDashboardSummary(
      userId: "8130001838", // TODO: Change this
    ```
-   - Impact: All users see same dashboard
-   - Risk: Data privacy violation
-   - Effort: 2 hours
+    - Impact: All users see same dashboard
+    - Risk: Data privacy violation
+    - Effort: 2 hours
 
 3. **No Error Monitoring** (1 day)
-   - Impact: Silent failures in production
-   - Cannot detect issues proactively
-   - User problems invisible to team
-   - Solution: Add Sentry/Crashlytics
-   - Effort: 1 day
+    - Impact: Silent failures in production
+    - Cannot detect issues proactively
+    - User problems invisible to team
+    - Solution: Add Sentry/Crashlytics
+    - Effort: 1 day
 
 4. **Debug Logging in Production** (4 hours)
    ```dart
@@ -1391,9 +1451,9 @@ class ChatNotifier extends _$ChatNotifier {
    print('📥 [ChatCubit] loadMessages called');
    print('⏳ [ChatCubit] Emitting ChatLoading...');
    ```
-   - Impact: Performance overhead, log spam
-   - Security: Potentially leaks sensitive data
-   - Effort: 4 hours to remove/wrap properly
+    - Impact: Performance overhead, log spam
+    - Security: Potentially leaks sensitive data
+    - Effort: 4 hours to remove/wrap properly
 
 **P1 - High Priority (Fix This Quarter)**:
 
@@ -1405,32 +1465,32 @@ class ChatNotifier extends _$ChatNotifier {
      }
    }
    ```
-   - Impact: Cannot safely update schema
-   - Risk: Data loss on updates
-   - Effort: 2 days
+    - Impact: Cannot safely update schema
+    - Risk: Data loss on updates
+    - Effort: 2 days
 
 6. **No API Retry Logic** (1 day)
-   - Impact: Transient failures become permanent
-   - Poor offline experience
-   - Lost messages
-   - Effort: 1 day
+    - Impact: Transient failures become permanent
+    - Poor offline experience
+    - Lost messages
+    - Effort: 1 day
 
 7. **Missing API Versioning** (2 days)
-   - Impact: Breaking API changes break all clients
-   - Cannot deprecate endpoints
-   - Effort: 2 days
+    - Impact: Breaking API changes break all clients
+    - Cannot deprecate endpoints
+    - Effort: 2 days
 
 8. **No Input Validation** (3 days)
-   - Impact: Invalid data can crash app
-   - SQL injection risk (though using parameterized queries)
-   - XSS risk in markdown rendering
-   - Effort: 3 days
+    - Impact: Invalid data can crash app
+    - SQL injection risk (though using parameterized queries)
+    - XSS risk in markdown rendering
+    - Effort: 3 days
 
 **P2 - Medium Priority (Fix Next Quarter)**:
 
 9. **Singleton Database Helper** (2 days)
-   - Impact: Hard to test, global state
-   - Effort: 2 days to inject properly
+    - Impact: Hard to test, global state
+    - Effort: 2 days to inject properly
 
 10. **No Pagination** (3 days)
     - Impact: Poor performance with large chat history
@@ -1474,15 +1534,17 @@ class ChatNotifier extends _$ChatNotifier {
    ```
 
 4. **God Classes** (Low Priority, 3 days)
-   - Some Cubits doing too much
-   - Should split responsibilities
+    - Some Cubits doing too much
+    - Should split responsibilities
 
 **Code Complexity**:
+
 - Average Cyclomatic Complexity: 3-4 (Good)
 - Max Complexity: ~8 (Acceptable)
 - Cognitive Complexity: Low (Good)
 
 **Unused Code** (1 day):
+
 - Several unused imports
 - Commented-out code
 - Dead code paths
@@ -1518,19 +1580,19 @@ class ChatNotifier extends _$ChatNotifier {
    ```
 
 2. **Missing Domain Services** (Medium, 3 days)
-   - UUID generation in Cubit (should be domain service)
-   - Message validation scattered
-   - Business rules in wrong layers
+    - UUID generation in Cubit (should be domain service)
+    - Message validation scattered
+    - Business rules in wrong layers
 
 3. **No Event System** (Low, 1 week)
-   - Features cannot communicate
-   - No cross-cutting concerns handling
-   - Should implement domain events
+    - Features cannot communicate
+    - No cross-cutting concerns handling
+    - Should implement domain events
 
 4. **Missing Specification Pattern** (Low, 2 days)
-   - Complex queries hardcoded
-   - Cannot combine query logic
-   - Recommend for dashboard filtering
+    - Complex queries hardcoded
+    - Cannot combine query logic
+    - Recommend for dashboard filtering
 
 ---
 
@@ -1558,36 +1620,36 @@ class ChatNotifier extends _$ChatNotifier {
 2. **No Automated Testing** (High, Covered in 5.1)
 
 3. **No Performance Monitoring** (Medium, 1 day)
-   - No crash reporting
-   - No performance metrics
-   - No user session tracking
+    - No crash reporting
+    - No performance metrics
+    - No user session tracking
 
 4. **No Feature Flags** (Low, 2 days)
-   - Cannot A/B test
-   - Cannot gradually roll out features
-   - Hard to disable broken features
+    - Cannot A/B test
+    - Cannot gradually roll out features
+    - Hard to disable broken features
 
 5. **No Backup Strategy** (Medium, 1 day)
-   - Local data can be lost
-   - No cloud backup
-   - No export functionality
+    - Local data can be lost
+    - No cloud backup
+    - No export functionality
 
 ---
 
 ### 5.5 Technical Debt Prioritization Matrix
 
-| Issue | Impact | Effort | Priority | Due Date |
-|-------|--------|--------|----------|----------|
-| Missing tests | High | High | P0 | 2 weeks |
-| Hardcoded user ID | Critical | Low | P0 | 1 week |
-| Debug logging | High | Low | P0 | 1 week |
-| No error monitoring | High | Medium | P0 | 2 weeks |
-| No DB migrations | High | Medium | P1 | 1 month |
-| No API retry | Medium | Low | P1 | 1 month |
-| No API versioning | High | Medium | P1 | 1 month |
-| Singleton DB | Medium | Medium | P2 | 2 months |
-| No pagination | Medium | Medium | P2 | 2 months |
-| Anemic domain | Low | High | P3 | 3 months |
+| Issue               | Impact   | Effort | Priority | Due Date |
+|---------------------|----------|--------|----------|----------|
+| Missing tests       | High     | High   | P0       | 2 weeks  |
+| Hardcoded user ID   | Critical | Low    | P0       | 1 week   |
+| Debug logging       | High     | Low    | P0       | 1 week   |
+| No error monitoring | High     | Medium | P0       | 2 weeks  |
+| No DB migrations    | High     | Medium | P1       | 1 month  |
+| No API retry        | Medium   | Low    | P1       | 1 month  |
+| No API versioning   | High     | Medium | P1       | 1 month  |
+| Singleton DB        | Medium   | Medium | P2       | 2 months |
+| No pagination       | Medium   | Medium | P2       | 2 months |
+| Anemic domain       | Low      | High   | P3       | 3 months |
 
 **Total Estimated Debt**: 4-6 weeks of focused work
 
@@ -1600,11 +1662,13 @@ class ChatNotifier extends _$ChatNotifier {
 **Score**: 6/10
 
 **Current Implementation**:
+
 - Google OAuth (Good)
 - Apple Sign-In (Good)
 - Session stored in SharedPreferences (Concerning)
 
 **Security Strengths**:
+
 1. Using industry-standard OAuth providers
 2. No passwords stored locally
 3. Token-based authentication
@@ -1617,9 +1681,9 @@ class ChatNotifier extends _$ChatNotifier {
    await _sharedPreferences.setString('userId', user.id);
    await _sharedPreferences.setString('email', user.email);
    ```
-   - SharedPreferences is NOT encrypted on Android
-   - Anyone with device access can read session data
-   - Rooted devices expose all data
+    - SharedPreferences is NOT encrypted on Android
+    - Anyone with device access can read session data
+    - Rooted devices expose all data
 
    **Fix**:
    ```dart
@@ -1629,9 +1693,9 @@ class ChatNotifier extends _$ChatNotifier {
    ```
 
 2. **No Session Expiration** (Medium Risk)
-   - Sessions never expire
-   - Compromised devices stay logged in forever
-   - No re-authentication required
+    - Sessions never expire
+    - Compromised devices stay logged in forever
+    - No re-authentication required
 
    **Fix**:
    ```dart
@@ -1646,8 +1710,8 @@ class ChatNotifier extends _$ChatNotifier {
    ```
 
 3. **No Biometric Lock** (Medium Risk)
-   - Financial data accessible without authentication
-   - Device theft exposes all data
+    - Financial data accessible without authentication
+    - Device theft exposes all data
 
    **Fix**:
    ```dart
@@ -1660,8 +1724,8 @@ class ChatNotifier extends _$ChatNotifier {
    ```
 
 4. **No Certificate Pinning** (Medium Risk)
-   - Vulnerable to man-in-the-middle attacks
-   - Malicious proxies can intercept traffic
+    - Vulnerable to man-in-the-middle attacks
+    - Malicious proxies can intercept traffic
 
    **Fix**:
    ```dart
@@ -1678,6 +1742,7 @@ class ChatNotifier extends _$ChatNotifier {
    ```
 
 **Security Recommendations**:
+
 1. Migrate to flutter_secure_storage (HIGH PRIORITY)
 2. Implement session expiration (HIGH PRIORITY)
 3. Add biometric authentication (MEDIUM PRIORITY)
@@ -1692,6 +1757,7 @@ class ChatNotifier extends _$ChatNotifier {
 **Score**: 5/10
 
 **Current State**:
+
 - SQLite database unencrypted
 - Local files unencrypted
 - Sensitive data in plain text
@@ -1711,9 +1777,9 @@ class ChatNotifier extends _$ChatNotifier {
    ```
 
 2. **Unencrypted Files** (High Risk)
-   - Uploaded images stored in plain text
-   - Audio recordings unencrypted
-   - Accessible via file manager on Android
+    - Uploaded images stored in plain text
+    - Audio recordings unencrypted
+    - Accessible via file manager on Android
 
 3. **Sensitive Data Logging** (Medium Risk)
    ```dart
@@ -1724,10 +1790,12 @@ class ChatNotifier extends _$ChatNotifier {
 **Data in Transit** (7/10):
 
 **Strengths**:
+
 - HTTPS for all API calls (Good)
 - Using Dio with proper TLS
 
 **Weaknesses**:
+
 - No certificate pinning
 - No additional encryption layer
 - Base64 encoding of images (not encryption)
@@ -1736,8 +1804,9 @@ class ChatNotifier extends _$ChatNotifier {
 
 ```dart
 // 1. Encrypt Database
-dependencies:
-  sqflite_sqlcipher: ^2.2.0
+dependencies:sqflite_sqlcipher: ^
+2.2
+.0
 
 class EncryptedDatabaseHelper {
   Future<Database> get database async {
@@ -1806,9 +1875,9 @@ class SecureLogger {
    // .env file committed to git (BAD)
    N8N_WEBHOOK_URL=https://primary-production-7383b.up.railway.app/webhook/...
    ```
-   - Anyone can send requests to webhook
-   - No authentication on webhook
-   - Vulnerable to abuse
+    - Anyone can send requests to webhook
+    - No authentication on webhook
+    - Vulnerable to abuse
 
    **Fix**:
    ```dart
@@ -1827,9 +1896,9 @@ class SecureLogger {
    ```
 
 2. **No Rate Limiting** (High Risk)
-   - Can spam API with requests
-   - DDoS vulnerability
-   - No throttling
+    - Can spam API with requests
+    - DDoS vulnerability
+    - No throttling
 
    **Fix**:
    ```dart
@@ -1855,8 +1924,8 @@ class SecureLogger {
    ```
 
 3. **No Request Signing** (Medium Risk)
-   - Requests can be tampered with
-   - No integrity verification
+    - Requests can be tampered with
+    - No integrity verification
 
    **Fix**:
    ```dart
@@ -1881,6 +1950,7 @@ class SecureLogger {
    ```
 
 **Security Headers Missing**:
+
 - No CORS configuration
 - No Content-Security-Policy
 - No X-Frame-Options
@@ -1894,23 +1964,23 @@ class SecureLogger {
 **Vulnerabilities**:
 
 1. **SharedPreferences Unencrypted** (Critical)
-   - All user data readable
-   - Session tokens exposed
-   - Email addresses visible
+    - All user data readable
+    - Session tokens exposed
+    - Email addresses visible
 
 2. **SQLite Unencrypted** (Critical)
-   - Financial data in plain text
-   - Message history readable
-   - Transactions visible
+    - Financial data in plain text
+    - Message history readable
+    - Transactions visible
 
 3. **No Data Sanitization on Write** (Medium)
-   - Potential SQL injection (mitigated by parameterized queries)
-   - XSS in stored markdown
+    - Potential SQL injection (mitigated by parameterized queries)
+    - XSS in stored markdown
 
 4. **No Secure File Deletion** (Low)
-   - Deleted messages still on disk
-   - No secure wipe
-   - Forensic recovery possible
+    - Deleted messages still on disk
+    - No secure wipe
+    - Forensic recovery possible
 
 **Recommendations**:
 
@@ -1937,15 +2007,15 @@ class DataSanitizer {
   String sanitizeInput(String input) {
     // Remove potentially dangerous characters
     return input
-      .replaceAll(RegExp(r'<script[^>]*>.*?</script>'), '')
-      .replaceAll(RegExp(r'[^\w\s\-.,!?@#]'), '');
+        .replaceAll(RegExp(r'<script[^>]*>.*?</script>'), '')
+        .replaceAll(RegExp(r'[^\w\s\-.,!?@#]'), '');
   }
 
   String sanitizeMarkdown(String markdown) {
     // Remove dangerous markdown (e.g., script tags, iframes)
     return markdown
-      .replaceAll(RegExp(r'<script[^>]*>.*?</script>'), '')
-      .replaceAll(RegExp(r'<iframe[^>]*>.*?</iframe>'), '');
+        .replaceAll(RegExp(r'<script[^>]*>.*?</script>'), '')
+        .replaceAll(RegExp(r'<iframe[^>]*>.*?</iframe>'), '');
   }
 }
 
@@ -1983,24 +2053,28 @@ class TamperDetection {
 ### 6.5 Security Recommendations Summary
 
 **Immediate Actions (Week 1)**:
+
 1. Move .env out of git (add to .gitignore)
 2. Migrate to flutter_secure_storage
 3. Remove debug logging with sensitive data
 4. Add API authentication
 
 **Short-term (Month 1)**:
+
 5. Implement database encryption
 6. Add session expiration
 7. Implement rate limiting
 8. Add certificate pinning
 
 **Medium-term (Quarter 1)**:
+
 9. Add biometric authentication
 10. Implement file encryption
 11. Add request signing
 12. Implement tamper detection
 
 **Security Checklist**:
+
 - [ ] Secrets not in source control
 - [ ] Encrypted data at rest
 - [ ] Encrypted data in transit (HTTPS)
@@ -2021,31 +2095,49 @@ class TamperDetection {
 ### 7.1 Critical Refactoring Needs
 
 **Priority 1: Fix Security Issues** (1 week)
+
 ```dart
 // Before
-await _sharedPreferences.setString('userId', user.id);
+await
+_sharedPreferences.setString
+('userId
+'
+, user.id);
 
 // After
 final secureStorage = FlutterSecureStorage();
-await secureStorage.write(key: 'userId', value: user.id);
+await secureStorage.write(key: 'userId'
+,
+value
+:
+user
+.
+id
+);
 ```
 
 **Priority 2: Add Test Coverage** (2 weeks)
+
 - Start with critical path tests
 - Repository tests
 - Use case tests
 - Cubit tests
 
 **Priority 3: Remove Hardcoded Values** (2 days)
+
 ```dart
 // Before
-userId: "8130001838", // TODO
+userId: "
+8130001838
+"
+, // TODO
 
 // After
 userId: user.id,
 ```
 
 **Priority 4: Extract Business Logic from Cubits** (1 week)
+
 ```dart
 // Before: Logic in Cubit
 class ChatCubit {
@@ -2067,7 +2159,9 @@ class SendMessageUseCase {
   }
 
   Either<Failure, SendMessageParams> _validate(SendMessageParams params) {
-    if (params.content.trim().isEmpty) {
+    if (params.content
+        .trim()
+        .isEmpty) {
       return Left(ValidationFailure('Message cannot be empty'));
     }
     return Right(params);
@@ -2080,12 +2174,14 @@ class SendMessageUseCase {
 ### 7.2 Recommended Refactoring Roadmap
 
 **Phase 1: Security & Stability (Weeks 1-2)**
+
 - Migrate to secure storage
 - Add error monitoring (Sentry)
 - Fix hardcoded user ID
 - Remove debug logging
 
 **Phase 2: Testing (Weeks 3-4)**
+
 - Set up test infrastructure
 - Write repository tests
 - Write use case tests
@@ -2093,18 +2189,21 @@ class SendMessageUseCase {
 - Achieve 50% coverage
 
 **Phase 3: Architecture (Weeks 5-6)**
+
 - Extract domain services
 - Implement specifications
 - Add domain events
 - Refactor cross-feature dependencies
 
 **Phase 4: Performance (Weeks 7-8)**
+
 - Implement pagination
 - Add caching layer
 - Optimize database queries
 - Add lazy loading
 
 **Phase 5: Infrastructure (Weeks 9-10)**
+
 - Set up CI/CD
 - Add automated testing
 - Implement feature flags
@@ -2117,51 +2216,56 @@ class SendMessageUseCase {
 ### 8.1 Immediate Actions (Next 2 Weeks)
 
 **Week 1: Critical Security Fixes**
+
 1. Move secrets out of git
-   - Remove .env from repository
-   - Use CI secrets for sensitive values
-   - Rotate exposed API keys
+    - Remove .env from repository
+    - Use CI secrets for sensitive values
+    - Rotate exposed API keys
 
 2. Fix hardcoded user ID
-   - Use actual user.id from session
-   - Test with multiple users
+    - Use actual user.id from session
+    - Test with multiple users
 
 3. Migrate to secure storage
-   - Add flutter_secure_storage
-   - Migrate SharedPreferences data
-   - Test on both Android and iOS
+    - Add flutter_secure_storage
+    - Migrate SharedPreferences data
+    - Test on both Android and iOS
 
 4. Remove debug logging
-   - Remove all print statements
-   - Add logger package with levels
-   - Only log in debug mode
+    - Remove all print statements
+    - Add logger package with levels
+    - Only log in debug mode
 
 **Week 2: Error Monitoring & Testing Foundation**
+
 5. Add Sentry integration
-   - Set up Sentry project
-   - Add sentry_flutter package
-   - Configure error reporting
+    - Set up Sentry project
+    - Add sentry_flutter package
+    - Configure error reporting
 
 6. Set up test infrastructure
-   - Create test helpers
-   - Add mock factories
-   - Write first 10 critical tests
+    - Create test helpers
+    - Add mock factories
+    - Write first 10 critical tests
 
 ---
 
 ### 8.2 Short-term Improvements (Next Month)
 
 **Testing (Week 3-4)**
+
 - Achieve 50% test coverage
 - Focus on critical paths
 - Add integration tests
 
 **Database (Week 3-4)**
+
 - Implement migration strategy
 - Add more indexes
 - Consider database encryption
 
 **API (Week 3-4)**
+
 - Add retry logic
 - Implement rate limiting
 - Add API versioning
@@ -2171,18 +2275,21 @@ class SendMessageUseCase {
 ### 8.3 Medium-term Enhancements (Next Quarter)
 
 **Architecture (Month 2)**
+
 - Enrich domain models
 - Extract domain services
 - Implement pagination
 - Add caching layer
 
 **Infrastructure (Month 2-3)**
+
 - Set up CI/CD pipeline
 - Add automated releases
 - Implement feature flags
 - Add analytics
 
 **Performance (Month 3)**
+
 - Optimize database queries
 - Add lazy loading
 - Implement virtual scrolling
@@ -2193,18 +2300,21 @@ class SendMessageUseCase {
 ### 8.4 Long-term Strategic Initiatives (Next 6 Months)
 
 **Scalability**
+
 - Consider backend refactoring
 - Implement CQRS for dashboard
 - Add multi-user support
 - Cloud sync implementation
 
 **Security**
+
 - Full security audit
 - Penetration testing
 - Compliance review (GDPR, etc.)
 - Add biometric authentication
 
 **Quality**
+
 - 80%+ test coverage
 - Automated E2E tests
 - Performance monitoring
@@ -2216,22 +2326,23 @@ class SendMessageUseCase {
 
 ### 9.1 Current State Metrics
 
-| Metric | Current | Target | Gap |
-|--------|---------|--------|-----|
-| Test Coverage | 1.5% | 75% | -73.5% |
-| Code Duplication | ~8% | <5% | -3% |
-| Technical Debt Ratio | ~25% | <10% | -15% |
-| Security Score | 5/10 | 9/10 | -4 |
-| Documentation Coverage | 70% | 90% | -20% |
-| Cyclomatic Complexity | 3-4 avg | <10 | Good |
-| API Response Time | Unknown | <500ms | Need monitoring |
-| Crash Rate | Unknown | <0.1% | Need monitoring |
+| Metric                 | Current | Target | Gap             |
+|------------------------|---------|--------|-----------------|
+| Test Coverage          | 1.5%    | 75%    | -73.5%          |
+| Code Duplication       | ~8%     | <5%    | -3%             |
+| Technical Debt Ratio   | ~25%    | <10%   | -15%            |
+| Security Score         | 5/10    | 9/10   | -4              |
+| Documentation Coverage | 70%     | 90%    | -20%            |
+| Cyclomatic Complexity  | 3-4 avg | <10    | Good            |
+| API Response Time      | Unknown | <500ms | Need monitoring |
+| Crash Rate             | Unknown | <0.1%  | Need monitoring |
 
 ---
 
 ### 9.2 Quality Gates
 
 **Before Merging to Main**:
+
 - [ ] All tests pass
 - [ ] Code coverage not decreased
 - [ ] No new critical security issues
@@ -2239,7 +2350,8 @@ class SendMessageUseCase {
 - [ ] Code review approved
 
 **Before Release**:
-- [ ] >75% test coverage
+
+- [ ] > 75% test coverage
 - [ ] No P0/P1 bugs
 - [ ] Performance benchmarks pass
 - [ ] Security scan clean
@@ -2251,9 +2363,12 @@ class SendMessageUseCase {
 
 ### 10.1 Overall Assessment
 
-BalanceIQ demonstrates **solid architectural foundations** with proper implementation of Clean Architecture, good separation of concerns, and thoughtful technology choices. The codebase is well-organized, maintainable, and ready for growth.
+BalanceIQ demonstrates **solid architectural foundations** with proper implementation of Clean
+Architecture, good separation of concerns, and thoughtful technology choices. The codebase is
+well-organized, maintainable, and ready for growth.
 
 **Strengths**:
+
 - Clean Architecture correctly implemented
 - Good dependency injection
 - Well-structured features
@@ -2261,6 +2376,7 @@ BalanceIQ demonstrates **solid architectural foundations** with proper implement
 - Proper state management
 
 **Critical Gaps**:
+
 - Severe lack of testing (only 1 test)
 - Security vulnerabilities (unencrypted storage)
 - Production-blocking hardcoded values
@@ -2272,6 +2388,7 @@ BalanceIQ demonstrates **solid architectural foundations** with proper implement
 **Production Readiness**: 6/10
 
 **Blockers for Production**:
+
 1. Fix hardcoded user ID
 2. Add error monitoring
 3. Implement secure storage
@@ -2288,6 +2405,7 @@ BalanceIQ demonstrates **solid architectural foundations** with proper implement
 **Long-term**: Scale and optimize (6 months)
 
 **Investment Priority**:
+
 1. Security (Critical - Do Now)
 2. Testing (Critical - Do Next)
 3. Monitoring (High - Do Soon)
@@ -2305,21 +2423,25 @@ BalanceIQ demonstrates **solid architectural foundations** with proper implement
 ## Appendix A: Tool Recommendations
 
 **Testing**:
+
 - mockito: ^5.4.0 (Mocking)
 - bloc_test: ^9.1.0 (Cubit testing)
 - integration_test: SDK (E2E tests)
 
 **Security**:
+
 - flutter_secure_storage: ^9.0.0
 - sqflite_sqlcipher: ^2.2.0
 - local_auth: ^2.1.0
 
 **Monitoring**:
+
 - sentry_flutter: ^7.0.0
 - firebase_crashlytics: ^3.4.0
 - firebase_analytics: ^10.7.0
 
 **Development**:
+
 - logger: ^2.0.0
 - connectivity_plus: ^5.0.0
 - hydrated_bloc: ^9.0.0

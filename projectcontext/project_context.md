@@ -28,14 +28,18 @@ This project context is complemented by specialized guides located in the `proje
 
 ### 📚 Available Guides
 
-1. **Progress Tracking** 🆕
+1. **Agent Configuration & Standards** 🆕
+   - **[agent_front_matter_standard.md](agent_front_matter_standard.md)** - Standardized YAML schema for agent front matter, category taxonomy, tag conventions, refinement status, and migration guide
+   - **Use this for**: Agent development, front matter refinement, understanding agent organization
+
+2. **Progress Tracking**
    - **[progress/progress.md](progress/progress.md)** - Daily development progress tracker with Git commit analysis
    - Automated tracking of commits, features, fixes, and improvements
    - Categorized by date with commit hash references
    - Summary statistics and next steps
    - **Use this for**: Understanding recent work, tracking development velocity, team updates
 
-2. **Business Strategy Documents (Bangladesh Market)**
+3. **Business Strategy Documents (Bangladesh Market)**
    - **[business/01_core_business_idea.md](project_summary/business/01_core_business_idea.md)** - What is BalanceIQ, problem/solution for BD market, target users
    - **[business/02_revenue_model.md](project_summary/business/02_revenue_model.md)** - Freemium pricing (600 BDT/month), unit economics, revenue streams
    - **[business/03_user_acquisition_strategy.md](project_summary/business/03_user_acquisition_strategy.md)** - How to get first 100, 1K, 10K users in Bangladesh
@@ -44,7 +48,7 @@ This project context is complemented by specialized guides located in the `proje
    - **[project_summary/business.md](project_summary/business.md)** - Original detailed US market business plan (reference only)
    - **Use these for**: Business planning, fundraising, market strategy (Bangladesh-first approach)
 
-3. **[development_guide.md](development_guide.md)**
+4. **[development_guide.md](development_guide.md)**
    - How to extend and customize the app
    - Adding new bots and features
    - Modifying UI/UX components
@@ -52,7 +56,7 @@ This project context is complemented by specialized guides located in the `proje
    - Best practices and code patterns
    - **Use this for**: Development work, adding features, customization
 
-4. **[testing_guide.md](testing_guide.md)**
+5. **[testing_guide.md](testing_guide.md)**
    - Comprehensive testing checklist
    - Authentication testing
    - Chat functionality testing
@@ -61,7 +65,7 @@ This project context is complemented by specialized guides located in the `proje
    - Platform-specific tests (Android/iOS)
    - **Use this for**: QA testing, verification, quality assurance
 
-5. **[app_overview.md](app_overview.md)**
+6. **[app_overview.md](app_overview.md)**
    - Visual diagrams and flowcharts
    - Data flow diagrams
    - Architecture layer visualization
@@ -70,7 +74,7 @@ This project context is complemented by specialized guides located in the `proje
    - Bot configuration overview
    - **Use this for**: Understanding system design, onboarding new developers
 
-6. **[webhook_integration.md](webhook_integration.md)**
+7. **[webhook_integration.md](webhook_integration.md)**
    - n8n webhook setup and configuration
    - Request/response payload structures
    - Migration from Telegram to webhook

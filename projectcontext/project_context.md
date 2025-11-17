@@ -29,7 +29,7 @@ This project context is complemented by specialized guides located in the `proje
 ### 📚 Available Guides
 
 1. **Progress Tracking** 🆕
-   - **[progree/progress.md](progree/progress.md)** - Daily development progress tracker with Git commit analysis
+   - **[progress/progress.md](progress/progress.md)** - Daily development progress tracker with Git commit analysis
    - Automated tracking of commits, features, fixes, and improvements
    - Categorized by date with commit hash references
    - Summary statistics and next steps
@@ -81,7 +81,7 @@ This project context is complemented by specialized guides located in the `proje
 ### 📖 How to Use These Documents
 
 - **New Developers**: Start with [app_overview.md](app_overview.md) → this document → [development_guide.md](development_guide.md)
-- **Daily Standup/Updates**: Check [progree/progress.md](progree/progress.md) for recent work
+- **Daily Standup/Updates**: Check [progress/progress.md](progress/progress.md) for recent work
 - **QA/Testers**: Use [testing_guide.md](testing_guide.md) for comprehensive testing
 - **Backend Integration**: Refer to [webhook_integration.md](webhook_integration.md)
 - **Feature Development**: Check [development_guide.md](development_guide.md) for patterns and examples

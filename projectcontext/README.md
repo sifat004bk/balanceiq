@@ -1,304 +1,121 @@
-# Project Context Documentation
+# BalanceIQ - Project Context for Developers & AI Agents
 
-This directory contains all comprehensive project documentation for BalanceIQ.
+Welcome to the BalanceIQ project context! This directory contains concise, essential documentation for developers and AI agents working on this project.
 
-> **⚠️ IMPORTANT**: BalanceIQ has been updated to use a **single AI assistant** architecture with comprehensive **email/password + OAuth** authentication. See [UPDATED_APP_CONCEPT.md](UPDATED_APP_CONCEPT.md) for details.
+## Quick Start
 
-## 📁 Document Structure
+1. **New to the project?** Start with [PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md)
+2. **Want to understand the code?** Read [ARCHITECTURE.md](ARCHITECTURE.md)
+3. **Ready to develop?** Check [DEVELOPMENT_GUIDE.md](DEVELOPMENT_GUIDE.md)
+4. **Need to know what's done?** See [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md)
+5. **Planning next steps?** Review [ROADMAP.md](ROADMAP.md) and [TASKS.md](TASKS.md)
+
+## Document Guide
+
+| Document | Purpose | Read Time |
+|----------|---------|-----------|
+| [PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md) | High-level project summary, tech stack, features | 10 min |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | Clean architecture, folder structure, design patterns | 15 min |
+| [DEVELOPMENT_GUIDE.md](DEVELOPMENT_GUIDE.md) | How to add features, modify code, best practices | 20 min |
+| [API_INTEGRATION.md](API_INTEGRATION.md) | n8n webhooks, API contracts, data flow | 10 min |
+| [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md) | What's implemented, what's missing, known issues | 10 min |
+| [ROADMAP.md](ROADMAP.md) | Development phases, priorities, timeline | 10 min |
+| [TASKS.md](TASKS.md) | Actionable task list with priorities | 5 min |
+
+## Project At a Glance
+
+**BalanceIQ** is an AI-powered personal finance app for Bangladesh market, built with Flutter.
+
+- **Platform**: Flutter 3.27.0 (iOS & Android)
+- **Architecture**: Clean Architecture (Domain, Data, Presentation)
+- **State Management**: Cubit (flutter_bloc)
+- **Backend**: n8n workflows + PostgreSQL
+- **Key Features**:
+  - Dashboard with financial metrics
+  - AI chat assistant for expense tracking
+  - Receipt scanning (OCR)
+  - Voice commands
+  - Multi-provider authentication
+
+## Current Status
+
+- **Development Stage**: Beta (60% complete)
+- **Total Code**: ~7,500 lines of Dart
+- **Features Implemented**: Auth, Dashboard, Chat, SQLite persistence
+- **Critical Missing**: Bank integration, Budgets, Bangla language
+- **Next Priority**: Launch-blocking UX fixes
+
+## Development Workflow
+
+```bash
+# Setup
+flutter pub get
+cp .env.example .env  # Configure API URLs
+
+# Run
+flutter run
+
+# Test
+flutter test
+flutter analyze
+
+# Build
+flutter build apk --release
+flutter build ios --release
+```
+
+## Key Technologies
+
+| Layer | Technologies |
+|-------|-------------|
+| **Frontend** | Flutter, Dart, Cubit |
+| **Local DB** | SQLite (sqflite) |
+| **Auth** | Google Sign-In, Apple Sign-In |
+| **API** | Dio, n8n webhooks |
+| **DI** | GetIt service locator |
+| **UI** | Material Design, Dark/Light themes |
+
+## Project Structure
 
 ```
-projectcontext/
-├── README.md                      # This file - documentation index
-├── UPDATED_APP_CONCEPT.md         # NEW - App direction changes summary
-├── project_context.md             # Main comprehensive context (START HERE)
-├── development_guide.md           # Development and customization guide
-├── testing_guide.md               # QA testing checklist
-├── app_overview.md                # Visual diagrams and system flows
-├── webhook_integration.md         # n8n webhook integration guide
-└── evaluation_meeting/            # Evaluation meeting documentation
-    └── task_distribution.md       # Task distribution matrix for comprehensive evaluation
+lib/
+├── core/              # Shared utilities, DI, database
+│   ├── constants/     # App constants, config
+│   ├── database/      # SQLite helper
+│   ├── di/           # Dependency injection
+│   └── theme/        # App themes
+│
+├── features/          # Feature modules
+│   ├── auth/         # Authentication
+│   ├── chat/         # AI chat assistant
+│   └── home/         # Dashboard
 ```
 
-## 📖 Reading Guide
+## Getting Help
 
-### For New Team Members
-1. **Start**: [project_context.md](project_context.md) - Get the complete picture
-2. **Visualize**: [app_overview.md](app_overview.md) - See the system design
-3. **Develop**: [development_guide.md](development_guide.md) - Learn to extend the app
+1. **Architecture questions?** → [ARCHITECTURE.md](ARCHITECTURE.md)
+2. **How to add a feature?** → [DEVELOPMENT_GUIDE.md](DEVELOPMENT_GUIDE.md)
+3. **API not working?** → [API_INTEGRATION.md](API_INTEGRATION.md)
+4. **What needs to be built?** → [TASKS.md](TASKS.md)
 
-### For Developers
-- **Adding Features**: [development_guide.md](development_guide.md)
-- **System Architecture**: [project_context.md](project_context.md) → Architecture section
-- **Visual Reference**: [app_overview.md](app_overview.md)
+## Document Philosophy
 
-### For QA/Testers
-- **Testing Checklist**: [testing_guide.md](testing_guide.md)
-- **Feature Reference**: [project_context.md](project_context.md) → Features section
+These documents are:
+- **Concise**: Only essential information
+- **Practical**: Real code examples and actionable guidance
+- **Current**: Reflects actual codebase state
+- **Focused**: For developers and AI agents, not business stakeholders
 
-### For Backend Integration
-- **Webhook Setup**: [webhook_integration.md](webhook_integration.md)
-- **API Details**: [project_context.md](project_context.md) → API Integration section
+## Contributing
 
-## 📄 Document Descriptions
-
-### [project_context.md](project_context.md) ⭐ START HERE
-**The main comprehensive documentation covering everything about BalanceIQ**
-
-Topics covered:
-- Complete project overview and purpose
-- Architecture and design patterns
-- All features and capabilities
-- Technology stack and dependencies
-- File structure and organization
-- Key components deep dive
-- Development journey and history
-- Database schema
-- API integration details
-- State management with Cubit
-- Authentication flows
-- UI/UX design guidelines
-- Recent fixes and improvements
-- Configuration and setup
-- Build and deployment process
-
-**Read time**: ~60 minutes
-**Use when**: You need comprehensive understanding of the entire project
+When updating these docs:
+1. Keep them short and actionable
+2. Use code examples from actual codebase
+3. Update IMPLEMENTATION_STATUS.md when features change
+4. Add new tasks to TASKS.md
 
 ---
 
-### [development_guide.md](development_guide.md)
-**Practical guide for extending and customizing BalanceIQ**
-
-Topics covered:
-- Adding new bots (step-by-step)
-- Adding new features with examples
-- Modifying UI components
-- Database changes and migrations
-- API integration patterns
-- Best practices and code patterns
-- Common development tasks
-- Debugging tips
-
-**Read time**: ~30 minutes
-**Use when**: You're actively developing features or customizing the app
-
----
-
-### [testing_guide.md](testing_guide.md)
-**Comprehensive QA testing checklist**
-
-Topics covered:
-- Pre-testing setup
-- Authentication tests (Google, Apple)
-- Home screen functionality
-- Chat interface testing
-- Text/image/audio message tests
-- Database persistence tests
-- n8n integration verification
-- Performance testing
-- Platform-specific tests (Android/iOS)
-- Edge cases and error scenarios
-- Accessibility testing
-- Security verification
-
-**Read time**: ~90 minutes (for full test execution)
-**Use when**: Performing QA testing or verifying app functionality
-
----
-
-### [app_overview.md](app_overview.md)
-**Visual guide with diagrams and flowcharts**
-
-Topics covered:
-- App flow diagram
-- Data flow visualization
-- Architecture layer diagrams
-- Database schema visual
-- Bot configuration overview
-- n8n integration diagram
-- Screen hierarchy
-- Theme system visualization
-- Deployment pipeline
-
-**Read time**: ~20 minutes
-**Use when**: You prefer visual learning or need to explain the system to others
-
----
-
-### [webhook_integration.md](webhook_integration.md)
-**Technical guide for n8n webhook integration**
-
-Topics covered:
-- Webhook setup overview
-- Flutter app changes for webhook
-- n8n workflow updates
-- Request/response payload structures
-- Data flow from app to n8n
-- Database table interactions
-- Bot ID configuration
-- Migration from Telegram
-- Testing checklist
-- Troubleshooting
-
-**Read time**: ~25 minutes
-**Use when**: Setting up or debugging webhook integration
-
----
-
-### [evaluation_meeting/task_distribution.md](evaluation_meeting/task_distribution.md)
-**Comprehensive task distribution matrix for project evaluation**
-
-Topics covered:
-- 11 evaluation tasks with detailed breakdowns
-- Agent assignments and responsibilities
-- Task priorities and dependencies
-- Deliverables and success criteria
-- Timeline and sequencing (6-day plan)
-- Agent workload distribution
-- Risk management framework
-- Success metrics and KPIs
-
-**Read time**: ~45 minutes
-**Use when**: Planning comprehensive project evaluation or understanding evaluation scope
-
----
-
-## 🎯 Quick Navigation
-
-### I want to...
-
-**Understand the project**
-→ [project_context.md](project_context.md)
-
-**Add a new bot**
-→ [development_guide.md](development_guide.md) → "Adding a New Bot"
-
-**Test the app**
-→ [testing_guide.md](testing_guide.md)
-
-**See architecture diagrams**
-→ [app_overview.md](app_overview.md)
-
-**Configure webhook**
-→ [webhook_integration.md](webhook_integration.md)
-
-**Understand database schema**
-→ [project_context.md](project_context.md) → "Database Schema"
-→ [app_overview.md](app_overview.md) → "Database Schema Visual"
-
-**Learn state management**
-→ [project_context.md](project_context.md) → "State Management"
-
-**Customize UI**
-→ [development_guide.md](development_guide.md) → "Modifying the UI"
-
-**Deploy the app**
-→ [project_context.md](project_context.md) → "Build and Deployment"
-
-**Plan project evaluation**
-→ [evaluation_meeting/task_distribution.md](evaluation_meeting/task_distribution.md)
-
----
-
-## 📊 Documentation Stats
-
-| Metric | Value |
-|--------|-------|
-| Total Documents | 6 markdown files |
-| Total Words | ~40,000+ words |
-| Code Examples | 100+ snippets |
-| Diagrams | 15+ visual flows |
-| Sections | 120+ topics covered |
-
----
-
-## 🔄 Keeping Documentation Updated
-
-### When to Update Each Document
-
-**project_context.md**
-- Major architecture changes
-- New features added
-- Technology stack updates
-- Deployment process changes
-
-**development_guide.md**
-- New development patterns
-- Updated best practices
-- New examples added
-
-**testing_guide.md**
-- New features to test
-- Updated test procedures
-- New edge cases discovered
-
-**app_overview.md**
-- Architecture changes
-- New screens or flows
-- Updated diagrams
-
-**webhook_integration.md**
-- Webhook endpoint changes
-- Payload structure updates
-- n8n workflow modifications
-
-**evaluation_meeting/task_distribution.md**
-- New evaluation tasks added
-- Agent assignments changed
-- Timeline adjustments
-- Deliverable updates
-
----
-
-## 💡 Documentation Philosophy
-
-This documentation follows these principles:
-
-1. **Comprehensive but Organized**: All information in one place, but structured for easy navigation
-2. **Multiple Entry Points**: Different documents for different needs
-3. **Visual + Text**: Diagrams complement written explanations
-4. **Practical Examples**: Real code snippets and step-by-step guides
-5. **Cross-Referenced**: Documents link to each other for deeper dives
-6. **Maintained**: Updated alongside code changes
-
----
-
-## 🤝 Contributing to Documentation
-
-When adding or updating documentation:
-
-1. **Choose the right file**:
-   - Big picture changes → `project_context.md`
-   - How-to guides → `development_guide.md`
-   - Testing procedures → `testing_guide.md`
-   - Visual representations → `app_overview.md`
-   - Backend integration → `webhook_integration.md`
-
-2. **Follow existing format**:
-   - Use consistent heading levels
-   - Add code examples with syntax highlighting
-   - Include cross-references to other sections
-   - Update table of contents if needed
-
-3. **Keep it practical**:
-   - Real examples over theory
-   - Step-by-step instructions
-   - Clear, concise language
-   - Accurate and tested code
-
----
-
-## 📞 Need Help?
-
-If you can't find what you need:
-
-1. Use Cmd/Ctrl + F to search within documents
-2. Check the [project_context.md](project_context.md) table of contents
-3. Review the "Quick Navigation" section above
-4. Open an issue in the repository
-
----
-
-**Last Updated**: 2025-11-15
-**Documentation Version**: 2.1
-**Maintained by**: BalanceIQ Development Team
+**Last Updated**: 2025-11-21
+**Project Version**: 1.0.0+1
+**Documentation Version**: 1.0

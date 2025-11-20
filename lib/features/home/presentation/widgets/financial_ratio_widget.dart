@@ -61,10 +61,10 @@ class FinancialRatiosWidget extends StatelessWidget {
         children: [
           Text(
             title,
-            style: textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w800,
-              color:
-                  isDark ? AppTheme.textSubtleDark : AppTheme.textSubtleLight,
+            style: textTheme.bodySmall?.copyWith(
+              color: isDark
+                  ? Colors.grey.shade300
+                  : Colors.grey.shade500,
             ),
           ),
           const SizedBox(height: 8),

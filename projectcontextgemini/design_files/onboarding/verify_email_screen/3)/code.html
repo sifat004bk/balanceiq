@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Verify Email</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#10B981",
+              "background-light": "#F9FAFB",
+              "background-dark": "#121212",
+              "text-light": "#111827",
+              "text-dark": "#E5E7EB",
+              "icon-light": "#6B7280",
+              "icon-dark": "#9CA3AF"
+            },
+            fontFamily: {
+              "display": ["Manrope", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="flex items-center p-4">
+<button class="text-icon-light dark:text-icon-dark flex size-12 shrink-0 items-center justify-center rounded-full">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</button>
+<h2 class="flex-1 text-center text-lg font-bold leading-tight tracking-[-0.015em] text-text-light dark:text-text-dark pr-12">Verify Email</h2>
+</div>
+<div class="flex flex-1 flex-col items-center justify-center px-4 pb-4 pt-8 text-center">
+<div class="flex items-center justify-center">
+<div class="relative flex h-32 w-32 items-center justify-center">
+<div class="absolute h-full w-full rounded-full bg-primary/20"></div>
+<div class="absolute flex h-24 w-24 items-center justify-center rounded-full bg-primary/30"></div>
+<span class="material-symbols-outlined text-5xl text-primary">mark_email_unread</span>
+</div>
+</div>
+<h1 class="text-text-light dark:text-text-dark tracking-light text-[32px] font-bold leading-tight pt-10 pb-3">Check your inbox</h1>
+<p class="text-text-light dark:text-text-dark text-base font-normal leading-normal max-w-sm">
+                We've sent a verification link to <span class="font-bold text-primary">your.email@example.com</span>. Please check your spam folder as well.
+            </p>
+<div class="w-full max-w-md pt-10">
+<div class="flex px-4 py-3 w-full">
+<button class="flex min-w-[84px] w-full cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-5 flex-1 bg-primary text-white text-base font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Open Email App</span>
+</button>
+</div>
+</div>
+<div class="pt-4">
+<p class="text-sm text-icon-light dark:text-icon-dark">
+                    Didn't receive it? <a class="font-bold text-primary hover:underline" href="#">Resend Email</a>
+</p>
+</div>
+</div>
+</div>
+</body></html>

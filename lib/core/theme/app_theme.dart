@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  // New Design System Colors
-  static const Color primaryColor = Color(0xFF13ec80); // Primary green
-  static const Color accentColor = Color(0xFF13ec80);
+  // New Design System Colors (Updated to match design)
+  static const Color primaryColor = Color(0xFF2bee4b); // Primary green (brighter)
+  static const Color accentColor = Color(0xFF2bee4b);
   static const Color backgroundLight =
-      Color(0xffecf1ec); // Light theme background
+      Color(0xFFF6F8F6); // Light theme background
   static const Color backgroundDark =
-      Color.fromRGBO(21, 34, 21, 1); // Dark theme background
+      Color(0xFF102213); // Dark theme background (darker green-tint)
 
   // Text Colors
   static const Color textLightTheme = Color(0xFF111827);
@@ -118,10 +118,10 @@ class AppTheme {
       bottomSheetTheme: BottomSheetThemeData(
         backgroundColor: Colors.transparent,
       ),
-      colorScheme: const ColorScheme.dark(
+      colorScheme: ColorScheme.dark(
         primary: primaryColor,
         secondary: accentColor,
-        surface: Color.fromRGBO(16, 27, 16, 1),
+        surface: Colors.black.withOpacity(0.2), // Match design card backgrounds
         error: Colors.red,
         onPrimary: budgetPlannerColor,
       ),

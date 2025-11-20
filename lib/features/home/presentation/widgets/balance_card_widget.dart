@@ -21,56 +21,56 @@ class BalanceCard extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Column(
-      children: [
-        // Net Balance Section
-        Text(
-          'Net Balance',
-          style: textTheme.bodyMedium?.copyWith(
-            color: isDark ? AppTheme.textSubtleDark : AppTheme.textSubtleLight,
-            fontWeight: FontWeight.w400,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        children: [
+          // Net Balance Section
+          Text(
+            'Net Balance',
+            style: textTheme.bodySmall?.copyWith(
+              color: isDark ? AppTheme.textSubtleDark : AppTheme.textSubtleLight,
+              fontWeight: FontWeight.w400,
+            ),
           ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          'BDT ${_formatCurrency(netBalance)}',
-          style: textTheme.displayLarge?.copyWith(
-            fontSize: 40,
-            fontWeight: FontWeight.bold,
-            height: 1.2,
-            letterSpacing: -0.8,
+          const SizedBox(height: 4),
+          Text(
+            '\$${_formatCurrency(netBalance)}',
+            style: textTheme.displayLarge?.copyWith(
+              fontSize: 40,
+              fontWeight: FontWeight.bold,
+              height: 1.2,
+              letterSpacing: -0.6,
+            ),
           ),
-        ),
-        const SizedBox(height: 32),
+          const SizedBox(height: 24),
 
-        // Income and Expense Cards
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
+          // Income and Expense Cards
+          Row(
             children: [
               Expanded(
                 child: _buildIncomeExpenseCard(
                   context,
-                  icon: Icons.south,
+                  icon: Icons.arrow_downward,
                   label: 'Income',
                   amount: totalIncome,
-                  iconColor: colorScheme.onPrimary,
+                  iconColor: AppTheme.primaryColor,
                 ),
               ),
               const SizedBox(width: 16),
               Expanded(
                 child: _buildIncomeExpenseCard(
                   context,
-                  icon: Icons.north,
+                  icon: Icons.arrow_upward,
                   label: 'Expense',
                   amount: totalExpense,
-                  iconColor: colorScheme.error,
+                  iconColor: Colors.red,
                 ),
               ),
             ],
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -81,14 +81,15 @@ class BalanceCard extends StatelessWidget {
     required double amount,
     required Color iconColor,
   }) {
-    final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: iconColor.withOpacity(isDark ? 0.4 : 0.2),
+        color: isDark
+            ? Colors.black.withOpacity(0.2)
+            : Colors.white,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -106,13 +107,13 @@ class BalanceCard extends StatelessWidget {
                 child: Icon(
                   icon,
                   color: iconColor,
-                  size: 12,
+                  size: 10,
                 ),
               ),
               const SizedBox(width: 8),
               Text(
                 label,
-                style: textTheme.titleMedium?.copyWith(
+                style: textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -120,7 +121,7 @@ class BalanceCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'BDT ${_formatCurrency(amount)}',
+            '\$${_formatCurrency(amount)}',
             style: textTheme.titleLarge?.copyWith(
               fontSize: 20,
               fontWeight: FontWeight.bold,

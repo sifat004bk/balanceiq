@@ -29,6 +29,7 @@ import '../../features/chat/domain/usecases/send_message.dart';
 import '../../features/chat/presentation/cubit/chat_cubit.dart';
 // Core
 import '../database/database_helper.dart';
+import '../network/logging_interceptor.dart';
 import '../theme/theme_cubit.dart';
 
 final sl = GetIt.instance;
@@ -38,7 +39,21 @@ Future<void> init() async {
   final sharedPreferences = await SharedPreferences.getInstance();
   sl.registerLazySingleton(() => sharedPreferences);
 
-  sl.registerLazySingleton(() => Dio());
+  // Configure Dio with logging interceptor (only logs in debug mode)
+  sl.registerLazySingleton(() {
+    final dio = Dio(
+      BaseOptions(
+        connectTimeout: const Duration(seconds: 30),
+        receiveTimeout: const Duration(seconds: 30),
+        sendTimeout: const Duration(seconds: 30),
+      ),
+    );
+
+    // Add logging interceptor - only logs in debug mode, no logs in release
+    dio.interceptors.add(LoggingInterceptor());
+
+    return dio;
+  });
 
   sl.registerLazySingleton(
     () => GoogleSignIn(

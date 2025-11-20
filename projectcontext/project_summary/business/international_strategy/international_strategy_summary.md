@@ -1,3 +1,7 @@
+# International Market Strategy Summary
+
+**Note:** This document outlines a US-market-first strategy, which can be adapted for other international markets with similar characteristics (e.g., strong banking infrastructure, high smartphone penetration, and a competitive market for financial apps).
+
 # BalanceIQ Evaluation Meeting - Executive Summary
 
 **Date:** 2025-01-15
@@ -165,7 +169,7 @@ reviewing every aspect of the project.
 #### D. Create Onboarding Flow
 
 - **Timeline:** 1 week
-- **Cost:** ~$5K developer time
+-- **Cost:** ~$5K developer time
 - **Impact:** First impression and user understanding
 - **Rationale:** Users need to understand value proposition immediately
 

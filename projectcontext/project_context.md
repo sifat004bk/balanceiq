@@ -40,11 +40,11 @@ This project context is complemented by specialized guides located in the `proje
    - **Use this for**: Understanding recent work, tracking development velocity, team updates
 
 3. **Business Strategy Documents (Bangladesh Market)**
-   - **[business/01_core_business_idea.md](project_summary/business/01_core_business_idea.md)** - What is BalanceIQ, problem/solution for BD market, target users
-   - **[business/02_revenue_model.md](project_summary/business/02_revenue_model.md)** - Freemium pricing (600 BDT/month), unit economics, revenue streams
-   - **[business/03_user_acquisition_strategy.md](project_summary/business/03_user_acquisition_strategy.md)** - How to get first 100, 1K, 10K users in Bangladesh
-   - **[business/04_critical_recommendations.md](project_summary/business/04_critical_recommendations.md)** - Top 3 priorities, risks, success metrics, go/no-go criteria
-   - **[business/05_fundraising.md](project_summary/business/05_fundraising.md)** - Funding needs (60L BDT), investor sources, pitch, fallback plans
+   - **[business/01_core_business_idea.md](project_summary/business/bangladesh_strategy/01_core_business_idea.md)** - What is BalanceIQ, problem/solution for BD market, target users
+   - **[business/02_revenue_model.md](project_summary/business/bangladesh_strategy/02_revenue_model.md)** - Freemium pricing (600 BDT/month), unit economics, revenue streams
+   - **[business/03_user_acquisition_strategy.md](project_summary/business/bangladesh_strategy/03_user_acquisition_strategy.md)** - How to get first 100, 1K, 10K users in Bangladesh
+   - **[business/04_critical_recommendations.md](project_summary/business/bangladesh_strategy/04_critical_recommendations.md)** - Top 3 priorities, risks, success metrics, go/no-go criteria
+   - **[business/05_fundraising.md](project_summary/business/bangladesh_strategy/05_fundraising.md)** - Funding needs (60L BDT), investor sources, pitch, fallback plans
    - **[project_summary/business.md](project_summary/business.md)** - Original detailed US market business plan (reference only)
    - **Use these for**: Business planning, fundraising, market strategy (Bangladesh-first approach)
 

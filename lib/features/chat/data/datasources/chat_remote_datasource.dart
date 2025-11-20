@@ -79,6 +79,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
         options: Options(
           headers: {
             'Content-Type': 'application/json',
+            'authorization': AppConstants.n8nWebhookAuthToken,
           },
           sendTimeout: AppConstants.apiTimeout,
           receiveTimeout: AppConstants.apiTimeout,

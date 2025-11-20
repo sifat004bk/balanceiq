@@ -38,7 +38,7 @@ class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
         options: Options(
           headers: <String, String>{
             'Content-Type': 'application/json',
-            'authorization': 'Dolphin D#-#{Oo"|tC[fHDBpCjwhBfrY?O-56s64R|S,b8D-41eRLd8',
+            'authorization': AppConstants.n8nDashboardAuthToken,
           },
           sendTimeout: const Duration(seconds: 30),
           receiveTimeout: const Duration(seconds: 30),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import '../../domain/entities/message.dart';
 import '../../../../core/theme/app_theme.dart';
 
@@ -49,7 +49,8 @@ class MessageBubble extends StatelessWidget {
                 // Sender name (only for bot)
                 if (!isUser)
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 4, left: 4, right: 4),
+                    padding:
+                        const EdgeInsets.only(bottom: 4, left: 4, right: 4),
                     child: Text(
                       botName,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -61,7 +62,8 @@ class MessageBubble extends StatelessWidget {
                 if (isUser)
                   // User message with bubble
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
                     decoration: const BoxDecoration(
                       color: AppTheme.userMessageColor,
                       borderRadius: BorderRadius.only(
@@ -76,9 +78,12 @@ class MessageBubble extends StatelessWidget {
                       children: [
                         Text(
                           message.content,
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: isDark ? const Color(0xFF102219) : const Color(0xFF102219),
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: isDark
+                                        ? const Color(0xFF102219)
+                                        : const Color(0xFF102219),
+                                  ),
                         ),
                         if (message.imageUrl != null &&
                             message.imageUrl!.isNotEmpty) ...[
@@ -94,7 +99,8 @@ class MessageBubble extends StatelessWidget {
                 else
                   // Bot message without bubble (ChatGPT style)
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -110,18 +116,28 @@ class MessageBubble extends StatelessWidget {
                               h4: Theme.of(context).textTheme.titleLarge,
                               h5: Theme.of(context).textTheme.titleMedium,
                               h6: Theme.of(context).textTheme.titleSmall,
-                              code: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              code: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
                                     fontFamily: 'monospace',
                                     backgroundColor: isDark
                                         ? Colors.grey[800]
                                         : Colors.grey[200],
                                   ),
                               codeblockDecoration: BoxDecoration(
-                                color: isDark ? Colors.grey[900] : Colors.grey[100],
+                                color: isDark
+                                    ? Colors.grey[900]
+                                    : Colors.grey[100],
                                 borderRadius: BorderRadius.circular(8),
                               ),
-                              blockquote: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: isDark ? Colors.grey[400] : Colors.grey[600],
+                              blockquote: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                    color: isDark
+                                        ? Colors.grey[400]
+                                        : Colors.grey[600],
                                     fontStyle: FontStyle.italic,
                                   ),
                               blockquoteDecoration: BoxDecoration(
@@ -135,21 +151,31 @@ class MessageBubble extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              listBullet: Theme.of(context).textTheme.bodyMedium,
+                              listBullet:
+                                  Theme.of(context).textTheme.bodyMedium,
                               tableBody: Theme.of(context).textTheme.bodyMedium,
-                              tableHead: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              tableHead: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
                                     fontWeight: FontWeight.bold,
                                   ),
-                              a: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              a: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
                                     color: AppTheme.primaryColor,
                                     decoration: TextDecoration.underline,
                                   ),
                               em: const TextStyle(fontStyle: FontStyle.italic),
-                              strong: const TextStyle(fontWeight: FontWeight.bold),
+                              strong:
+                                  const TextStyle(fontWeight: FontWeight.bold),
                               horizontalRuleDecoration: BoxDecoration(
                                 border: Border(
                                   top: BorderSide(
-                                    color: isDark ? Colors.grey[700]! : Colors.grey[300]!,
+                                    color: isDark
+                                        ? Colors.grey[700]!
+                                        : Colors.grey[300]!,
                                     width: 1,
                                   ),
                                 ),

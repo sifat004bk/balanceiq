@@ -10,6 +10,7 @@ class MessageList extends StatelessWidget {
   final String botId;
   final String botName;
   final bool isSending;
+  final bool hasStartedConversation;
   final ScrollController? scrollController;
 
   const MessageList({
@@ -18,6 +19,7 @@ class MessageList extends StatelessWidget {
     required this.botId,
     required this.botName,
     this.isSending = false,
+    this.hasStartedConversation = false,
     this.scrollController,
   });
 
@@ -66,36 +68,95 @@ class MessageList extends StatelessWidget {
     }
 
     print('🔨 [MessageList] Building ListView with ${messages.length + (isSending ? 1 : 0)} items');
-    return ListView.builder(
+    print('🔨 [MessageList] Building CustomScrollView with ${messages.length + (isSending ? 1 : 0)} items');
+    return CustomScrollView(
       controller: scrollController,
-      padding: const EdgeInsets.all(16),
-      reverse: true, // Start from bottom
-      itemCount: messages.length + (isSending ? 1 : 0),
-      itemBuilder: (context, index) {
-        // Reverse the index since list is reversed
-        final reversedIndex = messages.length - 1 - index + (isSending ? 1 : 0);
+      reverse: true,
+      slivers: [
+        // Bottom Spacer (pushes content up, but safe for large messages)
+        SliverToBoxAdapter(
+          child: SizedBox(
+            height: hasStartedConversation ? MediaQuery.of(context).size.height * 0.4 : 16,
+          ),
+        ),
+        
+        // Message List
+        SliverPadding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          sliver: SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                // Logic to handle Gap
+                // Index 0: Typing Indicator (if isSending)
+                // Index 1: New User Message (if isSending)
+                // Index 2: GAP (if isSending)
+                // Index 3+: Old Messages
+                
+                if (isSending) {
+                  if (index == 0) {
+                     print('⏱️ [MessageList] Rendering typing indicator at index $index');
+                     return _buildTypingIndicator(context);
+                  }
+                  if (index == 1) {
+                    // New User Message (messages.last)
+                    final message = messages.last;
+                    return MessageBubble(
+                      message: message,
+                      isUser: true,
+                      botName: botName,
+                      botColor: AppTheme.getBotColor(botId),
+                    );
+                  }
+                  if (index == 2) {
+                    // GAP to hide history
+                    return SizedBox(height: MediaQuery.of(context).size.height * 0.6);
+                  }
+                  
+                  // Old Messages (index 3 corresponds to messages[length - 2])
+                  // reversedIndex logic needs adjustment
+                  // We consumed 3 items (Typing, NewMsg, Gap).
+                  // Remaining items in 'messages' are length - 1 (excluding new msg).
+                  // We want to show them in reverse order.
+                  // Visual Index 3 -> Message[length - 2]
+                  // Visual Index 4 -> Message[length - 3]
+                  
+                  final remainingIndex = index - 3;
+                  final messageIndex = messages.length - 2 - remainingIndex;
+                  
+                  if (messageIndex < 0) return null;
+                  
+                  final message = messages[messageIndex];
+                  final isUser = message.sender == AppConstants.senderUser;
+                  return MessageBubble(
+                    message: message,
+                    isUser: isUser,
+                    botName: botName,
+                    botColor: AppTheme.getBotColor(botId),
+                  );
+                }
 
-        if (isSending && index == 0) {
-          // Show typing indicator at top (which is bottom visually)
-          print('⏱️ [MessageList] Rendering typing indicator at index $index');
-          return _buildTypingIndicator(context);
-        }
+                // Normal behavior (not sending)
+                final reversedIndex = messages.length - 1 - index;
+                if (reversedIndex < 0) return null;
 
-        final actualIndex = isSending ? reversedIndex - 1 : reversedIndex;
-        if (actualIndex < 0 || actualIndex >= messages.length) {
-          return const SizedBox.shrink();
-        }
+                final message = messages[reversedIndex];
+                final isUser = message.sender == AppConstants.senderUser;
 
-        final message = messages[actualIndex];
-        final isUser = message.sender == AppConstants.senderUser;
-
-        return MessageBubble(
-          message: message,
-          isUser: isUser,
-          botName: botName,
-          botColor: AppTheme.getBotColor(botId),
-        );
-      },
+                return MessageBubble(
+                  message: message,
+                  isUser: isUser,
+                  botName: botName,
+                  botColor: AppTheme.getBotColor(botId),
+                );
+              },
+              childCount: isSending ? messages.length + 2 : messages.length, // +1 for Typing, +1 for Gap
+            ),
+          ),
+        ),
+        
+        // Top Padding
+        const SliverPadding(padding: EdgeInsets.only(top: 16)),
+      ],
     );
   }
 

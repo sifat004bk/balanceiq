@@ -45,6 +45,7 @@ class ChatView extends StatefulWidget {
 
 class _ChatViewState extends State<ChatView> {
   final ScrollController _scrollController = ScrollController();
+  bool _hasStartedConversation = false;
   int _previousMessageCount = 0;
 
   @override
@@ -76,29 +77,45 @@ class _ChatViewState extends State<ChatView> {
     return Scaffold(
       backgroundColor: GeminiColors.background(context),
       appBar: AppBar(
-        toolbarHeight: 64, // Gemini app bar height
+        toolbarHeight: 64,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
           color: GeminiColors.icon(context),
         ),
         title: Text(
-          widget.botName,
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+          'BalanceIQ',
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w500,
-                color: GeminiColors.aiMessageText(context),
+                color: GeminiColors.icon(context),
+                fontSize: 16,
               ),
         ),
         centerTitle: true,
         backgroundColor: GeminiColors.background(context),
         elevation: 0,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.more_vert),
-            onPressed: () {
-              // TODO: Show menu for clear chat, settings, etc.
+          GestureDetector(
+            onTap: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Profile clicked')),
+              );
             },
-            color: GeminiColors.icon(context),
+            child: Padding(
+              padding: const EdgeInsets.only(right: 16.0),
+              child: CircleAvatar(
+                radius: 16,
+                backgroundColor: GeminiColors.primaryColor(context),
+                child: const Text(
+                  'S', // Placeholder for user initial
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+            ),
           ),
         ],
       ),
@@ -112,6 +129,11 @@ class _ChatViewState extends State<ChatView> {
                 if (state is ChatLoaded) {
                   print('📨 [ChatPage] ChatLoaded - Messages: ${state.messages.length}, isSending: ${state.isSending}');
                   print('📊 [ChatPage] Previous count: $_previousMessageCount, Current count: ${state.messages.length}');
+                  
+                  if (state.isSending) {
+                    _hasStartedConversation = true;
+                  }
+
                   // Only scroll if message count changed (new message added)
                   if (state.messages.length != _previousMessageCount) {
                     print('✅ [ChatPage] Message count changed! Scrolling to bottom...');
@@ -150,6 +172,7 @@ class _ChatViewState extends State<ChatView> {
                     botId: widget.botId,
                     botName: widget.botName,
                     isSending: state.isSending,
+                    hasStartedConversation: _hasStartedConversation,
                     scrollController: _scrollController,
                   );
                 } else if (state is ChatError) {

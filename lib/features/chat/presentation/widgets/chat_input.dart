@@ -167,54 +167,105 @@ class _ChatInputState extends State<ChatInput> {
   void _showAttachmentOptions() {
     showModalBottomSheet(
       context: context,
+      backgroundColor: const Color(0xFF1e1f20),
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
       builder: (context) => SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: GeminiColors.primary.withValues(alpha: 0.1),
-                  child: const Icon(Icons.photo_library,
-                      color: GeminiColors.primary),
-                ),
-                title: const Text('Choose from gallery'),
-                onTap: () {
-                  Navigator.pop(context);
-                  _pickImage();
-                },
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 12),
+            // Drag Handle
+            Container(
+              width: 32,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.grey[600],
+                borderRadius: BorderRadius.circular(2),
               ),
-              ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: GeminiColors.primary.withValues(alpha: 0.1),
-                  child: const Icon(Icons.camera_alt,
-                      color: GeminiColors.primary),
+            ),
+            const SizedBox(height: 32),
+            // Options Row
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildAttachmentOption(
+                  icon: Icons.camera_alt_outlined,
+                  label: 'Camera',
+                  onTap: () {
+                    Navigator.pop(context);
+                    _takePhoto();
+                  },
                 ),
-                title: const Text('Take a photo'),
-                onTap: () {
-                  Navigator.pop(context);
-                  _takePhoto();
-                },
-              ),
-              ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: GeminiColors.primary.withValues(alpha: 0.1),
-                  child:
-                      const Icon(Icons.mic, color: GeminiColors.primary),
+                _buildAttachmentOption(
+                  icon: Icons.photo_library_outlined,
+                  label: 'Gallery',
+                  onTap: () {
+                    Navigator.pop(context);
+                    _pickImage();
+                  },
                 ),
-                title: Text(_isRecording ? 'Stop recording' : 'Record audio'),
-                onTap: () {
-                  Navigator.pop(context);
-                  _toggleRecording();
-                },
-              ),
-            ],
-          ),
+                _buildAttachmentOption(
+                  icon: Icons.insert_drive_file_outlined,
+                  label: 'Files',
+                  onTap: () {
+                    Navigator.pop(context);
+                    // Placeholder for Files
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Files feature coming soon')),
+                    );
+                  },
+                ),
+                _buildAttachmentOption(
+                  icon: Icons.add_to_drive_outlined,
+                  label: 'Drive',
+                  onTap: () {
+                    Navigator.pop(context);
+                    // Placeholder for Drive
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Drive feature coming soon')),
+                    );
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 32),
+          ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildAttachmentOption({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 64,
+            height: 64,
+            decoration: BoxDecoration(
+              color: const Color(0xFF2a2a2e), // Slightly lighter than bg
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: Colors.white, size: 28),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            label,
+            style: const TextStyle(
+              color: Color(0xFFc4c7c5),
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -222,198 +273,149 @@ class _ChatInputState extends State<ChatInput> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: GeminiColors.background(context),
+        color: const Color(0xFF1e1f20), // Dark grey background
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(32)), // Large rounded top corners
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 10,
+            offset: const Offset(0, -2),
+          ),
+        ],
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Preview attachments
-          if (_selectedImagePath != null || _recordedAudioPath != null) ...[
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 16), // Padding inside the modal
+      child: SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Text Field Row (Top)
             Container(
-              margin: const EdgeInsets.only(bottom: 12),
-              child: Row(
-                children: [
-                  if (_selectedImagePath != null)
-                    Stack(
+              constraints: const BoxConstraints(
+                minHeight: 24,
+                maxHeight: 120,
+              ),
+              child: TextField(
+                controller: _textController,
+                decoration: InputDecoration(
+                  hintText: 'What do you want to write?',
+                  hintStyle: TextStyle(
+                    color: GeminiColors.textSecondary(context),
+                    fontSize: 18, // Larger font
+                  ),
+                  border: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  errorBorder: InputBorder.none,
+                  disabledBorder: InputBorder.none,
+                  isDense: true,
+                  contentPadding: EdgeInsets.zero,
+                  filled: false, // Ensure no background
+                  fillColor: Colors.transparent,
+                ),
+                maxLines: null,
+                textInputAction: TextInputAction.newline,
+                style: TextStyle(
+                  fontSize: 18,
+                  color: GeminiColors.icon(context),
+                ),
+                onChanged: (text) {
+                  setState(() {
+                    _hasContent = text.trim().isNotEmpty ||
+                        _selectedImagePath != null;
+                  });
+                },
+              ),
+            ),
+            
+          const SizedBox(height: 20), // Spacing between text and actions
+            
+            // Bottom Actions Row
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // Plus Icon (Left)
+                GestureDetector(
+                  onTap: _showAttachmentOptions,
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    child: Icon(
+                      Icons.add,
+                      color: GeminiColors.icon(context),
+                      size: 28,
+                    ),
+                  ),
+                ),
+                
+                const SizedBox(width: 8),
+
+                // Attachment Pill (if image selected)
+                if (_selectedImagePath != null)
+                  Container(
+                    margin: const EdgeInsets.only(right: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF2e406c), // Dark blue
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Container(
-                          height: 80,
-                          width: 80,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            image: DecorationImage(
-                              image: FileImage(File(_selectedImagePath!)),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          top: -4,
-                          right: -4,
-                          child: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                _selectedImagePath = null;
-                                _hasContent =
-                                    _textController.text.trim().isNotEmpty ||
-                                        _recordedAudioPath != null;
-                              });
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(4),
-                              decoration: BoxDecoration(
-                                color: GeminiColors.surface(context),
-                                shape: BoxShape.circle,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withValues(alpha: 0.2),
-                                    blurRadius: 4,
-                                  ),
-                                ],
-                              ),
-                              child: Icon(
-                                Icons.close,
-                                color: GeminiColors.icon(context),
-                                size: 16,
-                              ),
-                            ),
-                          ),
+                        const Icon(Icons.image, size: 16, color: Color(0xFFa8c7fa)),
+                        const SizedBox(width: 8),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _selectedImagePath = null;
+                            });
+                          },
+                          child: const Icon(Icons.close, size: 16, color: Color(0xFFa8c7fa)),
                         ),
                       ],
                     ),
-                  if (_selectedImagePath != null && _recordedAudioPath != null)
-                    const SizedBox(width: 12),
-                  if (_recordedAudioPath != null)
-                    Expanded(
-                      child: Container(
-                        height: 80,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 12),
-                        decoration: BoxDecoration(
-                          color: GeminiColors.chipBackground(context),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: GeminiColors.primary.withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Icon(Icons.mic,
-                                  size: 20, color: GeminiColors.primary),
-                            ),
-                            const SizedBox(width: 12),
-                            const Expanded(
-                              child: Text(
-                                'Audio recorded',
-                                style: TextStyle(fontSize: 14),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _recordedAudioPath = null;
-                                  _hasContent =
-                                      _textController.text.trim().isNotEmpty ||
-                                          _selectedImagePath != null;
-                                });
-                              },
-                              child: Icon(
-                                Icons.close,
-                                size: 20,
-                                color: GeminiColors.icon(context),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-            ),
-          ],
-          // Gemini-style pill input with all controls inside
-          Container(
-            constraints: const BoxConstraints(
-              minHeight: 56, // Gemini min height
-              maxHeight: 120, // Allow expansion for multiline
-            ),
-            decoration: BoxDecoration(
-              color: GeminiColors.inputBackground(context),
-              borderRadius: BorderRadius.circular(28), // Pill shape (56/2)
-              border: Border.all(
-                color: GeminiColors.inputBorder(context),
-                width: 0.5,
-              ),
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                // Attachment button (inside pill)
-                IconButton(
-                  icon: Icon(
-                    _isRecording ? Icons.stop : Icons.add,
-                    size: 24,
                   ),
-                  onPressed: _isRecording ? _toggleRecording : _showAttachmentOptions,
-                  color: _isRecording
-                      ? Colors.red
-                      : GeminiColors.icon(context),
-                  padding: const EdgeInsets.all(12),
-                ),
-                // Text input (expanded)
-                Expanded(
-                  child: TextField(
-                    controller: _textController,
-                    decoration: InputDecoration(
-                      hintText: _isRecording
-                          ? 'Recording...'
-                          : 'Ask me anything...',
-                      hintStyle: TextStyle(
-                        color: GeminiColors.textSecondary(context),
-                        fontSize: 15,
-                      ),
-                      border: InputBorder.none,
-                      filled: false,
-                      contentPadding: const EdgeInsets.symmetric(
-                        vertical: 16,
-                        horizontal: 4,
-                      ),
+
+                const Spacer(),
+                
+                // Mic Icon
+                GestureDetector(
+                  onTap: _toggleRecording,
+                  child: Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: const BoxDecoration(
+                      color: Color(0xFF2a2a2e),
+                      shape: BoxShape.circle,
                     ),
-                    maxLines: null,
-                    textInputAction: TextInputAction.newline,
-                    style: const TextStyle(fontSize: 15),
-                    enabled: !_isRecording,
+                    child: Icon(
+                      _isRecording ? Icons.stop : Icons.mic,
+                      color: _isRecording ? Colors.red : const Color(0xFFc4c7c5),
+                      size: 24,
+                    ),
                   ),
                 ),
-                // Send button (inside pill)
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  margin: const EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                    color: _hasContent
-                        ? GeminiColors.primary // Purple when active
-                        : Colors.transparent,
-                    shape: BoxShape.circle,
-                  ),
-                  child: IconButton(
-                    icon: const Icon(Icons.arrow_upward, size: 20),
-                    onPressed: _hasContent ? _sendMessage : null,
-                    color: _hasContent
-                        ? Colors.white
-                        : GeminiColors.icon(context),
-                    padding: const EdgeInsets.all(8),
+                const SizedBox(width: 12),
+                
+                // Send Icon
+                GestureDetector(
+                  onTap: _hasContent ? _sendMessage : null,
+                  child: Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: _hasContent ? GeminiColors.primaryColor(context) : const Color(0xFF2a2a2e),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.send, 
+                      color: _hasContent ? Colors.white : const Color(0xFFc4c7c5), 
+                      size: 24
+                    ),
                   ),
                 ),
               ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

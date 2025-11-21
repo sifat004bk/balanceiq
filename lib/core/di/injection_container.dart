@@ -1,3 +1,6 @@
+import 'package:balance_iq/core/constants/app_constants.dart';
+import 'package:balance_iq/features/chat/data/datasources/chat_mock_datasource.dart';
+import 'package:balance_iq/features/home/data/datasource/remote_datasource/dashboard_mock_datasource.dart';
 import 'package:balance_iq/features/home/data/datasource/remote_datasource/dashboard_remote_datasource.dart';
 import 'package:balance_iq/features/home/data/repository/dashboard_repository_impl.dart';
 import 'package:balance_iq/features/home/domain/repository/dashboard_repository.dart';
@@ -133,8 +136,17 @@ Future<void> init() async {
     () => ChatLocalDataSourceImpl(sl()),
   );
 
+  // Conditionally register mock or real chat datasource
   sl.registerLazySingleton<ChatRemoteDataSource>(
-    () => ChatRemoteDataSourceImpl(sl(), sl()),
+    () {
+      if (AppConstants.isMockMode) {
+        print('🎭 [DI] Registering MOCK ChatRemoteDataSource');
+        return ChatMockDataSource();
+      } else {
+        print('🌐 [DI] Registering REAL ChatRemoteDataSource');
+        return ChatRemoteDataSourceImpl(sl(), sl());
+      }
+    },
   );
 
   //! Features - Dashboard
@@ -153,7 +165,16 @@ Future<void> init() async {
   );
 
   // Data sources
+  // Conditionally register mock or real dashboard datasource
   sl.registerLazySingleton<DashboardRemoteDataSource>(
-    () => DashboardRemoteDataSourceImpl(sl()),
+    () {
+      if (AppConstants.isMockMode) {
+        print('🎭 [DI] Registering MOCK DashboardRemoteDataSource');
+        return DashboardMockDataSource();
+      } else {
+        print('🌐 [DI] Registering REAL DashboardRemoteDataSource');
+        return DashboardRemoteDataSourceImpl(sl());
+      }
+    },
   );
 }

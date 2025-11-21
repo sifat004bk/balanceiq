@@ -56,6 +56,12 @@ class AppConstants {
     fallback: '',
   );
 
+  // Mock Mode
+  static bool get isMockMode {
+    final mockMode = dotenv.get('MOCK_MODE', fallback: 'false').toLowerCase();
+    return mockMode == 'true' || mockMode == '1' || mockMode == 'yes';
+  }
+
   // Message Types
   static const String messageTypeText = 'text';
   static const String messageTypeImage = 'image';

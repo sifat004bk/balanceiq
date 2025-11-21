@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:balance_iq/core/constants/gemini_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -9,6 +10,7 @@ import 'package:record/record.dart';
 
 import '../cubit/chat_cubit.dart';
 
+/// Gemini-style chat input with pill-shaped design
 class ChatInput extends StatefulWidget {
   final String botId;
   final Color botColor;
@@ -162,29 +164,56 @@ class _ChatInputState extends State<ChatInput> {
     );
   }
 
-  void _showImageSourceDialog() {
+  void _showAttachmentOptions() {
     showModalBottomSheet(
       context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
       builder: (context) => SafeArea(
-        child: Wrap(
-          children: [
-            ListTile(
-              leading: const Icon(Icons.photo_library),
-              title: const Text('Choose from gallery'),
-              onTap: () {
-                Navigator.pop(context);
-                _pickImage();
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.camera_alt),
-              title: const Text('Take a photo'),
-              onTap: () {
-                Navigator.pop(context);
-                _takePhoto();
-              },
-            ),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: GeminiColors.primary.withValues(alpha: 0.1),
+                  child: const Icon(Icons.photo_library,
+                      color: GeminiColors.primary),
+                ),
+                title: const Text('Choose from gallery'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _pickImage();
+                },
+              ),
+              ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: GeminiColors.primary.withValues(alpha: 0.1),
+                  child: const Icon(Icons.camera_alt,
+                      color: GeminiColors.primary),
+                ),
+                title: const Text('Take a photo'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _takePhoto();
+                },
+              ),
+              ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: GeminiColors.primary.withValues(alpha: 0.1),
+                  child:
+                      const Icon(Icons.mic, color: GeminiColors.primary),
+                ),
+                title: Text(_isRecording ? 'Stop recording' : 'Record audio'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _toggleRecording();
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -192,25 +221,15 @@ class _ChatInputState extends State<ChatInput> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Theme.of(context).scaffoldBackgroundColor,
-        border: Border(
-          top: BorderSide(
-            color: isDark
-                ? const Color(0xFF374151).withValues(alpha: 0.3)
-                : const Color(0xFFE5E7EB).withValues(alpha: 0.3),
-            width: 1,
-          ),
-        ),
+        color: GeminiColors.background(context),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Preview attachments (unified layout for both image and audio)
+          // Preview attachments
           if (_selectedImagePath != null || _recordedAudioPath != null) ...[
             Container(
               margin: const EdgeInsets.only(bottom: 12),
@@ -245,9 +264,7 @@ class _ChatInputState extends State<ChatInput> {
                             child: Container(
                               padding: const EdgeInsets.all(4),
                               decoration: BoxDecoration(
-                                color: isDark
-                                    ? const Color(0xFF1E1E1E)
-                                    : Colors.white,
+                                color: GeminiColors.surface(context),
                                 shape: BoxShape.circle,
                                 boxShadow: [
                                   BoxShadow(
@@ -258,9 +275,7 @@ class _ChatInputState extends State<ChatInput> {
                               ),
                               child: Icon(
                                 Icons.close,
-                                color: isDark
-                                    ? Colors.grey[400]
-                                    : Colors.grey[700],
+                                color: GeminiColors.icon(context),
                                 size: 16,
                               ),
                             ),
@@ -277,9 +292,7 @@ class _ChatInputState extends State<ChatInput> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 16, vertical: 12),
                         decoration: BoxDecoration(
-                          color: isDark
-                              ? const Color(0xFF1F2937)
-                              : const Color(0xFFF3F4F6),
+                          color: GeminiColors.chipBackground(context),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
@@ -287,12 +300,11 @@ class _ChatInputState extends State<ChatInput> {
                             Container(
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
-                                color: isDark
-                                    ? const Color(0xFF374151)
-                                    : const Color(0xFFE5E7EB),
+                                color: GeminiColors.primary.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(8),
                               ),
-                              child: const Icon(Icons.mic, size: 20),
+                              child: const Icon(Icons.mic,
+                                  size: 20, color: GeminiColors.primary),
                             ),
                             const SizedBox(width: 12),
                             const Expanded(
@@ -311,15 +323,10 @@ class _ChatInputState extends State<ChatInput> {
                                           _selectedImagePath != null;
                                 });
                               },
-                              child: Container(
-                                padding: const EdgeInsets.all(4),
-                                child: Icon(
-                                  Icons.close,
-                                  size: 20,
-                                  color: isDark
-                                      ? Colors.grey[400]
-                                      : Colors.grey[600],
-                                ),
+                              child: Icon(
+                                Icons.close,
+                                size: 20,
+                                color: GeminiColors.icon(context),
                               ),
                             ),
                           ],
@@ -330,78 +337,81 @@ class _ChatInputState extends State<ChatInput> {
               ),
             ),
           ],
-          // Input row
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              // Add button (image/media)
-              Hero(
-                tag: 'chat_input',
-                child: IconButton(
-                  icon: const Icon(Icons.add_circle, size: 28),
-                  onPressed: _showImageSourceDialog,
-                  color: isDark
-                      ? const Color(0xFF9CA3AF)
-                      : const Color(0xFF6B7280),
-                  padding: const EdgeInsets.all(8),
-                ),
+          // Gemini-style pill input with all controls inside
+          Container(
+            constraints: const BoxConstraints(
+              minHeight: 56, // Gemini min height
+              maxHeight: 120, // Allow expansion for multiline
+            ),
+            decoration: BoxDecoration(
+              color: GeminiColors.inputBackground(context),
+              borderRadius: BorderRadius.circular(28), // Pill shape (56/2)
+              border: Border.all(
+                color: GeminiColors.inputBorder(context),
+                width: 0.5,
               ),
-              const SizedBox(width: 8),
-              // Text input
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: isDark
-                        ? const Color(0xFF1F2937)
-                        : const Color(0xFFF3F4F6),
-                    borderRadius: BorderRadius.circular(24),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                // Attachment button (inside pill)
+                IconButton(
+                  icon: Icon(
+                    _isRecording ? Icons.stop : Icons.add,
+                    size: 24,
                   ),
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  onPressed: _isRecording ? _toggleRecording : _showAttachmentOptions,
+                  color: _isRecording
+                      ? Colors.red
+                      : GeminiColors.icon(context),
+                  padding: const EdgeInsets.all(12),
+                ),
+                // Text input (expanded)
+                Expanded(
                   child: TextField(
                     controller: _textController,
                     decoration: InputDecoration(
-                      hintText: 'Ask me anything...',
+                      hintText: _isRecording
+                          ? 'Recording...'
+                          : 'Ask me anything...',
                       hintStyle: TextStyle(
-                        color: isDark
-                            ? const Color(0xFF9CA3AF)
-                            : const Color(0xFF6B7280),
-                        fontSize: 16,
+                        color: GeminiColors.textSecondary(context),
+                        fontSize: 15,
                       ),
                       border: InputBorder.none,
                       filled: false,
                       contentPadding: const EdgeInsets.symmetric(
-                        vertical: 12,
+                        vertical: 16,
+                        horizontal: 4,
                       ),
                     ),
                     maxLines: null,
                     textInputAction: TextInputAction.newline,
-                    style: const TextStyle(fontSize: 16),
+                    style: const TextStyle(fontSize: 15),
+                    enabled: !_isRecording,
                   ),
                 ),
-              ),
-              const SizedBox(width: 8),
-              // Send button
-              Container(
-                decoration: BoxDecoration(
-                  color: _hasContent
-                      ? const Color(0xFF13ec80)
-                      : (isDark
-                          ? const Color(0xFF374151)
-                          : const Color(0xFFE5E7EB)),
-                  shape: BoxShape.circle,
+                // Send button (inside pill)
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  margin: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: _hasContent
+                        ? GeminiColors.primary // Purple when active
+                        : Colors.transparent,
+                    shape: BoxShape.circle,
+                  ),
+                  child: IconButton(
+                    icon: const Icon(Icons.arrow_upward, size: 20),
+                    onPressed: _hasContent ? _sendMessage : null,
+                    color: _hasContent
+                        ? Colors.white
+                        : GeminiColors.icon(context),
+                    padding: const EdgeInsets.all(8),
+                  ),
                 ),
-                child: IconButton(
-                  icon: const Icon(Icons.arrow_upward, size: 20),
-                  onPressed: _hasContent ? _sendMessage : null,
-                  color: _hasContent
-                      ? const Color(0xFF102219)
-                      : (isDark
-                          ? const Color(0xFF6B7280)
-                          : const Color(0xFF9CA3AF)),
-                  padding: const EdgeInsets.all(12),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),

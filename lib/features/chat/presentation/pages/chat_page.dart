@@ -1,3 +1,4 @@
+import 'package:balance_iq/core/constants/gemini_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -7,6 +8,7 @@ import '../cubit/chat_cubit.dart';
 import '../cubit/chat_state.dart';
 import '../widgets/chat_input.dart';
 import '../widgets/message_list.dart';
+import '../widgets/suggested_prompts.dart';
 
 class ChatPage extends StatelessWidget {
   final String botId;
@@ -71,39 +73,32 @@ class _ChatViewState extends State<ChatView> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Scaffold(
+      backgroundColor: GeminiColors.background(context),
       appBar: AppBar(
+        toolbarHeight: 64, // Gemini app bar height
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
+          color: GeminiColors.icon(context),
         ),
         title: Text(
           widget.botName,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.w500,
+                color: GeminiColors.aiMessageText(context),
               ),
         ),
         centerTitle: true,
-        backgroundColor:
-            isDark ? AppTheme.backgroundDark : AppTheme.backgroundLight,
+        backgroundColor: GeminiColors.background(context),
         elevation: 0,
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1),
-          child: Container(
-            color: isDark
-                ? const Color(0xFF374151).withValues(alpha: 0.3)
-                : const Color(0xFFE5E7EB).withValues(alpha: 0.3),
-            height: 1,
-          ),
-        ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.more_horiz),
+            icon: const Icon(Icons.more_vert),
             onPressed: () {
               // TODO: Show menu for clear chat, settings, etc.
             },
+            color: GeminiColors.icon(context),
           ),
         ],
       ),
@@ -136,6 +131,20 @@ class _ChatViewState extends State<ChatView> {
                   );
                 } else if (state is ChatLoaded) {
                   print('✅ [ChatPage] Builder - Building MessageList with ${state.messages.length} messages, isSending: ${state.isSending}');
+
+                  // Show suggested prompts if no messages
+                  if (state.messages.isEmpty && !state.isSending) {
+                    return SuggestedPrompts(
+                      botId: widget.botId,
+                      onPromptSelected: (prompt) {
+                        context.read<ChatCubit>().sendNewMessage(
+                              botId: widget.botId,
+                              content: prompt,
+                            );
+                      },
+                    );
+                  }
+
                   return MessageList(
                     messages: state.messages,
                     botId: widget.botId,

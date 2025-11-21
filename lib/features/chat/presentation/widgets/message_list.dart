@@ -3,6 +3,7 @@ import '../../domain/entities/message.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'message_bubble.dart';
+import 'typing_indicator.dart';
 
 class MessageList extends StatelessWidget {
   final List<Message> messages;
@@ -99,48 +100,9 @@ class MessageList extends StatelessWidget {
   }
 
   Widget _buildTypingIndicator(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: Row(
-        children: [
-          CircleAvatar(
-            backgroundColor: AppTheme.getBotColor(botId),
-            child: Icon(
-              AppTheme.getBotIcon(botId),
-              color: Colors.white,
-              size: 20,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _buildDot(),
-              const SizedBox(width: 4),
-              _buildDot(delay: 150),
-              const SizedBox(width: 4),
-              _buildDot(delay: 300),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDot({int delay = 0}) {
-    return TweenAnimationBuilder<double>(
-      tween: Tween(begin: 0.0, end: 1.0),
-      duration: const Duration(milliseconds: 600),
-      builder: (context, value, child) {
-        return Container(
-          width: 8,
-          height: 8,
-          decoration: BoxDecoration(
-            color: Colors.grey.withValues(alpha: 0.4 + (value * 0.4)),
-            shape: BoxShape.circle,
-          ),
-        );
-      },
+    return const Padding(
+      padding: EdgeInsets.only(bottom: 8),
+      child: TypingIndicator(),
     );
   }
 

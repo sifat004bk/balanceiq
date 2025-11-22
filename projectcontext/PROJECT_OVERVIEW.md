@@ -6,7 +6,7 @@ BalanceIQ is an AI-powered personal finance management app designed for the Bang
 
 **Target Market**: Bangladesh (future expansion to South Asia)
 **Business Model**: Freemium (600 BDT/month premium)
-**Stage**: Beta development (60% complete)
+**Stage**: Beta development (65% complete)
 
 ## Core Value Proposition
 
@@ -279,20 +279,28 @@ flutter analyze
 ```
 N8N_WEBHOOK_URL=https://your-n8n-instance.com/webhook/balance-iq
 N8N_DASHBOARD_URL=https://your-n8n-instance.com/webhook-test/get-user-dashboard
+N8N_CHAT_HISTORY_URL=https://your-n8n-instance.com/webhook/get-user-chat-history
+BACKEND_BASE_URL=https://your-backend.com
 ```
 
 ## Current Implementation Status
 
-### ✅ Implemented (60%)
-- Authentication (Google, Apple, Email/Password)
+### ✅ Implemented (65%)
+- Authentication (Google, Apple, Email/Password + Backend APIs)
+  - 6 backend auth endpoints (signup, login, profile, password management)
+  - JWT token-based authentication
+  - Session persistence
 - Dashboard with 8+ financial metrics
 - AI chat interface (text, image, audio)
+  - Chat history API with pagination
 - SQLite local storage
 - Dark/Light themes
-- n8n webhook integration
+- n8n webhook integration (3 endpoints)
 - Clean architecture structure
+- Comprehensive integration test suite (22 tests)
 
-### ❌ Not Implemented (40%)
+### ❌ Not Implemented (35%)
+- **UI/API Synchronization** (Critical - in progress)
 - Bank integration
 - Budget creation and tracking
 - Bill reminders
@@ -366,4 +374,17 @@ Unlike bank apps (read-only) or complex trackers (steep learning curve), Balance
 
 ---
 
-**Last Updated**: 2025-11-21
+## Recent Updates (2025-11-22)
+
+**Backend API Integration Completed:**
+- Implemented complete authentication backend layer
+- Added chat history pagination support
+- Created comprehensive test suite with 22 integration tests
+- Organized project documentation structure
+
+**Critical Next Step:**
+- UI layer synchronization with backend APIs (see [implementation/UI_LAYER_EVALUATION.md](implementation/UI_LAYER_EVALUATION.md))
+
+---
+
+**Last Updated**: 2025-11-22

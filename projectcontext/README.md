@@ -22,6 +22,15 @@ Welcome to the BalanceIQ project context! This directory contains concise, essen
 | [ROADMAP.md](ROADMAP.md) | Development phases, priorities, timeline | 10 min |
 | [TASKS.md](TASKS.md) | Actionable task list with priorities | 5 min |
 
+## Specialized Documentation
+
+| Directory | Contents | Purpose |
+|-----------|----------|---------|
+| [implementation/](implementation/) | API implementation summaries, UI layer evaluations | Backend integration and synchronization analysis |
+| [design_docs/](design_docs/) | Gemini UI specifications, implementation checklists | UI/UX design guidelines and references |
+| [progress/](progress/) | Weekly progress reports, UI update reports | Development tracking and sprint summaries |
+| [project_summary/](project_summary/) | Business plans, product specs, tech architecture | Comprehensive project documentation |
+
 ## Project At a Glance
 
 **BalanceIQ** is an AI-powered personal finance app for Bangladesh market, built with Flutter.
@@ -39,11 +48,12 @@ Welcome to the BalanceIQ project context! This directory contains concise, essen
 
 ## Current Status
 
-- **Development Stage**: Beta (60% complete)
-- **Total Code**: ~7,500 lines of Dart
-- **Features Implemented**: Auth, Dashboard, Chat, SQLite persistence
-- **Critical Missing**: Bank integration, Budgets, Bangla language
-- **Next Priority**: Launch-blocking UX fixes
+- **Development Stage**: Beta (65% complete)
+- **Total Code**: ~10,000 lines of Dart
+- **Features Implemented**: Auth (OAuth + Backend APIs), Dashboard, Chat, SQLite persistence
+- **Recent Updates**: Backend authentication APIs, chat history pagination, integration tests
+- **Critical Missing**: UI/API sync, Bank integration, Budgets, Bangla language
+- **Next Priority**: UI layer fixes to integrate with backend APIs
 
 ## Development Workflow
 
@@ -116,6 +126,23 @@ When updating these docs:
 
 ---
 
-**Last Updated**: 2025-11-21
+## Recent Updates (2025-11-22)
+
+**API Integration Sprint Completed:**
+- ✅ Implemented 6 authentication backend APIs (signup, login, profile, password management)
+- ✅ Added chat history API with pagination
+- ✅ Created 22 comprehensive integration tests
+- ✅ Organized documentation structure under projectcontext/
+- 🔴 **Critical**: UI layer not yet synced with new backend APIs (see [implementation/UI_LAYER_EVALUATION.md](implementation/UI_LAYER_EVALUATION.md))
+
+**Documentation Reorganized:**
+- All API implementation docs → `implementation/`
+- All design specifications → `design_docs/`
+- Progress tracking → `progress/`
+- See directory READMEs for details
+
+---
+
+**Last Updated**: 2025-11-22
 **Project Version**: 1.0.0+1
-**Documentation Version**: 1.0
+**Documentation Version**: 1.1

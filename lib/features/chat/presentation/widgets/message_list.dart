@@ -11,6 +11,7 @@ class MessageList extends StatelessWidget {
   final String botName;
   final bool isSending;
   final bool hasStartedConversation;
+  final bool shouldHideOldMessages;
   final ScrollController? scrollController;
 
   const MessageList({
@@ -20,6 +21,7 @@ class MessageList extends StatelessWidget {
     required this.botName,
     this.isSending = false,
     this.hasStartedConversation = false,
+    this.shouldHideOldMessages = false,
     this.scrollController,
   });
 
@@ -73,12 +75,12 @@ class MessageList extends StatelessWidget {
       controller: scrollController,
       reverse: true,
       slivers: [
-        // Bottom Spacer - pushes old messages behind app bar when in conversation mode
+        // Bottom Spacer - pushes old messages behind app bar only when needed
         SliverToBoxAdapter(
           child: SizedBox(
-            height: hasStartedConversation
+            height: (hasStartedConversation && shouldHideOldMessages)
               ? MediaQuery.of(context).size.height * 0.6  // Large spacer to hide old messages
-              : 16, // Minimal spacing for initial view
+              : 16, // Minimal spacing when content fits or initial view
           ),
         ),
         
@@ -110,8 +112,12 @@ class MessageList extends StatelessWidget {
                     );
                   }
                   if (index == 2) {
-                    // GAP to push old messages behind app bar (shows only new message)
-                    return SizedBox(height: MediaQuery.of(context).size.height * 0.7);
+                    // GAP to push old messages behind app bar only when content warrants it
+                    return SizedBox(
+                      height: shouldHideOldMessages
+                        ? MediaQuery.of(context).size.height * 0.7  // Large gap to hide old messages
+                        : MediaQuery.of(context).size.height * 0.1,  // Small gap when content fits
+                    );
                   }
                   
                   // Old Messages (index 3 corresponds to messages[length - 2])

@@ -48,6 +48,7 @@ class _ChatViewState extends State<ChatView> {
   bool _hasStartedConversation = false;
   int _previousMessageCount = 0;
   bool _isInitialLoad = true;
+  bool _shouldHideOldMessages = false;
 
   @override
   void dispose() {
@@ -71,10 +72,24 @@ class _ChatViewState extends State<ChatView> {
             // Initial load: scroll to maxScrollExtent (shows oldest messages at top, newest at bottom)
             targetPosition = _scrollController.position.maxScrollExtent;
             print('📜 [ChatPage] Initial load - scrolling to maxScrollExtent: $targetPosition');
+            _shouldHideOldMessages = false;
           } else {
-            // After sending: scroll to minScrollExtent (shows only newest message, hides old ones behind app bar)
-            targetPosition = _scrollController.position.minScrollExtent;
-            print('📜 [ChatPage] After send - scrolling to minScrollExtent: $targetPosition');
+            // Check if content is large enough to warrant hiding old messages
+            // Only hide if there's substantial scrollable content (more than 200px of scroll range)
+            final scrollRange = _scrollController.position.maxScrollExtent - _scrollController.position.minScrollExtent;
+            _shouldHideOldMessages = scrollRange > 200;
+
+            print('📜 [ChatPage] Scroll range: $scrollRange, shouldHideOldMessages: $_shouldHideOldMessages');
+
+            if (_shouldHideOldMessages) {
+              // After sending with enough content: scroll to minScrollExtent (shows only newest message)
+              targetPosition = _scrollController.position.minScrollExtent;
+              print('📜 [ChatPage] After send (hide old) - scrolling to minScrollExtent: $targetPosition');
+            } else {
+              // After sending with little content: scroll to maxScrollExtent (keep all visible)
+              targetPosition = _scrollController.position.maxScrollExtent;
+              print('📜 [ChatPage] After send (show all) - scrolling to maxScrollExtent: $targetPosition');
+            }
           }
 
           _scrollController.animateTo(
@@ -193,6 +208,7 @@ class _ChatViewState extends State<ChatView> {
                     botName: widget.botName,
                     isSending: state.isSending,
                     hasStartedConversation: _hasStartedConversation,
+                    shouldHideOldMessages: _shouldHideOldMessages,
                     scrollController: _scrollController,
                   );
                 } else if (state is ChatError) {

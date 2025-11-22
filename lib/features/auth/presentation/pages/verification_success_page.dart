@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uuid/uuid.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../cubit/auth_cubit.dart';
+import '../cubit/auth_state.dart';
+import '../../domain/entities/user.dart';
 
 class VerificationSuccessPage extends StatefulWidget {
   const VerificationSuccessPage({super.key});
@@ -56,11 +59,16 @@ class _VerificationSuccessPageState extends State<VerificationSuccessPage>
   }
 
   void _continueToDashboard() {
-    // Mock authentication - always succeeds
-    context.read<AuthCubit>().signInWithMock(
-          email: 'user@example.com',
-          name: 'User',
-        );
+    // Mock authentication - create a mock user for development/testing
+    final mockUser = User(
+      id: const Uuid().v4(),
+      email: 'user@example.com',
+      name: 'User',
+      photoUrl: null,
+      authProvider: 'email',
+      createdAt: DateTime.now(),
+    );
+    context.read<AuthCubit>().emit(AuthAuthenticated(mockUser));
   }
 
   @override

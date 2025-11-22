@@ -1,5 +1,6 @@
 import 'package:balance_iq/core/constants/app_constants.dart';
 import 'package:balance_iq/core/mock/mock_data.dart';
+import '../../../auth/data/models/auth_request_models.dart';
 import '../models/message_model.dart';
 import 'chat_remote_datasource.dart';
 
@@ -43,5 +44,26 @@ class ChatMockDataSource implements ChatRemoteDataSource {
 
     print('✅ [MockDataSource] Mock response generated');
     return botMessage;
+  }
+
+  @override
+  Future<ChatHistoryResponse> getChatHistory({
+    required String userId,
+    required int page,
+    int? limit,
+  }) async {
+    print('🤖 [MockDataSource] Getting chat history for user: $userId, page: $page');
+
+    // Simulate network delay
+    await _simulateNetworkDelay();
+
+    // Return empty chat history for mock
+    return ChatHistoryResponse(
+      messages: [],
+      total: 0,
+      page: page,
+      limit: limit ?? 20,
+      hasMore: false,
+    );
   }
 }

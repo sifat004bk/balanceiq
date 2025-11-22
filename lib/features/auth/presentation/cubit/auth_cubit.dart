@@ -166,24 +166,21 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> getUserProfile() async {
     emit(AuthLoading());
 
-    final result = await getProfile();
+    // TODO: Implement token storage and retrieval
+    final result = await getProfile('');
 
     result.fold(
       (failure) => emit(AuthError(failure.message)),
-      (authResponse) {
-        if (authResponse.success && authResponse.user != null) {
-          final user = User(
-            id: authResponse.user!.id,
-            email: authResponse.user!.email,
-            name: authResponse.user!.fullName,
-            photoUrl: authResponse.user!.photoUrl,
-            authProvider: 'email',
-            createdAt: DateTime.now(),
-          );
-          emit(AuthAuthenticated(user));
-        } else {
-          emit(AuthError('Failed to load profile'));
-        }
+      (userInfo) {
+        final user = User(
+          id: userInfo.id,
+          email: userInfo.email,
+          name: userInfo.fullName,
+          photoUrl: userInfo.photoUrl,
+          authProvider: 'email',
+          createdAt: DateTime.now(),
+        );
+        emit(AuthAuthenticated(user));
       },
     );
   }
@@ -196,21 +193,17 @@ class AuthCubit extends Cubit<AuthState> {
   }) async {
     emit(AuthLoading());
 
+    // TODO: Implement token storage and retrieval
     final result = await changePassword(
       currentPassword: currentPassword,
       newPassword: newPassword,
       confirmPassword: confirmPassword,
+      token: '',
     );
 
     result.fold(
       (failure) => emit(AuthError(failure.message)),
-      (authResponse) {
-        if (authResponse.success) {
-          emit(PasswordChanged());
-        } else {
-          emit(AuthError(authResponse.message ?? 'Failed to change password'));
-        }
-      },
+      (_) => emit(PasswordChanged()),
     );
   }
 
@@ -222,13 +215,7 @@ class AuthCubit extends Cubit<AuthState> {
 
     result.fold(
       (failure) => emit(AuthError(failure.message)),
-      (authResponse) {
-        if (authResponse.success) {
-          emit(PasswordResetEmailSent(email));
-        } else {
-          emit(AuthError(authResponse.message ?? 'Failed to send reset email'));
-        }
-      },
+      (_) => emit(PasswordResetEmailSent(email)),
     );
   }
 
@@ -248,13 +235,7 @@ class AuthCubit extends Cubit<AuthState> {
 
     result.fold(
       (failure) => emit(AuthError(failure.message)),
-      (authResponse) {
-        if (authResponse.success) {
-          emit(PasswordResetSuccess());
-        } else {
-          emit(AuthError(authResponse.message ?? 'Failed to reset password'));
-        }
-      },
+      (_) => emit(PasswordResetSuccess()),
     );
   }
 }

@@ -85,10 +85,18 @@ Future<void> init() async {
   // Cubit
   sl.registerFactory(
     () => AuthCubit(
+      // OAuth dependencies
       signInWithGoogle: sl(),
       signInWithApple: sl(),
       signOutUseCase: sl(),
       getCurrentUser: sl(),
+      // Backend API dependencies
+      signup: sl(),
+      login: sl(),
+      getProfile: sl(),
+      changePassword: sl(),
+      forgotPassword: sl(),
+      resetPassword: sl(),
     ),
   );
 

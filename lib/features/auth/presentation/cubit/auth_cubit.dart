@@ -4,20 +4,43 @@ import '../../domain/usecases/sign_in_with_google.dart';
 import '../../domain/usecases/sign_in_with_apple.dart';
 import '../../domain/usecases/sign_out.dart';
 import '../../domain/usecases/get_current_user.dart';
+import '../../domain/usecases/signup.dart';
+import '../../domain/usecases/login.dart';
+import '../../domain/usecases/get_profile.dart';
+import '../../domain/usecases/change_password.dart';
+import '../../domain/usecases/forgot_password.dart';
+import '../../domain/usecases/reset_password.dart';
 import '../../domain/entities/user.dart';
 import 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
+  // OAuth dependencies
   final SignInWithGoogle signInWithGoogle;
   final SignInWithApple signInWithApple;
   final SignOut signOutUseCase;
   final GetCurrentUser getCurrentUser;
 
+  // Backend API dependencies
+  final Signup signup;
+  final Login login;
+  final GetProfile getProfile;
+  final ChangePassword changePassword;
+  final ForgotPassword forgotPassword;
+  final ResetPassword resetPassword;
+
   AuthCubit({
+    // OAuth dependencies
     required this.signInWithGoogle,
     required this.signInWithApple,
     required this.signOutUseCase,
     required this.getCurrentUser,
+    // Backend API dependencies
+    required this.signup,
+    required this.login,
+    required this.getProfile,
+    required this.changePassword,
+    required this.forgotPassword,
+    required this.resetPassword,
   }) : super(AuthInitial());
 
   // Check for existing session on app start
@@ -63,22 +86,175 @@ class AuthCubit extends Cubit<AuthState> {
     );
   }
 
-  // Mock sign-in (always succeeds) - For development/testing
-  Future<void> signInWithMock({required String email, required String name}) async {
+  /// Login with email/username and password using backend API
+  Future<void> loginWithEmail({
+    required String username,
+    required String password,
+  }) async {
     emit(AuthLoading());
 
-    // Simulate network delay
-    await Future.delayed(const Duration(milliseconds: 500));
-
-    final mockUser = User(
-      id: const Uuid().v4(),
-      email: email,
-      name: name,
-      photoUrl: null,
-      authProvider: 'mock',
-      createdAt: DateTime.now(),
+    final result = await login(
+      username: username,
+      password: password,
     );
 
-    emit(AuthAuthenticated(mockUser));
+    result.fold(
+      (failure) => emit(AuthError(failure.message)),
+      (authResponse) {
+        if (authResponse.success && authResponse.user != null) {
+          // Convert UserInfo to User entity
+          final user = User(
+            id: authResponse.user!.id,
+            email: authResponse.user!.email,
+            name: authResponse.user!.fullName,
+            photoUrl: authResponse.user!.photoUrl,
+            authProvider: 'email',
+            createdAt: DateTime.now(),
+          );
+
+          emit(AuthAuthenticated(user));
+        } else {
+          emit(AuthError(authResponse.message ?? 'Login failed'));
+        }
+      },
+    );
+  }
+
+  /// Sign up with email and password using backend API
+  Future<void> signupWithEmail({
+    required String username,
+    required String password,
+    required String fullName,
+    required String email,
+  }) async {
+    emit(AuthLoading());
+
+    final result = await signup(
+      username: username,
+      password: password,
+      fullName: fullName,
+      email: email,
+    );
+
+    result.fold(
+      (failure) => emit(AuthError(failure.message)),
+      (authResponse) {
+        if (authResponse.success) {
+          // Auto-login after signup if user data is returned
+          if (authResponse.user != null) {
+            final user = User(
+              id: authResponse.user!.id,
+              email: authResponse.user!.email,
+              name: authResponse.user!.fullName,
+              photoUrl: authResponse.user!.photoUrl,
+              authProvider: 'email',
+              createdAt: DateTime.now(),
+            );
+            emit(AuthAuthenticated(user));
+          } else {
+            // Show success, may require email verification
+            emit(SignupSuccess(email));
+          }
+        } else {
+          emit(AuthError(authResponse.message ?? 'Signup failed'));
+        }
+      },
+    );
+  }
+
+  /// Get current user profile from backend
+  Future<void> getUserProfile() async {
+    emit(AuthLoading());
+
+    final result = await getProfile();
+
+    result.fold(
+      (failure) => emit(AuthError(failure.message)),
+      (authResponse) {
+        if (authResponse.success && authResponse.user != null) {
+          final user = User(
+            id: authResponse.user!.id,
+            email: authResponse.user!.email,
+            name: authResponse.user!.fullName,
+            photoUrl: authResponse.user!.photoUrl,
+            authProvider: 'email',
+            createdAt: DateTime.now(),
+          );
+          emit(AuthAuthenticated(user));
+        } else {
+          emit(AuthError('Failed to load profile'));
+        }
+      },
+    );
+  }
+
+  /// Change password for currently authenticated user
+  Future<void> changeUserPassword({
+    required String currentPassword,
+    required String newPassword,
+    required String confirmPassword,
+  }) async {
+    emit(AuthLoading());
+
+    final result = await changePassword(
+      currentPassword: currentPassword,
+      newPassword: newPassword,
+      confirmPassword: confirmPassword,
+    );
+
+    result.fold(
+      (failure) => emit(AuthError(failure.message)),
+      (authResponse) {
+        if (authResponse.success) {
+          emit(PasswordChanged());
+        } else {
+          emit(AuthError(authResponse.message ?? 'Failed to change password'));
+        }
+      },
+    );
+  }
+
+  /// Request password reset email
+  Future<void> requestPasswordReset({required String email}) async {
+    emit(AuthLoading());
+
+    final result = await forgotPassword(email: email);
+
+    result.fold(
+      (failure) => emit(AuthError(failure.message)),
+      (authResponse) {
+        if (authResponse.success) {
+          emit(PasswordResetEmailSent(email));
+        } else {
+          emit(AuthError(authResponse.message ?? 'Failed to send reset email'));
+        }
+      },
+    );
+  }
+
+  /// Reset password with token from email
+  Future<void> resetUserPassword({
+    required String token,
+    required String newPassword,
+    required String confirmPassword,
+  }) async {
+    emit(AuthLoading());
+
+    final result = await resetPassword(
+      token: token,
+      newPassword: newPassword,
+      confirmPassword: confirmPassword,
+    );
+
+    result.fold(
+      (failure) => emit(AuthError(failure.message)),
+      (authResponse) {
+        if (authResponse.success) {
+          emit(PasswordResetSuccess());
+        } else {
+          emit(AuthError(authResponse.message ?? 'Failed to reset password'));
+        }
+      },
+    );
   }
 }

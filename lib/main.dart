@@ -9,11 +9,14 @@ import 'core/theme/theme_cubit.dart';
 import 'core/theme/theme_state.dart';
 import 'features/auth/presentation/cubit/auth_cubit.dart';
 import 'features/auth/presentation/cubit/auth_state.dart';
+import 'features/auth/presentation/pages/change_password_page.dart';
 import 'features/auth/presentation/pages/email_verification_page.dart';
+import 'features/auth/presentation/pages/forgot_password_page.dart';
 import 'features/auth/presentation/pages/loading_page.dart';
 import 'features/auth/presentation/pages/new_login_page.dart';
 import 'features/auth/presentation/pages/new_onboarding_page.dart';
 import 'features/auth/presentation/pages/new_signup_page.dart';
+import 'features/auth/presentation/pages/reset_password_page.dart';
 import 'features/auth/presentation/pages/verification_success_page.dart';
 import 'features/home/presentation/cubit/dashboard_cubit.dart';
 import 'features/home/presentation/pages/home_page.dart';
@@ -75,6 +78,8 @@ class MyApp extends StatelessWidget {
                   const VerificationSuccessPage(),
               '/loading': (context) => const LoadingPage(),
               '/home': (context) => const HomePage(),
+              '/forgot-password': (context) => const ForgotPasswordPage(),
+              '/change-password': (context) => const ChangePasswordPage(),
             },
             onGenerateRoute: (settings) {
               if (settings.name == '/email-verification') {
@@ -82,6 +87,12 @@ class MyApp extends StatelessWidget {
                     settings.arguments as String? ?? 'user@example.com';
                 return MaterialPageRoute(
                   builder: (context) => EmailVerificationPage(email: email),
+                );
+              }
+              if (settings.name == '/reset-password') {
+                final token = settings.arguments as String? ?? '';
+                return MaterialPageRoute(
+                  builder: (context) => ResetPasswordPage(token: token),
                 );
               }
               return null;

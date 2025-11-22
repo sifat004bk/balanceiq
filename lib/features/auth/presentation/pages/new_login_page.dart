@@ -26,10 +26,15 @@ class _NewLoginPageState extends State<NewLoginPage> {
 
   void _handleLogin() {
     if (_formKey.currentState!.validate()) {
-      // Mock login - always succeeds
-      context.read<AuthCubit>().signInWithMock(
-            email: _emailController.text,
-            name: 'User',
+      // Extract username from email input (before @)
+      final username = _emailController.text.contains('@')
+          ? _emailController.text.split('@').first
+          : _emailController.text;
+
+      // Call real backend login API
+      context.read<AuthCubit>().loginWithEmail(
+            username: username,
+            password: _passwordController.text,
           );
     }
   }
@@ -238,7 +243,7 @@ class _NewLoginPageState extends State<NewLoginPage> {
                   alignment: Alignment.centerRight,
                   child: TextButton(
                     onPressed: () {
-                      // TODO: Navigate to forgot password
+                      Navigator.pushNamed(context, '/forgot-password');
                     },
                     child: const Text(
                       'Forgot Password?',
@@ -253,24 +258,39 @@ class _NewLoginPageState extends State<NewLoginPage> {
                 SizedBox(
                   width: double.infinity,
                   height: 48,
-                  child: ElevatedButton(
-                    onPressed: _handleLogin,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.primaryColor,
-                      foregroundColor: isDark
-                          ? AppTheme.backgroundDark
-                          : const Color(0xFF111827),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: const Text(
-                      'Login',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                  child: BlocBuilder<AuthCubit, AuthState>(
+                    builder: (context, state) {
+                      final isLoading = state is AuthLoading;
+
+                      return ElevatedButton(
+                        onPressed: isLoading ? null : _handleLogin,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppTheme.primaryColor,
+                          foregroundColor: isDark
+                              ? AppTheme.backgroundDark
+                              : const Color(0xFF111827),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: isLoading
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                ),
+                              )
+                            : const Text(
+                                'Login',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                      );
+                    },
                   ),
                 ),
                 const SizedBox(height: 24),

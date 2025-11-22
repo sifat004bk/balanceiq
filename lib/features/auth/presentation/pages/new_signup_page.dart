@@ -31,12 +31,16 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
 
   void _handleSignUp() {
     if (_formKey.currentState!.validate()) {
-      // Navigate to email verification page
-      Navigator.pushNamed(
-        context,
-        '/email-verification',
-        arguments: _emailController.text,
-      );
+      // Extract username from email
+      final username = _emailController.text.split('@').first;
+
+      // Call backend signup API
+      context.read<AuthCubit>().signupWithEmail(
+            username: username,
+            password: _passwordController.text,
+            fullName: _nameController.text,
+            email: _emailController.text,
+          );
     }
   }
 
@@ -55,14 +59,30 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is AuthAuthenticated) {
-          // Navigate to home when authenticated via Google/Apple
+          // Navigate to home when authenticated (auto-login after signup or OAuth)
           Navigator.of(context).pushReplacementNamed('/home');
+        } else if (state is SignupSuccess) {
+          // Show success message and navigate to email verification
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Account created! Please check ${state.email} for verification.'),
+              backgroundColor: Colors.green,
+              duration: const Duration(seconds: 5),
+            ),
+          );
+          // Navigate to email verification page
+          Navigator.pushNamed(
+            context,
+            '/email-verification',
+            arguments: state.email,
+          );
         } else if (state is AuthError) {
           // Show error message
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message),
               backgroundColor: Colors.red,
+              duration: const Duration(seconds: 4),
             ),
           );
         }
@@ -415,24 +435,39 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                 SizedBox(
                   width: double.infinity,
                   height: 48,
-                  child: ElevatedButton(
-                    onPressed: _handleSignUp,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.primaryColor,
-                      foregroundColor: isDark
-                          ? AppTheme.backgroundDark
-                          : const Color(0xFF111827),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: const Text(
-                      'Create Account',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                  child: BlocBuilder<AuthCubit, AuthState>(
+                    builder: (context, state) {
+                      final isLoading = state is AuthLoading;
+
+                      return ElevatedButton(
+                        onPressed: isLoading ? null : _handleSignUp,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppTheme.primaryColor,
+                          foregroundColor: isDark
+                              ? AppTheme.backgroundDark
+                              : const Color(0xFF111827),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: isLoading
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                ),
+                              )
+                            : const Text(
+                                'Create Account',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                      );
+                    },
                   ),
                 ),
                 const SizedBox(height: 24),

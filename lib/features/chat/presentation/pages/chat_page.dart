@@ -60,10 +60,17 @@ class _ChatViewState extends State<ChatView> {
       // Use WidgetsBinding to ensure layout is complete
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (_scrollController.hasClients) {
-          print('📜 [ChatPage] Scrolling to position 0.0');
-          // Since list is reversed, scroll to minScrollExtent (top = newest messages)
+          print('📜 [ChatPage] Current position: ${_scrollController.position.pixels}');
+          print('📜 [ChatPage] Min extent: ${_scrollController.position.minScrollExtent}');
+          print('📜 [ChatPage] Max extent: ${_scrollController.position.maxScrollExtent}');
+
+          // For a reversed list, we want to scroll to the minimum scroll extent
+          // which visually shows the newest messages at the bottom of the screen
+          final targetPosition = _scrollController.position.minScrollExtent;
+          print('📜 [ChatPage] Scrolling to minScrollExtent: $targetPosition');
+
           _scrollController.animateTo(
-            0.0, // Scroll to top of reversed list (which shows newest messages)
+            targetPosition,
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeOut,
           );

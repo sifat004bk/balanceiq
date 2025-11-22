@@ -4,9 +4,9 @@ This document tracks what's implemented, what's missing, and known issues in Bal
 
 ## Overall Progress
 
-**Completion**: 60% (Beta stage)
-**Total Code**: ~7,500 lines of Dart
-**Last Updated**: 2025-11-21
+**Completion**: 65% (Beta stage) ⬆️ +5% (API integration complete)
+**Total Code**: ~10,000 lines of Dart (+2,500 lines)
+**Last Updated**: 2025-11-22
 
 ```
 Progress: [=============>                     ] 60%
@@ -19,21 +19,28 @@ Progress: [=============>                     ] 60%
 ### ✅ Completed Features
 
 #### 1. Authentication System
-**Status**: 100% Complete
+**Status**: 100% Complete ✅ NEW: Backend APIs Integrated
 - [x] Google Sign-In (OAuth 2.0)
 - [x] Apple Sign-In (iOS)
 - [x] Email/Password registration
 - [x] Email/Password login
 - [x] Email verification flow
-- [x] Forgot password (UI only, backend pending)
+- [x] **NEW: Signup API** (`/api/auth/signup`)
+- [x] **NEW: Login API** (`/api/auth/login`)
+- [x] **NEW: Get Profile API** (`/api/auth/me`)
+- [x] **NEW: Change Password API** (`/api/auth/change-password`)
+- [x] **NEW: Forgot Password API** (`/api/auth/forgot-password`)
+- [x] **NEW: Reset Password API** (`/api/auth/reset-password`)
 - [x] Session persistence (SharedPreferences)
+- [x] Token-based authentication (JWT)
 - [x] Automatic login on app restart
 - [x] Sign out functionality
 - [x] User profile storage (SQLite)
 
 **Files**:
 - `lib/features/auth/` (complete domain, data, presentation layers)
-- 3 data sources, 4 use cases, 1 cubit, 6 pages
+- 3 data sources, 10 use cases, 1 cubit, 6 pages
+- **NEW**: 1 request/response models file with 7 model classes
 
 #### 2. Dashboard (Home)
 **Status**: 90% Complete
@@ -60,14 +67,16 @@ Progress: [=============>                     ] 60%
 - 1 remote data source, 1 cubit, 3 pages, 8 widgets
 
 #### 3. Chat Assistant
-**Status**: 85% Complete
+**Status**: 90% Complete ✅ NEW: Chat History API Integrated
 - [x] Text message sending
 - [x] Text message receiving
 - [x] Image attachment (camera/gallery)
 - [x] Audio recording
 - [x] Base64 encoding for media
 - [x] Message persistence (SQLite)
-- [x] Chat history loading
+- [x] Chat history loading (local)
+- [x] **NEW: Remote Chat History API** (`/webhook/get-user-chat-history`)
+- [x] **NEW: Pagination support** (page, limit)
 - [x] Optimistic UI updates
 - [x] Typing indicator
 - [x] Auto-scroll to new messages
@@ -80,7 +89,8 @@ Progress: [=============>                     ] 60%
 
 **Files**:
 - `lib/features/chat/` (complete architecture)
-- 2 data sources, 2 use cases, 1 cubit, 1 page, 3 widgets
+- 2 data sources, 3 use cases, 1 cubit, 1 page, 3 widgets
+- **NEW**: Chat history models integrated with auth models
 
 #### 4. Core Infrastructure
 **Status**: 100% Complete
@@ -97,26 +107,30 @@ Progress: [=============>                     ] 60%
 - `lib/core/` (constants, database, DI, theme, error)
 
 #### 5. n8n Integration
-**Status**: 80% Complete
-- [x] Chat webhook endpoint
-- [x] Dashboard webhook endpoint
+**Status**: 95% Complete ✅ NEW: Chat History Endpoint Added
+- [x] Chat webhook endpoint (`/webhook/run-main-workflow`)
+- [x] Dashboard webhook endpoint (`/webhook/get-user-dashboard`)
+- [x] **NEW: Chat History endpoint** (`/webhook/get-user-chat-history`)
 - [x] Request payload formatting
-- [x] Response parsing
+- [x] Response parsing (handles both array and object responses)
 - [x] Error handling
 - [x] Timeout configuration
+- [x] Authorization token support
 - [ ] Retry logic
 - [ ] Offline queue
 
 ### 🟡 Partially Implemented
 
 #### 1. Password Reset
-**Status**: 30% Complete
+**Status**: 80% Complete ✅ NEW: Backend APIs Implemented
 - [x] Forgot password UI page
 - [x] Email input form
-- [ ] Backend API integration
-- [ ] Email sending
-- [ ] Reset token validation
-- [ ] New password form
+- [x] **NEW: Backend forgot password API**
+- [x] **NEW: Backend reset password API**
+- [x] **NEW: Reset token validation**
+- [ ] Email sending (backend handles)
+- [ ] New password form UI
+- [ ] Integration with presentation layer
 
 #### 2. User Profile
 **Status**: 40% Complete
@@ -338,11 +352,25 @@ APK Size:          ~18MB   ✅ Good
 - Interaction tests
 
 ### Integration Tests
-**Status**: ❌ Not Written
-**Coverage**: 0%
-**Required**:
-- End-to-end flow tests
-- API integration tests
+**Status**: ✅ Implemented (NEW - 2025-11-22)
+**Coverage**: ~30% (API layer only)
+**Test Files**:
+- `integration_test/auth_api_test.dart` (7 test cases)
+- `integration_test/chat_history_api_test.dart` (6 test cases)
+- `test/api_integration_test.dart` (9 lightweight tests)
+
+**Tests Implemented**:
+- [x] Authentication flow (signup, login, profile)
+- [x] Password management APIs
+- [x] Authorization & access control
+- [x] Chat history pagination
+- [x] Error handling & validation
+- [x] Headless CI/CD compatible tests
+
+**Still Required**:
+- [ ] End-to-end UI flow tests
+- [ ] Repository/Use case unit tests
+- [ ] Widget tests
 
 ### Manual Testing
 **Status**: ✅ Ongoing
@@ -421,5 +449,31 @@ See [ROADMAP.md](ROADMAP.md) for development plan and [TASKS.md](TASKS.md) for a
 
 ---
 
-**Last Updated**: 2025-11-21
+---
+
+## Recent Updates (2025-11-22)
+
+### API Integration Sprint ✅ Complete
+
+**Added**:
+- 6 new authentication API endpoints (signup, login, profile, password management)
+- 1 new chat history API endpoint with pagination
+- 11 new files (models, use cases, tests)
+- 13 comprehensive integration tests
+- Complete CI/CD compatible test suite
+
+**Modified**:
+- Updated 11 existing files across auth and chat features
+- Enhanced dependency injection with 7 new use cases
+- Added environment configuration for backend URLs
+
+**Documentation**:
+- Created [API_IMPLEMENTATION_SUMMARY.md](../API_IMPLEMENTATION_SUMMARY.md) with full details
+- Updated project context files
+
+**Git Commit**: `ff806ab` - "Implement user authentication and chat history APIs"
+
+---
+
+**Last Updated**: 2025-11-22
 **Next Review**: Weekly (Monday)

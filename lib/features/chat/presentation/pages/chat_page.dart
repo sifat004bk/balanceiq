@@ -47,6 +47,7 @@ class _ChatViewState extends State<ChatView> {
   final ScrollController _scrollController = ScrollController();
   bool _hasStartedConversation = false;
   int _previousMessageCount = 0;
+  bool _isInitialLoad = true;
 
   @override
   void dispose() {
@@ -55,7 +56,7 @@ class _ChatViewState extends State<ChatView> {
   }
 
   void _scrollToBottom() {
-    print('🔽 [ChatPage] _scrollToBottom called');
+    print('🔽 [ChatPage] _scrollToBottom called, isInitialLoad: $_isInitialLoad');
     if (_scrollController.hasClients) {
       // Use WidgetsBinding to ensure layout is complete
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -64,10 +65,17 @@ class _ChatViewState extends State<ChatView> {
           print('📜 [ChatPage] Min extent: ${_scrollController.position.minScrollExtent}');
           print('📜 [ChatPage] Max extent: ${_scrollController.position.maxScrollExtent}');
 
-          // For a reversed list, we want to scroll to the minimum scroll extent
-          // which visually shows the newest messages at the bottom of the screen
-          final targetPosition = _scrollController.position.minScrollExtent;
-          print('📜 [ChatPage] Scrolling to minScrollExtent: $targetPosition');
+          final double targetPosition;
+
+          if (_isInitialLoad) {
+            // Initial load: scroll to maxScrollExtent (shows oldest messages at top, newest at bottom)
+            targetPosition = _scrollController.position.maxScrollExtent;
+            print('📜 [ChatPage] Initial load - scrolling to maxScrollExtent: $targetPosition');
+          } else {
+            // After sending: scroll to minScrollExtent (shows only newest message, hides old ones behind app bar)
+            targetPosition = _scrollController.position.minScrollExtent;
+            print('📜 [ChatPage] After send - scrolling to minScrollExtent: $targetPosition');
+          }
 
           _scrollController.animateTo(
             targetPosition,
@@ -136,9 +144,14 @@ class _ChatViewState extends State<ChatView> {
                 if (state is ChatLoaded) {
                   print('📨 [ChatPage] ChatLoaded - Messages: ${state.messages.length}, isSending: ${state.isSending}');
                   print('📊 [ChatPage] Previous count: $_previousMessageCount, Current count: ${state.messages.length}');
-                  
+
                   if (state.isSending) {
                     _hasStartedConversation = true;
+                    // User sent a message, no longer initial load
+                    if (_isInitialLoad) {
+                      print('🎬 [ChatPage] User sent first message, marking initial load as complete');
+                      _isInitialLoad = false;
+                    }
                   }
 
                   // Only scroll if message count changed (new message added)

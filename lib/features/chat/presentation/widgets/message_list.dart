@@ -73,10 +73,12 @@ class MessageList extends StatelessWidget {
       controller: scrollController,
       reverse: true,
       slivers: [
-        // Bottom Spacer (minimal spacing to prevent content from touching bottom)
+        // Bottom Spacer - pushes old messages behind app bar when in conversation mode
         SliverToBoxAdapter(
           child: SizedBox(
-            height: 16, // Keep minimal spacing for all cases
+            height: hasStartedConversation
+              ? MediaQuery.of(context).size.height * 0.6  // Large spacer to hide old messages
+              : 16, // Minimal spacing for initial view
           ),
         ),
         
@@ -108,8 +110,8 @@ class MessageList extends StatelessWidget {
                     );
                   }
                   if (index == 2) {
-                    // GAP to create visual separation between new and old messages
-                    return SizedBox(height: MediaQuery.of(context).size.height * 0.3);
+                    // GAP to push old messages behind app bar (shows only new message)
+                    return SizedBox(height: MediaQuery.of(context).size.height * 0.7);
                   }
                   
                   // Old Messages (index 3 corresponds to messages[length - 2])

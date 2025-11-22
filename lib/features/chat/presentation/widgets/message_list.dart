@@ -10,8 +10,6 @@ class MessageList extends StatelessWidget {
   final String botId;
   final String botName;
   final bool isSending;
-  final bool hasStartedConversation;
-  final bool shouldHideOldMessages;
   final ScrollController? scrollController;
 
   const MessageList({
@@ -20,24 +18,12 @@ class MessageList extends StatelessWidget {
     required this.botId,
     required this.botName,
     this.isSending = false,
-    this.hasStartedConversation = false,
-    this.shouldHideOldMessages = false,
     this.scrollController,
   });
 
   @override
   Widget build(BuildContext context) {
-    print('📜 [MessageList] Building with ${messages.length} messages, isSending: $isSending');
-
-    // Print all messages with serial numbers
-    for (int i = 0; i < messages.length; i++) {
-      final msg = messages[i];
-      final preview = msg.content.length > 30 ? msg.content.substring(0, 30) + '...' : msg.content;
-      print('  📝 [MessageList] Message #${i + 1}/${messages.length} - ${msg.sender}: "$preview" (id: ${msg.id.substring(0, 8)})');
-    }
-
     if (messages.isEmpty && !isSending) {
-      print('💬 [MessageList] No messages, showing welcome screen');
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -69,36 +55,23 @@ class MessageList extends StatelessWidget {
       );
     }
 
-    print('🔨 [MessageList] Building ListView with ${messages.length + (isSending ? 1 : 0)} items');
-    print('🔨 [MessageList] Building CustomScrollView with ${messages.length + (isSending ? 1 : 0)} items');
     return CustomScrollView(
       controller: scrollController,
       reverse: true,
       slivers: [
-        // Bottom Spacer - pushes old messages behind app bar only when needed
-        SliverToBoxAdapter(
-          child: SizedBox(
-            height: (hasStartedConversation && shouldHideOldMessages)
-              ? MediaQuery.of(context).size.height * 0.6  // Large spacer to hide old messages
-              : 16, // Minimal spacing when content fits or initial view
-          ),
+        // Bottom Spacer
+        const SliverToBoxAdapter(
+          child: SizedBox(height: 16),
         ),
-        
+
         // Message List
         SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
           sliver: SliverList(
             delegate: SliverChildBuilderDelegate(
               (context, index) {
-                // Logic to handle Gap
-                // Index 0: Typing Indicator (if isSending)
-                // Index 1: New User Message (if isSending)
-                // Index 2: GAP (if isSending)
-                // Index 3+: Old Messages
-                
                 if (isSending) {
                   if (index == 0) {
-                     print('⏱️ [MessageList] Rendering typing indicator at index $index');
                      return _buildTypingIndicator(context);
                   }
                   if (index == 1) {
@@ -111,29 +84,12 @@ class MessageList extends StatelessWidget {
                       botColor: AppTheme.getBotColor(botId),
                     );
                   }
-                  if (index == 2) {
-                    // GAP to push old messages behind app bar only when content warrants it
-                    return SizedBox(
-                      height: shouldHideOldMessages
-                        ? MediaQuery.of(context).size.height * 0.7  // Large gap to hide old messages
-                        : MediaQuery.of(context).size.height * 0.1,  // Small gap when content fits
-                    );
-                  }
-                  
-                  // Old Messages (index 3 corresponds to messages[length - 2])
-                  // reversedIndex logic needs adjustment
-                  // We consumed 3 items (Typing, NewMsg, Gap).
-                  // Remaining items in 'messages' are length - 1 (excluding new msg).
-                  // We want to show them in reverse order.
-                  // Visual Index 3 -> Message[length - 2]
-                  // Visual Index 4 -> Message[length - 3]
-                  
-                  final remainingIndex = index - 3;
-                  final messageIndex = messages.length - 2 - remainingIndex;
-                  
-                  if (messageIndex < 0) return null;
-                  
-                  final message = messages[messageIndex];
+
+                  // Old Messages
+                  final reversedIndex = messages.length - 2 - (index - 2);
+                  if (reversedIndex < 0) return null;
+
+                  final message = messages[reversedIndex];
                   final isUser = message.sender == AppConstants.senderUser;
                   return MessageBubble(
                     message: message,
@@ -157,11 +113,11 @@ class MessageList extends StatelessWidget {
                   botColor: AppTheme.getBotColor(botId),
                 );
               },
-              childCount: isSending ? messages.length + 2 : messages.length, // +1 for Typing, +1 for Gap
+              childCount: isSending ? messages.length + 1 : messages.length, // +1 for Typing indicator
             ),
           ),
         ),
-        
+
         // Top Padding
         const SliverPadding(padding: EdgeInsets.only(top: 16)),
       ],

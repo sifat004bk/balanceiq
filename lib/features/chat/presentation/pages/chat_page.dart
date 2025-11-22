@@ -45,10 +45,7 @@ class ChatView extends StatefulWidget {
 
 class _ChatViewState extends State<ChatView> {
   final ScrollController _scrollController = ScrollController();
-  bool _hasStartedConversation = false;
   int _previousMessageCount = 0;
-  bool _isInitialLoad = true;
-  bool _shouldHideOldMessages = false;
 
   @override
   void dispose() {
@@ -57,43 +54,12 @@ class _ChatViewState extends State<ChatView> {
   }
 
   void _scrollToBottom() {
-    print('🔽 [ChatPage] _scrollToBottom called, isInitialLoad: $_isInitialLoad');
     if (_scrollController.hasClients) {
-      // Use WidgetsBinding to ensure layout is complete
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (_scrollController.hasClients) {
-          print('📜 [ChatPage] Current position: ${_scrollController.position.pixels}');
-          print('📜 [ChatPage] Min extent: ${_scrollController.position.minScrollExtent}');
-          print('📜 [ChatPage] Max extent: ${_scrollController.position.maxScrollExtent}');
-
-          final double targetPosition;
-
-          if (_isInitialLoad) {
-            // Initial load: scroll to maxScrollExtent (shows oldest messages at top, newest at bottom)
-            targetPosition = _scrollController.position.maxScrollExtent;
-            print('📜 [ChatPage] Initial load - scrolling to maxScrollExtent: $targetPosition');
-            _shouldHideOldMessages = false;
-          } else {
-            // Check if content is large enough to warrant hiding old messages
-            // Only hide if there's substantial scrollable content (more than 200px of scroll range)
-            final scrollRange = _scrollController.position.maxScrollExtent - _scrollController.position.minScrollExtent;
-            _shouldHideOldMessages = scrollRange > 200;
-
-            print('📜 [ChatPage] Scroll range: $scrollRange, shouldHideOldMessages: $_shouldHideOldMessages');
-
-            if (_shouldHideOldMessages) {
-              // After sending with enough content: scroll to minScrollExtent (shows only newest message)
-              targetPosition = _scrollController.position.minScrollExtent;
-              print('📜 [ChatPage] After send (hide old) - scrolling to minScrollExtent: $targetPosition');
-            } else {
-              // After sending with little content: scroll to maxScrollExtent (keep all visible)
-              targetPosition = _scrollController.position.maxScrollExtent;
-              print('📜 [ChatPage] After send (show all) - scrolling to maxScrollExtent: $targetPosition');
-            }
-          }
-
+          // For reversed list, minScrollExtent is the bottom (newest messages)
           _scrollController.animateTo(
-            targetPosition,
+            _scrollController.position.minScrollExtent,
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeOut,
           );
@@ -154,41 +120,21 @@ class _ChatViewState extends State<ChatView> {
           Expanded(
             child: BlocConsumer<ChatCubit, ChatState>(
               listener: (context, state) {
-                print('👂 [ChatPage] Listener - State: ${state.runtimeType}');
                 // Auto-scroll to bottom when new message arrives
                 if (state is ChatLoaded) {
-                  print('📨 [ChatPage] ChatLoaded - Messages: ${state.messages.length}, isSending: ${state.isSending}');
-                  print('📊 [ChatPage] Previous count: $_previousMessageCount, Current count: ${state.messages.length}');
-
-                  if (state.isSending) {
-                    _hasStartedConversation = true;
-                    // User sent a message, no longer initial load
-                    if (_isInitialLoad) {
-                      print('🎬 [ChatPage] User sent first message, marking initial load as complete');
-                      _isInitialLoad = false;
-                    }
-                  }
-
                   // Only scroll if message count changed (new message added)
                   if (state.messages.length != _previousMessageCount) {
-                    print('✅ [ChatPage] Message count changed! Scrolling to bottom...');
                     _previousMessageCount = state.messages.length;
                     _scrollToBottom();
-                  } else {
-                    print('⏸️ [ChatPage] Message count unchanged, not scrolling');
                   }
                 }
               },
               builder: (context, state) {
-                print('🎨 [ChatPage] Builder - State: ${state.runtimeType}');
                 if (state is ChatLoading) {
-                  print('⏳ [ChatPage] Builder - Showing loading indicator');
                   return const Center(
                     child: CircularProgressIndicator(),
                   );
                 } else if (state is ChatLoaded) {
-                  print('✅ [ChatPage] Builder - Building MessageList with ${state.messages.length} messages, isSending: ${state.isSending}');
-
                   // Show suggested prompts if no messages
                   if (state.messages.isEmpty && !state.isSending) {
                     return SuggestedPrompts(
@@ -207,12 +153,9 @@ class _ChatViewState extends State<ChatView> {
                     botId: widget.botId,
                     botName: widget.botName,
                     isSending: state.isSending,
-                    hasStartedConversation: _hasStartedConversation,
-                    shouldHideOldMessages: _shouldHideOldMessages,
                     scrollController: _scrollController,
                   );
                 } else if (state is ChatError) {
-                  print('❌ [ChatPage] Builder - Showing error: ${state.message}');
                   return Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -241,7 +184,6 @@ class _ChatViewState extends State<ChatView> {
                     ),
                   );
                 }
-                print('⚠️ [ChatPage] Builder - Unknown state, showing empty widget');
                 return const SizedBox.shrink();
               },
             ),

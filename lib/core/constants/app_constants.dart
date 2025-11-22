@@ -45,6 +45,16 @@ class AppConstants {
     fallback: 'https://primary-production-7383b.up.railway.app/webhook/get-user-dashboard',
   );
 
+  static String get n8nChatHistoryUrl => dotenv.get(
+    'N8N_CHAT_HISTORY_URL',
+    fallback: 'https://primary-production-7383b.up.railway.app/webhook/get-user-chat-history',
+  );
+
+  static String get backendBaseUrl => dotenv.get(
+    'BACKEND_BASE_URL',
+    fallback: 'https://primary-production-7383b.up.railway.app',
+  );
+
   // Authorization Tokens
   static String get n8nWebhookAuthToken => dotenv.get(
     'N8N_WEBHOOK_AUTH_TOKEN',

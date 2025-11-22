@@ -17,16 +17,23 @@ import '../../features/auth/data/datasources/auth_local_datasource.dart';
 import '../../features/auth/data/datasources/auth_remote_datasource.dart';
 import '../../features/auth/data/repositories/auth_repository_impl.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
+import '../../features/auth/domain/usecases/change_password.dart';
+import '../../features/auth/domain/usecases/forgot_password.dart';
 import '../../features/auth/domain/usecases/get_current_user.dart';
+import '../../features/auth/domain/usecases/get_profile.dart';
+import '../../features/auth/domain/usecases/login.dart';
+import '../../features/auth/domain/usecases/reset_password.dart';
 import '../../features/auth/domain/usecases/sign_in_with_apple.dart';
 import '../../features/auth/domain/usecases/sign_in_with_google.dart';
 import '../../features/auth/domain/usecases/sign_out.dart';
+import '../../features/auth/domain/usecases/signup.dart';
 import '../../features/auth/presentation/cubit/auth_cubit.dart';
 // Features - Chat
 import '../../features/chat/data/datasources/chat_local_datasource.dart';
 import '../../features/chat/data/datasources/chat_remote_datasource.dart';
 import '../../features/chat/data/repositories/chat_repository_impl.dart';
 import '../../features/chat/domain/repositories/chat_repository.dart';
+import '../../features/chat/domain/usecases/get_chat_history.dart';
 import '../../features/chat/domain/usecases/get_messages.dart';
 import '../../features/chat/domain/usecases/send_message.dart';
 import '../../features/chat/presentation/cubit/chat_cubit.dart';
@@ -90,6 +97,12 @@ Future<void> init() async {
   sl.registerLazySingleton(() => SignInWithApple(sl()));
   sl.registerLazySingleton(() => SignOut(sl()));
   sl.registerLazySingleton(() => GetCurrentUser(sl()));
+  sl.registerLazySingleton(() => Signup(sl()));
+  sl.registerLazySingleton(() => Login(sl()));
+  sl.registerLazySingleton(() => GetProfile(sl()));
+  sl.registerLazySingleton(() => ChangePassword(sl()));
+  sl.registerLazySingleton(() => ForgotPassword(sl()));
+  sl.registerLazySingleton(() => ResetPassword(sl()));
 
   // Repository
   sl.registerLazySingleton<AuthRepository>(
@@ -101,7 +114,11 @@ Future<void> init() async {
 
   // Data sources
   sl.registerLazySingleton<AuthRemoteDataSource>(
-    () => AuthRemoteDataSourceImpl(sl()),
+    () => AuthRemoteDataSourceImpl(
+      googleSignIn: sl(),
+      dio: sl(),
+      sharedPreferences: sl(),
+    ),
   );
 
   sl.registerLazySingleton<AuthLocalDataSource>(
@@ -121,6 +138,7 @@ Future<void> init() async {
   // Use cases
   sl.registerLazySingleton(() => GetMessages(sl()));
   sl.registerLazySingleton(() => SendMessage(sl()));
+  sl.registerLazySingleton(() => GetChatHistory(sl()));
 
   // Repository
   sl.registerLazySingleton<ChatRepository>(

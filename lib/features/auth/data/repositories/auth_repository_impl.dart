@@ -4,6 +4,7 @@ import '../../domain/repositories/auth_repository.dart';
 import '../../../../core/error/failures.dart';
 import '../datasources/auth_local_datasource.dart';
 import '../datasources/auth_remote_datasource.dart';
+import '../models/auth_request_models.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
@@ -64,6 +65,104 @@ class AuthRepositoryImpl implements AuthRepository {
       return Right(isSignedIn);
     } catch (e) {
       return Left(CacheFailure('Failed to check sign in status: $e'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, AuthResponse>> signup({
+    required String username,
+    required String password,
+    required String fullName,
+    required String email,
+  }) async {
+    try {
+      final request = SignupRequest(
+        username: username,
+        password: password,
+        fullName: fullName,
+        email: email,
+      );
+      final response = await remoteDataSource.signup(request);
+      return Right(response);
+    } catch (e) {
+      return Left(ServerFailure('Failed to signup: $e'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, AuthResponse>> login({
+    required String username,
+    required String password,
+  }) async {
+    try {
+      final request = LoginRequest(
+        username: username,
+        password: password,
+      );
+      final response = await remoteDataSource.login(request);
+      return Right(response);
+    } catch (e) {
+      return Left(ServerFailure('Failed to login: $e'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, UserInfo>> getProfile(String token) async {
+    try {
+      final profile = await remoteDataSource.getProfile(token);
+      return Right(profile);
+    } catch (e) {
+      return Left(ServerFailure('Failed to get profile: $e'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> changePassword({
+    required String currentPassword,
+    required String newPassword,
+    required String confirmPassword,
+    required String token,
+  }) async {
+    try {
+      final request = ChangePasswordRequest(
+        currentPassword: currentPassword,
+        newPassword: newPassword,
+        confirmPassword: confirmPassword,
+      );
+      await remoteDataSource.changePassword(request, token);
+      return const Right(null);
+    } catch (e) {
+      return Left(ServerFailure('Failed to change password: $e'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> forgotPassword({required String email}) async {
+    try {
+      final request = ForgotPasswordRequest(email: email);
+      await remoteDataSource.forgotPassword(request);
+      return const Right(null);
+    } catch (e) {
+      return Left(ServerFailure('Failed to send forgot password email: $e'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> resetPassword({
+    required String token,
+    required String newPassword,
+    required String confirmPassword,
+  }) async {
+    try {
+      final request = ResetPasswordRequest(
+        token: token,
+        newPassword: newPassword,
+        confirmPassword: confirmPassword,
+      );
+      await remoteDataSource.resetPassword(request);
+      return const Right(null);
+    } catch (e) {
+      return Left(ServerFailure('Failed to reset password: $e'));
     }
   }
 }

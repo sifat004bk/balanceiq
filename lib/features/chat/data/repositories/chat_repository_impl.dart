@@ -7,6 +7,7 @@ import '../../../../core/error/failures.dart';
 import '../datasources/chat_local_datasource.dart';
 import '../datasources/chat_remote_datasource.dart';
 import '../models/message_model.dart';
+import '../../../auth/data/models/auth_request_models.dart';
 
 class ChatRepositoryImpl implements ChatRepository {
   final ChatLocalDataSource localDataSource;
@@ -98,6 +99,24 @@ class ChatRepositoryImpl implements ChatRepository {
       return const Right(null);
     } catch (e) {
       return Left(CacheFailure('Failed to clear chat history: $e'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, ChatHistoryResponse>> getChatHistory({
+    required String userId,
+    required int page,
+    int? limit,
+  }) async {
+    try {
+      final response = await remoteDataSource.getChatHistory(
+        userId: userId,
+        page: page,
+        limit: limit,
+      );
+      return Right(response);
+    } catch (e) {
+      return Left(ServerFailure('Failed to get chat history: $e'));
     }
   }
 }

@@ -374,6 +374,142 @@ Unlike bank apps (read-only) or complex trackers (steep learning curve), Balance
 
 ---
 
+## Documentation Directory - Quick Reference
+
+### 📂 Core Documentation (Root Level)
+Located in `projectcontext/`
+
+| File | What You'll Find | When to Use |
+|------|------------------|-------------|
+| **PROJECT_OVERVIEW.md** | High-level project summary, tech stack, features, current status | Starting point for new developers |
+| **README.md** | Navigation guide to all docs, quick start instructions | First file to read |
+| **ARCHITECTURE.md** | Clean architecture layers, folder structure, design patterns | Understanding code organization |
+| **DEVELOPMENT_GUIDE.md** | How to add features, coding standards, best practices | Before writing new code |
+| **API_INTEGRATION.md** | n8n webhooks, API endpoints, request/response formats | Working with backend APIs |
+| **IMPLEMENTATION_STATUS.md** | Completion percentage, what's done, what's missing | Checking project progress |
+| **ROADMAP.md** | Development phases, priorities, timeline | Planning next steps |
+| **TASKS.md** | Actionable task list with priorities | Daily development tasks |
+
+### 📂 Specialized Directories
+
+#### `design_docs/` - UI/UX Design Specifications
+UI design guidelines and Gemini-inspired design system.
+
+| File | Contents | Use Case |
+|------|----------|----------|
+| **GEMINI_UI_DESIGN_SPECIFICATIONS.md** | Complete design system (colors, typography, components) | Implementing UI components |
+| **GEMINI_IMPLEMENTATION_CHECKLIST.md** | Phase-by-phase UI implementation tasks | Tracking UI development |
+| **GEMINI_QUICK_REFERENCE.md** | Color palette, typography scale, code snippets | Quick design reference |
+| **README_GEMINI_UI.md** | Getting started with Gemini UI | UI setup and overview |
+| **gemini_observes.md** | Design decisions and lessons learned | Understanding design choices |
+
+**Design Assets**: Located in `design_files/` with mockups for:
+- `chat_interface/` - Chat screens, attachment modals, settings
+- `dashboard/` - Dashboard layouts
+- `onboarding/` - Login, register, email verification, welcome
+- `profile/` - Profile, settings, subscription management
+- `subscription/` - Payment and subscription screens
+
+#### `implementation/` - Backend Integration & Analysis
+API implementation details and UI synchronization status.
+
+| File | Contents | Use Case |
+|------|----------|----------|
+| **API_IMPLEMENTATION_SUMMARY.md** | All 7 backend endpoints (auth + chat), tests, architecture | Understanding backend APIs |
+| **UI_LAYER_EVALUATION.md** | 🔴 Critical: Gap analysis between UI and backend APIs | Fixing UI/API synchronization |
+| **README.md** | Implementation docs overview | Navigating implementation docs |
+
+#### `progress/` - Development Tracking
+Weekly progress reports and status updates.
+
+| File | Contents | Use Case |
+|------|----------|----------|
+| **progress.md** | Weekly sprint updates, completed tasks, blockers | Checking latest progress |
+| **UI_UPDATE_REPORT.md** | UI/UX changes, design updates, improvements | Reviewing UI changes |
+| **README.md** | Progress tracking guide | Understanding progress docs |
+
+#### `project_summary/` - Comprehensive Project Documentation
+Detailed business, product, and technical documentation.
+
+**Business** (`project_summary/business/`)
+- `bangladesh_strategy/` - Market strategy, revenue model, user acquisition
+  - `bangladesh_strategy_summary.md` - Complete Bangladesh market strategy
+  - `01_core_business_idea.md` - Business concept and differentiators
+  - `02_revenue_model.md` - Pricing and monetization
+  - `03_user_acquisition_strategy.md` - Marketing and growth tactics
+  - `04_critical_recommendations.md` - Key action items
+  - `05_fundraising.md` - Funding strategy
+- `international_strategy/` - Global expansion plans
+
+**Product** (`project_summary/product/`)
+- `product.md` - Product specifications and requirements
+- `features.md` - Detailed feature breakdown
+- `ux.md` - UX principles and guidelines
+- `ux_evaluation_report.md` - UX audit and recommendations
+
+**Project** (`project_summary/project/`)
+- `roadmap.md` - Detailed development roadmap
+- `tasks.md` - Task breakdown and planning
+
+**Tech** (`project_summary/tech/`)
+- `app.md` - Flutter app architecture and implementation
+- `backend.md` - Backend API documentation
+- `n8n.md` - n8n workflow integration
+- `qa.md` - Testing strategy and quality assurance
+- `MOCK_ENVIRONMENT_GUIDE.md` - Local development without backend
+
+### 🔍 Where to Find What
+
+**Need to know...**
+- **"What is this project?"** → `PROJECT_OVERVIEW.md`
+- **"How is code organized?"** → `ARCHITECTURE.md`
+- **"How do I add a feature?"** → `DEVELOPMENT_GUIDE.md`
+- **"What APIs are available?"** → `API_INTEGRATION.md` + `implementation/API_IMPLEMENTATION_SUMMARY.md`
+- **"What's the current status?"** → `IMPLEMENTATION_STATUS.md` + `progress/progress.md`
+- **"What needs to be built?"** → `TASKS.md` + `ROADMAP.md`
+- **"How should UI look?"** → `design_docs/GEMINI_UI_DESIGN_SPECIFICATIONS.md`
+- **"Why UI not working with APIs?"** → `implementation/UI_LAYER_EVALUATION.md` 🔴
+- **"Business strategy for Bangladesh?"** → `project_summary/business/bangladesh_strategy/bangladesh_strategy_summary.md`
+- **"How to test locally?"** → `project_summary/tech/MOCK_ENVIRONMENT_GUIDE.md`
+- **"What are the features?"** → `project_summary/product/features.md`
+- **"Latest progress?"** → `progress/progress.md`
+
+### 📊 Documentation Map by Role
+
+**For New Developers:**
+1. `README.md` - Start here
+2. `PROJECT_OVERVIEW.md` - Understand the project
+3. `ARCHITECTURE.md` - Learn the code structure
+4. `DEVELOPMENT_GUIDE.md` - Start coding
+
+**For UI/UX Developers:**
+1. `design_docs/README_GEMINI_UI.md` - Design system intro
+2. `design_docs/GEMINI_UI_DESIGN_SPECIFICATIONS.md` - Complete specs
+3. `design_files/` - Visual mockups
+4. `project_summary/product/ux_evaluation_report.md` - UX improvements
+
+**For Backend Developers:**
+1. `API_INTEGRATION.md` - API overview
+2. `implementation/API_IMPLEMENTATION_SUMMARY.md` - Detailed endpoints
+3. `project_summary/tech/backend.md` - Backend architecture
+4. `project_summary/tech/n8n.md` - Workflow integration
+
+**For Product Managers:**
+1. `PROJECT_OVERVIEW.md` - Product summary
+2. `IMPLEMENTATION_STATUS.md` - Current status
+3. `ROADMAP.md` - Timeline and priorities
+4. `project_summary/business/bangladesh_strategy/` - Business strategy
+5. `project_summary/product/` - Product specs
+
+**For QA/Testers:**
+1. `IMPLEMENTATION_STATUS.md` - What's implemented
+2. `project_summary/tech/qa.md` - Testing strategy
+3. `project_summary/tech/MOCK_ENVIRONMENT_GUIDE.md` - Local testing setup
+
+---
+
+---
+
 ## Recent Updates (2025-11-22)
 
 **Backend API Integration Completed:**

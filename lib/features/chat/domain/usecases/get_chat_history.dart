@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import '../../../../core/error/failures.dart';
-import '../../../auth/data/models/auth_request_models.dart';
+import '../../data/models/chat_request_models.dart';
 import '../repositories/chat_repository.dart';
 
 class GetChatHistory {

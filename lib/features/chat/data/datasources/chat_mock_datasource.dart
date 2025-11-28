@@ -1,6 +1,6 @@
 import 'package:balance_iq/core/constants/app_constants.dart';
 import 'package:balance_iq/core/mock/mock_data.dart';
-import '../../../auth/data/models/auth_request_models.dart';
+import '../models/chat_request_models.dart';
 import '../models/message_model.dart';
 import 'chat_remote_datasource.dart';
 

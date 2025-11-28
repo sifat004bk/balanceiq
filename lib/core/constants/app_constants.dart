@@ -72,6 +72,15 @@ class AppConstants {
     return mockMode == 'true' || mockMode == '1' || mockMode == 'yes';
   }
 
+  // API Mode - Choose between n8n webhooks or finance-guru backend APIs
+  // Values: 'n8n' or 'finance-guru'
+  static String get apiMode {
+    return dotenv.get('API_MODE', fallback: 'n8n').toLowerCase();
+  }
+
+  static bool get useFinanceGuruAPI => apiMode == 'finance-guru' || apiMode == 'finance_guru' || apiMode == 'backend';
+  static bool get useN8nAPI => !useFinanceGuruAPI;
+
   // Message Types
   static const String messageTypeText = 'text';
   static const String messageTypeImage = 'image';

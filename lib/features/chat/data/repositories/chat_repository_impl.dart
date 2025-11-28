@@ -6,8 +6,8 @@ import '../../../../core/constants/app_constants.dart';
 import '../../../../core/error/failures.dart';
 import '../datasources/chat_local_datasource.dart';
 import '../datasources/chat_remote_datasource.dart';
+import '../models/chat_request_models.dart';
 import '../models/message_model.dart';
-import '../../../auth/data/models/auth_request_models.dart';
 
 class ChatRepositoryImpl implements ChatRepository {
   final ChatLocalDataSource localDataSource;

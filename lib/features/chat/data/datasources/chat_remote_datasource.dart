@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/constants/app_constants.dart';
-import '../../../auth/data/models/auth_request_models.dart';
+import '../models/chat_request_models.dart';
 import '../models/message_model.dart';
 
 abstract class ChatRemoteDataSource {
@@ -146,15 +146,16 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     int? limit,
   }) async {
     try {
-      final request = ChatHistoryRequest(
-        userId: userId,
-        page: page,
-        limit: limit,
-      );
+      // Create request body for n8n
+      final requestBody = {
+        'user_id': userId,
+        'page': page,
+        if (limit != null) 'limit': limit,
+      };
 
       final response = await dio.post(
         AppConstants.n8nChatHistoryUrl,
-        data: request.toJson(),
+        data: requestBody,
         options: Options(
           headers: {
             'Content-Type': 'application/json',

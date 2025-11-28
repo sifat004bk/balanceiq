@@ -1,5 +1,7 @@
 import 'package:balance_iq/core/constants/app_constants.dart';
+import 'package:balance_iq/features/chat/data/datasources/chat_finance_guru_datasource.dart';
 import 'package:balance_iq/features/chat/data/datasources/chat_mock_datasource.dart';
+import 'package:balance_iq/features/home/data/datasource/remote_datasource/dashboard_finance_guru_datasource.dart';
 import 'package:balance_iq/features/home/data/datasource/remote_datasource/dashboard_mock_datasource.dart';
 import 'package:balance_iq/features/home/data/datasource/remote_datasource/dashboard_remote_datasource.dart';
 import 'package:balance_iq/features/home/data/repository/dashboard_repository_impl.dart';
@@ -175,14 +177,17 @@ Future<void> init() async {
     () => ChatLocalDataSourceImpl(sl()),
   );
 
-  // Conditionally register mock or real chat datasource
+  // Conditionally register mock, finance-guru, or n8n chat datasource
   sl.registerLazySingleton<ChatRemoteDataSource>(
     () {
       if (AppConstants.isMockMode) {
         print('🎭 [DI] Registering MOCK ChatRemoteDataSource');
         return ChatMockDataSource();
+      } else if (AppConstants.useFinanceGuruAPI) {
+        print('🏦 [DI] Registering Finance Guru ChatRemoteDataSource');
+        return ChatFinanceGuruDataSource(sl(), sl());
       } else {
-        print('🌐 [DI] Registering REAL ChatRemoteDataSource');
+        print('🌊 [DI] Registering n8n ChatRemoteDataSource');
         return ChatRemoteDataSourceImpl(sl(), sl());
       }
     },
@@ -204,14 +209,17 @@ Future<void> init() async {
   );
 
   // Data sources
-  // Conditionally register mock or real dashboard datasource
+  // Conditionally register mock, finance-guru, or n8n dashboard datasource
   sl.registerLazySingleton<DashboardRemoteDataSource>(
     () {
       if (AppConstants.isMockMode) {
         print('🎭 [DI] Registering MOCK DashboardRemoteDataSource');
         return DashboardMockDataSource();
+      } else if (AppConstants.useFinanceGuruAPI) {
+        print('🏦 [DI] Registering Finance Guru DashboardRemoteDataSource');
+        return DashboardFinanceGuruDataSource(sl(), sl());
       } else {
-        print('🌐 [DI] Registering REAL DashboardRemoteDataSource');
+        print('🌊 [DI] Registering n8n DashboardRemoteDataSource');
         return DashboardRemoteDataSourceImpl(sl());
       }
     },

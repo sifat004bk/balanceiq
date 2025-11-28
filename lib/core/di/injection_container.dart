@@ -177,18 +177,15 @@ Future<void> init() async {
     () => ChatLocalDataSourceImpl(sl()),
   );
 
-  // Conditionally register mock, finance-guru, or n8n chat datasource
+  // Conditionally register mock or real API chat datasource
   sl.registerLazySingleton<ChatRemoteDataSource>(
     () {
       if (AppConstants.isMockMode) {
         print('🎭 [DI] Registering MOCK ChatRemoteDataSource');
         return ChatMockDataSource();
-      } else if (AppConstants.useFinanceGuruAPI) {
-        print('🏦 [DI] Registering Finance Guru ChatRemoteDataSource');
-        return ChatFinanceGuruDataSource(sl(), sl());
       } else {
-        print('🌊 [DI] Registering n8n ChatRemoteDataSource');
-        return ChatRemoteDataSourceImpl(sl(), sl());
+        print('🌐 [DI] Registering REAL ChatRemoteDataSource (Finance Guru API)');
+        return ChatFinanceGuruDataSource(sl(), sl());
       }
     },
   );
@@ -209,18 +206,15 @@ Future<void> init() async {
   );
 
   // Data sources
-  // Conditionally register mock, finance-guru, or n8n dashboard datasource
+  // Conditionally register mock or real API dashboard datasource
   sl.registerLazySingleton<DashboardRemoteDataSource>(
     () {
       if (AppConstants.isMockMode) {
         print('🎭 [DI] Registering MOCK DashboardRemoteDataSource');
         return DashboardMockDataSource();
-      } else if (AppConstants.useFinanceGuruAPI) {
-        print('🏦 [DI] Registering Finance Guru DashboardRemoteDataSource');
-        return DashboardFinanceGuruDataSource(sl(), sl());
       } else {
-        print('🌊 [DI] Registering n8n DashboardRemoteDataSource');
-        return DashboardRemoteDataSourceImpl(sl());
+        print('🌐 [DI] Registering REAL DashboardRemoteDataSource (Finance Guru API)');
+        return DashboardFinanceGuruDataSource(sl(), sl());
       }
     },
   );

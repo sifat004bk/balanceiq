@@ -54,7 +54,7 @@ class ChatRepositoryImpl implements ChatRepository {
       // Save user message to local database
       await localDataSource.saveMessage(userMessage);
 
-      // Send message to n8n workflow and get bot response
+      // Send message to backend API and get bot response
       final botMessage = await remoteDataSource.sendMessage(
         botId: botId,
         content: content,

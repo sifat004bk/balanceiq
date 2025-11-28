@@ -35,51 +35,17 @@ class AppConstants {
   static const String keyThemeMode = 'theme_mode';
 
   // API Configuration
-  static String get n8nWebhookUrl => dotenv.get(
-    'N8N_WEBHOOK_URL',
-    fallback: 'https://primary-production-7383b.up.railway.app/webhook/b1cfaa07-8bf1-4005-90e0-9759144705f2',
-  );
-
-  static String get n8nDashboardUrl => dotenv.get(
-    'N8N_DASHBOARD_URL',
-    fallback: 'https://primary-production-7383b.up.railway.app/webhook/get-user-dashboard',
-  );
-
-  static String get n8nChatHistoryUrl => dotenv.get(
-    'N8N_CHAT_HISTORY_URL',
-    fallback: 'https://primary-production-7383b.up.railway.app/webhook/get-user-chat-history',
-  );
-
   static String get backendBaseUrl => dotenv.get(
     'BACKEND_BASE_URL',
     fallback: 'https://primary-production-7383b.up.railway.app',
   );
 
-  // Authorization Tokens
-  static String get n8nWebhookAuthToken => dotenv.get(
-    'N8N_WEBHOOK_AUTH_TOKEN',
-    fallback: '',
-  );
-
-  static String get n8nDashboardAuthToken => dotenv.get(
-    'N8N_DASHBOARD_AUTH_TOKEN',
-    fallback: '',
-  );
-
   // Mock Mode
+  // When true, uses mock data instead of real API calls
   static bool get isMockMode {
     final mockMode = dotenv.get('MOCK_MODE', fallback: 'false').toLowerCase();
     return mockMode == 'true' || mockMode == '1' || mockMode == 'yes';
   }
-
-  // API Mode - Choose between n8n webhooks or finance-guru backend APIs
-  // Values: 'n8n' or 'finance-guru'
-  static String get apiMode {
-    return dotenv.get('API_MODE', fallback: 'n8n').toLowerCase();
-  }
-
-  static bool get useFinanceGuruAPI => apiMode == 'finance-guru' || apiMode == 'finance_guru' || apiMode == 'backend';
-  static bool get useN8nAPI => !useFinanceGuruAPI;
 
   // Message Types
   static const String messageTypeText = 'text';

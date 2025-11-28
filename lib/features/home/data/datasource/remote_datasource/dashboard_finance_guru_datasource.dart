@@ -59,7 +59,7 @@ class DashboardFinanceGuruDataSource implements DashboardRemoteDataSource {
           if (dataField is Map<String, dynamic>) {
             dashboardData = dataField;
           } else if (dataField is List && dataField.isNotEmpty) {
-            // Handle list format (similar to n8n)
+            // Handle list format
             final firstItem = dataField.first;
             if (firstItem is! Map<String, dynamic>) {
               throw Exception(

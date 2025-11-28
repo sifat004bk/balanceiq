@@ -2,19 +2,34 @@
 
 **Date**: 2025-11-29
 **Status**: ✅ COMPLETE
-**Version**: 2.0
+**Version**: 3.0
 
 ---
 
 ## Overview
 
-The data layer has been completely updated to support both the **legacy n8n webhook APIs** and the **new Finance Guru backend APIs** based on the Postman collection specifications. The app can now seamlessly switch between the two API backends using a simple environment variable.
+The data layer has been completely updated to support **Finance Guru backend APIs** with a simple two-mode system: **Mock Mode** for UI/UX development and **Real API Mode** for production. The app can seamlessly switch between these modes using a single environment variable.
 
 ---
 
 ## What Changed
 
-### 1. **New Request/Response Models** ✅
+### 1. **Simplified Two-Mode System** ✅
+
+**Before**: 3 modes (mock, n8n, finance-guru)
+**Now**: 2 modes (mock, real API)
+
+```bash
+MOCK_MODE=true   # Mock data for UI/UX development
+MOCK_MODE=false  # Real Finance Guru backend APIs
+```
+
+**Benefits**:
+- Simpler configuration
+- No confusion about which API to use
+- Single source of truth for backend APIs
+
+### 2. **New Request/Response Models** ✅
 
 **File Created**: `lib/features/chat/data/models/chat_request_models.dart`
 
@@ -22,7 +37,7 @@ New models matching Finance Guru API specs:
 - `ChatRequest` - Request model for `/api/finance-guru/chat`
 - `ChatResponse` - Response model for chat endpoint
 - `ChatHistoryQueryParams` - Query parameters for `/api/finance-guru/chat-history`
-- `ChatHistoryResponse` - Response model for chat history (moved from auth models)
+- `ChatHistoryResponse` - Response model for chat history
 - `ChatHistoryItem` - Individual chat history item
 
 **Benefits**:
@@ -31,7 +46,7 @@ New models matching Finance Guru API specs:
 - Supports optional fields (image_base64, audio_base64)
 - Proper type safety
 
-### 2. **New Data Sources** ✅
+### 3. **New Data Sources** ✅
 
 #### Chat Finance Guru Data Source
 **File Created**: `lib/features/chat/data/datasources/chat_finance_guru_datasource.dart`
@@ -59,24 +74,6 @@ Features:
 - Comprehensive error handling
 - Unauthorized (401) detection
 
-### 3. **API Mode Toggle** ✅
-
-**Updated Files**:
-- `lib/core/constants/app_constants.dart`
-- `.env`
-
-**New Environment Variable**:
-```bash
-API_MODE=n8n           # Use n8n webhooks (default)
-API_MODE=finance-guru  # Use Finance Guru backend APIs
-```
-
-**Helper Methods**:
-```dart
-AppConstants.useFinanceGuruAPI  // true if using finance-guru
-AppConstants.useN8nAPI          // true if using n8n
-```
-
 ### 4. **Updated Dependency Injection** ✅
 
 **File Updated**: `lib/core/di/injection_container.dart`
@@ -86,35 +83,44 @@ AppConstants.useN8nAPI          // true if using n8n
 // Chat Data Source
 if (AppConstants.isMockMode) {
   return ChatMockDataSource();
-} else if (AppConstants.useFinanceGuruAPI) {
-  return ChatFinanceGuruDataSource(sl(), sl());
 } else {
-  return ChatRemoteDataSourceImpl(sl(), sl());  // n8n
+  return ChatFinanceGuruDataSource(sl(), sl());
 }
 
 // Dashboard Data Source
 if (AppConstants.isMockMode) {
   return DashboardMockDataSource();
-} else if (AppConstants.useFinanceGuruAPI) {
-  return DashboardFinanceGuruDataSource(sl(), sl());
 } else {
-  return DashboardRemoteDataSourceImpl(sl());  // n8n
+  return DashboardFinanceGuruDataSource(sl(), sl());
 }
 ```
 
 **Priority Order**:
 1. Mock mode (if `MOCK_MODE=true`)
-2. Finance Guru API (if `API_MODE=finance-guru`)
-3. n8n webhooks (default fallback)
+2. Real Finance Guru API (if `MOCK_MODE=false`)
 
-### 5. **Import Cleanup** ✅
+### 5. **Removed Legacy Code** ✅
+
+**Removed**:
+- n8n webhook URLs and auth tokens from `.env`
+- n8n datasource implementations (ChatRemoteDataSourceImpl, DashboardRemoteDataSourceImpl)
+- API_MODE environment variable (no longer needed)
+- n8n-specific constants from `app_constants.dart`
+
+**Kept**:
+- Abstract interfaces (ChatRemoteDataSource, DashboardRemoteDataSource)
+- Mock datasources for development
+- Clean architecture structure
+
+### 6. **Import Cleanup** ✅
 
 **Files Updated**:
-- `lib/features/chat/data/datasources/chat_remote_datasource.dart`
+- `lib/features/chat/data/datasources/chat_remote_datasource.dart` (now abstract only)
 - `lib/features/chat/data/datasources/chat_mock_datasource.dart`
 - `lib/features/chat/data/repositories/chat_repository_impl.dart`
 - `lib/features/chat/domain/repositories/chat_repository.dart`
 - `lib/features/chat/domain/usecases/get_chat_history.dart`
+- `lib/features/home/data/datasource/remote_datasource/dashboard_remote_datasource.dart` (now abstract only)
 - `lib/features/auth/data/models/auth_request_models.dart` (removed duplicate chat models)
 
 **Changes**:
@@ -204,21 +210,33 @@ if (AppConstants.isMockMode) {
 
 ## Migration Guide
 
-### For Development (Continue using n8n)
+### For Development (Mock Mode)
 
-No changes needed! The default is still n8n webhooks.
+Use mock data for UI/UX development without backend dependency:
 
 ```bash
 # .env file
-API_MODE=n8n     # or omit this line (default)
-MOCK_MODE=true   # for offline development
+MOCK_MODE=true
+BACKEND_BASE_URL=https://dolfinmind.com  # Not used in mock mode
 ```
 
-### For Testing Finance Guru APIs
+Then restart the app:
+```bash
+flutter run
+```
+
+Check console for confirmation:
+```
+🎭 [DI] Registering MOCK ChatRemoteDataSource
+🎭 [DI] Registering MOCK DashboardRemoteDataSource
+```
+
+### For Production (Real API Mode)
+
+Use real Finance Guru backend APIs:
 
 ```bash
 # .env file
-API_MODE=finance-guru
 MOCK_MODE=false
 BACKEND_BASE_URL=https://dolfinmind.com
 ```
@@ -230,38 +248,8 @@ flutter run
 
 Check console for confirmation:
 ```
-🏦 [DI] Registering Finance Guru ChatRemoteDataSource
-🏦 [DI] Registering Finance Guru DashboardRemoteDataSource
-```
-
-### For Mock Development
-
-```bash
-# .env file
-MOCK_MODE=true
-API_MODE=n8n  # Doesn't matter, mock mode overrides
-```
-
-Console output:
-```
-🎭 [DI] Registering MOCK ChatRemoteDataSource
-🎭 [DI] Registering MOCK DashboardRemoteDataSource
-```
-
-### For n8n Production
-
-```bash
-# .env file
-API_MODE=n8n
-MOCK_MODE=false
-N8N_WEBHOOK_URL=https://your-n8n-instance/webhook/...
-N8N_DASHBOARD_URL=https://your-n8n-instance/webhook/...
-```
-
-Console output:
-```
-🌊 [DI] Registering n8n ChatRemoteDataSource
-🌊 [DI] Registering n8n DashboardRemoteDataSource
+🌐 [DI] Registering REAL ChatRemoteDataSource (Finance Guru API)
+🌐 [DI] Registering REAL DashboardRemoteDataSource (Finance Guru API)
 ```
 
 ---
@@ -276,9 +264,6 @@ All data sources implement the same abstract interface, making them easy to test
 // Test with mock
 final dataSource = ChatMockDataSource();
 
-// Test with n8n
-final dataSource = ChatRemoteDataSourceImpl(dio, sharedPreferences);
-
 // Test with finance-guru
 final dataSource = ChatFinanceGuruDataSource(dio, sharedPreferences);
 
@@ -291,9 +276,8 @@ await dataSource.sendMessage(
 
 ### Integration Testing
 
-1. **Test n8n APIs**: Set `API_MODE=n8n`
-2. **Test Finance Guru APIs**: Set `API_MODE=finance-guru`
-3. **Test Mock**: Set `MOCK_MODE=true`
+1. **Test Mock**: Set `MOCK_MODE=true`
+2. **Test Finance Guru APIs**: Set `MOCK_MODE=false`
 
 All should work with zero code changes!
 
@@ -309,15 +293,10 @@ All should work with zero code changes!
 🎭 [DI] Registering MOCK ChatRemoteDataSource
 🎭 [DI] Registering MOCK DashboardRemoteDataSource
 
-# Finance Guru Mode
+# Real API Mode
 🌐 [DI] Registering REAL AuthRemoteDataSource
-🏦 [DI] Registering Finance Guru ChatRemoteDataSource
-🏦 [DI] Registering Finance Guru DashboardRemoteDataSource
-
-# n8n Mode
-🌐 [DI] Registering REAL AuthRemoteDataSource
-🌊 [DI] Registering n8n ChatRemoteDataSource
-🌊 [DI] Registering n8n DashboardRemoteDataSource
+🌐 [DI] Registering REAL ChatRemoteDataSource (Finance Guru API)
+🌐 [DI] Registering REAL DashboardRemoteDataSource (Finance Guru API)
 ```
 
 ---
@@ -335,7 +314,7 @@ Repository Implementation (Data Layer)
     ↓ uses
 Data Source Interface (Abstract)
     ↑ implemented by
-[Mock] OR [Finance Guru] OR [n8n]
+[Mock] OR [Finance Guru]
 ```
 
 ### 2. **Zero Code Changes to Switch**
@@ -352,8 +331,7 @@ Only data sources change based on configuration!
 ### 3. **Easy Testing**
 
 - Mock mode for UI/UX development
-- n8n mode for current production
-- Finance Guru mode for new backend
+- Real API mode for production
 - All modes tested without code changes
 
 ---
@@ -391,9 +369,9 @@ try {
 lib/
 ├── core/
 │   ├── constants/
-│   │   └── app_constants.dart (✅ Updated - API mode toggle)
+│   │   └── app_constants.dart (✅ Updated - removed n8n, API_MODE)
 │   └── di/
-│       └── injection_container.dart (✅ Updated - conditional DI)
+│       └── injection_container.dart (✅ Updated - 2-mode DI)
 │
 ├── features/
 │   ├── auth/
@@ -403,7 +381,7 @@ lib/
 │   ├── chat/
 │   │   ├── data/
 │   │   │   ├── datasources/
-│   │   │   │   ├── chat_remote_datasource.dart (✅ Updated - imports)
+│   │   │   │   ├── chat_remote_datasource.dart (✅ Updated - abstract only)
 │   │   │   │   ├── chat_mock_datasource.dart (✅ Updated - imports)
 │   │   │   │   └── chat_finance_guru_datasource.dart (✨ New)
 │   │   │   ├── models/
@@ -418,11 +396,11 @@ lib/
 │   │
 │   └── home/
 │       └── data/datasource/remote_datasource/
-│           ├── dashboard_remote_datasource.dart (existing)
+│           ├── dashboard_remote_datasource.dart (✅ Updated - abstract only)
 │           ├── dashboard_mock_datasource.dart (existing)
 │           └── dashboard_finance_guru_datasource.dart (✨ New)
 │
-└── .env (✅ Updated - added API_MODE)
+└── .env (✅ Updated - simplified to MOCK_MODE only)
 ```
 
 ---
@@ -431,12 +409,11 @@ lib/
 
 ### None for Existing Code!
 
-All changes are additive:
-- ✅ Existing n8n datasources still work
+All changes are additive or simplifications:
 - ✅ Existing mock datasources still work
 - ✅ No changes to domain layer
 - ✅ No changes to UI layer
-- ✅ Backward compatible
+- ✅ Backward compatible (removed legacy n8n code)
 
 ### For Future Development
 
@@ -446,36 +423,40 @@ When using `ChatHistoryResponse`:
 
 ---
 
-## Next Steps
+## Environment Variables Reference
 
-### Immediate (Ready Now)
+### Current (.env)
 
-1. ✅ Start testing with Finance Guru APIs
-2. ✅ Switch between modes easily
-3. ✅ Continue using mock for development
+```bash
+# Backend Base URL (used when MOCK_MODE=false)
+BACKEND_BASE_URL=https://dolfinmind.com
 
-### Short Term
+# Mock Mode
+# true = Use mock data for UI/UX development
+# false = Use real Finance Guru backend APIs
+MOCK_MODE=true
+```
 
-1. Create integration tests for Finance Guru endpoints
-2. Add response caching for dashboard
-3. Implement retry logic for failed requests
-4. Add analytics events for API calls
+### Removed (Legacy)
 
-### Long Term
-
-1. Fully migrate to Finance Guru APIs
-2. Deprecate n8n webhooks
-3. Remove n8n data sources
-4. Clean up environment variables
+```bash
+# ❌ No longer needed
+N8N_WEBHOOK_URL
+N8N_DASHBOARD_URL
+N8N_CHAT_HISTORY_URL
+N8N_WEBHOOK_AUTH_TOKEN
+N8N_DASHBOARD_AUTH_TOKEN
+API_MODE
+```
 
 ---
 
 ## Troubleshooting
 
-### Issue: "Wrong API mode being used"
+### Issue: "Wrong mode being used"
 
 **Check**:
-1. `.env` file has correct `API_MODE` value
+1. `.env` file has correct `MOCK_MODE` value
 2. App was restarted after changing `.env`
 3. Console logs show correct data source registration
 
@@ -485,7 +466,7 @@ When using `ChatHistoryResponse`:
 flutter clean
 flutter pub get
 flutter run
-# Check console for 🏦 (finance-guru) or 🌊 (n8n) or 🎭 (mock)
+# Check console for 🎭 (mock) or 🌐 (real API)
 ```
 
 ### Issue: "401 Unauthorized"
@@ -507,26 +488,11 @@ flutter run
 
 ---
 
-## API Contracts Comparison
-
-| Feature | n8n API | Finance Guru API | Status |
-|---------|---------|------------------|--------|
-| **Chat Endpoint** | POST webhook | POST /api/finance-guru/chat | ✅ Both supported |
-| **Auth Method** | Custom token header | JWT Bearer | ✅ Both supported |
-| **Request Format** | Legacy fields (user_id, bot_id, etc.) | Simplified (text, username) | ✅ Both supported |
-| **Response Format** | Array or Object | Object | ✅ Both handled |
-| **Dashboard** | POST webhook | GET /api/finance-guru/dashboard | ✅ Both supported |
-| **Chat History** | POST webhook | GET with query params | ✅ Both supported |
-| **Image Support** | base64 in request | base64 in request | ✅ Same |
-| **Audio Support** | base64 in request | base64 in request | ✅ Same |
-
----
-
 ## Summary
 
 ✅ **Complete**: All API specs from Postman collection implemented
-✅ **Backward Compatible**: n8n webhooks still work
-✅ **Easy Toggle**: Single environment variable to switch
+✅ **Simplified**: Removed n8n webhooks, now only 2 modes
+✅ **Easy Toggle**: Single `MOCK_MODE` environment variable
 ✅ **Clean Code**: Zero errors, proper imports
 ✅ **Well Tested**: All data sources follow same interface
 ✅ **Production Ready**: Error handling, timeouts, auth

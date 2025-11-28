@@ -55,7 +55,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\": \"super-admin\",\n    \"password\": \"123456\"\n}",
+							"raw": "{\n    \"username\": \"rootadmin\",\n    \"password\": \"superadminpass\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -71,6 +71,35 @@
 								"api",
 								"auth",
 								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdXBlci1hZG1pbiIsImlhdCI6MTc2MjY2ODk1OCwiZXhwIjoxNzYyNzA0OTU4fQ.ShVfTeiIZ25jcIJA6R0jWzVMxl5FwsWSinBFCDD5w48",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/auth/me",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"me"
 							]
 						}
 					},
@@ -167,35 +196,6 @@
 								"api",
 								"users",
 								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Profile",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdXBlci1hZG1pbiIsImlhdCI6MTc2MjY2ODk1OCwiZXhwIjoxNzYyNzA0OTU4fQ.ShVfTeiIZ25jcIJA6R0jWzVMxl5FwsWSinBFCDD5w48",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/auth/me",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"auth",
-								"me"
 							]
 						}
 					},
@@ -389,201 +389,151 @@
 			"item": []
 		},
 		{
-			"name": "n8n-workflow",
+			"name": "finance-guru",
 			"item": [
 				{
-					"name": "get-user-dashboard-PROD",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Dolphin D#-#{Oo\"|tC[fHDBpCjwhBfrY?O-56s64R|S,b8D-41eRLd8",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"user_id\": \"8130001838\"\n}\n",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "https://primary-production-7383b.up.railway.app/webhook/get-user-dashboard",
-							"protocol": "https",
-							"host": [
-								"primary-production-7383b",
-								"up",
-								"railway",
-								"app"
-							],
-							"path": [
-								"webhook",
-								"get-user-dashboard"
-							]
+					"name": "/chat",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
 						}
 					},
-					"response": []
-				},
-				{
-					"name": "get-user-chat-history-PROD",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Dolphin D#-#{Oo\"|tC[fHDBpCjwhBfrY?O-56s64R|S,b8D-41eRLd8",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"user_id\": \"8130001838\", //all required\n  \"page\": 1,  // required\n  \"limit\": 2 // optional default: 20\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "https://primary-production-7383b.up.railway.app/webhook/get-user-chat-history",
-							"protocol": "https",
-							"host": [
-								"primary-production-7383b",
-								"up",
-								"railway",
-								"app"
-							],
-							"path": [
-								"webhook",
-								"get-user-chat-history"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "main-workflow-PROD",
 					"request": {
 						"auth": {
-							"type": "noauth"
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
 						},
 						"method": "POST",
 						"header": [
 							{
-								"key": "Authorization",
-								"value": "/3:ZS2VupG0A|2q20Y@6E{#*1PDpoqTVD5E6Vl7u:fO-XG4*_sms",
+								"key": "Content-Type",
+								"value": "application/json",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"user_id\": \"8130001838\",        // Maps to userId: \n  \"text\" : \"Total balance?\",\n  \"currency\" : \"BDT\",\n  \"username\": \"johndoe\"\n  //   \"image_base64\" : \"a string but you don't have to do anything.\" // optional and nullable\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
+							"raw": "{\n    \"text\": \"Got salary 100k, put into dps 5k and ate at kfc for 1755 taka. All from SCB bank\",\n    \"username\": \"Saif64\"\n}"
 						},
 						"url": {
-							"raw": "https://primary-production-7383b.up.railway.app/webhook/run-main-workflow",
-							"protocol": "https",
+							"raw": "{{base_url}}/api/finance-guru/chat",
 							"host": [
-								"primary-production-7383b",
-								"up",
-								"railway",
-								"app"
+								"{{base_url}}"
 							],
 							"path": [
-								"webhook",
-								"run-main-workflow"
+								"api",
+								"finance-guru",
+								"chat"
 							]
 						}
 					},
-					"response": [
-						{
-							"name": "main-workflow-PROD",
-							"originalRequest": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Authorization",
-										"value": "/3:ZS2VupG0A|2q20Y@6E{#*1PDpoqTVD5E6Vl7u:fO-XG4*_sms",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n  \"user_id\": \"8130001838\",        // Maps to userId: \n  \"text\" : \"What are my total expense?\",\n  \"currency\" : \"BDT\",\n  \"username\": \"johndoe\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "https://primary-production-7383b.up.railway.app/webhook/run-main-workflow",
-									"protocol": "https",
-									"host": [
-										"primary-production-7383b",
-										"up",
-										"railway",
-										"app"
-									],
-									"path": [
-										"webhook",
-										"run-main-workflow"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": null,
-							"header": [
-								{
-									"key": "Content-Length",
-									"value": "131"
-								},
-								{
-									"key": "Content-Security-Policy",
-									"value": "sandbox allow-downloads allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-presentation allow-scripts allow-top-navigation allow-top-navigation-by-user-activation allow-top-navigation-to-custom-protocols"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Date",
-									"value": "Thu, 20 Nov 2025 13:30:52 GMT"
-								},
-								{
-									"key": "Etag",
-									"value": "W/\"83-HdbAE/7oF4L6CGRw+bDHxd6gbjQ\""
-								},
-								{
-									"key": "Server",
-									"value": "railway-edge"
-								},
-								{
-									"key": "Vary",
-									"value": "Accept-Encoding"
-								},
-								{
-									"key": "X-Railway-Edge",
-									"value": "railway/asia-southeast1-eqsg3a"
-								},
-								{
-									"key": "X-Railway-Request-Id",
-									"value": "UpKw_7iYQii7AXw_0ubPiw"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"success\": true,\n    \"message\": \"Your total expense is **148,757.5 BDT**.\",\n    \"user_id\": \"8130001838\",\n    \"timestamp\": \"2025-11-20T13:30:52.507Z\"\n}"
+					"response": []
+				},
+				{
+					"name": "/dashboard",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {
+							"content-type": true
 						}
-					]
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{base_url}}/api/finance-guru/dashboard",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"finance-guru",
+								"dashboard"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/chat-history",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{base_url}}/api/finance-guru/chat-history?page=1&limit=20",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"finance-guru",
+								"chat-history"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}
@@ -591,6 +541,16 @@
 	"variable": [
 		{
 			"key": "railway-n8n-base",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "base_url",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "accessToken",
 			"value": "",
 			"type": "default"
 		}

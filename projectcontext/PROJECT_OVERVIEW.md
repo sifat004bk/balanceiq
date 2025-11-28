@@ -456,7 +456,8 @@ Detailed business, product, and technical documentation.
 - `backend.md` - Backend API documentation
 - `n8n.md` - n8n workflow integration
 - `qa.md` - Testing strategy and quality assurance
-- `MOCK_ENVIRONMENT_GUIDE.md` - Local development without backend
+- `MOCK_ENVIRONMENT_GUIDE.md` - 🎭 Local development without backend (mock mode)
+- `Business.postman_collection.json` - 📮 Complete API testing collection
 
 ### 🔍 Where to Find What
 
@@ -465,12 +466,13 @@ Detailed business, product, and technical documentation.
 - **"How is code organized?"** → `ARCHITECTURE.md`
 - **"How do I add a feature?"** → `DEVELOPMENT_GUIDE.md`
 - **"What APIs are available?"** → `API_INTEGRATION.md` + `implementation/API_IMPLEMENTATION_SUMMARY.md`
+- **"How to test APIs?"** → `project_summary/tech/Business.postman_collection.json` 📮
+- **"How to develop without backend?"** → `project_summary/tech/MOCK_ENVIRONMENT_GUIDE.md` 🎭
 - **"What's the current status?"** → `IMPLEMENTATION_STATUS.md` + `progress/progress.md`
 - **"What needs to be built?"** → `TASKS.md` + `ROADMAP.md`
 - **"How should UI look?"** → `design_docs/GEMINI_UI_DESIGN_SPECIFICATIONS.md`
 - **"Why UI not working with APIs?"** → `implementation/UI_LAYER_EVALUATION.md` 🔴
 - **"Business strategy for Bangladesh?"** → `project_summary/business/bangladesh_strategy/bangladesh_strategy_summary.md`
-- **"How to test locally?"** → `project_summary/tech/MOCK_ENVIRONMENT_GUIDE.md`
 - **"What are the features?"** → `project_summary/product/features.md`
 - **"Latest progress?"** → `progress/progress.md`
 
@@ -493,6 +495,8 @@ Detailed business, product, and technical documentation.
 2. `implementation/API_IMPLEMENTATION_SUMMARY.md` - Detailed endpoints
 3. `project_summary/tech/backend.md` - Backend architecture
 4. `project_summary/tech/n8n.md` - Workflow integration
+5. `project_summary/tech/Business.postman_collection.json` - 📮 API testing collection
+6. `project_summary/tech/MOCK_ENVIRONMENT_GUIDE.md` - 🎭 Mock development setup
 
 **For Product Managers:**
 1. `PROJECT_OVERVIEW.md` - Product summary
@@ -504,7 +508,8 @@ Detailed business, product, and technical documentation.
 **For QA/Testers:**
 1. `IMPLEMENTATION_STATUS.md` - What's implemented
 2. `project_summary/tech/qa.md` - Testing strategy
-3. `project_summary/tech/MOCK_ENVIRONMENT_GUIDE.md` - Local testing setup
+3. `project_summary/tech/MOCK_ENVIRONMENT_GUIDE.md` - 🎭 Local testing setup (offline mode)
+4. `project_summary/tech/Business.postman_collection.json` - 📮 API endpoint testing
 
 ---
 

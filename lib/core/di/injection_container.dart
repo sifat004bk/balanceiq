@@ -14,6 +14,7 @@ import 'package:uuid/uuid.dart';
 
 // Features - Auth
 import '../../features/auth/data/datasources/auth_local_datasource.dart';
+import '../../features/auth/data/datasources/auth_mock_datasource.dart';
 import '../../features/auth/data/datasources/auth_remote_datasource.dart';
 import '../../features/auth/data/repositories/auth_repository_impl.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
@@ -121,12 +122,24 @@ Future<void> init() async {
   );
 
   // Data sources
+  // Conditionally register mock or real auth datasource
   sl.registerLazySingleton<AuthRemoteDataSource>(
-    () => AuthRemoteDataSourceImpl(
-      googleSignIn: sl(),
-      dio: sl(),
-      sharedPreferences: sl(),
-    ),
+    () {
+      if (AppConstants.isMockMode) {
+        print('🎭 [DI] Registering MOCK AuthRemoteDataSource');
+        return AuthMockDataSource(
+          sharedPreferences: sl(),
+          uuid: sl(),
+        );
+      } else {
+        print('🌐 [DI] Registering REAL AuthRemoteDataSource');
+        return AuthRemoteDataSourceImpl(
+          googleSignIn: sl(),
+          dio: sl(),
+          sharedPreferences: sl(),
+        );
+      }
+    },
   );
 
   sl.registerLazySingleton<AuthLocalDataSource>(

@@ -91,11 +91,19 @@ class _HomePageState extends State<HomePage> {
                 physics: const AlwaysScrollableScrollPhysics(),
                 slivers: [
                   // --- Animated AppBar ---
-                  // TODO: Add onTaps
                   HomeAppbar(
                     summary: summary,
-                    onTapProfileIcon: () {},
-                    onTapNotificationIcon: () {},
+                    onTapProfileIcon: () {
+                      Navigator.pushNamed(context, '/profile');
+                    },
+                    onTapNotificationIcon: () {
+                      // TODO: Implement notifications
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Notifications coming soon'),
+                        ),
+                      );
+                    },
                     profileUrl: _profileUrl ?? '',
                   ),
 

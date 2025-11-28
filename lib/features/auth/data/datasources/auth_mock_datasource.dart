@@ -1,0 +1,454 @@
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
+import '../models/auth_request_models.dart';
+import '../models/user_model.dart';
+import 'auth_remote_datasource.dart';
+
+/// Mock authentication data source that simulates backend API behavior
+///
+/// This mock implementation:
+/// - Matches real API specs exactly
+/// - Simulates network delays (300-800ms)
+/// - Returns proper success/error responses
+/// - Validates input data like the real API
+/// - Stores user data in-memory for testing
+/// - Works completely offline
+class AuthMockDataSource implements AuthRemoteDataSource {
+  final SharedPreferences sharedPreferences;
+  final Uuid uuid;
+
+  // In-memory storage for mock users
+  static final Map<String, _MockUser> _users = {};
+  static final Map<String, String> _resetTokens = {}; // token -> email mapping
+
+  AuthMockDataSource({
+    required this.sharedPreferences,
+    required this.uuid,
+  }) {
+    _initializeMockUsers();
+  }
+
+  /// Initialize some test users for easy testing
+  void _initializeMockUsers() {
+    if (_users.isEmpty) {
+      // Test user 1: Regular user
+      _users['testuser'] = _MockUser(
+        id: 'user_001',
+        username: 'testuser',
+        password: 'password123',
+        fullName: 'Test User',
+        email: 'test@example.com',
+        photoUrl: null,
+        roles: ['user'],
+      );
+
+      // Test user 2: Admin user
+      _users['admin'] = _MockUser(
+        id: 'user_002',
+        username: 'admin',
+        password: 'admin123',
+        fullName: 'Admin User',
+        email: 'admin@balanceiq.com',
+        photoUrl: null,
+        roles: ['user', 'admin'],
+      );
+
+      // Test user 3: Demo user
+      _users['demo'] = _MockUser(
+        id: 'user_003',
+        username: 'demo',
+        password: 'demo123',
+        fullName: 'Demo Account',
+        email: 'demo@balanceiq.com',
+        photoUrl: 'https://i.pravatar.cc/150?u=demo',
+        roles: ['user'],
+      );
+    }
+  }
+
+  /// Simulate network delay
+  Future<void> _simulateDelay() async {
+    await Future.delayed(
+      Duration(milliseconds: 300 + (DateTime.now().millisecond % 500)),
+    );
+  }
+
+  @override
+  Future<AuthResponse> signup(SignupRequest request) async {
+    await _simulateDelay();
+
+    // Validate input
+    if (request.username.isEmpty || request.password.isEmpty) {
+      throw Exception('Username and password are required');
+    }
+
+    if (request.password.length < 6) {
+      throw Exception('Password must be at least 6 characters');
+    }
+
+    if (!request.email.contains('@')) {
+      throw Exception('Invalid email format');
+    }
+
+    // Check if user already exists
+    if (_users.containsKey(request.username)) {
+      throw Exception('User already exists');
+    }
+
+    // Check if email is already registered
+    for (var user in _users.values) {
+      if (user.email == request.email) {
+        throw Exception('Email already registered');
+      }
+    }
+
+    // Create new user
+    final newUser = _MockUser(
+      id: uuid.v4(),
+      username: request.username,
+      password: request.password,
+      fullName: request.fullName,
+      email: request.email,
+      photoUrl: null,
+      roles: ['user'],
+    );
+
+    _users[request.username] = newUser;
+
+    // Return success response (no auto-login, requires email verification)
+    return AuthResponse(
+      token: null,
+      user: null,
+      message: 'Account created successfully. Please check your email for verification.',
+      success: true,
+    );
+  }
+
+  @override
+  Future<AuthResponse> login(LoginRequest request) async {
+    await _simulateDelay();
+
+    // Validate input
+    if (request.username.isEmpty || request.password.isEmpty) {
+      throw Exception('Username and password are required');
+    }
+
+    // Check if user exists
+    if (!_users.containsKey(request.username)) {
+      throw Exception('User not found');
+    }
+
+    final user = _users[request.username]!;
+
+    // Check password
+    if (user.password != request.password) {
+      throw Exception('Invalid username or password');
+    }
+
+    // Generate mock JWT token
+    final token = _generateMockToken(user.id);
+
+    // Store token in SharedPreferences
+    await sharedPreferences.setString('auth_token', token);
+    await sharedPreferences.setString('user_id', user.id);
+    await sharedPreferences.setString('username', user.username);
+
+    // Return success response
+    return AuthResponse(
+      token: token,
+      user: UserInfo(
+        id: user.id,
+        username: user.username,
+        fullName: user.fullName,
+        email: user.email,
+        photoUrl: user.photoUrl,
+        roles: user.roles,
+      ),
+      message: 'Login successful',
+      success: true,
+    );
+  }
+
+  @override
+  Future<UserInfo> getProfile(String token) async {
+    await _simulateDelay();
+
+    // Validate token
+    if (token.isEmpty) {
+      throw Exception('Unauthorized. Please login again.');
+    }
+
+    // Extract user ID from token (in real implementation, would verify JWT)
+    final userId = _extractUserIdFromToken(token);
+
+    // Find user
+    final user = _users.values.firstWhere(
+      (u) => u.id == userId,
+      orElse: () => throw Exception('User not found'),
+    );
+
+    return UserInfo(
+      id: user.id,
+      username: user.username,
+      fullName: user.fullName,
+      email: user.email,
+      photoUrl: user.photoUrl,
+      roles: user.roles,
+    );
+  }
+
+  @override
+  Future<void> changePassword(
+    ChangePasswordRequest request,
+    String token,
+  ) async {
+    await _simulateDelay();
+
+    // Validate token
+    if (token.isEmpty) {
+      throw Exception('Unauthorized. Please login again.');
+    }
+
+    // Validate passwords
+    if (request.newPassword != request.confirmPassword) {
+      throw Exception('Passwords do not match');
+    }
+
+    if (request.newPassword.length < 6) {
+      throw Exception('Password must be at least 6 characters');
+    }
+
+    // Extract user ID from token
+    final userId = _extractUserIdFromToken(token);
+
+    // Find user
+    final username = _users.entries.firstWhere(
+      (entry) => entry.value.id == userId,
+      orElse: () => throw Exception('User not found'),
+    ).key;
+
+    final user = _users[username]!;
+
+    // Verify current password
+    if (user.password != request.currentPassword) {
+      throw Exception('Current password is incorrect');
+    }
+
+    // Update password
+    _users[username] = _MockUser(
+      id: user.id,
+      username: user.username,
+      password: request.newPassword,
+      fullName: user.fullName,
+      email: user.email,
+      photoUrl: user.photoUrl,
+      roles: user.roles,
+    );
+  }
+
+  @override
+  Future<void> forgotPassword(ForgotPasswordRequest request) async {
+    await _simulateDelay();
+
+    // Validate email
+    if (!request.email.contains('@')) {
+      throw Exception('Invalid email format');
+    }
+
+    // Check if email exists
+    final userExists = _users.values.any((user) => user.email == request.email);
+
+    if (!userExists) {
+      throw Exception('Email not found');
+    }
+
+    // Generate reset token
+    final resetToken = uuid.v4();
+    _resetTokens[resetToken] = request.email;
+
+    // In real implementation, would send email
+    // For mock, we'll just store the token
+    print('🔐 [MOCK] Password reset token: $resetToken');
+    print('📧 [MOCK] Reset link: /reset-password?token=$resetToken');
+  }
+
+  @override
+  Future<void> resetPassword(ResetPasswordRequest request) async {
+    await _simulateDelay();
+
+    // Validate passwords
+    if (request.newPassword != request.confirmPassword) {
+      throw Exception('Passwords do not match');
+    }
+
+    if (request.newPassword.length < 6) {
+      throw Exception('Password must be at least 6 characters');
+    }
+
+    // Validate token
+    if (!_resetTokens.containsKey(request.token)) {
+      throw Exception('Invalid or expired reset token');
+    }
+
+    final email = _resetTokens[request.token]!;
+
+    // Find user by email
+    final username = _users.entries.firstWhere(
+      (entry) => entry.value.email == email,
+      orElse: () => throw Exception('User not found'),
+    ).key;
+
+    final user = _users[username]!;
+
+    // Update password
+    _users[username] = _MockUser(
+      id: user.id,
+      username: user.username,
+      password: request.newPassword,
+      fullName: user.fullName,
+      email: user.email,
+      photoUrl: user.photoUrl,
+      roles: user.roles,
+    );
+
+    // Remove used token
+    _resetTokens.remove(request.token);
+  }
+
+  @override
+  Future<UserModel> signInWithGoogle() async {
+    await _simulateDelay();
+
+    // Mock Google Sign-In
+    final mockGoogleUser = UserModel(
+      id: uuid.v4(),
+      email: 'mockgoogle@gmail.com',
+      name: 'Mock Google User',
+      photoUrl: 'https://i.pravatar.cc/150?u=google',
+      authProvider: 'google',
+      createdAt: DateTime.now(),
+    );
+
+    // Store user in mock database
+    _users['mockgoogle'] = _MockUser(
+      id: mockGoogleUser.id,
+      username: 'mockgoogle',
+      password: '', // OAuth users don't have passwords
+      fullName: mockGoogleUser.name,
+      email: mockGoogleUser.email,
+      photoUrl: mockGoogleUser.photoUrl,
+      roles: ['user'],
+    );
+
+    return mockGoogleUser;
+  }
+
+  @override
+  Future<UserModel> signInWithApple() async {
+    await _simulateDelay();
+
+    // Mock Apple Sign-In
+    final mockAppleUser = UserModel(
+      id: uuid.v4(),
+      email: 'mockapple@privaterelay.appleid.com',
+      name: 'Mock Apple User',
+      photoUrl: null,
+      authProvider: 'apple',
+      createdAt: DateTime.now(),
+    );
+
+    // Store user in mock database
+    _users['mockapple'] = _MockUser(
+      id: mockAppleUser.id,
+      username: 'mockapple',
+      password: '', // OAuth users don't have passwords
+      fullName: mockAppleUser.name,
+      email: mockAppleUser.email,
+      photoUrl: mockAppleUser.photoUrl,
+      roles: ['user'],
+    );
+
+    return mockAppleUser;
+  }
+
+  @override
+  Future<void> signOut() async {
+    await _simulateDelay();
+
+    // Clear stored auth data
+    await sharedPreferences.remove('auth_token');
+    await sharedPreferences.remove('user_id');
+    await sharedPreferences.remove('username');
+  }
+
+  /// Generate a mock JWT token
+  String _generateMockToken(String userId) {
+    // In real implementation, this would be a proper JWT
+    // For mock, just create a base64-like string
+    final timestamp = DateTime.now().millisecondsSinceEpoch;
+    return 'mock_token_${userId}_$timestamp';
+  }
+
+  /// Extract user ID from mock token
+  String _extractUserIdFromToken(String token) {
+    // In real implementation, would decode and verify JWT
+    // For mock, just extract from our format
+    if (token.startsWith('mock_token_')) {
+      final parts = token.split('_');
+      if (parts.length >= 3) {
+        return parts[2];
+      }
+    }
+    throw Exception('Invalid token format');
+  }
+
+  /// Clear all mock data (useful for testing)
+  static void clearAllData() {
+    _users.clear();
+    _resetTokens.clear();
+  }
+
+  /// Get current stored users (for debugging)
+  /// Returns a map of username to mock user data
+  static Map<String, dynamic> getStoredUsers() {
+    return _users.map((key, value) => MapEntry(key, {
+      'id': value.id,
+      'username': value.username,
+      'email': value.email,
+      'fullName': value.fullName,
+      'photoUrl': value.photoUrl,
+      'roles': value.roles,
+    }));
+  }
+
+  /// Get reset tokens (for debugging)
+  static Map<String, String> getResetTokens() {
+    return Map.from(_resetTokens);
+  }
+}
+
+/// Internal class to represent a mock user in memory
+class _MockUser {
+  final String id;
+  final String username;
+  final String password;
+  final String fullName;
+  final String email;
+  final String? photoUrl;
+  final List<String> roles;
+
+  _MockUser({
+    required this.id,
+    required this.username,
+    required this.password,
+    required this.fullName,
+    required this.email,
+    this.photoUrl,
+    required this.roles,
+  });
+
+  @override
+  String toString() {
+    return 'MockUser(id: $id, username: $username, email: $email, fullName: $fullName)';
+  }
+}

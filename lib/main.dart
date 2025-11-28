@@ -16,6 +16,7 @@ import 'features/auth/presentation/pages/loading_page.dart';
 import 'features/auth/presentation/pages/new_login_page.dart';
 import 'features/auth/presentation/pages/new_onboarding_page.dart';
 import 'features/auth/presentation/pages/new_signup_page.dart';
+import 'features/auth/presentation/pages/profile_page.dart';
 import 'features/auth/presentation/pages/reset_password_page.dart';
 import 'features/auth/presentation/pages/verification_success_page.dart';
 import 'features/home/presentation/cubit/dashboard_cubit.dart';
@@ -80,6 +81,7 @@ class MyApp extends StatelessWidget {
               '/home': (context) => const HomePage(),
               '/forgot-password': (context) => const ForgotPasswordPage(),
               '/change-password': (context) => const ChangePasswordPage(),
+              '/profile': (context) => const ProfilePage(),
             },
             onGenerateRoute: (settings) {
               if (settings.name == '/email-verification') {

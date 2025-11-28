@@ -75,25 +75,28 @@ class _MessageBubbleState extends State<MessageBubble>
     final maxWidth = screenWidth * 0.75; // 75% of screen width (Gemini style)
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4), // Reduced vertical padding
       child: Row(
         mainAxisAlignment:
             widget.isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Bot avatar (only for AI messages) - REMOVED from here to align text with icon
-          // if (!widget.isUser) ...[
-          //   CircleAvatar(
-          //     radius: 16,
-          //     backgroundColor: GeminiColors.botAvatarBg,
-          //     child: const Icon(
-          //       Icons.auto_awesome, // Gemini sparkle icon
-          //       color: GeminiColors.botAvatarIcon,
-          //       size: 18,
-          //     ),
-          //   ),
-          //   const SizedBox(width: 12),
-          // ],
+          // Bot avatar (only for AI messages) - Restored for alignment
+          if (!widget.isUser) ...[
+            Padding(
+              padding: const EdgeInsets.only(top: 0), // Align with top of text
+              child: CircleAvatar(
+                radius: 14, // Smaller avatar
+                backgroundColor: Colors.transparent, // Transparent bg
+                child: Icon(
+                  Icons.auto_awesome, // Gemini sparkle icon
+                  color: widget.botColor, // Use bot specific color
+                  size: 20,
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+          ],
           // Message content
           Flexible(
             child: ConstrainedBox(
@@ -107,17 +110,18 @@ class _MessageBubbleState extends State<MessageBubble>
                   widget.isUser
                       ? _buildUserMessage(context)
                       : _buildAiMessage(context),
-                  // Timestamp
-                  Padding(
-                    padding: const EdgeInsets.only(top: 4),
-                    child: Text(
-                      _formatTimestamp(widget.message.timestamp),
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            fontSize: 11,
-                            color: GeminiColors.textSecondary(context),
-                          ),
+                  // Timestamp (User only, or bottom for AI?) - Keeping as is for now
+                  if (widget.isUser)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4, right: 4),
+                      child: Text(
+                        _formatTimestamp(widget.message.timestamp),
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              fontSize: 10,
+                              color: GeminiColors.textSecondary(context),
+                            ),
+                      ),
                     ),
-                  ),
                 ],
               ),
             ),
@@ -170,32 +174,32 @@ class _MessageBubbleState extends State<MessageBubble>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header: Avatar + Name
-          Row(
-            children: [
-              CircleAvatar(
-                radius: 16,
-                backgroundColor: GeminiColors.botAvatarBg,
-                child: const Icon(
-                  Icons.auto_awesome, // Gemini sparkle icon
-                  color: GeminiColors.botAvatarIcon,
-                  size: 18,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  'BalanceIQ', // App Name
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: GeminiColors.textSecondary(context),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
+          // Header: Avatar + Name - REMOVED (Moved avatar to outer row)
+          // Row(
+          //   children: [
+          //     CircleAvatar(
+          //       radius: 16,
+          //       backgroundColor: GeminiColors.botAvatarBg,
+          //       child: const Icon(
+          //         Icons.auto_awesome, // Gemini sparkle icon
+          //         color: GeminiColors.botAvatarIcon,
+          //         size: 18,
+          //       ),
+          //     ),
+          //     const SizedBox(width: 12),
+          //     Expanded(
+          //       child: Text(
+          //         'BalanceIQ', // App Name
+          //         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+          //               color: GeminiColors.textSecondary(context),
+          //               fontSize: 14,
+          //               fontWeight: FontWeight.w500,
+          //             ),
+          //       ),
+          //     ),
+          //   ],
+          // ),
+          // const SizedBox(height: 16),
           
           // Content
           if (widget.message.content.isNotEmpty)

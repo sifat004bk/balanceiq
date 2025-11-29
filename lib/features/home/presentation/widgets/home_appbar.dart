@@ -1,16 +1,18 @@
 import 'package:balance_iq/core/theme/app_theme.dart';
+import 'package:balance_iq/core/theme/theme_cubit.dart';
+import 'package:balance_iq/core/theme/theme_state.dart';
 import 'package:balance_iq/features/home/domain/entities/dashbaord_summary.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeAppbar extends StatelessWidget {
-  final VoidCallback onTapProfileIcon, onTapNotificationIcon;
+  final VoidCallback onTapProfileIcon;
   final String profileUrl;
 
   const HomeAppbar({
     super.key,
     required this.summary,
     required this.onTapProfileIcon,
-    required this.onTapNotificationIcon,
     required this.profileUrl,
   });
 
@@ -32,9 +34,8 @@ class HomeAppbar extends StatelessWidget {
               letterSpacing: 0.27,
             ),
       ),
-      // TODO: Add user profile picture and onpressed to settings
       leading: Padding(
-        padding: const EdgeInsets.only(left: 12), // little breathing room
+        padding: const EdgeInsets.only(left: 12),
         child: InkWell(
           onTap: onTapProfileIcon,
           borderRadius: BorderRadius.circular(50),
@@ -61,19 +62,30 @@ class HomeAppbar extends StatelessWidget {
         ),
       ),
       actions: [
-        Container(
-          height: 40,
-          width: 40,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Theme.of(context).colorScheme.surface,
-          ),
-          child: InkWell(
-            onTap: onTapNotificationIcon,
-            child: Icon(
-              Icons.notifications_outlined,
-            ),
-          ),
+        BlocBuilder<ThemeCubit, ThemeState>(
+          builder: (context, themeState) {
+            final isDark = themeState is ThemeLoaded &&
+                themeState.themeMode == ThemeMode.dark;
+
+            return Container(
+              height: 40,
+              width: 40,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Theme.of(context).colorScheme.surface,
+              ),
+              child: InkWell(
+                onTap: () {
+                  context.read<ThemeCubit>().toggleTheme();
+                },
+                borderRadius: BorderRadius.circular(50),
+                child: Icon(
+                  isDark ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
+                  size: 20,
+                ),
+              ),
+            );
+          },
         ),
         const SizedBox(width: 8),
       ],

@@ -96,14 +96,6 @@ class _HomePageState extends State<HomePage> {
                     onTapProfileIcon: () {
                       Navigator.pushNamed(context, '/profile');
                     },
-                    onTapNotificationIcon: () {
-                      // TODO: Implement notifications
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Notifications coming soon'),
-                        ),
-                      );
-                    },
                     profileUrl: _profileUrl ?? '',
                   ),
 

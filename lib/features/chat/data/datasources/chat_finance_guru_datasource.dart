@@ -1,5 +1,3 @@
-import 'dart:convert';
-import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/constants/app_constants.dart';
@@ -7,8 +5,10 @@ import '../models/chat_request_models.dart';
 import '../models/message_model.dart';
 import 'chat_remote_datasource.dart';
 
-/// Finance Guru API implementation using the new backend endpoints
-/// Endpoints: /api/finance-guru/chat, /api/finance-guru/dashboard, /api/finance-guru/chat-history
+/// Finance Guru API implementation based on Postman API Collection spec
+/// Endpoints:
+/// - POST /api/finance-guru/chat
+/// - GET /api/finance-guru/chat-history
 class ChatFinanceGuruDataSource implements ChatRemoteDataSource {
   final Dio dio;
   final SharedPreferences sharedPreferences;
@@ -32,35 +32,11 @@ class ChatFinanceGuruDataSource implements ChatRemoteDataSource {
           ? userEmail.split('@').first
           : userName.replaceAll(' ', '').toLowerCase();
 
-      // Prepare image base64 if provided
-      String? imageBase64;
-      if (imagePath != null && imagePath.isNotEmpty) {
-        final imageFile = File(imagePath);
-        if (await imageFile.exists()) {
-          final bytes = await imageFile.readAsBytes();
-          // Detect image type
-          final extension = imagePath.split('.').last.toLowerCase();
-          final mimeType = extension == 'png' ? 'image/png' : 'image/jpeg';
-          imageBase64 = 'data:$mimeType;base64,${base64Encode(bytes)}';
-        }
-      }
-
-      // Prepare audio base64 if provided
-      String? audioBase64;
-      if (audioPath != null && audioPath.isNotEmpty) {
-        final audioFile = File(audioPath);
-        if (await audioFile.exists()) {
-          final bytes = await audioFile.readAsBytes();
-          audioBase64 = 'data:audio/mp3;base64,${base64Encode(bytes)}';
-        }
-      }
-
-      // Create request using the new ChatRequest model
+      // Create request matching API spec: {"text": "...", "username": "..."}
+      // Note: API spec does not support image_base64 or audio_base64
       final request = ChatRequest(
         text: content,
         username: username,
-        imageBase64: imageBase64,
-        audioBase64: audioBase64,
       );
 
       // Get auth token if available
@@ -86,12 +62,10 @@ class ChatFinanceGuruDataSource implements ChatRemoteDataSource {
 
         // Create a message model from the bot's response
         final botMessage = MessageModel(
-          id: chatResponse.id ?? DateTime.now().millisecondsSinceEpoch.toString(),
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
           botId: botId,
           sender: AppConstants.senderBot,
           content: chatResponse.message,
-          imageUrl: chatResponse.imageUrl,
-          audioUrl: chatResponse.audioUrl,
           timestamp: DateTime.now(),
           isSending: false,
           hasError: false,

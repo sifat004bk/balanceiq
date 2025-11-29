@@ -1,64 +1,39 @@
 /// Request and response models for Finance Guru Chat API endpoints
+/// Based on Postman API Collection spec
 
 /// Request model for POST /api/finance-guru/chat
+/// Spec: {"text": "...", "username": "..."}
 class ChatRequest {
   final String text;
   final String username;
-  final String? imageBase64;
-  final String? audioBase64;
 
   ChatRequest({
     required this.text,
     required this.username,
-    this.imageBase64,
-    this.audioBase64,
   });
 
   Map<String, dynamic> toJson() {
-    final data = {
+    return {
       'text': text,
       'username': username,
     };
-
-    if (imageBase64 != null && imageBase64!.isNotEmpty) {
-      data['image_base64'] = imageBase64!;
-    }
-
-    if (audioBase64 != null && audioBase64!.isNotEmpty) {
-      data['audio_base64'] = audioBase64!;
-    }
-
-    return data;
   }
 
-  /// Create request from user data for finance-guru API
-  factory ChatRequest.fromUserData({
-    required String message,
-    required String username,
-    String? imageBase64,
-    String? audioBase64,
-  }) {
+  factory ChatRequest.fromJson(Map<String, dynamic> json) {
     return ChatRequest(
-      text: message,
-      username: username,
-      imageBase64: imageBase64,
-      audioBase64: audioBase64,
+      text: json['text'] as String,
+      username: json['username'] as String,
     );
   }
 }
 
 /// Response model for POST /api/finance-guru/chat
+/// The API returns the bot's response message
 class ChatResponse {
   final String message;
-  final String? id;
-  final String? imageUrl;
-  final String? audioUrl;
 
   ChatResponse({
     required this.message,
-    this.id,
-    this.imageUrl,
-    this.audioUrl,
   });
 
   factory ChatResponse.fromJson(Map<String, dynamic> json) {
@@ -66,23 +41,18 @@ class ChatResponse {
       message: json['message'] as String? ??
                json['response'] as String? ??
                '',
-      id: json['id'] as String?,
-      imageUrl: json['image_url'] as String?,
-      audioUrl: json['audio_url'] as String?,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'message': message,
-      if (id != null) 'id': id,
-      if (imageUrl != null) 'image_url': imageUrl,
-      if (audioUrl != null) 'audio_url': audioUrl,
     };
   }
 }
 
-/// Request model for GET /api/finance-guru/chat-history
+/// Query parameters for GET /api/finance-guru/chat-history
+/// Spec: ?page=1&limit=20
 class ChatHistoryQueryParams {
   final int page;
   final int limit;
@@ -92,7 +62,7 @@ class ChatHistoryQueryParams {
     this.limit = 20,
   });
 
-  Map<String, dynamic> toQueryParams() {
+  Map<String, String> toQueryParams() {
     return {
       'page': page.toString(),
       'limit': limit.toString(),

@@ -4,8 +4,10 @@ import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dashboard_remote_datasource.dart';
 
-/// Finance Guru Dashboard API implementation using the new backend endpoint
+/// Finance Guru Dashboard API implementation based on Postman API Collection spec
 /// Endpoint: GET /api/finance-guru/dashboard
+/// Auth: Bearer token (from SharedPreferences)
+/// No request parameters needed
 class DashboardFinanceGuruDataSource implements DashboardRemoteDataSource {
   final Dio dio;
   final SharedPreferences sharedPreferences;
@@ -13,13 +15,7 @@ class DashboardFinanceGuruDataSource implements DashboardRemoteDataSource {
   DashboardFinanceGuruDataSource(this.dio, this.sharedPreferences);
 
   @override
-  Future<DashboardSummaryModel> getDashboardSummary({
-    required String userId,
-    required String botId,
-    required String firstName,
-    required String lastName,
-    required String username,
-  }) async {
+  Future<DashboardSummaryModel> getDashboardSummary() async {
     try {
       // Get auth token if available
       final token = sharedPreferences.getString('auth_token');

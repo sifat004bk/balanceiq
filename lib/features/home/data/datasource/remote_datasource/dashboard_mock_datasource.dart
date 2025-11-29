@@ -12,22 +12,16 @@ class DashboardMockDataSource implements DashboardRemoteDataSource {
   }
 
   @override
-  Future<DashboardSummaryModel> getDashboardSummary({
-    required String userId,
-    required String botId,
-    required String firstName,
-    required String lastName,
-    required String username,
-  }) async {
-    print('🏠 [MockDashboard] Fetching dashboard for user: $userId, bot: $botId');
+  Future<DashboardSummaryModel> getDashboardSummary() async {
+    print('🏠 [MockDashboard] Fetching dashboard data');
 
     // Simulate network delay
     await _simulateNetworkDelay();
 
-    // Get mock dashboard data
+    // Get mock dashboard data (no parameters needed, uses default mock data)
     final mockData = MockData.getMockDashboardSummary(
-      userId: userId,
-      botId: botId,
+      userId: 'mock_user',
+      botId: 'balance_tracker',
     );
 
     print('✅ [MockDashboard] Mock dashboard data generated');

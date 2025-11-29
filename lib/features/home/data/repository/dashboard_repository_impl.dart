@@ -17,37 +17,16 @@ class DashboardRepositoryImpl implements DashboardRepository {
   @override
   Future<Either<Failure, DashboardSummary>> getDashboardSummary() async {
     try {
-      // Get user from auth cache
+      // Get user from auth cache to verify logged in state
       final user = await authLocalDataSource.getCachedUser();
 
       if (user == null) {
         return const Left(AuthFailure('User not logged in'));
       }
 
-      // Validate user ID
-      if (user.id.isEmpty) {
-        return const Left(AuthFailure('Invalid user ID'));
-      }
-
-      // Split name into first and last name with type safety
-      final String fullName = user.name;
-      final List<String> nameParts = fullName.split(' ');
-      final String firstName = nameParts.isNotEmpty ? nameParts[0] : '';
-      final String lastName =
-          nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '';
-
-      // Get bot ID from environment (consider making this configurable)
-      const String botId = 'balance_iq';
-
       // Fetch dashboard data
-      final DashboardSummary dashboard =
-          await remoteDataSource.getDashboardSummary(
-        userId: "8130001838", //TODO: Change this
-        botId: botId,
-        firstName: firstName,
-        lastName: lastName,
-        username: user.email,
-      );
+      // API uses Bearer token from SharedPreferences, no parameters needed
+      final DashboardSummary dashboard = await remoteDataSource.getDashboardSummary();
 
       return Right(dashboard);
     } on FormatException catch (e) {

@@ -99,21 +99,21 @@ class AuthCubit extends Cubit<AuthState> {
 
     result.fold(
       (failure) => emit(AuthError(failure.message)),
-      (authResponse) {
-        if (authResponse.success && authResponse.user != null) {
-          // Convert UserInfo to User entity
+      (loginResponse) {
+        if (loginResponse.success && loginResponse.data != null) {
+          // Convert LoginData to User entity
           final user = User(
-            id: authResponse.user!.id,
-            email: authResponse.user!.email,
-            name: authResponse.user!.fullName,
-            photoUrl: authResponse.user!.photoUrl,
+            id: loginResponse.data!.userId.toString(),
+            email: loginResponse.data!.email,
+            name: loginResponse.data!.username,
+            photoUrl: null,
             authProvider: 'email',
             createdAt: DateTime.now(),
           );
 
           emit(AuthAuthenticated(user));
         } else {
-          emit(AuthError(authResponse.message ?? 'Login failed'));
+          emit(AuthError(loginResponse.message));
         }
       },
     );
@@ -137,25 +137,13 @@ class AuthCubit extends Cubit<AuthState> {
 
     result.fold(
       (failure) => emit(AuthError(failure.message)),
-      (authResponse) {
-        if (authResponse.success) {
-          // Auto-login after signup if user data is returned
-          if (authResponse.user != null) {
-            final user = User(
-              id: authResponse.user!.id,
-              email: authResponse.user!.email,
-              name: authResponse.user!.fullName,
-              photoUrl: authResponse.user!.photoUrl,
-              authProvider: 'email',
-              createdAt: DateTime.now(),
-            );
-            emit(AuthAuthenticated(user));
-          } else {
-            // Show success, may require email verification
-            emit(SignupSuccess(email));
-          }
+      (signupResponse) {
+        if (signupResponse.success) {
+          // Signup successful - typically requires email verification
+          // Don't auto-login, show success message instead
+          emit(SignupSuccess(email));
         } else {
-          emit(AuthError(authResponse.message ?? 'Signup failed'));
+          emit(AuthError(signupResponse.message));
         }
       },
     );
@@ -172,7 +160,7 @@ class AuthCubit extends Cubit<AuthState> {
       (failure) => emit(AuthError(failure.message)),
       (userInfo) {
         final user = User(
-          id: userInfo.id,
+          id: userInfo.id.toString(),
           email: userInfo.email,
           name: userInfo.fullName,
           photoUrl: userInfo.photoUrl,

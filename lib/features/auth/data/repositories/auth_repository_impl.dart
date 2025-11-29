@@ -69,7 +69,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, AuthResponse>> signup({
+  Future<Either<Failure, SignupResponse>> signup({
     required String username,
     required String password,
     required String fullName,
@@ -90,7 +90,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, AuthResponse>> login({
+  Future<Either<Failure, LoginResponse>> login({
     required String username,
     required String password,
   }) async {

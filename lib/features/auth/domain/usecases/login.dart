@@ -8,7 +8,7 @@ class Login {
 
   Login(this.repository);
 
-  Future<Either<Failure, AuthResponse>> call({
+  Future<Either<Failure, LoginResponse>> call({
     required String username,
     required String password,
   }) async {

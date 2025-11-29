@@ -28,25 +28,76 @@ class ChatRequest {
 }
 
 /// Response model for POST /api/finance-guru/chat
-/// The API returns the bot's response message
+/// Actual API response includes token usage and action type
 class ChatResponse {
+  final bool success;
   final String message;
+  final int userId;
+  final String timestamp;
+  final TokenUsage? tokenUsage;
+  final String? actionType;
 
   ChatResponse({
+    required this.success,
     required this.message,
+    required this.userId,
+    required this.timestamp,
+    this.tokenUsage,
+    this.actionType,
   });
 
   factory ChatResponse.fromJson(Map<String, dynamic> json) {
     return ChatResponse(
+      success: json['success'] as bool? ?? true,
       message: json['message'] as String? ??
                json['response'] as String? ??
                '',
+      userId: json['userId'] as int? ?? 0,
+      timestamp: json['timestamp'] as String? ?? '',
+      tokenUsage: json['tokenUsage'] != null
+          ? TokenUsage.fromJson(json['tokenUsage'] as Map<String, dynamic>)
+          : null,
+      actionType: json['actionType'] as String?,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
+      'success': success,
       'message': message,
+      'userId': userId,
+      'timestamp': timestamp,
+      if (tokenUsage != null) 'tokenUsage': tokenUsage!.toJson(),
+      if (actionType != null) 'actionType': actionType,
+    };
+  }
+}
+
+/// Token usage statistics from LLM
+class TokenUsage {
+  final int promptTokens;
+  final int completionTokens;
+  final int totalTokens;
+
+  TokenUsage({
+    required this.promptTokens,
+    required this.completionTokens,
+    required this.totalTokens,
+  });
+
+  factory TokenUsage.fromJson(Map<String, dynamic> json) {
+    return TokenUsage(
+      promptTokens: json['promptTokens'] as int? ?? 0,
+      completionTokens: json['completionTokens'] as int? ?? 0,
+      totalTokens: json['totalTokens'] as int? ?? 0,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'promptTokens': promptTokens,
+      'completionTokens': completionTokens,
+      'totalTokens': totalTokens,
     };
   }
 }
@@ -71,89 +122,109 @@ class ChatHistoryQueryParams {
 }
 
 /// Response model for GET /api/finance-guru/chat-history
+/// Actual API response structure
 class ChatHistoryResponse {
-  final List<ChatHistoryItem> messages;
-  final int? page;
-  final int? limit;
-  final int? total;
-  final bool? hasMore;
+  final int userId;
+  final List<Conversation> conversations;
+  final Pagination pagination;
 
   ChatHistoryResponse({
-    required this.messages,
-    this.page,
-    this.limit,
-    this.total,
-    this.hasMore,
+    required this.userId,
+    required this.conversations,
+    required this.pagination,
   });
 
   factory ChatHistoryResponse.fromJson(Map<String, dynamic> json) {
-    final messagesList = json['messages'] as List<dynamic>? ?? [];
+    final conversationsList = json['conversations'] as List<dynamic>? ?? [];
 
     return ChatHistoryResponse(
-      messages: messagesList
-          .map((item) => ChatHistoryItem.fromJson(item as Map<String, dynamic>))
+      userId: json['userId'] as int? ?? 0,
+      conversations: conversationsList
+          .map((item) => Conversation.fromJson(item as Map<String, dynamic>))
           .toList(),
-      page: json['page'] as int?,
-      limit: json['limit'] as int?,
-      total: json['total'] as int?,
-      hasMore: json['hasMore'] as bool? ?? json['has_more'] as bool?,
+      pagination: json['pagination'] != null
+          ? Pagination.fromJson(json['pagination'] as Map<String, dynamic>)
+          : Pagination(
+              currentPage: 1,
+              limit: 10,
+              returned: 0,
+              hasNext: false,
+              nextPage: null,
+            ),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'messages': messages.map((m) => m.toJson()).toList(),
-      if (page != null) 'page': page,
-      if (limit != null) 'limit': limit,
-      if (total != null) 'total': total,
-      if (hasMore != null) 'hasMore': hasMore,
+      'userId': userId,
+      'conversations': conversations.map((c) => c.toJson()).toList(),
+      'pagination': pagination.toJson(),
     };
   }
 }
 
-/// Individual chat history item
-class ChatHistoryItem {
-  final String id;
-  final String userId;
-  final String message;
-  final String? response;
-  final String? imageBase64;
-  final String? audioBase64;
-  final DateTime timestamp;
+/// Individual conversation item
+class Conversation {
+  final String userMessage;
+  final String aiResponse;
+  final String createdAt;
 
-  ChatHistoryItem({
-    required this.id,
-    required this.userId,
-    required this.message,
-    this.response,
-    this.imageBase64,
-    this.audioBase64,
-    required this.timestamp,
+  Conversation({
+    required this.userMessage,
+    required this.aiResponse,
+    required this.createdAt,
   });
 
-  factory ChatHistoryItem.fromJson(Map<String, dynamic> json) {
-    return ChatHistoryItem(
-      id: json['id']?.toString() ?? '',
-      userId: json['user_id']?.toString() ?? json['userId']?.toString() ?? '',
-      message: json['message'] as String? ?? '',
-      response: json['response'] as String?,
-      imageBase64: json['image_base64'] as String? ?? json['imageBase64'] as String?,
-      audioBase64: json['audio_base64'] as String? ?? json['audioBase64'] as String?,
-      timestamp: json['timestamp'] != null
-          ? DateTime.parse(json['timestamp'])
-          : DateTime.now(),
+  factory Conversation.fromJson(Map<String, dynamic> json) {
+    return Conversation(
+      userMessage: json['userMessage'] as String? ?? '',
+      aiResponse: json['aiResponse'] as String? ?? '',
+      createdAt: json['createdAt'] as String? ?? '',
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
-      'user_id': userId,
-      'message': message,
-      if (response != null) 'response': response,
-      if (imageBase64 != null) 'image_base64': imageBase64,
-      if (audioBase64 != null) 'audio_base64': audioBase64,
-      'timestamp': timestamp.toIso8601String(),
+      'userMessage': userMessage,
+      'aiResponse': aiResponse,
+      'createdAt': createdAt,
+    };
+  }
+}
+
+/// Pagination metadata
+class Pagination {
+  final int currentPage;
+  final int limit;
+  final int returned;
+  final bool hasNext;
+  final int? nextPage;
+
+  Pagination({
+    required this.currentPage,
+    required this.limit,
+    required this.returned,
+    required this.hasNext,
+    this.nextPage,
+  });
+
+  factory Pagination.fromJson(Map<String, dynamic> json) {
+    return Pagination(
+      currentPage: json['currentPage'] as int? ?? 1,
+      limit: json['limit'] as int? ?? 10,
+      returned: json['returned'] as int? ?? 0,
+      hasNext: json['hasNext'] as bool? ?? false,
+      nextPage: json['nextPage'] as int?,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'currentPage': currentPage,
+      'limit': limit,
+      'returned': returned,
+      'hasNext': hasNext,
+      if (nextPage != null) 'nextPage': nextPage,
     };
   }
 }

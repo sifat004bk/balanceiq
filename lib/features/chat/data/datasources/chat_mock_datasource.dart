@@ -57,13 +57,17 @@ class ChatMockDataSource implements ChatRemoteDataSource {
     // Simulate network delay
     await _simulateNetworkDelay();
 
-    // Return empty chat history for mock
+    // Return empty chat history for mock matching actual API structure
     return ChatHistoryResponse(
-      messages: [],
-      total: 0,
-      page: page,
-      limit: limit ?? 20,
-      hasMore: false,
+      userId: int.tryParse(userId) ?? 0,
+      conversations: [],
+      pagination: Pagination(
+        currentPage: page,
+        limit: limit ?? 20,
+        returned: 0,
+        hasNext: false,
+        nextPage: null,
+      ),
     );
   }
 }

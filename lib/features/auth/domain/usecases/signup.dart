@@ -8,7 +8,7 @@ class Signup {
 
   Signup(this.repository);
 
-  Future<Either<Failure, AuthResponse>> call({
+  Future<Either<Failure, SignupResponse>> call({
     required String username,
     required String password,
     required String fullName,

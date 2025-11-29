@@ -90,57 +90,202 @@ class ResetPasswordRequest {
   }
 }
 
-class AuthResponse {
-  final String? token;
-  final UserInfo? user;
-  final String? message;
+/// Signup API Response
+/// POST /api/auth/signup
+class SignupResponse {
   final bool success;
+  final String message;
+  final SignupData? data;
+  final String? error;
+  final int timestamp;
 
-  AuthResponse({
-    this.token,
-    this.user,
-    this.message,
-    this.success = true,
+  SignupResponse({
+    required this.success,
+    required this.message,
+    this.data,
+    this.error,
+    required this.timestamp,
   });
 
-  factory AuthResponse.fromJson(Map<String, dynamic> json) {
-    return AuthResponse(
-      token: json['token'] as String?,
-      user: json['user'] != null ? UserInfo.fromJson(json['user']) : null,
-      message: json['message'] as String?,
-      success: json['success'] as bool? ?? true,
+  factory SignupResponse.fromJson(Map<String, dynamic> json) {
+    return SignupResponse(
+      success: json['success'] as bool? ?? false,
+      message: json['message'] as String? ?? '',
+      data: json['data'] != null
+          ? SignupData.fromJson(json['data'] as Map<String, dynamic>)
+          : null,
+      error: json['error'] as String?,
+      timestamp: json['timestamp'] as int? ?? 0,
     );
   }
 }
 
-class UserInfo {
-  final String id;
+class SignupData {
+  final int id;
+  final String email;
   final String username;
   final String fullName;
+  final String userRole;
+  final String? subscriptionPlanName;
+  final String? subscriptionStatus;
+  final String? subscriptionEndDate;
+  final bool isActive;
+  final bool isEmailVerified;
+  final String createdAt;
+
+  SignupData({
+    required this.id,
+    required this.email,
+    required this.username,
+    required this.fullName,
+    required this.userRole,
+    this.subscriptionPlanName,
+    this.subscriptionStatus,
+    this.subscriptionEndDate,
+    required this.isActive,
+    required this.isEmailVerified,
+    required this.createdAt,
+  });
+
+  factory SignupData.fromJson(Map<String, dynamic> json) {
+    return SignupData(
+      id: json['id'] as int? ?? 0,
+      email: json['email'] as String? ?? '',
+      username: json['username'] as String? ?? '',
+      fullName: json['fullName'] as String? ?? '',
+      userRole: json['userRole'] as String? ?? 'USER',
+      subscriptionPlanName: json['subscriptionPlanName'] as String?,
+      subscriptionStatus: json['subscriptionStatus'] as String?,
+      subscriptionEndDate: json['subscriptionEndDate'] as String?,
+      isActive: json['isActive'] as bool? ?? true,
+      isEmailVerified: json['isEmailVerified'] as bool? ?? false,
+      createdAt: json['createdAt'] as String? ?? '',
+    );
+  }
+}
+
+/// Login API Response
+/// POST /api/auth/login
+class LoginResponse {
+  final bool success;
+  final String message;
+  final LoginData? data;
+  final String? error;
+  final int timestamp;
+
+  LoginResponse({
+    required this.success,
+    required this.message,
+    this.data,
+    this.error,
+    required this.timestamp,
+  });
+
+  factory LoginResponse.fromJson(Map<String, dynamic> json) {
+    return LoginResponse(
+      success: json['success'] as bool? ?? false,
+      message: json['message'] as String? ?? '',
+      data: json['data'] != null
+          ? LoginData.fromJson(json['data'] as Map<String, dynamic>)
+          : null,
+      error: json['error'] as String?,
+      timestamp: json['timestamp'] as int? ?? 0,
+    );
+  }
+}
+
+class LoginData {
+  final String token;
+  final int userId;
+  final String username;
   final String email;
+  final String role;
+  final bool isEmailVerified;
+
+  LoginData({
+    required this.token,
+    required this.userId,
+    required this.username,
+    required this.email,
+    required this.role,
+    required this.isEmailVerified,
+  });
+
+  factory LoginData.fromJson(Map<String, dynamic> json) {
+    return LoginData(
+      token: json['token'] as String? ?? '',
+      userId: json['userId'] as int? ?? 0,
+      username: json['username'] as String? ?? '',
+      email: json['email'] as String? ?? '',
+      role: json['role'] as String? ?? 'USER',
+      isEmailVerified: json['isEmailVerified'] as bool? ?? false,
+    );
+  }
+}
+
+/// Generic API Response for simple success/error messages
+/// Used by: forgot-password, reset-password, change-password
+class ApiResponse {
+  final bool success;
+  final String message;
+  final dynamic data;
+  final String? error;
+  final int timestamp;
+
+  ApiResponse({
+    required this.success,
+    required this.message,
+    this.data,
+    this.error,
+    required this.timestamp,
+  });
+
+  factory ApiResponse.fromJson(Map<String, dynamic> json) {
+    return ApiResponse(
+      success: json['success'] as bool? ?? false,
+      message: json['message'] as String? ?? '',
+      data: json['data'],
+      error: json['error'] as String?,
+      timestamp: json['timestamp'] as int? ?? 0,
+    );
+  }
+}
+
+/// User profile information
+/// GET /api/auth/me
+class UserInfo {
+  final int id;
+  final String username;
+  final String email;
+  final String fullName;
   final String? photoUrl;
   final List<String> roles;
 
   UserInfo({
     required this.id,
     required this.username,
-    required this.fullName,
     required this.email,
+    required this.fullName,
     this.photoUrl,
-    this.roles = const [],
+    required this.roles,
   });
 
   factory UserInfo.fromJson(Map<String, dynamic> json) {
+    // Handle both direct user object and nested data structure
+    final Map<String, dynamic> userData = json.containsKey('data')
+        ? json['data'] as Map<String, dynamic>
+        : json;
+
     return UserInfo(
-      id: json['id']?.toString() ?? '',
-      username: json['username'] as String? ?? '',
-      fullName: json['fullName'] as String? ?? '',
-      email: json['email'] as String? ?? '',
-      photoUrl: json['photoUrl'] as String?,
-      roles: (json['roles'] as List<dynamic>?)
-              ?.map((role) => role.toString())
+      id: userData['id'] as int? ?? userData['userId'] as int? ?? 0,
+      username: userData['username'] as String? ?? '',
+      email: userData['email'] as String? ?? '',
+      fullName: userData['fullName'] as String? ?? '',
+      photoUrl: userData['photoUrl'] as String?,
+      roles: (userData['roles'] as List<dynamic>?)
+              ?.map((e) => e.toString())
               .toList() ??
-          [],
+          [userData['role'] as String? ?? 'USER'],
     );
   }
 
@@ -148,9 +293,9 @@ class UserInfo {
     return {
       'id': id,
       'username': username,
-      'fullName': fullName,
       'email': email,
-      'photoUrl': photoUrl,
+      'fullName': fullName,
+      if (photoUrl != null) 'photoUrl': photoUrl,
       'roles': roles,
     };
   }

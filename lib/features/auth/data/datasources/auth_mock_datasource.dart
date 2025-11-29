@@ -74,7 +74,7 @@ class AuthMockDataSource implements AuthRemoteDataSource {
   }
 
   @override
-  Future<AuthResponse> signup(SignupRequest request) async {
+  Future<SignupResponse> signup(SignupRequest request) async {
     await _simulateDelay();
 
     // Validate input
@@ -103,8 +103,9 @@ class AuthMockDataSource implements AuthRemoteDataSource {
     }
 
     // Create new user
+    final userId = DateTime.now().millisecondsSinceEpoch % 10000;
     final newUser = _MockUser(
-      id: uuid.v4(),
+      id: userId.toString(),
       username: request.username,
       password: request.password,
       fullName: request.fullName,
@@ -115,17 +116,26 @@ class AuthMockDataSource implements AuthRemoteDataSource {
 
     _users[request.username] = newUser;
 
-    // Return success response (no auto-login, requires email verification)
-    return AuthResponse(
-      token: null,
-      user: null,
-      message: 'Account created successfully. Please check your email for verification.',
+    // Return success response matching actual API
+    return SignupResponse(
       success: true,
+      message: 'User registered successfully. Please verify your email to activate your account.',
+      data: SignupData(
+        id: userId,
+        username: request.username,
+        email: request.email,
+        fullName: request.fullName,
+        userRole: 'USER',
+        isEmailVerified: false,
+        createdAt: DateTime.now().toIso8601String(),
+        isActive: true,
+      ),
+      timestamp: DateTime.now().millisecondsSinceEpoch,
     );
   }
 
   @override
-  Future<AuthResponse> login(LoginRequest request) async {
+  Future<LoginResponse> login(LoginRequest request) async {
     await _simulateDelay();
 
     // Validate input
@@ -153,19 +163,19 @@ class AuthMockDataSource implements AuthRemoteDataSource {
     await sharedPreferences.setString('user_id', user.id);
     await sharedPreferences.setString('username', user.username);
 
-    // Return success response
-    return AuthResponse(
-      token: token,
-      user: UserInfo(
-        id: user.id,
-        username: user.username,
-        fullName: user.fullName,
-        email: user.email,
-        photoUrl: user.photoUrl,
-        roles: user.roles,
-      ),
-      message: 'Login successful',
+    // Return success response matching actual API
+    return LoginResponse(
       success: true,
+      message: 'Login successful.',
+      data: LoginData(
+        token: token,
+        userId: int.tryParse(user.id) ?? 0,
+        username: user.username,
+        email: user.email,
+        role: user.roles.contains('admin') ? 'ADMIN' : 'USER',
+        isEmailVerified: true,
+      ),
+      timestamp: DateTime.now().millisecondsSinceEpoch,
     );
   }
 
@@ -188,7 +198,7 @@ class AuthMockDataSource implements AuthRemoteDataSource {
     );
 
     return UserInfo(
-      id: user.id,
+      id: int.tryParse(user.id) ?? 0,
       username: user.username,
       fullName: user.fullName,
       email: user.email,

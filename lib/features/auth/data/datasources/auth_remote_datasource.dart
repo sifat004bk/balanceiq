@@ -13,8 +13,8 @@ abstract class AuthRemoteDataSource {
   Future<void> signOut();
 
   // Backend API Methods
-  Future<AuthResponse> signup(SignupRequest request);
-  Future<AuthResponse> login(LoginRequest request);
+  Future<SignupResponse> signup(SignupRequest request);
+  Future<LoginResponse> login(LoginRequest request);
   Future<UserInfo> getProfile(String token);
   Future<void> changePassword(ChangePasswordRequest request, String token);
   Future<void> forgotPassword(ForgotPasswordRequest request);
@@ -90,7 +90,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<AuthResponse> signup(SignupRequest request) async {
+  Future<SignupResponse> signup(SignupRequest request) async {
     try {
       final response = await dio.post(
         '${AppConstants.backendBaseUrl}/api/auth/signup',
@@ -103,7 +103,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        return AuthResponse.fromJson(response.data);
+        return SignupResponse.fromJson(response.data);
       } else {
         throw Exception('Signup failed: ${response.statusCode}');
       }
@@ -122,7 +122,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<AuthResponse> login(LoginRequest request) async {
+  Future<LoginResponse> login(LoginRequest request) async {
     try {
       final response = await dio.post(
         '${AppConstants.backendBaseUrl}/api/auth/login',
@@ -135,14 +135,14 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
 
       if (response.statusCode == 200) {
-        final authResponse = AuthResponse.fromJson(response.data);
+        final loginResponse = LoginResponse.fromJson(response.data);
 
         // Store the token in SharedPreferences
-        if (authResponse.token != null) {
-          await sharedPreferences.setString('auth_token', authResponse.token!);
+        if (loginResponse.data?.token != null) {
+          await sharedPreferences.setString('auth_token', loginResponse.data!.token);
         }
 
-        return authResponse;
+        return loginResponse;
       } else {
         throw Exception('Login failed: ${response.statusCode}');
       }

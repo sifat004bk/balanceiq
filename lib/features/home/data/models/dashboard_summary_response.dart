@@ -26,97 +26,129 @@ class DashboardSummaryModel extends DashboardSummary {
 
   factory DashboardSummaryModel.fromJson(Map<String, dynamic> json) {
     try {
-      // Parse spending trend with strict type checking
+      // API returns camelCase fields, not snake_case
+      // Parse dailySpendingTrend array
       final List<SpendingTrendPoint> spendingTrend = [];
-      final dynamic spendingTrendData = json['spending_trend'];
+      final dynamic spendingTrendData = json['dailySpendingTrend'];
 
-      if (spendingTrendData != null) {
-        if (spendingTrendData is! List) {
-          throw FormatException('spending_trend must be a List');
-        }
-
+      if (spendingTrendData != null && spendingTrendData is List) {
         for (final dynamic point in spendingTrendData) {
-          if (point is! Map<String, dynamic>) {
-            throw FormatException(
-                'spending_trend item must be a Map<String, dynamic>');
+          if (point is Map<String, dynamic>) {
+            spendingTrend.add(SpendingTrendPoint(
+              day: _parseIntNullable(point['day']) ?? 0,
+              amount: _parseDoubleNullable(point['amount']) ?? 0.0,
+            ));
           }
-
-          spendingTrend.add(SpendingTrendPoint(
-            day: _parseInt(point['day'], 'day'),
-            amount: _parseDouble(point['amount'], 'amount'),
-          ));
         }
       }
 
-      // Parse categories map with strict type checking
+      // Parse categoryBreakdown array into map for backward compatibility
       final Map<String, double> categories = {};
-      final dynamic categoriesData = json['categories'];
+      final dynamic categoriesData = json['categoryBreakdown'];
 
-      if (categoriesData != null) {
-        if (categoriesData is! Map) {
-          throw FormatException('categories must be a Map');
-        }
-
-        categoriesData.forEach((key, value) {
-          if (key is! String) {
-            throw FormatException('categories key must be String');
+      if (categoriesData != null && categoriesData is List) {
+        for (final dynamic item in categoriesData) {
+          if (item is Map<String, dynamic>) {
+            final category = item['category'] as String?;
+            final amount = _parseDoubleNullable(item['amount']);
+            if (category != null && amount != null) {
+              categories[category] = amount;
+            }
           }
-          categories[key] = _parseDouble(value, 'categories[$key]');
-        });
+        }
       }
 
-      // Parse accounts breakdown with strict type checking
+      // Parse accountBalances array into map for backward compatibility
       final Map<String, double> accountsBreakdown = {};
-      final dynamic accountsData = json['accounts_breakdown'];
+      final dynamic accountsData = json['accountBalances'];
 
-      if (accountsData != null) {
-        if (accountsData is! Map) {
-          throw FormatException('accounts_breakdown must be a Map');
-        }
-
-        accountsData.forEach((key, value) {
-          if (key is! String) {
-            throw FormatException('accounts_breakdown key must be String');
+      if (accountsData != null && accountsData is List) {
+        for (final dynamic item in accountsData) {
+          if (item is Map<String, dynamic>) {
+            final accountName = item['accountName'] as String?;
+            final balance = _parseDoubleNullable(item['balance']);
+            if (accountName != null && balance != null) {
+              accountsBreakdown[accountName] = balance;
+            }
           }
-          accountsBreakdown[key] =
-              _parseDouble(value, 'accounts_breakdown[$key]');
-        });
+        }
       }
+
+      // Parse biggestExpense object
+      final dynamic biggestExpense = json['biggestExpense'];
+      final double biggestExpenseAmount = biggestExpense != null
+          ? _parseDoubleNullable(biggestExpense['amount']) ?? 0.0
+          : 0.0;
+      final String biggestExpenseDescription = biggestExpense != null
+          ? _parseStringNullable(biggestExpense['description']) ?? ''
+          : '';
+      final String expenseCategory = biggestExpense != null
+          ? _parseStringNullable(biggestExpense['category']) ?? ''
+          : '';
+      final String expenseAccount = biggestExpense != null
+          ? _parseStringNullable(biggestExpense['account']) ?? ''
+          : '';
+
+      // Parse biggestCategory object
+      final dynamic biggestCategory = json['biggestCategory'];
+      final String biggestCategoryName = biggestCategory != null
+          ? _parseStringNullable(biggestCategory['category']) ?? ''
+          : '';
+      final double biggestCategoryAmount = biggestCategory != null
+          ? _parseDoubleNullable(biggestCategory['amount']) ?? 0.0
+          : 0.0;
 
       return DashboardSummaryModel(
-        totalIncome: _parseDouble(json['total_income'], 'total_income'),
-        totalExpense: _parseDouble(json['total_expense'], 'total_expense'),
-        netBalance: _parseDouble(json['net_balance'], 'net_balance'),
-        expenseRatio: _parseDouble(json['expense_ratio'], 'expense_ratio'),
-        savingsRate: _parseDouble(json['savings_rate'], 'savings_rate'),
-        incomeTransactions:
-            _parseInt(json['income_transactions'], 'income_transactions'),
-        expenseTransactions:
-            _parseInt(json['expense_transactions'], 'expense_transactions'),
-        avgIncome: _parseDouble(json['avg_income'], 'avg_income'),
-        avgExpense: _parseDouble(json['avg_expense'], 'avg_expense'),
+        totalIncome: _parseDoubleNullable(json['totalIncome']) ?? 0.0,
+        totalExpense: _parseDoubleNullable(json['totalExpense']) ?? 0.0,
+        netBalance: _parseDoubleNullable(json['netBalance']) ?? 0.0,
+        expenseRatio: _parseDoubleNullable(json['expenseRatio']) ?? 0.0,
+        savingsRate: _parseDoubleNullable(json['savingsRate']) ?? 0.0,
+        incomeTransactions: 0, // Not in API response
+        expenseTransactions: 0, // Not in API response
+        avgIncome: 0.0, // Not in API response
+        avgExpense: 0.0, // Not in API response
         spendingTrend: spendingTrend,
         categories: categories,
         accountsBreakdown: accountsBreakdown,
-        biggestExpenseAmount: _parseDouble(
-            json['biggest_expense_amount'], 'biggest_expense_amount'),
-        biggestExpenseDescription: _parseString(
-            json['biggest_expense_description'], 'biggest_expense_description'),
-        expenseCategory:
-            _parseString(json['expense_category'], 'expense_category'),
-        expenseAccount:
-            _parseString(json['expense_account'], 'expense_account'),
-        biggestCategoryName: _parseString(
-            json['biggest_category_name'], 'biggest_category_name'),
-        biggestCategoryAmount: _parseDouble(
-            json['biggest_category_amount'], 'biggest_category_amount'),
-        period: _parseString(json['period'], 'period').trim(),
-        daysRemainingInMonth: _parseInt(
-            json['days_remaining_in_month'], 'days_remaining_in_month'),
+        biggestExpenseAmount: biggestExpenseAmount,
+        biggestExpenseDescription: biggestExpenseDescription,
+        expenseCategory: expenseCategory,
+        expenseAccount: expenseAccount,
+        biggestCategoryName: biggestCategoryName,
+        biggestCategoryAmount: biggestCategoryAmount,
+        period: _parseStringNullable(json['period']) ?? '',
+        daysRemainingInMonth:
+            _parseIntNullable(json['daysRemainingInMonth']) ?? 0,
       );
     } catch (e) {
       throw FormatException('Failed to parse DashboardSummaryModel: $e');
     }
+  }
+
+  /// Nullable int parser
+  static int? _parseIntNullable(dynamic value) {
+    if (value == null) return null;
+    if (value is int) return value;
+    if (value is double) return value.toInt();
+    if (value is String) return int.tryParse(value);
+    return null;
+  }
+
+  /// Nullable double parser
+  static double? _parseDoubleNullable(dynamic value) {
+    if (value == null) return null;
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    if (value is String) return double.tryParse(value);
+    return null;
+  }
+
+  /// Nullable string parser
+  static String? _parseStringNullable(dynamic value) {
+    if (value == null) return null;
+    if (value is String) return value;
+    return value.toString();
   }
 
   /// Type-safe helper to parse integers

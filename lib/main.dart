@@ -21,6 +21,8 @@ import 'features/auth/presentation/pages/reset_password_page.dart';
 import 'features/auth/presentation/pages/verification_success_page.dart';
 import 'features/home/presentation/cubit/dashboard_cubit.dart';
 import 'features/home/presentation/pages/home_page.dart';
+import 'features/subscription/presentation/pages/manage_subscription_page.dart';
+import 'features/subscription/presentation/pages/subscription_plans_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -82,6 +84,9 @@ class MyApp extends StatelessWidget {
               '/forgot-password': (context) => const ForgotPasswordPage(),
               '/change-password': (context) => const ChangePasswordPage(),
               '/profile': (context) => const ProfilePage(),
+              '/subscription-plans': (context) => const SubscriptionPlansPage(),
+              '/manage-subscription': (context) =>
+                  const ManageSubscriptionPage(),
             },
             onGenerateRoute: (settings) {
               if (settings.name == '/email-verification') {

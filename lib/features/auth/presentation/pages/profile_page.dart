@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/theme/app_theme.dart';
+import '../../../../core/constants/gemini_colors.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
 
@@ -10,185 +10,44 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is AuthUnauthenticated) {
-          // Navigate to login when logged out
           Navigator.of(context).pushReplacementNamed('/login');
         } else if (state is AuthError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message),
-              backgroundColor: Colors.red,
+              backgroundColor: Colors.red.shade700,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
             ),
           );
         }
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Profile & Settings'),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-        ),
+        backgroundColor: isDark ? GeminiColors.backgroundDark : GeminiColors.backgroundLight,
         body: BlocBuilder<AuthCubit, AuthState>(
           builder: (context, state) {
-            if (state is AuthAuthenticated) {
-              final user = state.user;
-
-              return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    const SizedBox(height: 24),
-                    // Profile Header
-                    _buildProfileHeader(context, user, isDark),
-                    const SizedBox(height: 32),
-                    // Account Section
-                    _buildSection(
-                      context,
-                      title: 'Account',
-                      items: [
-                        _SettingsItem(
-                          icon: Icons.person_outline,
-                          title: 'Edit Profile',
-                          subtitle: 'Update your personal information',
-                          onTap: () {
-                            // TODO: Navigate to edit profile page
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Edit profile feature coming soon'),
-                              ),
-                            );
-                          },
-                        ),
-                        _SettingsItem(
-                          icon: Icons.lock_outline,
-                          title: 'Change Password',
-                          subtitle: 'Update your account password',
-                          onTap: () {
-                            Navigator.pushNamed(context, '/change-password');
-                          },
-                        ),
-                        _SettingsItem(
-                          icon: Icons.email_outlined,
-                          title: 'Email',
-                          subtitle: user.email,
-                          trailing: null,
-                        ),
-                      ],
-                      isDark: isDark,
-                    ),
-                    const SizedBox(height: 16),
-                    // Preferences Section
-                    _buildSection(
-                      context,
-                      title: 'Preferences',
-                      items: [
-                        _SettingsItem(
-                          icon: Icons.language,
-                          title: 'Language',
-                          subtitle: 'English',
-                          onTap: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Language settings coming soon'),
-                              ),
-                            );
-                          },
-                        ),
-                        _SettingsItem(
-                          icon: Icons.currency_exchange,
-                          title: 'Currency',
-                          subtitle: 'BDT (৳)',
-                          onTap: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Currency settings coming soon'),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                      isDark: isDark,
-                    ),
-                    const SizedBox(height: 16),
-                    // About Section
-                    _buildSection(
-                      context,
-                      title: 'About',
-                      items: [
-                        _SettingsItem(
-                          icon: Icons.info_outline,
-                          title: 'App Version',
-                          subtitle: '1.0.0+1',
-                          trailing: null,
-                        ),
-                        _SettingsItem(
-                          icon: Icons.privacy_tip_outlined,
-                          title: 'Privacy Policy',
-                          onTap: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Privacy policy coming soon'),
-                              ),
-                            );
-                          },
-                        ),
-                        _SettingsItem(
-                          icon: Icons.description_outlined,
-                          title: 'Terms of Service',
-                          onTap: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Terms of service coming soon'),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                      isDark: isDark,
-                    ),
-                    const SizedBox(height: 32),
-                    // Logout Button
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: SizedBox(
-                        width: double.infinity,
-                        height: 48,
-                        child: OutlinedButton.icon(
-                          onPressed: () {
-                            _showLogoutDialog(context);
-                          },
-                          icon: const Icon(
-                            Icons.logout,
-                            color: Colors.red,
-                          ),
-                          label: const Text(
-                            'Logout',
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          style: OutlinedButton.styleFrom(
-                            side: const BorderSide(color: Colors.red),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 32),
-                  ],
+            if (state is AuthLoading) {
+              return Center(
+                child: CircularProgressIndicator(
+                  color: GeminiColors.primary,
                 ),
               );
             }
 
-            // Loading or other states
+            if (state is AuthAuthenticated) {
+              final user = state.user;
+              return _buildProfileContent(context, user, isDark, colorScheme);
+            }
+
             return const Center(
-              child: CircularProgressIndicator(),
+              child: Text('Please login to view your profile'),
             );
           },
         ),
@@ -196,273 +55,447 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildProfileHeader(
+  Widget _buildProfileContent(
     BuildContext context,
     dynamic user,
     bool isDark,
+    ColorScheme colorScheme,
   ) {
+    return CustomScrollView(
+      slivers: [
+        // App Bar
+        SliverAppBar(
+          floating: true,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: isDark ? Colors.white : Colors.black87,
+            ),
+            onPressed: () => Navigator.pop(context),
+          ),
+          title: Text(
+            'Profile',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              color: isDark ? Colors.white : Colors.black87,
+            ),
+          ),
+          actions: [
+            IconButton(
+              icon: Icon(
+                Icons.wb_sunny_outlined,
+                color: isDark ? Colors.white : Colors.black87,
+              ),
+              onPressed: () {
+                // TODO: Toggle theme
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Theme toggle coming soon')),
+                );
+              },
+            ),
+          ],
+        ),
+
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              children: [
+                const SizedBox(height: 16),
+                // Profile Header
+                _buildProfileHeader(user, isDark),
+                const SizedBox(height: 40),
+                // Subscription Card
+                _buildSubscriptionCard(context, isDark),
+                const SizedBox(height: 32),
+                // Menu Items
+                _buildMenuItem(
+                  context,
+                  icon: Icons.person_outline,
+                  title: 'Account Details',
+                  isDark: isDark,
+                  onTap: () {
+                    // TODO: Navigate to account details
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Account Details coming soon')),
+                    );
+                  },
+                ),
+                const SizedBox(height: 12),
+                _buildMenuItem(
+                  context,
+                  icon: Icons.lock_outline,
+                  title: 'Security',
+                  isDark: isDark,
+                  onTap: () {
+                    Navigator.pushNamed(context, '/change-password');
+                  },
+                ),
+                const SizedBox(height: 12),
+                _buildMenuItem(
+                  context,
+                  icon: Icons.notifications_outlined,
+                  title: 'Notifications',
+                  isDark: isDark,
+                  onTap: () {
+                    // TODO: Navigate to notifications
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Notifications coming soon')),
+                    );
+                  },
+                ),
+                const SizedBox(height: 12),
+                _buildMenuItem(
+                  context,
+                  icon: Icons.palette_outlined,
+                  title: 'Appearance',
+                  isDark: isDark,
+                  onTap: () {
+                    // TODO: Navigate to appearance settings
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Appearance settings coming soon')),
+                    );
+                  },
+                ),
+                const SizedBox(height: 12),
+                _buildMenuItem(
+                  context,
+                  icon: Icons.help_outline,
+                  title: 'Help Center',
+                  isDark: isDark,
+                  onTap: () {
+                    // TODO: Navigate to help center
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Help Center coming soon')),
+                    );
+                  },
+                ),
+                const SizedBox(height: 40),
+                // Log Out Button
+                _buildLogOutButton(context, isDark),
+                const SizedBox(height: 32),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildProfileHeader(dynamic user, bool isDark) {
     return Column(
       children: [
-        // Profile Picture
+        // Avatar with glow effect
         Container(
-          width: 100,
-          height: 100,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: AppTheme.primaryColor.withValues(alpha: 0.2),
-            border: Border.all(
-              color: AppTheme.primaryColor,
-              width: 3,
-            ),
-          ),
-          child: user.photoUrl != null
-              ? ClipOval(
-                  child: Image.network(
-                    user.photoUrl!,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return _buildDefaultAvatar(user.name);
-                    },
-                  ),
-                )
-              : _buildDefaultAvatar(user.name),
-        ),
-        const SizedBox(height: 16),
-        // Name
-        Text(
-          user.name,
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-        ),
-        const SizedBox(height: 4),
-        // Email
-        Text(
-          user.email,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: isDark
-                    ? AppTheme.textSubtleDark
-                    : AppTheme.textSubtleLight,
-              ),
-        ),
-        const SizedBox(height: 8),
-        // Auth Provider Badge
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: AppTheme.primaryColor.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: AppTheme.primaryColor.withValues(alpha: 0.3),
-            ),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                _getAuthProviderIcon(user.authProvider),
-                size: 16,
-                color: AppTheme.primaryColor,
-              ),
-              const SizedBox(width: 6),
-              Text(
-                _getAuthProviderLabel(user.authProvider),
-                style: TextStyle(
-                  color: AppTheme.primaryColor,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                ),
+            boxShadow: [
+              BoxShadow(
+                color: GeminiColors.primary.withOpacity(0.4),
+                blurRadius: 40,
+                spreadRadius: 10,
               ),
             ],
           ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDefaultAvatar(String name) {
-    return Center(
-      child: Text(
-        name.isNotEmpty ? name[0].toUpperCase() : 'U',
-        style: TextStyle(
-          fontSize: 40,
-          fontWeight: FontWeight.bold,
-          color: AppTheme.primaryColor,
-        ),
-      ),
-    );
-  }
-
-  IconData _getAuthProviderIcon(String provider) {
-    switch (provider.toLowerCase()) {
-      case 'google':
-        return Icons.g_mobiledata;
-      case 'apple':
-        return Icons.apple;
-      default:
-        return Icons.email;
-    }
-  }
-
-  String _getAuthProviderLabel(String provider) {
-    switch (provider.toLowerCase()) {
-      case 'google':
-        return 'Google Account';
-      case 'apple':
-        return 'Apple ID';
-      default:
-        return 'Email Account';
-    }
-  }
-
-  Widget _buildSection(
-    BuildContext context, {
-    required String title,
-    required List<_SettingsItem> items,
-    required bool isDark,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-          child: Text(
-            title,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+          child: Container(
+            width: 120,
+            height: 120,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: GeminiColors.primary,
+                width: 3,
+              ),
+              gradient: const LinearGradient(
+                colors: [
+                  Color(0xFFFFC2A1),
+                  Color(0xFFFFD8B8),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+            child: Center(
+              child: Text(
+                user.name.isNotEmpty ? user.name[0].toUpperCase() : 'U',
+                style: const TextStyle(
+                  fontSize: 48,
                   fontWeight: FontWeight.bold,
-                  color: isDark
-                      ? AppTheme.textDarkTheme
-                      : AppTheme.textLightTheme,
+                  color: Color(0xFF2D3142),
                 ),
-          ),
-        ),
-        Container(
-          margin: const EdgeInsets.symmetric(horizontal: 16),
-          decoration: BoxDecoration(
-            color: isDark
-                ? const Color(0xFF1F2937)
-                : const Color(0xFFF9FAFB),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: isDark
-                  ? const Color(0xFF374151)
-                  : const Color(0xFFE5E7EB),
-            ),
-          ),
-          child: ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: items.length,
-            separatorBuilder: (context, index) => Divider(
-              height: 1,
-              indent: 56,
-              color: isDark
-                  ? const Color(0xFF374151)
-                  : const Color(0xFFE5E7EB),
-            ),
-            itemBuilder: (context, index) {
-              final item = items[index];
-              return ListTile(
-                leading: Icon(
-                  item.icon,
-                  color: isDark
-                      ? AppTheme.textSubtleDark
-                      : const Color(0xFF6B7280),
-                ),
-                title: Text(
-                  item.title,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    color: isDark
-                        ? AppTheme.textDarkTheme
-                        : AppTheme.textLightTheme,
-                  ),
-                ),
-                subtitle: item.subtitle != null
-                    ? Text(
-                        item.subtitle!,
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: isDark
-                              ? AppTheme.textSubtleDark
-                              : AppTheme.textSubtleLight,
-                        ),
-                      )
-                    : null,
-                trailing: item.trailing ??
-                    (item.onTap != null
-                        ? Icon(
-                            Icons.chevron_right,
-                            color: isDark
-                                ? AppTheme.textSubtleDark
-                                : const Color(0xFF9CA3AF),
-                          )
-                        : null),
-                onTap: item.onTap,
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-              );
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
-  void _showLogoutDialog(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    showDialog(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Logout'),
-        content: const Text('Are you sure you want to logout?'),
-        backgroundColor: isDark
-            ? const Color(0xFF1F2937)
-            : Colors.white,
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(),
-            child: Text(
-              'Cancel',
-              style: TextStyle(
-                color: isDark
-                    ? AppTheme.textSubtleDark
-                    : const Color(0xFF6B7280),
               ),
             ),
           ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(dialogContext).pop();
-              context.read<AuthCubit>().logout();
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
+        ),
+        const SizedBox(height: 24),
+        // User Name with Premium Badge
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              user.name,
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: isDark ? Colors.white : Colors.black87,
+              ),
             ),
-            child: const Text('Logout'),
+            const SizedBox(width: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: GeminiColors.primary.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: GeminiColors.primary,
+                  width: 1,
+                ),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.star,
+                    size: 16,
+                    color: GeminiColors.primary,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    'Premium',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: GeminiColors.primary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        // Email
+        Text(
+          user.email,
+          style: TextStyle(
+            fontSize: 14,
+            color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSubscriptionCard(BuildContext context, bool isDark) {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: isDark
+            ? const Color(0xFF1A1C23)
+            : Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isDark
+              ? Colors.grey.shade800
+              : Colors.grey.shade200,
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            spreadRadius: 0,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'My Subscription',
+            style: TextStyle(
+              fontSize: 14,
+              color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Plan: Premium',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: isDark ? Colors.white : Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Renews on Dec 24, 2024',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                    ),
+                  ),
+                ],
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/manage-subscription');
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: GeminiColors.primary,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  elevation: 0,
+                ),
+                child: const Text(
+                  'Manage',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
     );
   }
-}
 
-class _SettingsItem {
-  final IconData icon;
-  final String title;
-  final String? subtitle;
-  final Widget? trailing;
-  final VoidCallback? onTap;
+  Widget _buildMenuItem(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required bool isDark,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: isDark
+              ? const Color(0xFF1A1C23)
+              : Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: isDark
+                ? Colors.grey.shade800
+                : Colors.grey.shade200,
+            width: 1,
+          ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: GeminiColors.primary.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                icon,
+                color: GeminiColors.primary,
+                size: 24,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: isDark ? Colors.white : Colors.black87,
+                ),
+              ),
+            ),
+            Icon(
+              Icons.chevron_right,
+              color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
-  _SettingsItem({
-    required this.icon,
-    required this.title,
-    this.subtitle,
-    this.trailing,
-    this.onTap,
-  });
+  Widget _buildLogOutButton(BuildContext context, bool isDark) {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: () {
+          // Show confirmation dialog
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Log Out'),
+              content: const Text('Are you sure you want to log out?'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    context.read<AuthCubit>().logout();
+                  },
+                  child: const Text(
+                    'Log Out',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: isDark
+              ? const Color(0xFF2D1F1F)
+              : Colors.red.shade50,
+          foregroundColor: Colors.red.shade700,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          elevation: 0,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.logout,
+              size: 20,
+              color: Colors.red.shade700,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              'Log Out',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: Colors.red.shade700,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

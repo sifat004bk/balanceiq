@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/usecases/sign_in_with_google.dart';
-import '../../domain/usecases/sign_in_with_apple.dart';
 import '../../domain/usecases/sign_out.dart';
 import '../../domain/usecases/get_current_user.dart';
 import '../../domain/usecases/signup.dart';
@@ -15,7 +14,6 @@ import 'auth_state.dart';
 class AuthCubit extends Cubit<AuthState> {
   // OAuth dependencies
   final SignInWithGoogle signInWithGoogle;
-  final SignInWithApple signInWithApple;
   final SignOut signOutUseCase;
   final GetCurrentUser getCurrentUser;
 
@@ -30,7 +28,6 @@ class AuthCubit extends Cubit<AuthState> {
   AuthCubit({
     // OAuth dependencies
     required this.signInWithGoogle,
-    required this.signInWithApple,
     required this.signOutUseCase,
     required this.getCurrentUser,
     // Backend API dependencies
@@ -61,15 +58,6 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> signInGoogle() async {
     emit(AuthLoading());
     final result = await signInWithGoogle();
-    result.fold(
-      (failure) => emit(AuthError(failure.message)),
-      (user) => emit(AuthAuthenticated(user)),
-    );
-  }
-
-  Future<void> signInApple() async {
-    emit(AuthLoading());
-    final result = await signInWithApple();
     result.fold(
       (failure) => emit(AuthError(failure.message)),
       (user) => emit(AuthAuthenticated(user)),

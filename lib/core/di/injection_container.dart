@@ -26,7 +26,6 @@ import '../../features/auth/domain/usecases/get_current_user.dart';
 import '../../features/auth/domain/usecases/get_profile.dart';
 import '../../features/auth/domain/usecases/login.dart';
 import '../../features/auth/domain/usecases/reset_password.dart';
-import '../../features/auth/domain/usecases/sign_in_with_apple.dart';
 import '../../features/auth/domain/usecases/sign_in_with_google.dart';
 import '../../features/auth/domain/usecases/sign_out.dart';
 import '../../features/auth/domain/usecases/signup.dart';
@@ -90,7 +89,6 @@ Future<void> init() async {
     () => AuthCubit(
       // OAuth dependencies
       signInWithGoogle: sl(),
-      signInWithApple: sl(),
       signOutUseCase: sl(),
       getCurrentUser: sl(),
       // Backend API dependencies
@@ -105,7 +103,6 @@ Future<void> init() async {
 
   // Use cases
   sl.registerLazySingleton(() => SignInWithGoogle(sl()));
-  sl.registerLazySingleton(() => SignInWithApple(sl()));
   sl.registerLazySingleton(() => SignOut(sl()));
   sl.registerLazySingleton(() => GetCurrentUser(sl()));
   sl.registerLazySingleton(() => Signup(sl()));

@@ -353,33 +353,6 @@ class AuthMockDataSource implements AuthRemoteDataSource {
     return mockGoogleUser;
   }
 
-  @override
-  Future<UserModel> signInWithApple() async {
-    await _simulateDelay();
-
-    // Mock Apple Sign-In
-    final mockAppleUser = UserModel(
-      id: uuid.v4(),
-      email: 'mockapple@privaterelay.appleid.com',
-      name: 'Mock Apple User',
-      photoUrl: null,
-      authProvider: 'apple',
-      createdAt: DateTime.now(),
-    );
-
-    // Store user in mock database
-    _users['mockapple'] = _MockUser(
-      id: mockAppleUser.id,
-      username: 'mockapple',
-      password: '', // OAuth users don't have passwords
-      fullName: mockAppleUser.name,
-      email: mockAppleUser.email,
-      photoUrl: mockAppleUser.photoUrl,
-      roles: ['user'],
-    );
-
-    return mockAppleUser;
-  }
 
   @override
   Future<void> signOut() async {

@@ -48,9 +48,6 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
     context.read<AuthCubit>().signInGoogle();
   }
 
-  void _handleAppleSignUp() {
-    context.read<AuthCubit>().signInApple();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -532,43 +529,6 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                             const SizedBox(width: 8),
                             const Text(
                               'Google',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: _handleAppleSignUp,
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          side: BorderSide(
-                            color: isDark
-                                ? const Color(0xFF374151)
-                                : const Color(0xFFD1D5DB),
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.apple,
-                              size: 20,
-                              color: isDark
-                                  ? AppTheme.textDarkTheme
-                                  : AppTheme.textLightTheme,
-                            ),
-                            const SizedBox(width: 8),
-                            const Text(
-                              'Apple',
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,

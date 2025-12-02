@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../models/auth_request_models.dart';
@@ -9,7 +8,6 @@ import '../models/user_model.dart';
 abstract class AuthRemoteDataSource {
   // OAuth Methods
   Future<UserModel> signInWithGoogle();
-  Future<UserModel> signInWithApple();
   Future<void> signOut();
 
   // Backend API Methods
@@ -54,31 +52,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     }
   }
 
-  @override
-  Future<UserModel> signInWithApple() async {
-    try {
-      final credential = await SignInWithApple.getAppleIDCredential(
-        scopes: [
-          AppleIDAuthorizationScopes.email,
-          AppleIDAuthorizationScopes.fullName,
-        ],
-      );
-
-      final String name = credential.givenName != null && credential.familyName != null
-          ? '${credential.givenName} ${credential.familyName}'
-          : credential.email?.split('@').first ?? 'Unknown';
-
-      return UserModel(
-        id: credential.userIdentifier ?? DateTime.now().millisecondsSinceEpoch.toString(),
-        email: credential.email ?? 'no-email@apple.com',
-        name: name,
-        authProvider: 'apple',
-        createdAt: DateTime.now(),
-      );
-    } catch (e) {
-      throw Exception('Failed to sign in with Apple: $e');
-    }
-  }
 
   @override
   Future<void> signOut() async {

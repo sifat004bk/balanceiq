@@ -97,26 +97,6 @@ class OnboardingPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  // Apple Sign In Button (iOS only)
-                  if (Platform.isIOS)
-                    SizedBox(
-                      width: double.infinity,
-                      height: 56,
-                      child: ElevatedButton.icon(
-                        onPressed: () => context.read<AuthCubit>().signInApple(),
-                        icon: const Icon(Icons.apple),
-                        label: const Text('Continue with Apple'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black,
-                          foregroundColor: Colors.white,
-                          elevation: 2,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                      ),
-                    ),
                 ],
                 const SizedBox(height: 24),
                 // Terms and Privacy

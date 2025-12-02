@@ -5,6 +5,7 @@ import '../../../../core/error/failures.dart';
 import '../datasources/auth_local_datasource.dart';
 import '../datasources/auth_remote_datasource.dart';
 import '../models/auth_request_models.dart';
+import '../models/user_model.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
@@ -100,6 +101,20 @@ class AuthRepositoryImpl implements AuthRepository {
         password: password,
       );
       final response = await remoteDataSource.login(request);
+
+      // Save user to local storage after successful login
+      if (response.success && response.data != null) {
+        final userModel = UserModel(
+          id: response.data!.userId.toString(),
+          email: response.data!.email,
+          name: response.data!.username,
+          photoUrl: null,
+          authProvider: 'email',
+          createdAt: DateTime.now(),
+        );
+        await localDataSource.saveUser(userModel);
+      }
+
       return Right(response);
     } catch (e) {
       return Left(ServerFailure('Failed to login: $e'));

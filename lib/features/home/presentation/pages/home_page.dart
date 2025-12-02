@@ -73,9 +73,26 @@ class _HomePageState extends State<HomePage> {
                 onGetStarted: _loadDashboard,
               );
             }
+
+            // Check if error is authentication-related
+            final isAuthError = state.message.toLowerCase().contains('unauthorized') ||
+                state.message.toLowerCase().contains('unauthenticated') ||
+                state.message.toLowerCase().contains('token') ||
+                state.message.toLowerCase().contains('login');
+
             return Error404Page(
               errorMessage: state.message,
-              onRetry: _loadDashboard,
+              isAuthError: isAuthError,
+              onRetry: isAuthError
+                  ? () {
+                      // Navigate to login page
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        '/login',
+                        (route) => false,
+                      );
+                    }
+                  : _loadDashboard,
             );
           }
 

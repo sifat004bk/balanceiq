@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 class Error404Page extends StatelessWidget {
   final String errorMessage;
   final VoidCallback onRetry;
+  final bool isAuthError;
 
   const Error404Page({
     super.key,
     required this.errorMessage,
     required this.onRetry,
+    this.isAuthError = false,
   });
 
   @override
@@ -164,9 +166,12 @@ class Error404Page extends StatelessWidget {
                 height: 56,
                 child: ElevatedButton.icon(
                   onPressed: onRetry,
-                  icon: const Icon(Icons.refresh, size: 24),
+                  icon: Icon(
+                    isAuthError ? Icons.login : Icons.refresh,
+                    size: 24,
+                  ),
                   label: Text(
-                    'Try Again',
+                    isAuthError ? 'Go to Login' : 'Try Again',
                     style: textTheme.titleMedium?.copyWith(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,

@@ -218,6 +218,8 @@ class _MessageBubbleState extends State<MessageBubble>
                 'ui:metric': GenUIMetricCardBuilder(),
                 'ui:progress': GenUIProgressBuilder(),
                 'ui:actions': GenUIActionButtonsBuilder(),
+                'ui:stats': GenUIStatsBuilder(),
+                'ui:insight': GenUIInsightCardBuilder(),
               },
               styleSheet: MarkdownStyleSheet(
                 p: Theme.of(context).textTheme.bodyMedium?.copyWith(

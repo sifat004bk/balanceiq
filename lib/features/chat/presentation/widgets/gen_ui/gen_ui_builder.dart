@@ -8,6 +8,8 @@ import 'gen_ui_metric_card.dart';
 import 'gen_ui_progress.dart';
 import 'gen_ui_action_buttons.dart';
 import 'gen_ui_animated_wrapper.dart';
+import 'gen_ui_stats.dart';
+import 'gen_ui_insight_card.dart';
 
 class GenUICodeBuilder extends MarkdownElementBuilder {
   @override
@@ -135,6 +137,50 @@ class GenUIActionButtonsBuilder extends MarkdownElementBuilder {
       );
     } catch (e) {
       return Text('Error rendering action buttons: $e',
+          style: const TextStyle(color: Colors.red));
+    }
+  }
+}
+
+class GenUIStatsBuilder extends MarkdownElementBuilder {
+  @override
+  Widget? visitElementAfterWithContext(
+    BuildContext context,
+    md.Element element,
+    TextStyle? preferredStyle,
+    TextStyle? parentStyle,
+  ) {
+    try {
+      final content = element.textContent;
+      final jsonMap = jsonDecode(content);
+      return GenUIAnimatedWrapper(
+        delay: 100,
+        child: GenUIStats(data: jsonMap),
+      );
+    } catch (e) {
+      return Text('Error rendering stats: $e',
+          style: const TextStyle(color: Colors.red));
+    }
+  }
+}
+
+class GenUIInsightCardBuilder extends MarkdownElementBuilder {
+  @override
+  Widget? visitElementAfterWithContext(
+    BuildContext context,
+    md.Element element,
+    TextStyle? preferredStyle,
+    TextStyle? parentStyle,
+  ) {
+    try {
+      final content = element.textContent;
+      final jsonMap = jsonDecode(content);
+      return GenUIAnimatedWrapper(
+        delay: 100,
+        child: GenUIInsightCard(data: jsonMap),
+      );
+    } catch (e) {
+      return Text('Error rendering insight card: $e',
           style: const TextStyle(color: Colors.red));
     }
   }

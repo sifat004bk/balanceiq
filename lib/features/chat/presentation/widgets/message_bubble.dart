@@ -417,23 +417,22 @@ class _MessageBubbleState extends State<MessageBubble>
                     // Trigger regeneration logic here if available
                   },
                 ),
-            ],
-          ),
-          
-          const SizedBox(height: 24),
-          
-          // Disclaimer
-          if (ChatConfig.bottomDisclaimerText != null)
-            Center(
-              child: Text(
-                ChatConfig.bottomDisclaimerText!,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              // Disclaimer
+              if (ChatConfig.bottomDisclaimerText != null)
+                Center(
+                  child: Text(
+                    ChatConfig.bottomDisclaimerText!,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: GeminiColors.textSecondary(context),
                       fontSize: 12,
                     ),
-                textAlign: TextAlign.center,
-              ),
-            ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+            ],
+          ),
+
+
 
           // Image logic
           if (widget.message.imageUrl != null &&

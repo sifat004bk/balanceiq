@@ -20,5 +20,5 @@ class ChatConfig {
 
   /// Text to display at the bottom of the chat (disclaimer)
   /// Set to null to hide
-  static const String? bottomDisclaimerText = "BalanceIQ may display inaccurate info, including about people, so double-check its responses.";
+  static const String? bottomDisclaimerText = "BalanceIQ can make mistake.";
 }

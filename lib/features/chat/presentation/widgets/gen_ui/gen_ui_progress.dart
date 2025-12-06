@@ -11,7 +11,7 @@ class GenUIProgress extends StatelessWidget {
     final title = data['title'] as String;
     final current = (data['current'] as num).toDouble();
     final target = (data['target'] as num).toDouble();
-    final percentage = (current / target * 100).clamp(0, 100);
+    final percentage = (current / target * 100).clamp(0.0, 100.0).toDouble();
     final label = data['label'] as String?;
     final showValue = data['showValue'] as bool? ?? true;
 

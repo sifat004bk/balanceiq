@@ -137,7 +137,7 @@ class GenUIChart extends StatelessWidget {
             barTouchData: BarTouchData(
               enabled: true,
               touchTooltipData: BarTouchTooltipData(
-                tooltipBgColor: GeminiColors.primaryColor(context).withOpacity(0.9),
+                getTooltipColor: (group) => GeminiColors.primaryColor(context).withOpacity(0.9),
                 tooltipRoundedRadius: 8,
                 tooltipPadding: const EdgeInsets.all(8),
                 getTooltipItem: (group, groupIndex, rod, rodIndex) {

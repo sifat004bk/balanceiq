@@ -34,12 +34,6 @@ class AppConstants {
   static const String keyIsLoggedIn = 'is_logged_in';
   static const String keyThemeMode = 'theme_mode';
 
-  // API Configuration
-  static String get backendBaseUrl => dotenv.get(
-    'BACKEND_BASE_URL',
-    fallback: 'https://primary-production-7383b.up.railway.app',
-  );
-
   // Mock Mode
   // When true, uses mock data instead of real API calls
   static bool get isMockMode {

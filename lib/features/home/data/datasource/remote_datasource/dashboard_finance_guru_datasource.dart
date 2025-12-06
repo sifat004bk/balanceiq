@@ -1,4 +1,5 @@
 import 'package:balance_iq/core/constants/app_constants.dart';
+import 'package:balance_iq/core/constants/api_endpoints.dart';
 import 'package:balance_iq/features/home/data/models/dashboard_summary_response.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,7 +22,7 @@ class DashboardFinanceGuruDataSource implements DashboardRemoteDataSource {
       final token = sharedPreferences.getString('auth_token');
 
       final response = await dio.get<Map<String, dynamic>>(
-        '${AppConstants.backendBaseUrl}/api/finance-guru/dashboard',
+        ApiEndpoints.dashboard,
         options: Options(
           headers: <String, String>{
             'Content-Type': 'application/json',

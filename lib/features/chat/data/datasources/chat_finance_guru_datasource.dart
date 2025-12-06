@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/constants/app_constants.dart';
+import '../../../../core/constants/api_endpoints.dart';
 import '../models/chat_request_models.dart';
 import '../models/chat_history_response_model.dart';
 import '../models/message_model.dart';
@@ -45,7 +46,7 @@ class ChatFinanceGuruDataSource implements ChatRemoteDataSource {
 
       // Send request to finance-guru chat endpoint
       final response = await dio.post(
-        '${AppConstants.backendBaseUrl}/api/finance-guru/chat',
+        ApiEndpoints.chat,
         data: request.toJson(),
         options: Options(
           headers: {
@@ -109,7 +110,7 @@ class ChatFinanceGuruDataSource implements ChatRemoteDataSource {
       final token = sharedPreferences.getString('auth_token');
 
       final response = await dio.get(
-        '${AppConstants.backendBaseUrl}/api/finance-guru/chat-history',
+        ApiEndpoints.chatHistory,
         queryParameters: queryParams.toQueryParams(),
         options: Options(
           headers: {

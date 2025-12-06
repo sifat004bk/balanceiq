@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/constants/app_constants.dart';
+import '../../../../core/constants/api_endpoints.dart';
 import '../models/auth_request_models.dart';
 import '../models/user_model.dart';
 
@@ -66,7 +67,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<SignupResponse> signup(SignupRequest request) async {
     try {
       final response = await dio.post(
-        '${AppConstants.backendBaseUrl}/api/auth/signup',
+        ApiEndpoints.signup,
         data: request.toJson(),
         options: Options(
           headers: {'Content-Type': 'application/json'},
@@ -98,7 +99,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<LoginResponse> login(LoginRequest request) async {
     try {
       final response = await dio.post(
-        '${AppConstants.backendBaseUrl}/api/auth/login',
+        ApiEndpoints.login,
         data: request.toJson(),
         options: Options(
           headers: {'Content-Type': 'application/json'},
@@ -136,7 +137,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<UserInfo> getProfile(String token) async {
     try {
       final response = await dio.get(
-        '${AppConstants.backendBaseUrl}/api/auth/me',
+        ApiEndpoints.getProfile,
         options: Options(
           headers: {
             'Content-Type': 'application/json',
@@ -168,7 +169,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       ChangePasswordRequest request, String token) async {
     try {
       final response = await dio.post(
-        '${AppConstants.backendBaseUrl}/api/auth/change-password',
+        ApiEndpoints.changePassword,
         data: request.toJson(),
         options: Options(
           headers: {
@@ -203,7 +204,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<void> forgotPassword(ForgotPasswordRequest request) async {
     try {
       final response = await dio.post(
-        '${AppConstants.backendBaseUrl}/api/auth/forgot-password',
+        ApiEndpoints.forgotPassword,
         data: request.toJson(),
         options: Options(
           headers: {'Content-Type': 'application/json'},
@@ -232,7 +233,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<void> resetPassword(ResetPasswordRequest request) async {
     try {
       final response = await dio.post(
-        '${AppConstants.backendBaseUrl}/api/auth/reset-password',
+        ApiEndpoints.resetPassword,
         data: request.toJson(),
         options: Options(
           headers: {'Content-Type': 'application/json'},

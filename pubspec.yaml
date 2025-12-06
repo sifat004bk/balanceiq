@@ -65,6 +65,7 @@ dependencies:
   shared_preferences: ^2.3.3
   dartz: ^0.10.1
   flutter_dotenv: ^5.2.1
+  synchronized: ^3.1.0+1  # Concurrency control for chat sync
 
   # UI
   flutter_svg: ^2.0.10+1

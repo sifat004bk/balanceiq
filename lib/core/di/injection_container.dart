@@ -150,7 +150,9 @@ Future<void> init() async {
   sl.registerFactory(
     () => ChatCubit(
       getMessages: sl(),
+      getChatHistory: sl(),
       sendMessage: sl(),
+      sharedPreferences: sl(),
       uuid: sl(),
     ),
   );

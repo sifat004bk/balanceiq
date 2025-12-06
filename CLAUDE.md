@@ -20,7 +20,7 @@
 3. Review `projectcontext/IMPLEMENTATION_STATUS.md` - Current state
 
 **Working on Specific Features?**
-- **Authentication** → `projectcontext/implementation/API_IMPLEMENTATION_SUMMARY.md`
+- **Authentication** → `projectcontext/projectcontext/api/API_IMPLEMENTATION_GUIDE.md`
 - **Chat Pagination & Caching** → `projectcontext/CHAT_ARCHITECTURE_v2.md`
 - **UI/UX Design** → `projectcontext/design_docs/GEMINI_UI_DESIGN_SPECIFICATIONS.md`
 - **Backend APIs** → `projectcontext/api/API_SPECIFICATION.md`
@@ -364,7 +364,7 @@ MOCK_MODE=false  # Always use real APIs
 
 3. **Check Related Documentation**
    - UI changes → `design_docs/`
-   - API changes → `implementation/API_IMPLEMENTATION_SUMMARY.md`
+   - API changes → `projectcontext/api/API_IMPLEMENTATION_GUIDE.md`
    - Business context → `project_summary/business/`
 
 ### After Completing a Task
@@ -527,7 +527,7 @@ flutter test test/features/auth/  # Specific feature
 
 **After API changes:**
 - ✅ Update `API_INTEGRATION.md`
-- ✅ Update `implementation/API_IMPLEMENTATION_SUMMARY.md`
+- ✅ Update `projectcontext/api/API_IMPLEMENTATION_GUIDE.md`
 
 **After UI changes:**
 - ✅ Update `design_docs/` if design system changed

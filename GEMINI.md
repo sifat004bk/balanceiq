@@ -31,7 +31,7 @@
 
 3. **Check Related Documentation**
    - UI changes → `design_docs/`
-   - API changes → `implementation/API_IMPLEMENTATION_SUMMARY.md`
+   - API changes → `projectcontext/api/API_IMPLEMENTATION_GUIDE.md`
    - Business context → `project_summary/business/`
 
 ### After Completing a Task
@@ -194,7 +194,7 @@ flutter test test/features/auth/  # Specific feature
 
 **After API changes:**
 - ✅ Update `API_INTEGRATION.md`
-- ✅ Update `implementation/API_IMPLEMENTATION_SUMMARY.md`
+- ✅ Update `projectcontext/api/API_IMPLEMENTATION_GUIDE.md`
 
 **After UI changes:**
 - ✅ Update `design_docs/` if design system changed

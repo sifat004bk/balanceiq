@@ -1,8 +1,6 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ApiEndpoints {
-
-  // API Configuration
   static String get backendBaseUrl => dotenv.get(
     'BACKEND_BASE_URL',
     fallback: 'https://primary-production-7383b.up.railway.app',

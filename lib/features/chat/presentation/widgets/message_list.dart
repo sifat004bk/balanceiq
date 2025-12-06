@@ -78,23 +78,26 @@ class MessageList extends StatelessWidget {
                   if (index == 0) {
                      return _buildTypingIndicator(context);
                   }
-                  if (index == 1) {
-                    // New User Message (messages.last)
-                    final message = messages.last;
+                  // Adjust index for typing indicator
+                  final messageIndex = index - 1;
+                  if (messageIndex < messages.length) {
+                    final message = messages[messageIndex];
+                    final isUser = message.sender == AppConstants.senderUser;
                     return MessageBubble(
                       message: message,
-                      isUser: true,
+                      isUser: isUser,
                       botName: botName,
                       botColor: AppTheme.getBotColor(botId),
                     );
                   }
+                  return null;
+                }
 
-                  // Old Messages
-                  final reversedIndex = messages.length - 2 - (index - 2);
-                  if (reversedIndex < 0) return null;
-
-                  final message = messages[reversedIndex];
+                // Normal behavior (not sending)
+                if (index < messages.length) {
+                  final message = messages[index];
                   final isUser = message.sender == AppConstants.senderUser;
+
                   return MessageBubble(
                     message: message,
                     isUser: isUser,
@@ -102,20 +105,7 @@ class MessageList extends StatelessWidget {
                     botColor: AppTheme.getBotColor(botId),
                   );
                 }
-
-                // Normal behavior (not sending)
-                final reversedIndex = messages.length - 1 - index;
-                if (reversedIndex < 0) return null;
-
-                final message = messages[reversedIndex];
-                final isUser = message.sender == AppConstants.senderUser;
-
-                return MessageBubble(
-                  message: message,
-                  isUser: isUser,
-                  botName: botName,
-                  botColor: AppTheme.getBotColor(botId),
-                );
+                return null;
               },
               childCount: isSending ? messages.length + 1 : messages.length, // +1 for Typing indicator
             ),

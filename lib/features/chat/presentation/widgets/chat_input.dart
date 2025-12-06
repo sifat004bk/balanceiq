@@ -300,8 +300,8 @@ class _ChatInputState extends State<ChatInput> {
                 controller: _textController,
                 decoration: InputDecoration(
                   hintText: 'What do you want to write?',
-                  hintStyle: TextStyle(
-                    color: GeminiColors.textSecondary(context),
+                  hintStyle: const TextStyle(
+                    color: Color(0xFFc4c7c5), // Fixed light grey for dark background
                     fontSize: 18, // Larger font
                   ),
                   border: InputBorder.none,
@@ -318,7 +318,7 @@ class _ChatInputState extends State<ChatInput> {
                 textInputAction: TextInputAction.newline,
                 style: TextStyle(
                   fontSize: 18,
-                  color: GeminiColors.icon(context),
+                  color: Colors.white, // Fixed white for dark background
                 ),
                 onChanged: (text) {
                   setState(() {
@@ -342,7 +342,7 @@ class _ChatInputState extends State<ChatInput> {
                     padding: const EdgeInsets.all(8),
                     child: Icon(
                       Icons.add,
-                      color: GeminiColors.icon(context),
+                      color: Color(0xFFc4c7c5), // Fixed light grey for dark background
                       size: 28,
                     ),
                   ),

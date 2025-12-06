@@ -189,8 +189,8 @@ class ChatCubit extends Cubit<ChatState> {
         );
         print('✨ [ChatCubit] Created temp message: ${tempUserMessage.content.length > 20 ? tempUserMessage.content.substring(0, 20) + "..." : tempUserMessage.content}');
 
-        // Immediately show user message in UI
-        final updatedMessages = [...currentState.messages, tempUserMessage];
+        // Immediately show user message in UI (prepend for descending order)
+        final updatedMessages = [tempUserMessage, ...currentState.messages];
         print('📊 [ChatCubit] Emitting optimistic state - Messages: ${updatedMessages.length}, isSending: true');
         emit(currentState.copyWith(messages: updatedMessages, isSending: true));
 

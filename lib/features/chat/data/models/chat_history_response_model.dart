@@ -64,8 +64,8 @@ class ChatHistoryResponseModel {
         botId: botId,
         sender: 'bot',
         content: conversation.aiResponse,
-        timestamp: DateTime.parse(conversation.createdAt),
-        serverCreatedAt: DateTime.parse(conversation.createdAt),
+        timestamp: DateTime.parse(conversation.createdAt).add(const Duration(milliseconds: 1)),
+        serverCreatedAt: DateTime.parse(conversation.createdAt).add(const Duration(milliseconds: 1)),
         isSynced: true,
         syncStatus: 'sent',
       ));

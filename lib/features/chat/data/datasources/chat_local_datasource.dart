@@ -26,7 +26,8 @@ class ChatLocalDataSourceImpl implements ChatLocalDataSource {
       whereArgs: [botId],
       // Order by server_created_at DESC for reverse ListView (newest first in data)
       // If server_created_at is null, fallback to timestamp
-      orderBy: 'COALESCE(server_created_at, timestamp) DESC',
+      // Secondary sort by sender ASC (bot before user) to ensure bot response is "newer" if timestamps equal
+      orderBy: 'COALESCE(server_created_at, timestamp) DESC, sender ASC',
       limit: limit,
     );
 

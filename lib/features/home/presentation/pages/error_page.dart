@@ -191,6 +191,22 @@ class Error404Page extends StatelessWidget {
                   ),
                 ),
               ),
+              const SizedBox(height: 16),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    '/login',
+                    (route) => false,
+                  );
+                },
+                child: Text(
+                  'Back to Login Page',
+                  style: textTheme.titleMedium?.copyWith(
+                    color: isDark ? AppTheme.textSubtleDark : AppTheme.primaryColor,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
             ],
           ),
         ),

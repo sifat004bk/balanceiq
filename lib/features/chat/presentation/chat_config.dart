@@ -11,9 +11,7 @@ class ChatConfig {
   /// Whether to show the select text button on messages
   static const bool showSelectTextButton = false;
 
-  /// Whether to show the copy button on messages
-  static const bool showCopyButton = true;
-
+  /// Whether to show the copy button on me
   /// Whether to show the regenerate button on AI messages
   static const bool showRegenerateButton = false;
 

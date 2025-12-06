@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../models/chat_request_models.dart';
+import '../models/chat_history_response_model.dart';
 import '../models/message_model.dart';
 import 'chat_remote_datasource.dart';
 
@@ -93,7 +94,7 @@ class ChatFinanceGuruDataSource implements ChatRemoteDataSource {
   }
 
   @override
-  Future<ChatHistoryResponse> getChatHistory({
+  Future<ChatHistoryResponseModel> getChatHistory({
     required String userId,
     required int page,
     int? limit,
@@ -121,7 +122,7 @@ class ChatFinanceGuruDataSource implements ChatRemoteDataSource {
       );
 
       if (response.statusCode == 200) {
-        return ChatHistoryResponse.fromJson(response.data);
+        return ChatHistoryResponseModel.fromJson(response.data);
       } else {
         throw Exception('Failed to get chat history: ${response.statusCode}');
       }

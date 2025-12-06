@@ -1,12 +1,13 @@
 import 'package:dartz/dartz.dart';
 import 'package:uuid/uuid.dart';
 import '../../domain/entities/message.dart';
+import '../../domain/entities/chat_history_response.dart';
 import '../../domain/repositories/chat_repository.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/error/failures.dart';
 import '../datasources/chat_local_datasource.dart';
 import '../datasources/chat_remote_datasource.dart';
-import '../models/chat_request_models.dart';
+import '../models/chat_history_response_model.dart';
 import '../models/message_model.dart';
 
 class ChatRepositoryImpl implements ChatRepository {
@@ -21,9 +22,9 @@ class ChatRepositoryImpl implements ChatRepository {
   });
 
   @override
-  Future<Either<Failure, List<Message>>> getMessages(String botId) async {
+  Future<Either<Failure, List<Message>>> getMessages(String botId, {int? limit}) async {
     try {
-      final messages = await localDataSource.getMessages(botId);
+      final messages = await localDataSource.getMessages(botId, limit: limit);
       return Right(messages);
     } catch (e) {
       return Left(CacheFailure('Failed to load messages: $e'));
@@ -107,14 +108,25 @@ class ChatRepositoryImpl implements ChatRepository {
     required String userId,
     required int page,
     int? limit,
+    String? botId,
   }) async {
     try {
-      final response = await remoteDataSource.getChatHistory(
+      // Call API to get chat history
+      final responseModel = await remoteDataSource.getChatHistory(
         userId: userId,
         page: page,
         limit: limit,
       );
-      return Right(response);
+
+      // Convert to messages and save to local cache
+      // This enables offline-first UX and deduplication
+      if (responseModel.conversations.isNotEmpty && botId != null) {
+        final messages = responseModel.toMessageModels(botId);
+        await localDataSource.saveMessages(messages);
+      }
+
+      // Return domain entity
+      return Right(responseModel.toEntity());
     } catch (e) {
       return Left(ServerFailure('Failed to get chat history: $e'));
     }

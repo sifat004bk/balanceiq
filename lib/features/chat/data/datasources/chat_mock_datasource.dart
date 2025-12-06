@@ -1,6 +1,7 @@
 import 'package:balance_iq/core/constants/app_constants.dart';
 import 'package:balance_iq/core/mock/mock_data.dart';
 import '../models/chat_request_models.dart';
+import '../models/chat_history_response_model.dart';
 import '../models/message_model.dart';
 import 'chat_remote_datasource.dart';
 
@@ -47,7 +48,7 @@ class ChatMockDataSource implements ChatRemoteDataSource {
   }
 
   @override
-  Future<ChatHistoryResponse> getChatHistory({
+  Future<ChatHistoryResponseModel> getChatHistory({
     required String userId,
     required int page,
     int? limit,
@@ -58,10 +59,10 @@ class ChatMockDataSource implements ChatRemoteDataSource {
     await _simulateNetworkDelay();
 
     // Return empty chat history for mock matching actual API structure
-    return ChatHistoryResponse(
+    return ChatHistoryResponseModel(
       userId: int.tryParse(userId) ?? 0,
       conversations: [],
-      pagination: Pagination(
+      pagination: PaginationModel(
         currentPage: page,
         limit: limit ?? 20,
         returned: 0,

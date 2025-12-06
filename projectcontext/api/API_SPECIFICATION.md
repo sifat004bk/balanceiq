@@ -673,8 +673,6 @@ GET /api/finance-guru/chat-history?page=1&limit=10
 
 #### Error Responses
 
-**401 Unauthorized** - Missing or invalid token
-
 **Status**: ✅ **Working**
 
 ---

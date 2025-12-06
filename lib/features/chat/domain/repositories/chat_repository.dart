@@ -1,10 +1,10 @@
 import 'package:dartz/dartz.dart';
 import '../entities/message.dart';
+import '../entities/chat_history_response.dart';
 import '../../../../core/error/failures.dart';
-import '../../data/models/chat_request_models.dart';
 
 abstract class ChatRepository {
-  Future<Either<Failure, List<Message>>> getMessages(String botId);
+  Future<Either<Failure, List<Message>>> getMessages(String botId, {int? limit});
   Future<Either<Failure, Message>> sendMessage({
     required String botId,
     required String content,
@@ -15,10 +15,11 @@ abstract class ChatRepository {
   Future<Either<Failure, void>> deleteMessage(String messageId);
   Future<Either<Failure, void>> clearChatHistory(String botId);
 
-  // Remote chat history
+  // Remote chat history with smart sync
   Future<Either<Failure, ChatHistoryResponse>> getChatHistory({
     required String userId,
     required int page,
     int? limit,
+    String? botId,
   });
 }

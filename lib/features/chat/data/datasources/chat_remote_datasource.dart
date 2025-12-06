@@ -1,4 +1,5 @@
 import '../models/chat_request_models.dart';
+import '../models/chat_history_response_model.dart';
 import '../models/message_model.dart';
 
 abstract class ChatRemoteDataSource {
@@ -9,7 +10,7 @@ abstract class ChatRemoteDataSource {
     String? audioPath,
   });
 
-  Future<ChatHistoryResponse> getChatHistory({
+  Future<ChatHistoryResponseModel> getChatHistory({
     required String userId,
     required int page,
     int? limit,

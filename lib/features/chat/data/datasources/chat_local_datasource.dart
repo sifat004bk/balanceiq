@@ -4,8 +4,9 @@ import '../../../../core/database/database_helper.dart';
 import '../models/message_model.dart';
 
 abstract class ChatLocalDataSource {
-  Future<List<MessageModel>> getMessages(String botId);
+  Future<List<MessageModel>> getMessages(String botId, {int? limit});
   Future<void> saveMessage(MessageModel message);
+  Future<void> saveMessages(List<MessageModel> messages);
   Future<void> updateMessage(MessageModel message);
   Future<void> deleteMessage(String messageId);
   Future<void> clearChatHistory(String botId);
@@ -17,13 +18,16 @@ class ChatLocalDataSourceImpl implements ChatLocalDataSource {
   ChatLocalDataSourceImpl(this.databaseHelper);
 
   @override
-  Future<List<MessageModel>> getMessages(String botId) async {
+  Future<List<MessageModel>> getMessages(String botId, {int? limit}) async {
     final db = await databaseHelper.database;
     final List<Map<String, dynamic>> maps = await db.query(
       AppConstants.messagesTable,
       where: 'bot_id = ?',
       whereArgs: [botId],
-      orderBy: 'timestamp ASC',
+      // Order by server_created_at DESC for reverse ListView (newest first in data)
+      // If server_created_at is null, fallback to timestamp
+      orderBy: 'COALESCE(server_created_at, timestamp) DESC',
+      limit: limit,
     );
 
     return List.generate(maps.length, (i) {
@@ -39,6 +43,23 @@ class ChatLocalDataSourceImpl implements ChatLocalDataSource {
       message.toJson(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+  }
+
+  @override
+  Future<void> saveMessages(List<MessageModel> messages) async {
+    final db = await databaseHelper.database;
+
+    // Use transaction for batch insert (atomic operation)
+    await db.transaction((txn) async {
+      for (var message in messages) {
+        await txn.insert(
+          AppConstants.messagesTable,
+          message.toJson(),
+          // Use ignore to prevent duplicates (idempotent operation)
+          conflictAlgorithm: ConflictAlgorithm.ignore,
+        );
+      }
+    });
   }
 
   @override

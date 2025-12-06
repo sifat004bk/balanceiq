@@ -23,7 +23,7 @@ class ChatPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => sl<ChatCubit>()..loadMessages(botId),
+      create: (_) => sl<ChatCubit>()..loadChatHistory(botId),
       child: ChatView(botId: botId, botName: botName),
     );
   }
@@ -48,9 +48,25 @@ class _ChatViewState extends State<ChatView> {
   int _previousMessageCount = 0;
 
   @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
   void dispose() {
+    _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
     super.dispose();
+  }
+
+  void _onScroll() {
+    // For reverse ListView, maxScrollExtent is at the top (oldest messages)
+    // Trigger pagination when user scrolls near the top
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent * 0.9) {
+      context.read<ChatCubit>().loadMoreMessages();
+    }
   }
 
   void _scrollToBottom() {
@@ -153,6 +169,8 @@ class _ChatViewState extends State<ChatView> {
                     botId: widget.botId,
                     botName: widget.botName,
                     isSending: state.isSending,
+                    hasMore: state.hasMore,
+                    isLoadingMore: state.isLoadingMore,
                     scrollController: _scrollController,
                   );
                 } else if (state is ChatError) {
@@ -176,7 +194,7 @@ class _ChatViewState extends State<ChatView> {
                           onPressed: () {
                             context
                                 .read<ChatCubit>()
-                                .loadMessages(widget.botId);
+                                .loadChatHistory(widget.botId);
                           },
                           child: const Text('Retry'),
                         ),

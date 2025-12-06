@@ -10,6 +10,8 @@ class MessageList extends StatelessWidget {
   final String botId;
   final String botName;
   final bool isSending;
+  final bool hasMore;
+  final bool isLoadingMore;
   final ScrollController? scrollController;
 
   const MessageList({
@@ -18,6 +20,8 @@ class MessageList extends StatelessWidget {
     required this.botId,
     required this.botName,
     this.isSending = false,
+    this.hasMore = false,
+    this.isLoadingMore = false,
     this.scrollController,
   });
 
@@ -117,6 +121,26 @@ class MessageList extends StatelessWidget {
             ),
           ),
         ),
+
+        // Pagination Loading Indicator (at top when scrolling up)
+        if (isLoadingMore)
+          SliverToBoxAdapter(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      AppTheme.getBotColor(botId),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
 
         // Top Padding
         const SliverPadding(padding: EdgeInsets.only(top: 16)),

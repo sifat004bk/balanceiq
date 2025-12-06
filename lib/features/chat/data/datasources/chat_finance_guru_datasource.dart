@@ -25,7 +25,8 @@ class ChatFinanceGuruDataSource implements ChatRemoteDataSource {
     String? audioPath,
   }) async {
     try {
-      // Get username from SharedPreferences
+      // Get user info from SharedPreferences
+      final userId = sharedPreferences.getString(AppConstants.keyUserId) ?? '';
       final userEmail = sharedPreferences.getString(AppConstants.keyUserEmail) ?? '';
       final userName = sharedPreferences.getString(AppConstants.keyUserName) ?? 'User';
 
@@ -65,6 +66,7 @@ class ChatFinanceGuruDataSource implements ChatRemoteDataSource {
         // Create a message model from the bot's response
         final botMessage = MessageModel(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
+          userId: userId,
           botId: botId,
           sender: AppConstants.senderBot,
           content: chatResponse.message,

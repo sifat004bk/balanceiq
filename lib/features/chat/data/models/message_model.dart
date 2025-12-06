@@ -3,6 +3,7 @@ import '../../domain/entities/message.dart';
 class MessageModel extends Message {
   const MessageModel({
     required super.id,
+    required super.userId,
     required super.botId,
     required super.sender,
     required super.content,
@@ -20,6 +21,7 @@ class MessageModel extends Message {
   factory MessageModel.fromJson(Map<String, dynamic> json) {
     return MessageModel(
       id: json['id'] as String,
+      userId: json['user_id'] as String,
       botId: json['bot_id'] as String,
       sender: json['sender'] as String,
       content: json['content'] as String,
@@ -40,6 +42,7 @@ class MessageModel extends Message {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'user_id': userId,
       'bot_id': botId,
       'sender': sender,
       'content': content,
@@ -58,6 +61,7 @@ class MessageModel extends Message {
   factory MessageModel.fromEntity(Message message) {
     return MessageModel(
       id: message.id,
+      userId: message.userId,
       botId: message.botId,
       sender: message.sender,
       content: message.content,
@@ -76,6 +80,7 @@ class MessageModel extends Message {
   Message toEntity() {
     return Message(
       id: id,
+      userId: userId,
       botId: botId,
       sender: sender,
       content: content,

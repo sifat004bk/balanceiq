@@ -9,6 +9,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:record/record.dart';
 
 import '../cubit/chat_cubit.dart';
+import '../chat_config.dart';
 
 /// Gemini-style chat input with pill-shaped design
 class ChatInput extends StatefulWidget {
@@ -336,19 +337,21 @@ class _ChatInputState extends State<ChatInput> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 // Plus Icon (Left)
-                GestureDetector(
-                  onTap: _showAttachmentOptions,
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    child: Icon(
-                      Icons.add,
-                      color: Color(0xFFc4c7c5), // Fixed light grey for dark background
-                      size: 28,
+                if (ChatConfig.showAttachments)
+                  GestureDetector(
+                    onTap: _showAttachmentOptions,
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      child: Icon(
+                        Icons.add,
+                        color: Color(0xFFc4c7c5), // Fixed light grey for dark background
+                        size: 28,
+                      ),
                     ),
                   ),
-                ),
                 
-                const SizedBox(width: 8),
+                if (ChatConfig.showAttachments)
+                  const SizedBox(width: 8),
 
                 // Attachment Pill (if image selected)
                 if (_selectedImagePath != null)
@@ -379,22 +382,24 @@ class _ChatInputState extends State<ChatInput> {
                 const Spacer(),
                 
                 // Mic Icon
-                GestureDetector(
-                  onTap: _toggleRecording,
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: const BoxDecoration(
-                      color: Color(0xFF2a2a2e),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      _isRecording ? Icons.stop : Icons.mic,
-                      color: _isRecording ? Colors.red : const Color(0xFFc4c7c5),
-                      size: 24,
+                if (ChatConfig.showAudioRecording)
+                  GestureDetector(
+                    onTap: _toggleRecording,
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF2a2a2e),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        _isRecording ? Icons.stop : Icons.mic,
+                        color: _isRecording ? Colors.red : const Color(0xFFc4c7c5),
+                        size: 24,
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(width: 12),
+                if (ChatConfig.showAudioRecording)
+                  const SizedBox(width: 12),
                 
                 // Send Icon
                 GestureDetector(

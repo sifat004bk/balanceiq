@@ -49,6 +49,7 @@ class ChatHistoryResponseModel {
       // User message
       messages.add(MessageModel(
         id: '${userId}_${conversation.createdAt}_user',
+        userId: userId.toString(),
         botId: botId,
         sender: 'user',
         content: conversation.userMessage,
@@ -61,6 +62,7 @@ class ChatHistoryResponseModel {
       // AI response
       messages.add(MessageModel(
         id: '${userId}_${conversation.createdAt}_bot',
+        userId: userId.toString(),
         botId: botId,
         sender: 'bot',
         content: conversation.aiResponse,

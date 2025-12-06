@@ -8,7 +8,7 @@ class GetMessages {
 
   GetMessages(this.repository);
 
-  Future<Either<Failure, List<Message>>> call(String botId, {int? limit}) async {
-    return await repository.getMessages(botId, limit: limit);
+  Future<Either<Failure, List<Message>>> call(String userId, String botId, {int? limit}) async {
+    return await repository.getMessages(userId, botId, limit: limit);
   }
 }

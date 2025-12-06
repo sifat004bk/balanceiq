@@ -1,5 +1,6 @@
 import 'package:balance_iq/core/constants/app_constants.dart';
 import 'package:balance_iq/core/mock/mock_data.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/chat_request_models.dart';
 import '../models/chat_history_response_model.dart';
 import '../models/message_model.dart';
@@ -7,6 +8,10 @@ import 'chat_remote_datasource.dart';
 
 /// Mock implementation of ChatRemoteDataSource for testing without API calls
 class ChatMockDataSource implements ChatRemoteDataSource {
+  final SharedPreferences sharedPreferences;
+
+  ChatMockDataSource(this.sharedPreferences);
+
   /// Simulate network delay (300-800ms)
   Future<void> _simulateNetworkDelay() async {
     await Future.delayed(
@@ -24,6 +29,9 @@ class ChatMockDataSource implements ChatRemoteDataSource {
     print('🤖 [MockDataSource] Sending message to bot: $botId');
     print('📝 [MockDataSource] Message content: $content');
 
+    // Get user ID from SharedPreferences
+    final userId = sharedPreferences.getString(AppConstants.keyUserId) ?? '';
+
     // Simulate network delay
     await _simulateNetworkDelay();
 
@@ -33,6 +41,7 @@ class ChatMockDataSource implements ChatRemoteDataSource {
     // Create mock response message
     final botMessage = MessageModel(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
+      userId: userId,
       botId: botId,
       sender: AppConstants.senderBot,
       content: responseText,

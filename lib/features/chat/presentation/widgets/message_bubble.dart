@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:intl/intl.dart';
 import '../../domain/entities/message.dart';
+import '../chat_config.dart';
 
 /// Gemini-style message bubble with animations
 class MessageBubble extends StatefulWidget {
@@ -292,70 +293,82 @@ class _MessageBubbleState extends State<MessageBubble>
           // Action Row: Like, Dislike, Select Text, Copy, Regenerate
           Row(
             children: [
-              IconButton(
-                icon: Icon(Icons.thumb_up_outlined, color: GeminiColors.icon(context), size: 20),
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Thanks for the feedback!')),
-                  );
-                },
-              ),
-              const SizedBox(width: 8),
-              IconButton(
-                icon: Icon(Icons.thumb_down_outlined, color: GeminiColors.icon(context), size: 20),
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Thanks for the feedback!')),
-                  );
-                },
-              ),
-              const SizedBox(width: 8),
+              if (ChatConfig.showFeedbackButtons) ...[
+                IconButton(
+                  icon: Icon(Icons.thumb_up_outlined, color: GeminiColors.icon(context), size: 20),
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Thanks for the feedback!')),
+                    );
+                  },
+                ),
+                const SizedBox(width: 8),
+                IconButton(
+                  icon: Icon(Icons.thumb_down_outlined, color: GeminiColors.icon(context), size: 20),
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Thanks for the feedback!')),
+                    );
+                  },
+                ),
+                const SizedBox(width: 8),
+              ],
+              
               // Select Text (Replaces Filter/Tune)
-              IconButton(
-                icon: Icon(Icons.select_all, color: GeminiColors.icon(context), size: 20),
-                onPressed: () {
-                   // Placeholder for select text functionality
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Select text mode')),
-                  );
-                },
-              ),
-              const SizedBox(width: 8),
-              IconButton(
-                icon: Icon(Icons.content_copy, color: GeminiColors.icon(context), size: 20),
-                onPressed: () {
-                  Clipboard.setData(ClipboardData(text: widget.message.content));
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Copied to clipboard')),
-                  );
-                },
-              ),
-              const SizedBox(width: 8),
+              if (ChatConfig.showSelectTextButton) ...[
+                IconButton(
+                  icon: Icon(Icons.select_all, color: GeminiColors.icon(context), size: 20),
+                  onPressed: () {
+                     // Placeholder for select text functionality
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Select text mode')),
+                    );
+                  },
+                ),
+                const SizedBox(width: 8),
+              ],
+
+              if (ChatConfig.showCopyButton) ...[
+                IconButton(
+                  icon: Icon(Icons.content_copy, color: GeminiColors.icon(context), size: 20),
+                  onPressed: () {
+                    Clipboard.setData(ClipboardData(text: widget.message.content));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Copied to clipboard')),
+                    );
+                  },
+                ),
+                const SizedBox(width: 8),
+              ],
+
               // Regenerate Button
-              IconButton(
-                icon: Icon(Icons.refresh, color: GeminiColors.icon(context), size: 20),
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Regenerating response...')),
-                  );
-                  // Trigger regeneration logic here if available
-                },
-              ),
+              if (ChatConfig.showRegenerateButton)
+                IconButton(
+                  icon: Icon(Icons.refresh, color: GeminiColors.icon(context), size: 20),
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Regenerating response...')),
+                    );
+                    // Trigger regeneration logic here if available
+                  },
+                ),
             ],
           ),
           
           const SizedBox(height: 24),
           
           // Disclaimer
-          Center(
-            child: Text(
-              'BalanceIQ can make mistakes, so double-check it',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: GeminiColors.textSecondary(context),
-                    fontSize: 12,
-                  ),
+          if (ChatConfig.bottomDisclaimerText != null)
+            Center(
+              child: Text(
+                ChatConfig.bottomDisclaimerText!,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: GeminiColors.textSecondary(context),
+                      fontSize: 12,
+                    ),
+                textAlign: TextAlign.center,
+              ),
             ),
-          ),
 
           // Image logic
           if (widget.message.imageUrl != null &&

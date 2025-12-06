@@ -4,12 +4,13 @@ import '../../../../core/database/database_helper.dart';
 import '../models/message_model.dart';
 
 abstract class ChatLocalDataSource {
-  Future<List<MessageModel>> getMessages(String botId, {int? limit});
+  Future<List<MessageModel>> getMessages(String userId, String botId, {int? limit});
   Future<void> saveMessage(MessageModel message);
   Future<void> saveMessages(List<MessageModel> messages);
   Future<void> updateMessage(MessageModel message);
   Future<void> deleteMessage(String messageId);
-  Future<void> clearChatHistory(String botId);
+  Future<void> clearChatHistory(String userId, String botId);
+  Future<void> clearAllUserMessages(String userId);
 }
 
 class ChatLocalDataSourceImpl implements ChatLocalDataSource {
@@ -18,12 +19,12 @@ class ChatLocalDataSourceImpl implements ChatLocalDataSource {
   ChatLocalDataSourceImpl(this.databaseHelper);
 
   @override
-  Future<List<MessageModel>> getMessages(String botId, {int? limit}) async {
+  Future<List<MessageModel>> getMessages(String userId, String botId, {int? limit}) async {
     final db = await databaseHelper.database;
     final List<Map<String, dynamic>> maps = await db.query(
       AppConstants.messagesTable,
-      where: 'bot_id = ?',
-      whereArgs: [botId],
+      where: 'user_id = ? AND bot_id = ?',
+      whereArgs: [userId, botId],
       // Order by server_created_at DESC for reverse ListView (newest first in data)
       // If server_created_at is null, fallback to timestamp
       // Secondary sort by sender ASC (bot before user) to ensure bot response is "newer" if timestamps equal
@@ -85,12 +86,22 @@ class ChatLocalDataSourceImpl implements ChatLocalDataSource {
   }
 
   @override
-  Future<void> clearChatHistory(String botId) async {
+  Future<void> clearChatHistory(String userId, String botId) async {
     final db = await databaseHelper.database;
     await db.delete(
       AppConstants.messagesTable,
-      where: 'bot_id = ?',
-      whereArgs: [botId],
+      where: 'user_id = ? AND bot_id = ?',
+      whereArgs: [userId, botId],
+    );
+  }
+
+  @override
+  Future<void> clearAllUserMessages(String userId) async {
+    final db = await databaseHelper.database;
+    await db.delete(
+      AppConstants.messagesTable,
+      where: 'user_id = ?',
+      whereArgs: [userId],
     );
   }
 }

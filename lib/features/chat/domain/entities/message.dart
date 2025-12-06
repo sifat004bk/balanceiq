@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 
 class Message extends Equatable {
   final String id;
+  final String userId;  // User isolation - each user sees only their messages
   final String botId;
   final String sender; // 'user' or 'bot'
   final String content;
@@ -19,6 +20,7 @@ class Message extends Equatable {
 
   const Message({
     required this.id,
+    required this.userId,
     required this.botId,
     required this.sender,
     required this.content,
@@ -36,6 +38,7 @@ class Message extends Equatable {
   @override
   List<Object?> get props => [
         id,
+        userId,
         botId,
         sender,
         content,
@@ -52,6 +55,7 @@ class Message extends Equatable {
 
   Message copyWith({
     String? id,
+    String? userId,
     String? botId,
     String? sender,
     String? content,
@@ -67,6 +71,7 @@ class Message extends Equatable {
   }) {
     return Message(
       id: id ?? this.id,
+      userId: userId ?? this.userId,
       botId: botId ?? this.botId,
       sender: sender ?? this.sender,
       content: content ?? this.content,

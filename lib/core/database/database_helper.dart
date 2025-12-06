@@ -39,10 +39,11 @@ class DatabaseHelper {
       )
     ''');
 
-    // Create messages table (v2 schema with sync fields)
+    // Create messages table (v3 schema with user_id for isolation)
     await db.execute('''
       CREATE TABLE ${AppConstants.messagesTable} (
         id TEXT PRIMARY KEY,
+        user_id TEXT NOT NULL,
         bot_id TEXT NOT NULL,
         sender TEXT NOT NULL,
         content TEXT NOT NULL,
@@ -58,20 +59,20 @@ class DatabaseHelper {
         sync_status TEXT DEFAULT 'pending',
         api_message_id TEXT,
 
-        -- Deduplication constraint
-        CONSTRAINT unique_message UNIQUE (bot_id, sender, server_created_at, content)
+        -- Deduplication constraint (v3: includes user_id)
+        CONSTRAINT unique_message UNIQUE (user_id, bot_id, sender, server_created_at, content)
       )
     ''');
 
-    // Create indexes for efficient queries
+    // Create indexes for efficient queries (v3: includes user_id)
     await db.execute('''
-      CREATE INDEX idx_messages_bot_server_time
-      ON ${AppConstants.messagesTable}(bot_id, server_created_at DESC)
+      CREATE INDEX idx_messages_user_bot_server_time
+      ON ${AppConstants.messagesTable}(user_id, bot_id, server_created_at DESC)
     ''');
 
     await db.execute('''
-      CREATE INDEX idx_messages_bot_timestamp
-      ON ${AppConstants.messagesTable}(bot_id, timestamp)
+      CREATE INDEX idx_messages_user_bot_timestamp
+      ON ${AppConstants.messagesTable}(user_id, bot_id, timestamp DESC)
     ''');
   }
 
@@ -79,6 +80,11 @@ class DatabaseHelper {
     // Migrate from version 1 to 2: Add chat sync fields
     if (oldVersion < 2) {
       await _migrateToV2(db);
+    }
+
+    // Migrate from version 2 to 3: Add user_id for user isolation
+    if (oldVersion < 3) {
+      await _migrateToV3(db);
     }
   }
 
@@ -137,6 +143,57 @@ class DatabaseHelper {
     ''');
 
     print('✅ Migration to v2 completed successfully');
+  }
+
+  Future<void> _migrateToV3(Database db) async {
+    print('🔄 Migrating database from v2 to v3: Adding user_id for user isolation');
+
+    // Strategy: Delete all existing messages (fresh start)
+    // This ensures clean user isolation without orphaned data
+    print('⚠️ Clearing all existing messages for fresh start...');
+    await db.delete(AppConstants.messagesTable);
+
+    // Drop old table
+    await db.execute('DROP TABLE ${AppConstants.messagesTable}');
+
+    // Create new messages table with user_id column
+    await db.execute('''
+      CREATE TABLE ${AppConstants.messagesTable} (
+        id TEXT PRIMARY KEY,
+        user_id TEXT NOT NULL,
+        bot_id TEXT NOT NULL,
+        sender TEXT NOT NULL,
+        content TEXT NOT NULL,
+        image_url TEXT,
+        audio_url TEXT,
+        timestamp TEXT NOT NULL,
+        is_sending INTEGER NOT NULL DEFAULT 0,
+        has_error INTEGER NOT NULL DEFAULT 0,
+
+        -- Sync fields (v2)
+        server_created_at TEXT,
+        is_synced INTEGER DEFAULT 0,
+        sync_status TEXT DEFAULT 'pending',
+        api_message_id TEXT,
+
+        -- Deduplication constraint (v3: includes user_id)
+        CONSTRAINT unique_message UNIQUE (user_id, bot_id, sender, server_created_at, content)
+      )
+    ''');
+
+    // Create new indexes for efficient user-specific queries
+    await db.execute('''
+      CREATE INDEX idx_messages_user_bot_server_time
+      ON ${AppConstants.messagesTable}(user_id, bot_id, server_created_at DESC)
+    ''');
+
+    await db.execute('''
+      CREATE INDEX idx_messages_user_bot_timestamp
+      ON ${AppConstants.messagesTable}(user_id, bot_id, timestamp DESC)
+    ''');
+
+    print('✅ Migration to v3 completed successfully');
+    print('ℹ️ All previous messages have been cleared for user isolation');
   }
 
   Future<void> close() async {

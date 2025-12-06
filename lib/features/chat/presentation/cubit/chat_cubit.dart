@@ -39,9 +39,12 @@ class ChatCubit extends Cubit<ChatState> {
 
     emit(ChatLoading());
 
+    // Get user ID from SharedPreferences
+    final userId = sharedPreferences.getString(AppConstants.keyUserId) ?? '';
+
     // Step 1: Load from cache immediately (fast UX)
     print('💾 [ChatCubit] Loading from cache...');
-    final cachedResult = await getMessages(botId, limit: 20);
+    final cachedResult = await getMessages(userId, botId, limit: 20);
     cachedResult.fold(
       (failure) {
         print('⚠️ [ChatCubit] Cache load failed: ${failure.message}');
@@ -58,7 +61,6 @@ class ChatCubit extends Cubit<ChatState> {
     // Step 2: Sync with API in background
     print('🌐 [ChatCubit] Syncing with API...');
     _apiPage = 1;
-    final userId = sharedPreferences.getString(AppConstants.keyUserId) ?? '0';
 
     final apiResult = await getChatHistory(
       userId: userId,
@@ -84,7 +86,7 @@ class ChatCubit extends Cubit<ChatState> {
           _hasMore = response.pagination.hasNext;
 
           // Step 3: Reload from cache (now includes API data)
-          final updatedResult = await getMessages(botId, limit: 20);
+          final updatedResult = await getMessages(userId, botId, limit: 20);
           updatedResult.fold(
             (failure) => emit(ChatError(message: failure.message)),
             (messages) {
@@ -140,7 +142,7 @@ class ChatCubit extends Cubit<ChatState> {
 
           // Reload with more messages
           final currentCount = currentState.messages.length;
-          final updatedResult = await getMessages(currentBotId!, limit: currentCount + 20);
+          final updatedResult = await getMessages(userId, currentBotId!, limit: currentCount + 20);
           updatedResult.fold(
             (failure) => emit(currentState.copyWith(isLoadingMore: false)),
             (messages) {
@@ -175,9 +177,13 @@ class ChatCubit extends Cubit<ChatState> {
         final currentState = state as ChatLoaded;
         print('📤 [ChatCubit] Starting sendNewMessage - Current messages: ${currentState.messages.length}');
 
+        // Get user ID from SharedPreferences
+        final userId = sharedPreferences.getString(AppConstants.keyUserId) ?? '';
+
         // Create temporary user message for immediate display (optimistic UI)
         final tempUserMessage = Message(
           id: uuid.v4(),
+          userId: userId,
           botId: botId,
           sender: AppConstants.senderUser,
           content: content,
@@ -207,7 +213,7 @@ class ChatCubit extends Cubit<ChatState> {
         // After API completes, reload from DB to get actual messages
         if (!isClosed) {
           print('🔄 [ChatCubit] Reloading messages from cache');
-          final reloadResult = await getMessages(botId, limit: currentState.messages.length + 2);
+          final reloadResult = await getMessages(userId, botId, limit: currentState.messages.length + 2);
           reloadResult.fold(
             (failure) => emit(currentState.copyWith(isSending: false)),
             (messages) {

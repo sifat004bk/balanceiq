@@ -167,6 +167,7 @@ Future<void> init() async {
     () => ChatRepositoryImpl(
       localDataSource: sl(),
       remoteDataSource: sl(),
+      sharedPreferences: sl(),
       uuid: sl(),
     ),
   );
@@ -181,7 +182,7 @@ Future<void> init() async {
     () {
       if (AppConstants.isMockMode) {
         print('🎭 [DI] Registering MOCK ChatRemoteDataSource');
-        return ChatMockDataSource();
+        return ChatMockDataSource(sl());
       } else {
         print('🌐 [DI] Registering REAL ChatRemoteDataSource (Finance Guru API)');
         return ChatFinanceGuruDataSource(sl(), sl());

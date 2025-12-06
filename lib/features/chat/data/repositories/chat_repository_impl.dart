@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:uuid/uuid.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../domain/entities/message.dart';
 import '../../domain/entities/chat_history_response.dart';
 import '../../domain/repositories/chat_repository.dart';
@@ -13,18 +14,20 @@ import '../models/message_model.dart';
 class ChatRepositoryImpl implements ChatRepository {
   final ChatLocalDataSource localDataSource;
   final ChatRemoteDataSource remoteDataSource;
+  final SharedPreferences sharedPreferences;
   final Uuid uuid;
 
   ChatRepositoryImpl({
     required this.localDataSource,
     required this.remoteDataSource,
+    required this.sharedPreferences,
     required this.uuid,
   });
 
   @override
-  Future<Either<Failure, List<Message>>> getMessages(String botId, {int? limit}) async {
+  Future<Either<Failure, List<Message>>> getMessages(String userId, String botId, {int? limit}) async {
     try {
-      final messages = await localDataSource.getMessages(botId, limit: limit);
+      final messages = await localDataSource.getMessages(userId, botId, limit: limit);
       return Right(messages);
     } catch (e) {
       return Left(CacheFailure('Failed to load messages: $e'));
@@ -39,9 +42,13 @@ class ChatRepositoryImpl implements ChatRepository {
     String? audioPath,
   }) async {
     try {
+      // Get user ID from SharedPreferences
+      final userId = sharedPreferences.getString(AppConstants.keyUserId) ?? '';
+
       // Create user message
       final userMessage = MessageModel(
         id: uuid.v4(),
+        userId: userId,
         botId: botId,
         sender: AppConstants.senderUser,
         content: content,
@@ -94,12 +101,22 @@ class ChatRepositoryImpl implements ChatRepository {
   }
 
   @override
-  Future<Either<Failure, void>> clearChatHistory(String botId) async {
+  Future<Either<Failure, void>> clearChatHistory(String userId, String botId) async {
     try {
-      await localDataSource.clearChatHistory(botId);
+      await localDataSource.clearChatHistory(userId, botId);
       return const Right(null);
     } catch (e) {
       return Left(CacheFailure('Failed to clear chat history: $e'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> clearAllUserMessages(String userId) async {
+    try {
+      await localDataSource.clearAllUserMessages(userId);
+      return const Right(null);
+    } catch (e) {
+      return Left(CacheFailure('Failed to clear user messages: $e'));
     }
   }
 

@@ -82,12 +82,9 @@ class _MessageBubbleState extends State<MessageBubble>
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4), // Reduced vertical padding
-      child: Row(
-        mainAxisAlignment:
-            widget.isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Bot avatar (only for AI messages) - Restored for alignment
           if (!widget.isUser) ...[
             Padding(
               padding: const EdgeInsets.only(top: 0), // Align with top of text
@@ -103,34 +100,41 @@ class _MessageBubbleState extends State<MessageBubble>
             ),
             const SizedBox(width: 12),
           ],
-          // Message content
-          Flexible(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: maxWidth),
-              child: Column(
-                crossAxisAlignment: widget.isUser
-                    ? CrossAxisAlignment.end
-                    : CrossAxisAlignment.start,
-                children: [
-                  // Message bubble
-                  widget.isUser
-                      ? _buildUserMessage(context)
-                      : _buildAiMessage(context),
-                  // Timestamp (User only, or bottom for AI?) - Keeping as is for now
-                  if (widget.isUser)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 4, right: 4),
-                      child: Text(
-                        _formatTimestamp(widget.message.timestamp),
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              fontSize: 10,
-                              color: GeminiColors.textSecondary(context),
-                            ),
-                      ),
-                    ),
-                ],
+          Row(
+            mainAxisAlignment:
+                widget.isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Message content
+              Flexible(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: maxWidth),
+                  child: Column(
+                    crossAxisAlignment: widget.isUser
+                        ? CrossAxisAlignment.end
+                        : CrossAxisAlignment.start,
+                    children: [
+                      // Message bubble
+                      widget.isUser
+                          ? _buildUserMessage(context)
+                          : _buildAiMessage(context),
+                      // Timestamp (User only, or bottom for AI?) - Keeping as is for now
+                      if (widget.isUser)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4, right: 4),
+                          child: Text(
+                            _formatTimestamp(widget.message.timestamp),
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  fontSize: 10,
+                                  color: GeminiColors.textSecondary(context),
+                                ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
         ],
       ),

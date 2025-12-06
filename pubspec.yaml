@@ -74,6 +74,7 @@ dependencies:
   flutter_markdown_plus: ^1.0.5
   smooth_page_indicator: ^1.2.0+3
   fl_chart: ^0.68.0
+  data_table_2: ^2.5.15
 
 dev_dependencies:
   flutter_test:

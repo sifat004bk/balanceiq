@@ -8,6 +8,7 @@ import '../../domain/entities/message.dart';
 import '../chat_config.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubit/chat_cubit.dart';
+import 'gen_ui/gen_ui_builder.dart';
 
 /// Gemini-style message bubble with animations
 class MessageBubble extends StatefulWidget {
@@ -211,6 +212,13 @@ class _MessageBubbleState extends State<MessageBubble>
             MarkdownBody(
               data: widget.message.content,
               selectable: true,
+              builders: {
+                'ui:chart': GenUIChartBuilder(),
+                'ui:table': GenUITableBuilder(),
+                'ui:metric': GenUIMetricCardBuilder(),
+                'ui:progress': GenUIProgressBuilder(),
+                'ui:actions': GenUIActionButtonsBuilder(),
+              },
               styleSheet: MarkdownStyleSheet(
                 p: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: GeminiColors.aiMessageText(context),

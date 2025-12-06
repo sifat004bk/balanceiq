@@ -17,6 +17,7 @@ class Message extends Equatable {
   final bool isSynced;               // Whether synced with backend
   final String syncStatus;           // 'pending', 'sent', 'failed'
   final String? apiMessageId;        // Backend message ID
+  final String? actionType;          // Action type (e.g., balance_query, income_log)
 
   const Message({
     required this.id,
@@ -33,6 +34,7 @@ class Message extends Equatable {
     this.isSynced = false,
     this.syncStatus = 'pending',
     this.apiMessageId,
+    this.actionType,
   });
 
   @override
@@ -51,6 +53,7 @@ class Message extends Equatable {
         isSynced,
         syncStatus,
         apiMessageId,
+        actionType,
       ];
 
   Message copyWith({
@@ -68,6 +71,7 @@ class Message extends Equatable {
     bool? isSynced,
     String? syncStatus,
     String? apiMessageId,
+    String? actionType,
   }) {
     return Message(
       id: id ?? this.id,
@@ -84,6 +88,7 @@ class Message extends Equatable {
       isSynced: isSynced ?? this.isSynced,
       syncStatus: syncStatus ?? this.syncStatus,
       apiMessageId: apiMessageId ?? this.apiMessageId,
+      actionType: actionType ?? this.actionType,
     );
   }
 }

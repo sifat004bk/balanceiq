@@ -73,6 +73,7 @@ class ChatFinanceGuruDataSource implements ChatRemoteDataSource {
           timestamp: DateTime.now(),
           isSending: false,
           hasError: false,
+          actionType: chatResponse.actionType,
         );
 
         return botMessage;

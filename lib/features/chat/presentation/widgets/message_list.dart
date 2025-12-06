@@ -83,11 +83,16 @@ class MessageList extends StatelessWidget {
                   if (messageIndex < messages.length) {
                     final message = messages[messageIndex];
                     final isUser = message.sender == AppConstants.senderUser;
+                    // When sending, the first message (index 0) is typing indicator, 
+                    // so index 1 (messageIndex 0) is the last message.
+                    final isLastMessage = messageIndex == 0;
+                    
                     return MessageBubble(
                       message: message,
                       isUser: isUser,
                       botName: botName,
                       botColor: AppTheme.getBotColor(botId),
+                      isLastMessage: isLastMessage,
                     );
                   }
                   return null;
@@ -97,12 +102,15 @@ class MessageList extends StatelessWidget {
                 if (index < messages.length) {
                   final message = messages[index];
                   final isUser = message.sender == AppConstants.senderUser;
+                  // In reversed list, index 0 is the last message
+                  final isLastMessage = index == 0;
 
                   return MessageBubble(
                     message: message,
                     isUser: isUser,
                     botName: botName,
                     botColor: AppTheme.getBotColor(botId),
+                    isLastMessage: isLastMessage,
                   );
                 }
                 return null;

@@ -6,6 +6,8 @@ import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:intl/intl.dart';
 import '../../domain/entities/message.dart';
 import '../chat_config.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../cubit/chat_cubit.dart';
 
 /// Gemini-style message bubble with animations
 class MessageBubble extends StatefulWidget {
@@ -13,6 +15,7 @@ class MessageBubble extends StatefulWidget {
   final bool isUser;
   final String botName;
   final Color botColor;
+  final bool isLastMessage;
 
   const MessageBubble({
     super.key,
@@ -20,6 +23,7 @@ class MessageBubble extends StatefulWidget {
     required this.isUser,
     required this.botName,
     required this.botColor,
+    this.isLastMessage = false,
   });
 
   @override
@@ -289,6 +293,57 @@ class _MessageBubbleState extends State<MessageBubble>
             ),
             
           const SizedBox(height: 16),
+
+          // Action Type Display & Change Button
+          if (widget.message.actionType != null && widget.message.actionType!.isNotEmpty) ...[
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: isDark ? const Color(0xFF2a2a2e) : const Color(0xFFf0f0f0),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: GeminiColors.divider(context),
+                ),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "Recorded as '${widget.message.actionType}'",
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: GeminiColors.textSecondary(context),
+                          fontStyle: FontStyle.italic,
+                        ),
+                  ),
+                  if (widget.isLastMessage) ...[
+                    const SizedBox(width: 8),
+                    GestureDetector(
+                      onTap: () => _showActionTypeOptions(context),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: GeminiColors.primaryColor(context).withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: GeminiColors.primaryColor(context),
+                            width: 1,
+                          ),
+                        ),
+                        child: Text(
+                          'Change',
+                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                color: GeminiColors.primaryColor(context),
+                                fontWeight: FontWeight.bold,
+                              ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+          ],
           
           // Action Row: Like, Dislike, Select Text, Copy, Regenerate
           Row(
@@ -431,5 +486,62 @@ class _MessageBubbleState extends State<MessageBubble>
     } else {
       return DateFormat('MMM d, h:mm a').format(timestamp);
     }
+  }
+
+  void _showActionTypeOptions(BuildContext context) {
+    // Capture the cubit from the current context (where the provider is available)
+    // before showing the bottom sheet (which pushes a new route without the provider)
+    final chatCubit = context.read<ChatCubit>();
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: GeminiColors.surface(context),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Change Action Type',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+                const SizedBox(height: 16),
+                ListTile(
+                  leading: const Icon(Icons.arrow_downward, color: Colors.green),
+                  title: const Text('Income'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    _sendCorrectionMessage(chatCubit, 'income');
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.arrow_upward, color: Colors.red),
+                  title: const Text('Expense'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    _sendCorrectionMessage(chatCubit, 'expense');
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _sendCorrectionMessage(ChatCubit chatCubit, String newType) {
+    final correctionText = "change the actiontype of the last entry as $newType";
+    chatCubit.sendNewMessage(
+          botId: widget.message.botId,
+          content: correctionText,
+        );
   }
 }

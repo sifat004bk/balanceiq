@@ -58,6 +58,7 @@ class DatabaseHelper {
         is_synced INTEGER DEFAULT 0,
         sync_status TEXT DEFAULT 'pending',
         api_message_id TEXT,
+        action_type TEXT,
 
         -- Deduplication constraint (v3: includes user_id)
         CONSTRAINT unique_message UNIQUE (user_id, bot_id, sender, server_created_at, content)
@@ -85,6 +86,11 @@ class DatabaseHelper {
     // Migrate from version 2 to 3: Add user_id for user isolation
     if (oldVersion < 3) {
       await _migrateToV3(db);
+    }
+
+    // Migrate from version 3 to 4: Add action_type column
+    if (oldVersion < 4) {
+      await _migrateToV4(db);
     }
   }
 
@@ -194,6 +200,15 @@ class DatabaseHelper {
 
     print('✅ Migration to v3 completed successfully');
     print('ℹ️ All previous messages have been cleared for user isolation');
+  }
+
+  Future<void> _migrateToV4(Database db) async {
+    print('🔄 Migrating database from v3 to v4: Adding action_type column');
+    
+    // Add action_type column to existing table
+    await db.execute('ALTER TABLE ${AppConstants.messagesTable} ADD COLUMN action_type TEXT');
+    
+    print('✅ Migration to v4 completed successfully');
   }
 
   Future<void> close() async {

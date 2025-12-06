@@ -45,7 +45,7 @@ class ChatView extends StatefulWidget {
 
 class _ChatViewState extends State<ChatView> {
   final ScrollController _scrollController = ScrollController();
-  int _previousMessageCount = 0;
+  String? _latestMessageId;
 
   @override
   void initState() {
@@ -94,11 +94,12 @@ class _ChatViewState extends State<ChatView> {
             Expanded(
               child: BlocConsumer<ChatCubit, ChatState>(
                 listener: (context, state) {
-                  // Auto-scroll to bottom when new message arrives
-                  if (state is ChatLoaded) {
-                    // Only scroll if message count changed (new message added)
-                    if (state.messages.length != _previousMessageCount) {
-                      _previousMessageCount = state.messages.length;
+                  // Auto-scroll to bottom ONLY when a NEW message arrives (latest message changes)
+                  if (state is ChatLoaded && state.messages.isNotEmpty) {
+                    final latestMessage = state.messages.first;
+                    // Check if the latest message is different from what we saw last time
+                    if (_latestMessageId != latestMessage.id) {
+                      _latestMessageId = latestMessage.id;
                       _scrollToBottom();
                     }
                   }

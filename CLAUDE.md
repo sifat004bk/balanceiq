@@ -21,15 +21,17 @@
 
 **Working on Specific Features?**
 - **Authentication** → `projectcontext/implementation/API_IMPLEMENTATION_SUMMARY.md`
+- **Chat Pagination & Caching** → `projectcontext/CHAT_ARCHITECTURE_v2.md`
 - **UI/UX Design** → `projectcontext/design_docs/GEMINI_UI_DESIGN_SPECIFICATIONS.md`
-- **Backend APIs** → `projectcontext/API_INTEGRATION.md` + `projectcontext/project_summary/tech/backend.md`
+- **Backend APIs** → `projectcontext/api/API_SPECIFICATION.md`
+- **n8n Integration** → `projectcontext/api/API_INTEGRATION.md`
 - **API Testing (Postman)** → `projectcontext/project_summary/tech/Business.postman_collection.json`
 - **Mock Development** → `projectcontext/project_summary/tech/MOCK_ENVIRONMENT_GUIDE.md`
 - **Architecture** → `projectcontext/ARCHITECTURE.md`
 - **Development Guide** → `projectcontext/DEVELOPMENT_GUIDE.md`
 
 **Critical Information:**
-- 🔴 **UI/API Sync Issues** → `projectcontext/implementation/UI_LAYER_EVALUATION.md`
+- **UI/API Sync Issues** → `projectcontext/implementation/UI_LAYER_EVALUATION.md`
 - **Latest Progress** → `projectcontext/progress/progress.md`
 - **Current Tasks** → `projectcontext/TASKS.md`
 - **Roadmap** → `projectcontext/ROADMAP.md`

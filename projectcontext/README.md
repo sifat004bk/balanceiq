@@ -10,25 +10,27 @@ Welcome to the BalanceIQ project context! This directory contains concise, essen
 4. **Need to know what's done?** See [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md)
 5. **Planning next steps?** Review [ROADMAP.md](ROADMAP.md) and [TASKS.md](TASKS.md)
 
-## Document Guide
+## Core Documents
 
 | Document | Purpose | Read Time |
 |----------|---------|-----------|
 | [PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md) | High-level project summary, tech stack, features | 10 min |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Clean architecture, folder structure, design patterns | 15 min |
 | [DEVELOPMENT_GUIDE.md](DEVELOPMENT_GUIDE.md) | How to add features, modify code, best practices | 20 min |
-| [API_INTEGRATION.md](API_INTEGRATION.md) | n8n webhooks, API contracts, data flow | 10 min |
 | [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md) | What's implemented, what's missing, known issues | 10 min |
 | [ROADMAP.md](ROADMAP.md) | Development phases, priorities, timeline | 10 min |
 | [TASKS.md](TASKS.md) | Actionable task list with priorities | 5 min |
+| [CLEANUP_SUMMARY.md](CLEANUP_SUMMARY.md) | Documentation reorganization summary | 5 min |
 
 ## Specialized Documentation
 
 | Directory | Contents | Purpose |
 |-----------|----------|---------|
-| [implementation/](implementation/) | API implementation summaries, UI layer evaluations | Backend integration and synchronization analysis |
+| [api/](api/) | Backend API spec, n8n integration, API navigation | Complete API reference and integration guides |
 | [design_docs/](design_docs/) | Gemini UI specifications, implementation checklists | UI/UX design guidelines and references |
+| [implementation/](implementation/) | API implementation summaries, UI layer evaluations | Backend integration and synchronization analysis |
 | [progress/](progress/) | Weekly progress reports, UI update reports | Development tracking and sprint summaries |
+| [archive/](archive/) | Completed features, outdated guides | Historical documentation and completion reports |
 | [project_summary/](project_summary/) | Business plans, product specs, tech architecture | Comprehensive project documentation |
 
 ## Project At a Glance
@@ -105,7 +107,7 @@ lib/
 
 1. **Architecture questions?** → [ARCHITECTURE.md](ARCHITECTURE.md)
 2. **How to add a feature?** → [DEVELOPMENT_GUIDE.md](DEVELOPMENT_GUIDE.md)
-3. **API not working?** → [API_INTEGRATION.md](API_INTEGRATION.md)
+3. **API documentation?** → [api/README.md](api/README.md)
 4. **What needs to be built?** → [TASKS.md](TASKS.md)
 
 ## Document Philosophy
@@ -126,23 +128,34 @@ When updating these docs:
 
 ---
 
-## Recent Updates (2025-11-22)
+## Recent Updates (2025-11-30)
 
-**API Integration Sprint Completed:**
+**Documentation Cleanup Completed:**
+- ✅ Reorganized projectcontext directory structure
+- ✅ Created dedicated `api/` directory for all API documentation
+- ✅ Moved historical docs to `archive/` directory
+- ✅ Removed duplicate and empty stub files
+- ✅ Updated all cross-references in CLAUDE.md, GEMINI.md, and PROJECT_OVERVIEW.md
+- ✅ Created comprehensive CLEANUP_SUMMARY.md
+
+**Previous Updates (2025-11-22):**
 - ✅ Implemented 6 authentication backend APIs (signup, login, profile, password management)
 - ✅ Added chat history API with pagination
 - ✅ Created 22 comprehensive integration tests
-- ✅ Organized documentation structure under projectcontext/
-- 🔴 **Critical**: UI layer not yet synced with new backend APIs (see [implementation/UI_LAYER_EVALUATION.md](implementation/UI_LAYER_EVALUATION.md))
+- **Critical**: UI layer not yet synced with new backend APIs (see [implementation/UI_LAYER_EVALUATION.md](implementation/UI_LAYER_EVALUATION.md))
 
-**Documentation Reorganized:**
-- All API implementation docs → `implementation/`
-- All design specifications → `design_docs/`
+**Directory Structure:**
+- API documentation → `api/`
+- Design specifications → `design_docs/`
+- Implementation details → `implementation/`
 - Progress tracking → `progress/`
-- See directory READMEs for details
+- Historical docs → `archive/`
+- Comprehensive docs → `project_summary/`
+
+See [CLEANUP_SUMMARY.md](CLEANUP_SUMMARY.md) for complete reorganization details.
 
 ---
 
-**Last Updated**: 2025-11-22
+**Last Updated**: 2025-11-30
 **Project Version**: 1.0.0+1
-**Documentation Version**: 1.1
+**Documentation Version**: 2.0

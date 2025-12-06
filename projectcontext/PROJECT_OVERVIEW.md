@@ -385,22 +385,31 @@ Located in `projectcontext/`
 | **README.md** | Navigation guide to all docs, quick start instructions | First file to read |
 | **ARCHITECTURE.md** | Clean architecture layers, folder structure, design patterns | Understanding code organization |
 | **DEVELOPMENT_GUIDE.md** | How to add features, coding standards, best practices | Before writing new code |
-| **API_INTEGRATION.md** | n8n webhooks, API endpoints, request/response formats | Working with backend APIs |
 | **IMPLEMENTATION_STATUS.md** | Completion percentage, what's done, what's missing | Checking project progress |
 | **ROADMAP.md** | Development phases, priorities, timeline | Planning next steps |
 | **TASKS.md** | Actionable task list with priorities | Daily development tasks |
 
 ### 📂 Specialized Directories
 
+#### `api/` - API Documentation
+Complete API reference and integration guides.
+
+| File | Contents | Use Case |
+|------|----------|----------|
+| **README.md** | API documentation overview and quick reference | Navigation and environment setup |
+| **API_SPECIFICATION.md** | Complete backend API spec (auth, finance guru endpoints) | Backend API integration |
+| **API_INTEGRATION.md** | n8n webhook integration guide (legacy) | Working with n8n workflows |
+
 #### `design_docs/` - UI/UX Design Specifications
 UI design guidelines and Gemini-inspired design system.
 
 | File | Contents | Use Case |
 |------|----------|----------|
+| **OVERVIEW.md** | Getting started with Gemini UI design system | UI setup and introduction |
 | **GEMINI_UI_DESIGN_SPECIFICATIONS.md** | Complete design system (colors, typography, components) | Implementing UI components |
 | **GEMINI_IMPLEMENTATION_CHECKLIST.md** | Phase-by-phase UI implementation tasks | Tracking UI development |
 | **GEMINI_QUICK_REFERENCE.md** | Color palette, typography scale, code snippets | Quick design reference |
-| **README_GEMINI_UI.md** | Getting started with Gemini UI | UI setup and overview |
+| **README.md** | Design docs navigation | Understanding design docs |
 | **gemini_observes.md** | Design decisions and lessons learned | Understanding design choices |
 
 **Design Assets**: Located in `design_files/` with mockups for:
@@ -415,8 +424,8 @@ API implementation details and UI synchronization status.
 
 | File | Contents | Use Case |
 |------|----------|----------|
-| **API_IMPLEMENTATION_SUMMARY.md** | All 7 backend endpoints (auth + chat), tests, architecture | Understanding backend APIs |
-| **UI_LAYER_EVALUATION.md** | 🔴 Critical: Gap analysis between UI and backend APIs | Fixing UI/API synchronization |
+| **API_IMPLEMENTATION_SUMMARY.md** | Backend endpoints implementation details, tests | Understanding API implementation |
+| **UI_LAYER_EVALUATION.md** | Critical: Gap analysis between UI and backend APIs | Fixing UI/API synchronization |
 | **README.md** | Implementation docs overview | Navigating implementation docs |
 
 #### `progress/` - Development Tracking
@@ -428,17 +437,19 @@ Weekly progress reports and status updates.
 | **UI_UPDATE_REPORT.md** | UI/UX changes, design updates, improvements | Reviewing UI changes |
 | **README.md** | Progress tracking guide | Understanding progress docs |
 
+#### `archive/` - Historical Documentation
+Archived completion reports and outdated documentation.
+
+Contains:
+- `AUTH_UX_COMPLETE.md` - Authentication UX completion report
+- `API_DATA_LAYER_UPDATE.md` - API data layer implementation log
+- `MOCK_AUTH_GUIDE.md` - Legacy mock authentication guide
+
 #### `project_summary/` - Comprehensive Project Documentation
 Detailed business, product, and technical documentation.
 
 **Business** (`project_summary/business/`)
 - `bangladesh_strategy/` - Market strategy, revenue model, user acquisition
-  - `bangladesh_strategy_summary.md` - Complete Bangladesh market strategy
-  - `01_core_business_idea.md` - Business concept and differentiators
-  - `02_revenue_model.md` - Pricing and monetization
-  - `03_user_acquisition_strategy.md` - Marketing and growth tactics
-  - `04_critical_recommendations.md` - Key action items
-  - `05_fundraising.md` - Funding strategy
 - `international_strategy/` - Global expansion plans
 
 **Product** (`project_summary/product/`)
@@ -447,17 +458,13 @@ Detailed business, product, and technical documentation.
 - `ux.md` - UX principles and guidelines
 - `ux_evaluation_report.md` - UX audit and recommendations
 
-**Project** (`project_summary/project/`)
-- `roadmap.md` - Detailed development roadmap
-- `tasks.md` - Task breakdown and planning
-
 **Tech** (`project_summary/tech/`)
 - `app.md` - Flutter app architecture and implementation
 - `backend.md` - Backend API documentation
 - `n8n.md` - n8n workflow integration
 - `qa.md` - Testing strategy and quality assurance
-- `MOCK_ENVIRONMENT_GUIDE.md` - 🎭 Local development without backend (mock mode)
-- `Business.postman_collection.json` - 📮 Complete API testing collection
+- `MOCK_ENVIRONMENT_GUIDE.md` - Local development without backend (mock mode)
+- `Business.postman_collection.json` - Complete API testing collection
 
 ### 🔍 Where to Find What
 
@@ -465,13 +472,14 @@ Detailed business, product, and technical documentation.
 - **"What is this project?"** → `PROJECT_OVERVIEW.md`
 - **"How is code organized?"** → `ARCHITECTURE.md`
 - **"How do I add a feature?"** → `DEVELOPMENT_GUIDE.md`
-- **"What APIs are available?"** → `API_INTEGRATION.md` + `implementation/API_IMPLEMENTATION_SUMMARY.md`
-- **"How to test APIs?"** → `project_summary/tech/Business.postman_collection.json` 📮
-- **"How to develop without backend?"** → `project_summary/tech/MOCK_ENVIRONMENT_GUIDE.md` 🎭
+- **"What APIs are available?"** → `api/API_SPECIFICATION.md`
+- **"How to work with n8n?"** → `api/API_INTEGRATION.md`
+- **"How to test APIs?"** → `project_summary/tech/Business.postman_collection.json`
+- **"How to develop without backend?"** → `project_summary/tech/MOCK_ENVIRONMENT_GUIDE.md`
 - **"What's the current status?"** → `IMPLEMENTATION_STATUS.md` + `progress/progress.md`
 - **"What needs to be built?"** → `TASKS.md` + `ROADMAP.md`
 - **"How should UI look?"** → `design_docs/GEMINI_UI_DESIGN_SPECIFICATIONS.md`
-- **"Why UI not working with APIs?"** → `implementation/UI_LAYER_EVALUATION.md` 🔴
+- **"Why UI not working with APIs?"** → `implementation/UI_LAYER_EVALUATION.md`
 - **"Business strategy for Bangladesh?"** → `project_summary/business/bangladesh_strategy/bangladesh_strategy_summary.md`
 - **"What are the features?"** → `project_summary/product/features.md`
 - **"Latest progress?"** → `progress/progress.md`
@@ -485,18 +493,18 @@ Detailed business, product, and technical documentation.
 4. `DEVELOPMENT_GUIDE.md` - Start coding
 
 **For UI/UX Developers:**
-1. `design_docs/README_GEMINI_UI.md` - Design system intro
+1. `design_docs/OVERVIEW.md` - Design system intro
 2. `design_docs/GEMINI_UI_DESIGN_SPECIFICATIONS.md` - Complete specs
 3. `design_files/` - Visual mockups
 4. `project_summary/product/ux_evaluation_report.md` - UX improvements
 
 **For Backend Developers:**
-1. `API_INTEGRATION.md` - API overview
-2. `implementation/API_IMPLEMENTATION_SUMMARY.md` - Detailed endpoints
-3. `project_summary/tech/backend.md` - Backend architecture
-4. `project_summary/tech/n8n.md` - Workflow integration
-5. `project_summary/tech/Business.postman_collection.json` - 📮 API testing collection
-6. `project_summary/tech/MOCK_ENVIRONMENT_GUIDE.md` - 🎭 Mock development setup
+1. `api/README.md` - API overview
+2. `api/API_SPECIFICATION.md` - Complete backend API spec
+3. `api/API_INTEGRATION.md` - n8n integration guide
+4. `implementation/API_IMPLEMENTATION_SUMMARY.md` - Implementation details
+5. `project_summary/tech/Business.postman_collection.json` - API testing
+6. `project_summary/tech/MOCK_ENVIRONMENT_GUIDE.md` - Mock development
 
 **For Product Managers:**
 1. `PROJECT_OVERVIEW.md` - Product summary
@@ -508,8 +516,8 @@ Detailed business, product, and technical documentation.
 **For QA/Testers:**
 1. `IMPLEMENTATION_STATUS.md` - What's implemented
 2. `project_summary/tech/qa.md` - Testing strategy
-3. `project_summary/tech/MOCK_ENVIRONMENT_GUIDE.md` - 🎭 Local testing setup (offline mode)
-4. `project_summary/tech/Business.postman_collection.json` - 📮 API endpoint testing
+3. `project_summary/tech/MOCK_ENVIRONMENT_GUIDE.md` - Local testing setup
+4. `project_summary/tech/Business.postman_collection.json` - API testing
 
 ---
 
@@ -528,4 +536,4 @@ Detailed business, product, and technical documentation.
 
 ---
 
-**Last Updated**: 2025-11-22
+**Last Updated**: 2025-11-30

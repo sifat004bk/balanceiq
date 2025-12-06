@@ -77,9 +77,6 @@ class _MessageBubbleState extends State<MessageBubble>
   }
 
   Widget _buildMessageContent(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final maxWidth = screenWidth * 0.75; // 75% of screen width (Gemini style)
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4), // Reduced vertical padding
       child: Column(
@@ -107,31 +104,28 @@ class _MessageBubbleState extends State<MessageBubble>
             children: [
               // Message content
               Flexible(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: maxWidth),
-                  child: Column(
-                    crossAxisAlignment: widget.isUser
-                        ? CrossAxisAlignment.end
-                        : CrossAxisAlignment.start,
-                    children: [
-                      // Message bubble
-                      widget.isUser
-                          ? _buildUserMessage(context)
-                          : _buildAiMessage(context),
-                      // Timestamp (User only, or bottom for AI?) - Keeping as is for now
-                      if (widget.isUser)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 4, right: 4),
-                          child: Text(
-                            _formatTimestamp(widget.message.timestamp),
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  fontSize: 10,
-                                  color: GeminiColors.textSecondary(context),
-                                ),
-                          ),
+                child: Column(
+                  crossAxisAlignment: widget.isUser
+                      ? CrossAxisAlignment.end
+                      : CrossAxisAlignment.start,
+                  children: [
+                    // Message bubble
+                    widget.isUser
+                        ? _buildUserMessage(context)
+                        : _buildAiMessage(context),
+                    // Timestamp (User only, or bottom for AI?) - Keeping as is for now
+                    if (widget.isUser)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4, right: 4),
+                        child: Text(
+                          _formatTimestamp(widget.message.timestamp),
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                fontSize: 10,
+                                color: GeminiColors.textSecondary(context),
+                              ),
                         ),
-                    ],
-                  ),
+                      ),
+                  ],
                 ),
               ),
             ],

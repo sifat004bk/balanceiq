@@ -11,6 +11,10 @@ class MessageModel extends Message {
     required super.timestamp,
     super.isSending,
     super.hasError,
+    super.serverCreatedAt,
+    super.isSynced,
+    super.syncStatus,
+    super.apiMessageId,
   });
 
   factory MessageModel.fromJson(Map<String, dynamic> json) {
@@ -24,6 +28,12 @@ class MessageModel extends Message {
       timestamp: DateTime.parse(json['timestamp'] as String),
       isSending: json['is_sending'] == 1,
       hasError: json['has_error'] == 1,
+      serverCreatedAt: json['server_created_at'] != null
+          ? DateTime.parse(json['server_created_at'] as String)
+          : null,
+      isSynced: json['is_synced'] == 1,
+      syncStatus: json['sync_status'] as String? ?? 'pending',
+      apiMessageId: json['api_message_id'] as String?,
     );
   }
 
@@ -38,6 +48,10 @@ class MessageModel extends Message {
       'timestamp': timestamp.toIso8601String(),
       'is_sending': isSending ? 1 : 0,
       'has_error': hasError ? 1 : 0,
+      'server_created_at': serverCreatedAt?.toIso8601String(),
+      'is_synced': isSynced ? 1 : 0,
+      'sync_status': syncStatus,
+      'api_message_id': apiMessageId,
     };
   }
 
@@ -52,6 +66,10 @@ class MessageModel extends Message {
       timestamp: message.timestamp,
       isSending: message.isSending,
       hasError: message.hasError,
+      serverCreatedAt: message.serverCreatedAt,
+      isSynced: message.isSynced,
+      syncStatus: message.syncStatus,
+      apiMessageId: message.apiMessageId,
     );
   }
 
@@ -66,6 +84,10 @@ class MessageModel extends Message {
       timestamp: timestamp,
       isSending: isSending,
       hasError: hasError,
+      serverCreatedAt: serverCreatedAt,
+      isSynced: isSynced,
+      syncStatus: syncStatus,
+      apiMessageId: apiMessageId,
     );
   }
 }

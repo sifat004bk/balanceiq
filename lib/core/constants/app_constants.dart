@@ -19,7 +19,7 @@ class AppConstants {
 
   // Local Database
   static const String databaseName = 'balance_iq.db';
-  static const int databaseVersion = 1;
+  static const int databaseVersion = 2; // Updated for chat pagination & sync fields
 
   // Table Names
   static const String messagesTable = 'messages';

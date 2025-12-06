@@ -11,6 +11,12 @@ class Message extends Equatable {
   final bool isSending;
   final bool hasError;
 
+  // Sync fields for chat history API integration
+  final DateTime? serverCreatedAt;  // Source of truth for ordering
+  final bool isSynced;               // Whether synced with backend
+  final String syncStatus;           // 'pending', 'sent', 'failed'
+  final String? apiMessageId;        // Backend message ID
+
   const Message({
     required this.id,
     required this.botId,
@@ -21,6 +27,10 @@ class Message extends Equatable {
     required this.timestamp,
     this.isSending = false,
     this.hasError = false,
+    this.serverCreatedAt,
+    this.isSynced = false,
+    this.syncStatus = 'pending',
+    this.apiMessageId,
   });
 
   @override
@@ -34,6 +44,10 @@ class Message extends Equatable {
         timestamp,
         isSending,
         hasError,
+        serverCreatedAt,
+        isSynced,
+        syncStatus,
+        apiMessageId,
       ];
 
   Message copyWith({
@@ -46,6 +60,10 @@ class Message extends Equatable {
     DateTime? timestamp,
     bool? isSending,
     bool? hasError,
+    DateTime? serverCreatedAt,
+    bool? isSynced,
+    String? syncStatus,
+    String? apiMessageId,
   }) {
     return Message(
       id: id ?? this.id,
@@ -57,6 +75,10 @@ class Message extends Equatable {
       timestamp: timestamp ?? this.timestamp,
       isSending: isSending ?? this.isSending,
       hasError: hasError ?? this.hasError,
+      serverCreatedAt: serverCreatedAt ?? this.serverCreatedAt,
+      isSynced: isSynced ?? this.isSynced,
+      syncStatus: syncStatus ?? this.syncStatus,
+      apiMessageId: apiMessageId ?? this.apiMessageId,
     );
   }
 }

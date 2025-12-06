@@ -124,6 +124,7 @@ class GenUIChart extends StatelessWidget {
 
   Widget _buildBarChart(BuildContext context) {
     final chartData = (data['data'] as List).cast<Map<String, dynamic>>();
+    final useGradient = data['gradient'] == true;
 
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0.0, end: 1.0),
@@ -137,26 +138,16 @@ class GenUIChart extends StatelessWidget {
             barTouchData: BarTouchData(
               enabled: true,
               touchTooltipData: BarTouchTooltipData(
-                getTooltipColor: (group) => GeminiColors.primaryColor(context).withOpacity(0.9),
-                tooltipRoundedRadius: 8,
+                getTooltipColor: (group) => Theme.of(context).cardColor,
                 tooltipPadding: const EdgeInsets.all(8),
+                tooltipMargin: 8,
                 getTooltipItem: (group, groupIndex, rod, rodIndex) {
                   return BarTooltipItem(
-                    '${chartData[groupIndex]['label']}\n',
-                    const TextStyle(
-                      color: Colors.white,
+                    rod.toY.toString(),
+                    TextStyle(
+                      color: GeminiColors.aiMessageText(context),
                       fontWeight: FontWeight.bold,
-                      fontSize: 14,
                     ),
-                    children: [
-                      TextSpan(
-                        text: rod.toY.toStringAsFixed(0),
-                        style: const TextStyle(
-                          color: Colors.white70,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
                   );
                 },
               ),
@@ -172,8 +163,9 @@ class GenUIChart extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 8.0),
                         child: Text(
                           chartData[value.toInt()]['label'] ?? '',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 10,
+                            color: GeminiColors.textSecondary(context),
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -190,13 +182,12 @@ class GenUIChart extends StatelessWidget {
             gridData: FlGridData(
               show: true,
               drawVerticalLine: false,
-              horizontalInterval: _getMaxValue(chartData) * 0.2,
-              getDrawingHorizontalLine: (value) {
-                return FlLine(
-                  color: GeminiColors.divider(context).withOpacity(0.3),
-                  strokeWidth: 1,
-                );
-              },
+              horizontalInterval: _getMaxValue(chartData) / 4,
+              getDrawingHorizontalLine: (value) => FlLine(
+                color: GeminiColors.divider(context).withOpacity(0.5),
+                strokeWidth: 1,
+                dashArray: [5, 5],
+              ),
             ),
             borderData: FlBorderData(show: false),
             barGroups: chartData.asMap().entries.map((entry) {
@@ -205,28 +196,30 @@ class GenUIChart extends StatelessWidget {
               final targetValue = (item['value'] as num).toDouble();
               final animatedValue = targetValue * animationValue;
               final colorHex = item['color'] as String?;
-              final color = colorHex != null ? _parseColor(colorHex) : GeminiColors.primaryColor(context);
+              final color = colorHex != null
+                  ? _parseColor(colorHex)
+                  : GeminiColors.primaryColor(context);
 
               return BarChartGroupData(
                 x: index,
                 barRods: [
                   BarChartRodData(
                     toY: animatedValue,
-                    color: color,
-                    width: 20,
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(6)),
+                    gradient: useGradient
+                        ? LinearGradient(
+                            colors: [color.withOpacity(0.6), color],
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.topCenter,
+                          )
+                        : null,
+                    color: useGradient ? null : color,
+                    width: 18,
+                    borderRadius:
+                        const BorderRadius.vertical(top: Radius.circular(6)),
                     backDrawRodData: BackgroundBarChartRodData(
                       show: true,
                       toY: _getMaxValue(chartData) * 1.2,
-                      color: color.withOpacity(0.1),
-                    ),
-                    gradient: LinearGradient(
-                      colors: [
-                        color,
-                        color.withOpacity(0.7),
-                      ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
+                      color: GeminiColors.divider(context).withOpacity(0.2),
                     ),
                   ),
                 ],
@@ -251,9 +244,20 @@ class GenUIChart extends StatelessWidget {
       return FlSpot(index.toDouble(), value);
     }).toList();
 
+    final primaryColor = GeminiColors.primaryColor(context);
+
     return LineChart(
       LineChartData(
-        gridData: const FlGridData(show: false),
+        gridData: FlGridData(
+          show: true,
+          drawVerticalLine: false,
+          horizontalInterval: _getMaxValue(chartData) / 4,
+          getDrawingHorizontalLine: (value) => FlLine(
+            color: GeminiColors.divider(context).withOpacity(0.5),
+            strokeWidth: 1,
+            dashArray: [5, 5],
+          ),
+        ),
         titlesData: FlTitlesData(
           bottomTitles: AxisTitles(
             sideTitles: SideTitles(
@@ -264,7 +268,11 @@ class GenUIChart extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 8.0),
                     child: Text(
                       chartData[value.toInt()]['label'] ?? '',
-                      style: const TextStyle(fontSize: 10),
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: GeminiColors.textSecondary(context),
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   );
                 }
@@ -282,13 +290,49 @@ class GenUIChart extends StatelessWidget {
           LineChartBarData(
             spots: spots,
             isCurved: true,
-            color: GeminiColors.primaryColor(context),
-            barWidth: 3,
+            color: primaryColor,
+            barWidth: 4,
             isStrokeCapRound: true,
-            dotData: const FlDotData(show: true),
-            belowBarData: BarAreaData(show: true, color: GeminiColors.primaryColor(context).withOpacity(0.1)),
+            dotData: FlDotData(
+              show: true,
+              getDotPainter: (spot, percent, barData, index) {
+                return FlDotCirclePainter(
+                  radius: 4,
+                  color: Theme.of(context).cardColor,
+                  strokeWidth: 2,
+                  strokeColor: primaryColor,
+                );
+              },
+            ),
+            belowBarData: BarAreaData(
+              show: true, 
+              gradient: LinearGradient(
+                colors: [
+                  primaryColor.withOpacity(0.3),
+                  primaryColor.withOpacity(0.0),
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+            ),
           ),
         ],
+        lineTouchData: LineTouchData(
+          touchTooltipData: LineTouchTooltipData(
+            getTooltipColor: (touchedSpot) => Theme.of(context).cardColor,
+            getTooltipItems: (touchedSpots) {
+              return touchedSpots.map((spot) {
+                return LineTooltipItem(
+                  spot.y.toString(),
+                  TextStyle(
+                    color: GeminiColors.aiMessageText(context),
+                    fontWeight: FontWeight.bold,
+                  ),
+                );
+              }).toList();
+            },
+          ),
+        ),
       ),
     );
   }

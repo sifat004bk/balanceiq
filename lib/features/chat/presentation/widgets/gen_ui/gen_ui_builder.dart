@@ -10,8 +10,11 @@ import 'gen_ui_action_buttons.dart';
 import 'gen_ui_animated_wrapper.dart';
 import 'gen_ui_stats.dart';
 import 'gen_ui_insight_card.dart';
+import 'gen_ui_summary_card.dart';
+import 'gen_ui_action_list.dart';
 
 class GenUICodeBuilder extends MarkdownElementBuilder {
+  // Base class not used directly
   @override
   Widget? visitElementAfterWithContext(
     BuildContext context,
@@ -19,16 +22,7 @@ class GenUICodeBuilder extends MarkdownElementBuilder {
     TextStyle? preferredStyle,
     TextStyle? parentStyle,
   ) {
-    // The element text content contains the code block content
-    final String content = element.textContent;
-
-    try {
-      final jsonMap = jsonDecode(content);
-      return null; // This base class won't be used directly.
-    } catch (e) {
-      return Text('Error parsing Gen UI: $e',
-          style: const TextStyle(color: Colors.red));
-    }
+    return null;
   }
 }
 
@@ -72,6 +66,48 @@ class GenUITableBuilder extends MarkdownElementBuilder {
     } catch (e) {
       return Text('Error rendering table: $e',
           style: const TextStyle(color: Colors.red));
+    }
+  }
+}
+
+class GenUISummaryCardBuilder extends MarkdownElementBuilder {
+  @override
+  Widget? visitElementAfterWithContext(
+    BuildContext context,
+    md.Element element,
+    TextStyle? preferredStyle,
+    TextStyle? parentStyle,
+  ) {
+    try {
+      final content = element.textContent;
+      final jsonMap = jsonDecode(content);
+      return GenUIAnimatedWrapper(
+        delay: 100,
+        child: GenUISummaryCard(data: jsonMap),
+      );
+    } catch (e) {
+      return Text('Error rendering summary card: $e', style: const TextStyle(color: Colors.red));
+    }
+  }
+}
+
+class GenUIActionListBuilder extends MarkdownElementBuilder {
+  @override
+  Widget? visitElementAfterWithContext(
+    BuildContext context,
+    md.Element element,
+    TextStyle? preferredStyle,
+    TextStyle? parentStyle,
+  ) {
+    try {
+      final content = element.textContent;
+      final jsonMap = jsonDecode(content);
+      return GenUIAnimatedWrapper(
+        delay: 100,
+        child: GenUIActionList(data: jsonMap),
+      );
+    } catch (e) {
+      return Text('Error rendering action list: $e', style: const TextStyle(color: Colors.red));
     }
   }
 }

@@ -215,6 +215,8 @@ class _MessageBubbleState extends State<MessageBubble>
               builders: {
                 'ui:chart': GenUIChartBuilder(),
                 'ui:table': GenUITableBuilder(),
+                'ui:summary_card': GenUISummaryCardBuilder(),
+                'ui:action_list': GenUIActionListBuilder(),
                 'ui:metric': GenUIMetricCardBuilder(),
                 'ui:progress': GenUIProgressBuilder(),
                 'ui:actions': GenUIActionButtonsBuilder(),

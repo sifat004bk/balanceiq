@@ -425,7 +425,7 @@ Expected response format:
 
 Retrieve user's financial dashboard summary.
 
-**Endpoint**: `GET /api/finance-guru/dashboard`
+**Endpoint**: `GET /api/finance-guru/v1/dashboard`
 **Authentication**: Required (Bearer Token)
 **Content-Type**: `application/json`
 
@@ -444,19 +444,34 @@ None required - user ID extracted from JWT token
 
 ```json
 {
-  "userId": 8,
-  "period": "2025-11",
-  "totalIncome": 0,
-  "totalExpense": 0,
-  "netBalance": 0,
-  "expenseRatio": null,
-  "savingsRate": null,
-  "categoryBreakdown": [],
-  "dailySpendingTrend": [],
-  "accountBalances": [],
-  "biggestExpense": null,
-  "biggestCategory": null,
-  "daysRemainingInMonth": 1
+  "userId": 9,
+  "period": "2025-12",
+  "totalIncome": 100000.00,
+  "totalExpense": 6755.00,
+  "netBalance": 93245.00,
+  "expenseRatio": 6.76,
+  "savingsRate": 93.25,
+  "categoryBreakdown": [
+    {
+      "category": "dps",
+      "amount": 5000.0,
+      "percent": null,
+      "transactionCount": 1
+    }
+  ],
+  "dailySpendingTrend": [
+    {
+      "date": "2025-12-01",
+      "amount": 0.0
+    }
+  ],
+  "biggestExpense": {
+    "amount": 5000.00,
+    "category": "dps",
+    "description": "dps"
+  },
+  "biggestCategory": "dps",
+  "daysRemainingInMonth": 25
 }
 ```
 
@@ -473,9 +488,8 @@ None required - user ID extracted from JWT token
 | savingsRate | number \| null | Savings rate percentage |
 | categoryBreakdown | array | List of expense categories with amounts |
 | dailySpendingTrend | array | Daily spending trend data |
-| accountBalances | array | List of account balances |
 | biggestExpense | object \| null | Details of biggest single expense |
-| biggestCategory | object \| null | Category with highest spending |
+| biggestCategory | string \| null | Name of category with highest spending |
 | daysRemainingInMonth | integer | Days left in current month |
 
 #### Category Breakdown Item
@@ -484,7 +498,8 @@ None required - user ID extracted from JWT token
 {
   "category": "string",
   "amount": "number",
-  "percentage": "number"
+  "percent": "number | null",
+  "transactionCount": "integer"
 }
 ```
 
@@ -494,15 +509,6 @@ None required - user ID extracted from JWT token
 {
   "date": "string (YYYY-MM-DD)",
   "amount": "number"
-}
-```
-
-#### Account Balance Item
-
-```json
-{
-  "accountName": "string",
-  "balance": "number"
 }
 ```
 

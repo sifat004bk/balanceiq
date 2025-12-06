@@ -26,7 +26,7 @@ class DashboardSummaryModel extends DashboardSummary {
 
   factory DashboardSummaryModel.fromJson(Map<String, dynamic> json) {
     try {
-      // API returns camelCase fields, not snake_case
+      // API returns camelCase fields
       // Parse dailySpendingTrend array
       final List<SpendingTrendPoint> spendingTrend = [];
       final dynamic spendingTrendData = json['dailySpendingTrend'];
@@ -34,8 +34,18 @@ class DashboardSummaryModel extends DashboardSummary {
       if (spendingTrendData != null && spendingTrendData is List) {
         for (final dynamic point in spendingTrendData) {
           if (point is Map<String, dynamic>) {
+            // Parse date "2025-12-01" to get day
+            int day = 0;
+            final dateStr = point['date'];
+            if (dateStr != null) {
+              try {
+                final date = DateTime.parse(dateStr.toString());
+                day = date.day;
+              } catch (_) {}
+            }
+            
             spendingTrend.add(SpendingTrendPoint(
-              day: _parseIntNullable(point['day']) ?? 0,
+              day: day,
               amount: _parseDoubleNullable(point['amount']) ?? 0.0,
             ));
           }
@@ -85,18 +95,14 @@ class DashboardSummaryModel extends DashboardSummary {
       final String expenseCategory = biggestExpense != null
           ? _parseStringNullable(biggestExpense['category']) ?? ''
           : '';
-      final String expenseAccount = biggestExpense != null
-          ? _parseStringNullable(biggestExpense['account']) ?? ''
-          : '';
+      // API doesn't return account for biggest expense anymore
+      final String expenseAccount = '';
 
-      // Parse biggestCategory object
-      final dynamic biggestCategory = json['biggestCategory'];
-      final String biggestCategoryName = biggestCategory != null
-          ? _parseStringNullable(biggestCategory['category']) ?? ''
-          : '';
-      final double biggestCategoryAmount = biggestCategory != null
-          ? _parseDoubleNullable(biggestCategory['amount']) ?? 0.0
-          : 0.0;
+      // Parse biggestCategory (now returns string name only)
+      final String biggestCategoryName = _parseStringNullable(json['biggestCategory']) ?? '';
+      
+      // Find amount for biggest category from categories map
+      final double biggestCategoryAmount = categories[biggestCategoryName] ?? 0.0;
 
       return DashboardSummaryModel(
         totalIncome: _parseDoubleNullable(json['totalIncome']) ?? 0.0,

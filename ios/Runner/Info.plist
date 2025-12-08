@@ -53,5 +53,18 @@
 	<string>This app needs access to the microphone to record audio messages.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>This app needs access to save photos to your library.</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.1072498309198-dmvm3egt9ihkv1jseubu0b63v4ffdis2</string>
+			</array>
+		</dict>
+	</array>
+	<key>GIDClientID</key>
+	<string>1072498309198-dmvm3egt9ihkv1jseubu0b63v4ffdis2.apps.googleusercontent.com</string>
 </dict>
 </plist>

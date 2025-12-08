@@ -69,6 +69,7 @@ Future<void> init() async {
 
   sl.registerLazySingleton(
     () => GoogleSignIn(
+      clientId: '1072498309198-dmvm3egt9ihkv1jseubu0b63v4ffdis2.apps.googleusercontent.com',
       scopes: [
         'email',
         'profile',

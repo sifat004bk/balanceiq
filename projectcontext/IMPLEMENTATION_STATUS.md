@@ -4,12 +4,12 @@ This document tracks what's implemented, what's missing, and known issues in Bal
 
 ## Overall Progress
 
-**Completion**: 68% (Beta stage) ⬆️ +8% (UI integration & features complete)
-**Total Code**: ~15,000 lines of Dart (+7,500 lines since Nov 15)
-**Last Updated**: 2025-11-29
+**Completion**: 70% (Beta stage) ⬆️ +2% (Finance Guru v1 APIs integrated)
+**Total Code**: ~16,000 lines of Dart (+1,000 lines since Nov 29)
+**Last Updated**: 2025-12-09
 
 ```
-Progress: [===============>                   ] 68%
+Progress: [================>                  ] 70%
 
 ✅ Completed     🟡 Partial     ❌ Not Started
 ```
@@ -109,7 +109,7 @@ Progress: [===============>                   ] 68%
 **Files**:
 - `lib/core/` (constants, database, DI, theme, error)
 
-#### 5. n8n Integration
+#### 5. n8n Integration (Legacy)
 **Status**: 95% Complete ✅ NEW: Chat History Endpoint Added
 - [x] Chat webhook endpoint (`/webhook/run-main-workflow`)
 - [x] Dashboard webhook endpoint (`/webhook/get-user-dashboard`)
@@ -121,6 +121,52 @@ Progress: [===============>                   ] 68%
 - [x] Authorization token support
 - [ ] Retry logic
 - [ ] Offline queue
+
+**Note**: n8n webhooks are being phased out in favor of Finance Guru v1 REST APIs
+
+#### 6. Finance Guru v1 APIs
+**Status**: 90% Complete ✅ NEW: v1 REST APIs Implemented
+- [x] **Dashboard API v1** (`GET /api/finance-guru/v1/dashboard`)
+  - [x] Data source with JWT authentication
+  - [x] Query parameters support (startDate, endDate)
+  - [x] Mock data source for offline development
+  - [x] Response model with new fields (biggestIncome)
+  - [ ] UI integration with date range selector
+- [x] **Transaction Search API** (`GET /api/finance-guru/v1/transactions`)
+  - [x] Data source implementation
+  - [x] Request/response models
+  - [x] Flexible query parameters (search, category, type, dates, amounts, limit)
+  - [x] Fuzzy search support
+  - [ ] UI integration (transaction search page)
+  - [ ] Use cases and repository
+- [x] **Chat Feedback API** (`POST /api/finance-guru/v1/chat-history/{id}/feedback`)
+  - [x] Data source implementation
+  - [x] Request/response models
+  - [x] Feedback types enum (LIKE, DISLIKE, NONE)
+  - [ ] UI integration (feedback buttons in chat)
+  - [ ] Use cases and repository
+- [x] **Token Usage API** (`GET /api/finance-guru/v1/token-usage`)
+  - [x] Data source implementation
+  - [x] Request/response models
+  - [x] Usage history tracking
+  - [ ] UI integration (usage dashboard)
+  - [ ] Use cases and repository
+- [x] **Action Types Documentation**
+  - [x] Transaction actions (record, update, delete, search)
+  - [x] Analytics actions (balance, trends, summaries)
+  - [x] Category management actions
+  - [x] System conversation actions
+
+**Files**:
+- `lib/core/constants/api_endpoints.dart` (v1 endpoints)
+- `lib/features/home/data/models/transaction_model.dart`
+- `lib/features/home/data/datasource/remote_datasource/transaction_search_datasource.dart`
+- `lib/features/chat/data/models/token_usage_model.dart`
+- `lib/features/chat/data/models/chat_feedback_model.dart`
+- `lib/features/chat/data/datasources/token_usage_datasource.dart`
+- `lib/features/chat/data/datasources/chat_feedback_datasource.dart`
+- `projectcontext/api/API_SPECIFICATION.md` (13 endpoints documented)
+- `projectcontext/api/API_INTEGRATION.md` (updated with v1 APIs)
 
 ### 🟡 Partially Implemented
 

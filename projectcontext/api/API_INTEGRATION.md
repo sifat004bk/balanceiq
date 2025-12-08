@@ -1,10 +1,28 @@
 # API Integration Guide
 
-This document details the n8n webhook integration and API contracts for BalanceIQ.
+This document details the backend API integration and n8n webhook integration for BalanceIQ.
 
 ## Overview
 
-BalanceIQ uses **n8n workflows** as its backend, communicating via RESTful webhook endpoints. All AI processing, data storage, and business logic happen in n8n.
+BalanceIQ uses **two types of backend services**:
+
+1. **Backend REST APIs** (`/api/*`) - JWT-authenticated endpoints for Finance Guru features
+2. **n8n Webhooks** (legacy) - Webhook endpoints for chat and dashboard (being phased out)
+
+### Finance Guru v1 APIs (New - Recommended)
+
+All new Finance Guru features use the backend REST APIs with JWT authentication:
+
+- **Dashboard**: `GET /api/finance-guru/v1/dashboard` - Financial summary with date range support
+- **Transaction Search**: `GET /api/finance-guru/v1/transactions` - Search and filter transactions
+- **Chat Feedback**: `POST /api/finance-guru/v1/chat-history/{id}/feedback` - Rate AI responses
+- **Token Usage**: `GET /api/finance-guru/v1/token-usage` - Track LLM token consumption
+
+**See [API_SPECIFICATION.md](API_SPECIFICATION.md) for complete API documentation.**
+
+### n8n Webhooks (Legacy)
+
+The original n8n webhook integration is still active for backward compatibility:
 
 **Architecture**:
 ```
@@ -563,4 +581,4 @@ final dio = Dio()
 
 ---
 
-**Last Updated**: 2025-11-21
+**Last Updated**: 2025-12-09

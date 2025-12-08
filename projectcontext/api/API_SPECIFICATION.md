@@ -20,6 +20,10 @@
    - [Dashboard](#7-dashboard)
    - [Chat](#8-chat)
    - [Chat History](#9-chat-history)
+   - [Transaction Search](#10-transaction-search)
+   - [Chat Feedback](#11-chat-feedback)
+   - [Token Usage](#12-token-usage)
+   - [Action Types](#13-action-types)
 3. [Response Format](#response-format)
 4. [Error Codes](#error-codes)
 5. [Status Summary](#status-summary)
@@ -423,7 +427,7 @@ Expected response format:
 
 ### 7. Dashboard
 
-Retrieve user's financial dashboard summary.
+Retrieve a comprehensive financial dashboard for the authenticated user. This endpoint aggregates transaction data to provide summaries, trends, and top income/expense items for a specified date range.
 
 **Endpoint**: `GET /api/finance-guru/v1/dashboard`
 **Authentication**: Required (Bearer Token)
@@ -436,42 +440,65 @@ Authorization: Bearer <JWT_TOKEN>
 Content-Type: application/json
 ```
 
-#### Request Parameters
+#### Query Parameters
 
-None required - user ID extracted from JWT token
+| Parameter | Type | Required | Description | Default |
+|-----------|------|----------|-------------|---------|
+| `startDate` | Date (ISO 8601) | No | Start date for the dashboard data (YYYY-MM-DD) | First day of current month |
+| `endDate` | Date (ISO 8601) | No | End date for the dashboard data (YYYY-MM-DD) | Last day of current month |
+
+#### Request Example
+
+```
+GET /api/finance-guru/v1/dashboard?startDate=2025-12-01&endDate=2025-12-31
+Authorization: Bearer <JWT_TOKEN>
+```
 
 #### Success Response (200 OK)
 
 ```json
 {
-  "userId": 9,
-  "period": "2025-12",
-  "totalIncome": 100000.00,
-  "totalExpense": 6755.00,
-  "netBalance": 93245.00,
-  "expenseRatio": 6.76,
-  "savingsRate": 93.25,
+  "userId": 12345,
+  "startDate": "2025-12-01",
+  "endDate": "2025-12-31",
+  "totalIncome": 50000.00,
+  "totalExpense": 15450.50,
+  "netBalance": 34549.50,
+  "expenseRatio": 30.90,
+  "savingsRate": 69.10,
   "categoryBreakdown": [
     {
-      "category": "dps",
-      "amount": 5000.0,
-      "percent": null,
+      "category": "Rent",
+      "amount": 12000.00,
       "transactionCount": 1
+    },
+    {
+      "category": "Groceries",
+      "amount": 3450.50,
+      "transactionCount": 5
     }
   ],
   "dailySpendingTrend": [
     {
       "date": "2025-12-01",
-      "amount": 0.0
+      "amount": 12000.00
+    },
+    {
+      "date": "2025-12-05",
+      "amount": 540.00
     }
   ],
   "biggestExpense": {
-    "amount": 5000.00,
-    "category": "dps",
-    "description": "dps"
+    "amount": 12000.00,
+    "category": "Rent",
+    "description": "Monthly House Rent"
   },
-  "biggestCategory": "dps",
-  "daysRemainingInMonth": 25
+  "biggestIncome": {
+    "amount": 45000.00,
+    "category": "Salary",
+    "description": "December Salary"
+  },
+  "daysRemainingInMonth": 24
 }
 ```
 
@@ -480,17 +507,18 @@ None required - user ID extracted from JWT token
 | Field | Type | Description |
 |-------|------|-------------|
 | userId | integer | User ID from JWT token |
-| period | string | Current period (format: YYYY-MM) |
-| totalIncome | number | Total income for the period |
-| totalExpense | number | Total expenses for the period |
-| netBalance | number | Net balance (income - expense) |
-| expenseRatio | number \| null | Expense ratio percentage |
-| savingsRate | number \| null | Savings rate percentage |
-| categoryBreakdown | array | List of expense categories with amounts |
-| dailySpendingTrend | array | Daily spending trend data |
-| biggestExpense | object \| null | Details of biggest single expense |
-| biggestCategory | string \| null | Name of category with highest spending |
-| daysRemainingInMonth | integer | Days left in current month |
+| startDate | Date (YYYY-MM-DD) | The start date of the dashboard period |
+| endDate | Date (YYYY-MM-DD) | The end date of the dashboard period |
+| totalIncome | number | Total income amount for the period |
+| totalExpense | number | Total expense amount for the period |
+| netBalance | number | Net balance (Income - Expense) |
+| expenseRatio | number | Ratio of expenses to income (0-100) |
+| savingsRate | number | Ratio of savings (Net Balance) to income (0-100) |
+| categoryBreakdown | array | List of spending by category |
+| dailySpendingTrend | array | Daily aggregate of expenses |
+| biggestExpense | object \| null | The single largest expense transaction in the period |
+| biggestIncome | object \| null | The single largest income transaction in the period |
+| daysRemainingInMonth | integer | Number of days left in the month (0 if viewing past periods) |
 
 #### Category Breakdown Item
 
@@ -498,7 +526,6 @@ None required - user ID extracted from JWT token
 {
   "category": "string",
   "amount": "number",
-  "percent": "number | null",
   "transactionCount": "integer"
 }
 ```
@@ -512,9 +539,20 @@ None required - user ID extracted from JWT token
 }
 ```
 
+#### Expense/Income Item Structure
+
+```json
+{
+  "amount": "number",
+  "category": "string",
+  "description": "string"
+}
+```
+
 #### Error Responses
 
 **401 Unauthorized** - Missing or invalid token
+**500 Internal Server Error** - Server error processing the request
 
 **Status**: ✅ **Working**
 
@@ -683,6 +721,310 @@ GET /api/finance-guru/chat-history?page=1&limit=10
 
 ---
 
+### 10. Transaction Search
+
+Retrieve a list of transactions with flexible filtering capabilities.
+
+**Endpoint**: `GET /api/finance-guru/v1/transactions`
+**Authentication**: Required (Bearer Token)
+**Content-Type**: `application/json`
+
+#### Request Headers
+
+```
+Authorization: Bearer <JWT_TOKEN>
+Content-Type: application/json
+```
+
+#### Query Parameters
+
+| Parameter | Type | Required | Description | Example |
+|-----------|------|----------|-------------|---------|
+| `search` | String | No | Text to search in descriptions and categories (supports fuzzy matching) | `coffee` |
+| `category` | String | No | Filter by category name (partial match) | `Food` |
+| `type` | String | No | Filter by transaction type: `INCOME`, `EXPENSE`, `TRANSFER` | `EXPENSE` |
+| `startDate` | Date (ISO) | No | Start date for the transaction range (YYYY-MM-DD) | `2025-12-01` |
+| `endDate` | Date (ISO) | No | End date for the transaction range (YYYY-MM-DD) | `2025-12-31` |
+| `minAmount` | Double | No | Minimum transaction amount | `100.0` |
+| `maxAmount` | Double | No | Maximum transaction amount | `5000.0` |
+| `limit` | Integer | No | Maximum number of results to return (max 200) | `50` |
+
+#### Request Example
+
+```
+GET /api/finance-guru/v1/transactions?category=Food&startDate=2025-12-01
+Authorization: Bearer <JWT_TOKEN>
+```
+
+#### Success Response (200 OK)
+
+```json
+{
+  "success": true,
+  "count": 2,
+  "data": [
+    {
+      "transaction_id": 101,
+      "type": "EXPENSE",
+      "amount": 450.00,
+      "category": "Food & Dining",
+      "description": "Lunch at Cafe",
+      "transaction_date": "2025-12-05",
+      "created_at": "2025-12-05T12:30:00",
+      "relevance_score": 1.0,
+      "total_matches": 2
+    },
+    {
+      "transaction_id": 102,
+      "type": "EXPENSE",
+      "amount": 120.00,
+      "category": "Food",
+      "description": "Snacks",
+      "transaction_date": "2025-12-06",
+      "created_at": "2025-12-06T15:00:00",
+      "relevance_score": 1.0,
+      "total_matches": 2
+    }
+  ]
+}
+```
+
+#### Response Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| success | boolean | True if the request was successful |
+| count | integer | Number of transactions returned |
+| data | array | List of transaction objects |
+
+#### Transaction Object
+
+| Field | Type | Description |
+|-------|------|-------------|
+| transaction_id | integer | Unique ID of the transaction |
+| type | string | Type (INCOME, EXPENSE, TRANSFER) |
+| amount | number | Transaction amount |
+| category | string | Category name |
+| description | string | Description |
+| transaction_date | Date (YYYY-MM-DD) | Date of the transaction |
+| created_at | DateTime (ISO 8601) | Server timestamp when created |
+| relevance_score | number | Search relevance score (if search text provided) |
+| total_matches | integer | Total number of matches found |
+
+#### Error Responses
+
+**401 Unauthorized** - Missing or invalid token
+**400 Bad Request** - Invalid query parameters
+**500 Internal Server Error** - Server error
+
+**Status**: ✅ **Working**
+
+---
+
+### 11. Chat Feedback
+
+Allow users to provide feedback ("LIKE" or "DISLIKE") on specific chat messages.
+
+**Endpoint**: `POST /api/finance-guru/v1/chat-history/{id}/feedback`
+**Authentication**: Required (Bearer Token)
+**Content-Type**: `application/json`
+
+#### Request Headers
+
+```
+Authorization: Bearer <JWT_TOKEN>
+Content-Type: application/json
+```
+
+#### Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | Integer | Yes | The ID of the chat message (returned in chat history) |
+
+#### Request Body
+
+```json
+{
+  "feedback": "LIKE"
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `feedback` | String | Yes | Feedback value: `LIKE`, `DISLIKE`, or `NONE` |
+
+#### Request Example
+
+```http
+POST /api/finance-guru/v1/chat-history/123/feedback HTTP/1.1
+Authorization: Bearer <JWT_TOKEN>
+Content-Type: application/json
+
+{
+  "feedback": "LIKE"
+}
+```
+
+#### Success Response (200 OK)
+
+```json
+{
+  "success": true,
+  "message": "Feedback updated"
+}
+```
+
+#### Error Responses
+
+**400 Bad Request** - Invalid feedback value or ID
+```json
+{
+  "success": false,
+  "message": "Invalid feedback value. Must be LIKE, DISLIKE, or NONE",
+  "error": "INVALID_ARGUMENT"
+}
+```
+
+**403 Forbidden** - User does not own the chat message
+```json
+{
+  "success": false,
+  "message": "You can only provide feedback on your own messages",
+  "error": "FORBIDDEN"
+}
+```
+
+**404 Not Found** - Chat message ID not found
+```json
+{
+  "success": false,
+  "message": "Chat message not found",
+  "error": "NOT_FOUND"
+}
+```
+
+**401 Unauthorized** - Missing or invalid token
+
+**Status**: ✅ **Working**
+
+---
+
+### 12. Token Usage
+
+Retrieve tracking statistics for the user's token consumption in the FinanceGuru chat system. This data is useful for monitoring usage limits or billing.
+
+**Endpoint**: `GET /api/finance-guru/v1/token-usage`
+**Authentication**: Required (Bearer Token)
+**Content-Type**: `application/json`
+
+#### Request Headers
+
+```
+Authorization: Bearer <JWT_TOKEN>
+Content-Type: application/json
+```
+
+#### Request Example
+
+```
+GET /api/finance-guru/v1/token-usage
+Authorization: Bearer <JWT_TOKEN>
+```
+
+#### Success Response (200 OK)
+
+```json
+{
+  "totalUsage": 4500,
+  "todayUsage": 1250,
+  "history": [
+    {
+      "amount": 250,
+      "action": "QUERY",
+      "timestamp": "2025-12-07T16:30:45.123"
+    },
+    {
+      "amount": 100,
+      "action": "LOG_EXPENSE",
+      "timestamp": "2025-12-07T16:28:10.555"
+    }
+  ]
+}
+```
+
+#### Response Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| totalUsage | integer | Total tokens used by this user over all time |
+| todayUsage | integer | Tokens used since midnight (00:00:00) today |
+| history | array | List of recent usage events (last 10) |
+
+#### History Item Structure
+
+| Field | Type | Description |
+|-------|------|-------------|
+| amount | integer | Number of tokens consumed in this event |
+| action | string | The action type associated with this usage (e.g., `QUERY`, `LOG_EXPENSE`) |
+| timestamp | DateTime (ISO 8601) | Timestamp of the event |
+
+#### Error Responses
+
+**401 Unauthorized** - Missing or invalid token
+**500 Internal Server Error** - Server error
+
+**Status**: ✅ **Working**
+
+---
+
+### 13. Action Types
+
+The `actionType` field in the Chat API response indicates the nature of the operation performed or the intent processed. This allows the frontend to render specific UI components (e.g., charts for trends, success cards for transactions).
+
+#### Transaction Actions
+
+| Action Type | Description |
+|-------------|-------------|
+| `record_income` | A single income transaction was successfully recorded |
+| `record_expense` | A single expense transaction was successfully recorded |
+| `record_transaction` | A transaction was recorded (generic fallback) |
+| `batch_record_transaction` | Multiple transactions were recorded in a batch |
+| `update_transaction` | An existing transaction was updated |
+| `delete_transaction` | A transaction was deleted |
+| `batch_update_transaction` | Multiple transactions were updated |
+| `batch_delete_transaction` | Multiple transactions were deleted |
+| `search_transactions` | A search for transactions was performed (likely returns a list) |
+
+#### Analytics & Reporting Actions
+
+| Action Type | Description |
+|-------------|-------------|
+| `summary` | A general financial summary was retrieved |
+| `balance`, `get_balance` | Current account balance(s) were retrieved |
+| `top_expenses` | A list of top spending items or categories |
+| `monthly_trend` | Monthly spending/income trend data |
+| `category_breakdown` | Spending breakdown by category (pie chart data) |
+| `compare_periods` | Comparison between time periods (e.g., this month vs last) |
+| `financial_health` | Financial health score or assessment |
+
+#### Category Management Actions
+
+| Action Type | Description |
+|-------------|-------------|
+| `list_categories` | A list of available categories was retrieved |
+| `manage_category` | A category was created, updated, or deleted |
+
+#### System & Conversation Actions
+
+| Action Type | Description |
+|-------------|-------------|
+| `general_chat` | Non-financial conversation (greeting, chit-chat) |
+| `clarification_needed` | The bot needs more information to proceed (e.g., "How much?") |
+| `error` | An error occurred while processing the request |
+
+---
+
 ## Response Format
 
 All API responses follow a consistent format:
@@ -718,6 +1060,7 @@ All API responses follow a consistent format:
 | Code | HTTP Status | Description |
 |------|-------------|-------------|
 | UNAUTHORIZED | 401 | Missing or invalid authentication token |
+| FORBIDDEN | 403 | User does not have permission to access the resource |
 | INVALID_ARGUMENT | 400 | Invalid request parameters |
 | INTERNAL_SERVER_ERROR | 500 | Server-side error |
 | NOT_FOUND | 404 | Resource not found |
@@ -726,20 +1069,33 @@ All API responses follow a consistent format:
 
 ## Status Summary
 
-### ✅ Working APIs (7/9)
+### ✅ Working APIs (10/13)
 
+**Authentication (4/6)**
 1. **Signup** - `POST /api/auth/signup` ✅
 2. **Login** - `POST /api/auth/login` ✅
 3. **Forgot Password** - `POST /api/auth/forgot-password` ✅
 4. **Reset Password** - `POST /api/auth/reset-password` ✅
-5. **Dashboard** - `GET /api/finance-guru/dashboard` ✅
+
+**Finance Guru (6/6)**
+5. **Dashboard** - `GET /api/finance-guru/v1/dashboard` ✅
 6. **Chat** - `POST /api/finance-guru/chat` ✅
 7. **Chat History** - `GET /api/finance-guru/chat-history` ✅
+8. **Transaction Search** - `GET /api/finance-guru/v1/transactions` ✅
+9. **Chat Feedback** - `POST /api/finance-guru/v1/chat-history/{id}/feedback` ✅
+10. **Token Usage** - `GET /api/finance-guru/v1/token-usage` ✅
 
-### ⚠️ Under Development (2/9)
+### ⚠️ Under Development (2/13)
 
 1. **Get Profile** - `GET /api/auth/me` ⚠️ (500 Internal Server Error)
 2. **Change Password** - `POST /api/auth/change-password` ⚠️ (500 Internal Server Error)
+
+### 🔄 To Be Implemented in Flutter App (3/6)
+
+The following FinanceGuru APIs are working on the backend but not yet integrated in the Flutter app:
+1. **Transaction Search** - `GET /api/finance-guru/v1/transactions` (planned)
+2. **Chat Feedback** - `POST /api/finance-guru/v1/chat-history/{id}/feedback` (planned)
+3. **Token Usage** - `GET /api/finance-guru/v1/token-usage` (planned)
 
 ---
 
@@ -761,9 +1117,14 @@ All API responses follow a consistent format:
 - All monetary values are in Bangladeshi Taka (৳)
 - Chat responses are formatted in markdown
 - Maximum chat history page size is 50 items
+- Dashboard API supports custom date ranges via `startDate` and `endDate` query parameters
+- Transaction search supports fuzzy matching and multiple filter combinations
+- Chat feedback allows users to rate AI responses (LIKE, DISLIKE, NONE)
+- Token usage tracking helps monitor LLM consumption for billing and limits
+- All Finance Guru v1 endpoints require JWT Bearer authentication
 
 ---
 
-**Last Updated**: 2025-11-29
+**Last Updated**: 2025-12-09
 **Tested By**: Claude AI Assistant
 **Backend Version**: Production API v1.0

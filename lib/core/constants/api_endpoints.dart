@@ -25,7 +25,13 @@ class ApiEndpoints {
   static String get changePassword => '$authBaseUrl/change-password';
 
   // Finance Guru APIs
-  static String get dashboard => '$financeGuruBaseUrl/dashboard';
+  static String get dashboard => '$financeGuruBaseUrl/v1/dashboard';
   static String get chat => '$financeGuruBaseUrl/chat';
   static String get chatHistory => '$financeGuruBaseUrl/chat-history';
+  static String get transactions => '$financeGuruBaseUrl/v1/transactions';
+  static String get tokenUsage => '$financeGuruBaseUrl/v1/token-usage';
+
+  // Chat feedback endpoint (requires message ID)
+  static String chatFeedback(int messageId) =>
+      '$financeGuruBaseUrl/v1/chat-history/$messageId/feedback';
 }

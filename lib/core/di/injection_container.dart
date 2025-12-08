@@ -38,7 +38,20 @@ import '../../features/chat/domain/repositories/chat_repository.dart';
 import '../../features/chat/domain/usecases/get_chat_history.dart';
 import '../../features/chat/domain/usecases/get_messages.dart';
 import '../../features/chat/domain/usecases/send_message.dart';
+import '../../features/chat/domain/usecases/get_token_usage.dart';
+import '../../features/chat/domain/usecases/submit_feedback.dart';
 import '../../features/chat/presentation/cubit/chat_cubit.dart';
+import '../../features/chat/data/datasources/token_usage_datasource.dart';
+import '../../features/chat/data/datasources/chat_feedback_datasource.dart';
+import '../../features/chat/data/repositories/token_usage_repository_impl.dart';
+import '../../features/chat/data/repositories/chat_feedback_repository_impl.dart';
+import '../../features/chat/domain/repositories/token_usage_repository.dart';
+import '../../features/chat/domain/repositories/chat_feedback_repository.dart';
+// Features - Home (Transaction Search)
+import '../../features/home/data/datasource/remote_datasource/transaction_search_datasource.dart';
+import '../../features/home/data/repositories/transaction_repository_impl.dart';
+import '../../features/home/domain/repositories/transaction_repository.dart';
+import '../../features/home/domain/usecases/search_transactions.dart';
 // Core
 import '../database/database_helper.dart';
 import '../network/logging_interceptor.dart';
@@ -218,5 +231,47 @@ Future<void> init() async {
         return DashboardFinanceGuruDataSource(sl(), sl());
       }
     },
+  );
+
+  //! Features - Transaction Search
+  // Use cases
+  sl.registerLazySingleton(() => SearchTransactions(sl()));
+
+  // Repository
+  sl.registerLazySingleton<TransactionRepository>(
+    () => TransactionRepositoryImpl(remoteDataSource: sl()),
+  );
+
+  // Data sources
+  sl.registerLazySingleton<TransactionSearchDataSource>(
+    () => TransactionSearchDataSourceImpl(sl(), sl()),
+  );
+
+  //! Features - Chat Feedback
+  // Use cases
+  sl.registerLazySingleton(() => SubmitFeedback(sl()));
+
+  // Repository
+  sl.registerLazySingleton<ChatFeedbackRepository>(
+    () => ChatFeedbackRepositoryImpl(remoteDataSource: sl()),
+  );
+
+  // Data sources
+  sl.registerLazySingleton<ChatFeedbackDataSource>(
+    () => ChatFeedbackDataSourceImpl(sl(), sl()),
+  );
+
+  //! Features - Token Usage
+  // Use cases
+  sl.registerLazySingleton(() => GetTokenUsage(sl()));
+
+  // Repository
+  sl.registerLazySingleton<TokenUsageRepository>(
+    () => TokenUsageRepositoryImpl(remoteDataSource: sl()),
+  );
+
+  // Data sources
+  sl.registerLazySingleton<TokenUsageDataSource>(
+    () => TokenUsageDataSourceImpl(sl(), sl()),
   );
 }

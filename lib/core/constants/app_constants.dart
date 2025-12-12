@@ -19,7 +19,7 @@ class AppConstants {
 
   // Local Database
   static const String databaseName = 'balance_iq.db';
-  static const int databaseVersion = 4; // Updated for action_type column
+  static const int databaseVersion = 6; // Updated for feedback column
 
   // Table Names
   static const String messagesTable = 'messages';

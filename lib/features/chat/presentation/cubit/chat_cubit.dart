@@ -3,15 +3,17 @@ import 'package:uuid/uuid.dart';
 import 'package:synchronized/synchronized.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../domain/entities/message.dart';
-import '../../domain/usecases/get_messages.dart';
 import '../../domain/usecases/get_chat_history.dart';
+import '../../domain/usecases/get_messages.dart';
 import '../../domain/usecases/send_message.dart';
+import '../../domain/usecases/get_token_usage.dart';
 import 'chat_state.dart';
 import '../../../../core/constants/app_constants.dart';
 
 class ChatCubit extends Cubit<ChatState> {
   final GetMessages getMessages;
   final GetChatHistory getChatHistory;
+  final GetTokenUsage getTokenUsage;
   final SendMessage sendMessage;
   final SharedPreferences sharedPreferences;
   final Uuid uuid;
@@ -24,10 +26,26 @@ class ChatCubit extends Cubit<ChatState> {
   ChatCubit({
     required this.getMessages,
     required this.getChatHistory,
+    required this.getTokenUsage,
     required this.sendMessage,
     required this.sharedPreferences,
     required this.uuid,
   }) : super(ChatInitial());
+
+  Future<void> loadTokenUsage() async {
+    final result = await getTokenUsage();
+    result.fold(
+      (failure) => print('⚠️ [ChatCubit] Failed to load token usage: ${failure.message}'),
+      (usage) {
+        if (state is ChatLoaded) {
+          emit((state as ChatLoaded).copyWith(
+            currentTokenUsage: usage.todayUsage,
+            dailyTokenLimit: AppConstants.dailyTokenLimit,
+          ));
+        }
+      },
+    );
+  }
 
   /// Load chat history with cache-first strategy
   /// 1. Load from local cache immediately (fast UX)
@@ -38,6 +56,9 @@ class ChatCubit extends Cubit<ChatState> {
     print('📥 [ChatCubit] loadChatHistory called for botId: $botId');
 
     emit(ChatLoading());
+
+    // Load token usage first
+    await loadTokenUsage();
 
     // Get user ID from SharedPreferences
     final userId = sharedPreferences.getString(AppConstants.keyUserId) ?? '';
@@ -212,12 +233,23 @@ class ChatCubit extends Cubit<ChatState> {
 
         // After API completes, reload from DB to get actual messages
         if (!isClosed) {
+          // Check result of API call
+          result.fold(
+            (failure) {
+              print('❌ [ChatCubit] sendNewMessage failed: ${failure.message}');
+              // Optionally show error state or undo optimistic update
+            },
+            (_) => null,
+          );
+
           print('🔄 [ChatCubit] Reloading messages from cache');
           final reloadResult = await getMessages(userId, botId, limit: currentState.messages.length + 2);
           reloadResult.fold(
             (failure) => emit(currentState.copyWith(isSending: false)),
             (messages) {
               emit(currentState.copyWith(messages: messages, isSending: false));
+              // Update token usage
+              loadTokenUsage();
             },
           );
         }
@@ -231,3 +263,4 @@ class ChatCubit extends Cubit<ChatState> {
     }
   }
 }
+

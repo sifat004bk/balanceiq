@@ -9,6 +9,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:record/record.dart';
 
 import '../cubit/chat_cubit.dart';
+import '../cubit/chat_state.dart';
 import '../chat_config.dart';
 
 /// Gemini-style chat input with pill-shaped design
@@ -273,155 +274,216 @@ class _ChatInputState extends State<ChatInput> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFF1e1f20), // Dark grey background
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(32)), // Large rounded top corners
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 10,
-            offset: const Offset(0, -2),
-          ),
-        ],
-      ),
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 16), // Padding inside the modal
-      child: SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Text Field Row (Top)
-            Container(
-              constraints: const BoxConstraints(
-                minHeight: 24,
-                maxHeight: 120,
-              ),
-              child: TextField(
-                controller: _textController,
-                decoration: InputDecoration(
-                  hintText: 'What do you want to write?',
-                  hintStyle: const TextStyle(
-                    color: Color(0xFFc4c7c5), // Fixed light grey for dark background
-                    fontSize: 18, // Larger font
-                  ),
-                  border: InputBorder.none,
-                  focusedBorder: InputBorder.none,
-                  enabledBorder: InputBorder.none,
-                  errorBorder: InputBorder.none,
-                  disabledBorder: InputBorder.none,
-                  isDense: true,
-                  contentPadding: EdgeInsets.zero,
-                  filled: false, // Ensure no background
-                  fillColor: Colors.transparent,
-                ),
-                maxLines: null,
-                textInputAction: TextInputAction.newline,
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.white, // Fixed white for dark background
-                ),
-                onChanged: (text) {
-                  setState(() {
-                    _hasContent = text.trim().isNotEmpty ||
-                        _selectedImagePath != null;
-                  });
-                },
-              ),
-            ),
-            
-          const SizedBox(height: 20), // Spacing between text and actions
-            
-            // Bottom Actions Row
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // Plus Icon (Left)
-                if (ChatConfig.showAttachments)
-                  GestureDetector(
-                    onTap: _showAttachmentOptions,
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      child: Icon(
-                        Icons.add,
-                        color: Color(0xFFc4c7c5), // Fixed light grey for dark background
-                        size: 28,
-                      ),
-                    ),
-                  ),
-                
-                if (ChatConfig.showAttachments)
-                  const SizedBox(width: 8),
+    return BlocBuilder<ChatCubit, ChatState>(
+      builder: (context, state) {
+        bool isLimitReached = false;
+        bool isNearLimit = false;
+        int remainingTokens = 0;
+        
+        if (state is ChatLoaded) {
+          isLimitReached = state.isTokenLimitReached;
+          isNearLimit = state.currentTokenUsage > (state.dailyTokenLimit * 0.9);
+          remainingTokens = state.dailyTokenLimit - state.currentTokenUsage;
+        }
 
-                // Attachment Pill (if image selected)
-                if (_selectedImagePath != null)
+        return Container(
+          decoration: BoxDecoration(
+            color: const Color(0xFF1e1f20), // Dark grey background
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(32)), // Large rounded top corners
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                blurRadius: 10,
+                offset: const Offset(0, -2),
+              ),
+            ],
+          ),
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 16), // Padding inside the modal
+          child: SafeArea(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Token Warning/Limit Banner
+                if (isLimitReached)
                   Container(
-                    margin: const EdgeInsets.only(right: 8),
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    width: double.infinity,
+                    margin: const EdgeInsets.only(bottom: 12),
+                    padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF2e406c), // Dark blue
-                      borderRadius: BorderRadius.circular(16),
+                      color: Colors.red.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.red.withOpacity(0.5)),
                     ),
                     child: Row(
-                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.image, size: 16, color: Color(0xFFa8c7fa)),
+                        const Icon(Icons.error_outline, color: Colors.red, size: 20),
                         const SizedBox(width: 8),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _selectedImagePath = null;
-                            });
-                          },
-                          child: const Icon(Icons.close, size: 16, color: Color(0xFFa8c7fa)),
+                        const Text(
+                          'Daily token limit reached. Chat unavailable.',
+                          style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 13),
+                        ),
+                      ],
+                    ),
+                  )
+                else if (isNearLimit)
+                  Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.only(bottom: 12),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: Colors.orange.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.orange.withOpacity(0.5)),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.warning_amber_rounded, color: Colors.orange, size: 16),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Near token limit ($remainingTokens remaining)',
+                          style: const TextStyle(color: Colors.orange, fontSize: 12),
                         ),
                       ],
                     ),
                   ),
 
-                const Spacer(),
-                
-                // Mic Icon
-                if (ChatConfig.showAudioRecording)
-                  GestureDetector(
-                    onTap: _toggleRecording,
-                    child: Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: const BoxDecoration(
-                        color: Color(0xFF2a2a2e),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        _isRecording ? Icons.stop : Icons.mic,
-                        color: _isRecording ? Colors.red : const Color(0xFFc4c7c5),
-                        size: 24,
-                      ),
-                    ),
+                // Text Field Row (Top)
+                Container(
+                  constraints: const BoxConstraints(
+                    minHeight: 24,
+                    maxHeight: 120,
                   ),
-                if (ChatConfig.showAudioRecording)
-                  const SizedBox(width: 12),
-                
-                // Send Icon
-                GestureDetector(
-                  onTap: _hasContent ? _sendMessage : null,
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: _hasContent ? GeminiColors.primaryColor(context) : const Color(0xFF2a2a2e),
-                      shape: BoxShape.circle,
+                  child: TextField(
+                    controller: _textController,
+                    enabled: !isLimitReached,
+                    decoration: InputDecoration(
+                      hintText: isLimitReached ? 'Limit reached' : 'What do you want to write?',
+                      hintStyle: TextStyle(
+                        color: isLimitReached ? Colors.red.withOpacity(0.5) : const Color(0xFFc4c7c5),
+                        fontSize: 18,
+                      ),
+                      border: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      errorBorder: InputBorder.none,
+                      disabledBorder: InputBorder.none,
+                      isDense: true,
+                      contentPadding: EdgeInsets.zero,
+                      filled: false,
+                      fillColor: Colors.transparent,
                     ),
-                    child: Icon(
-                      Icons.send, 
-                      color: _hasContent ? Colors.white : const Color(0xFFc4c7c5), 
-                      size: 24
+                    maxLines: null,
+                    textInputAction: TextInputAction.newline,
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: isLimitReached ? Colors.grey : Colors.white,
                     ),
+                    onChanged: (text) {
+                      setState(() {
+                        _hasContent = text.trim().isNotEmpty ||
+                            _selectedImagePath != null;
+                      });
+                    },
                   ),
+                ),
+                
+              const SizedBox(height: 20), // Spacing between text and actions
+                
+                // Bottom Actions Row
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // Plus Icon (Left)
+                    if (ChatConfig.showAttachments)
+                      GestureDetector(
+                        onTap: isLimitReached ? null : _showAttachmentOptions,
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          child: Icon(
+                            Icons.add,
+                            color: isLimitReached ? Colors.grey : const Color(0xFFc4c7c5),
+                            size: 28,
+                          ),
+                        ),
+                      ),
+                    
+                    if (ChatConfig.showAttachments)
+                      const SizedBox(width: 8),
+
+                    // Attachment Pill (if image selected)
+                    if (_selectedImagePath != null)
+                      Container(
+                        margin: const EdgeInsets.only(right: 8),
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF2e406c), // Dark blue
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.image, size: 16, color: Color(0xFFa8c7fa)),
+                            const SizedBox(width: 8),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _selectedImagePath = null;
+                                });
+                              },
+                              child: const Icon(Icons.close, size: 16, color: Color(0xFFa8c7fa)),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                    const Spacer(),
+                    
+                    // Mic Icon
+                    if (ChatConfig.showAudioRecording)
+                      GestureDetector(
+                        onTap: isLimitReached ? null : _toggleRecording,
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: const BoxDecoration(
+                            color: Color(0xFF2a2a2e),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            _isRecording ? Icons.stop : Icons.mic,
+                            color: _isRecording ? Colors.red : (isLimitReached ? Colors.grey : const Color(0xFFc4c7c5)),
+                            size: 24,
+                          ),
+                        ),
+                      ),
+                    if (ChatConfig.showAudioRecording)
+                      const SizedBox(width: 12),
+                    
+                    // Send Icon
+                    GestureDetector(
+                      onTap: (_hasContent && !isLimitReached) ? _sendMessage : null,
+                      child: Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: (_hasContent && !isLimitReached) ? GeminiColors.primaryColor(context) : const Color(0xFF2a2a2e),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          Icons.send, 
+                          color: (_hasContent && !isLimitReached) ? Colors.white : const Color(0xFFc4c7c5), 
+                          size: 24
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

@@ -23,22 +23,33 @@ class ChatLoaded extends ChatState {
     this.isSending = false,
     this.hasMore = false,
     this.isLoadingMore = false,
+    this.currentTokenUsage = 0,
+    this.dailyTokenLimit = 5000,
   });
 
   @override
-  List<Object?> get props => [messages, isSending, hasMore, isLoadingMore];
+  List<Object?> get props => [messages, isSending, hasMore, isLoadingMore, currentTokenUsage, dailyTokenLimit];
+
+  final int currentTokenUsage;
+  final int dailyTokenLimit;
+
+  bool get isTokenLimitReached => currentTokenUsage >= dailyTokenLimit;
 
   ChatLoaded copyWith({
     List<Message>? messages,
     bool? isSending,
     bool? hasMore,
     bool? isLoadingMore,
+    int? currentTokenUsage,
+    int? dailyTokenLimit,
   }) {
     return ChatLoaded(
       messages: messages ?? this.messages,
       isSending: isSending ?? this.isSending,
       hasMore: hasMore ?? this.hasMore,
       isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+      currentTokenUsage: currentTokenUsage ?? this.currentTokenUsage,
+      dailyTokenLimit: dailyTokenLimit ?? this.dailyTokenLimit,
     );
   }
 }

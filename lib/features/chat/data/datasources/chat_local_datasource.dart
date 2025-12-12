@@ -54,6 +54,23 @@ class ChatLocalDataSourceImpl implements ChatLocalDataSource {
     // Use transaction for batch insert (atomic operation)
     await db.transaction((txn) async {
       for (var message in messages) {
+        // If this is a synced message (has server_created_at),
+        // check for and delete any corresponding local pending message (server_created_at IS NULL)
+        // to prevent duplicates.
+        if (message.serverCreatedAt != null) {
+           await txn.delete(
+            AppConstants.messagesTable,
+            where: '''
+              user_id = ? AND 
+              bot_id = ? AND 
+              sender = ? AND 
+              content = ? AND 
+              server_created_at IS NULL
+            ''',
+            whereArgs: [message.userId, message.botId, message.sender, message.content],
+          );
+        }
+
         await txn.insert(
           AppConstants.messagesTable,
           message.toJson(),

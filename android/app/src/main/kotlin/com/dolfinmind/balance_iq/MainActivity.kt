@@ -1,4 +1,4 @@
-package com.balanceiq.balance_iq
+package com.dolfinmind.balance_iq
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -7,6 +7,8 @@ import '../../domain/usecases/get_chat_history.dart';
 import '../../domain/usecases/get_messages.dart';
 import '../../domain/usecases/send_message.dart';
 import '../../domain/usecases/get_token_usage.dart';
+import '../../domain/usecases/submit_feedback.dart';
+import '../../domain/entities/chat_feedback.dart';  // For FeedbackType
 import 'chat_state.dart';
 import '../../../../core/constants/app_constants.dart';
 
@@ -15,6 +17,7 @@ class ChatCubit extends Cubit<ChatState> {
   final GetChatHistory getChatHistory;
   final GetTokenUsage getTokenUsage;
   final SendMessage sendMessage;
+  final SubmitFeedback submitFeedback;
   final SharedPreferences sharedPreferences;
   final Uuid uuid;
 
@@ -28,6 +31,7 @@ class ChatCubit extends Cubit<ChatState> {
     required this.getChatHistory,
     required this.getTokenUsage,
     required this.sendMessage,
+    required this.submitFeedback,
     required this.sharedPreferences,
     required this.uuid,
   }) : super(ChatInitial());
@@ -255,6 +259,43 @@ class ChatCubit extends Cubit<ChatState> {
         }
       }
     });
+  }
+
+  Future<void> submitMessageFeedback(String messageId, FeedbackType feedback) async {
+    if (state is ChatLoaded) {
+      final currentState = state as ChatLoaded;
+      
+      // 1. Optimistic Update
+      final updatedMessages = currentState.messages.map((msg) {
+        if (msg.id == messageId) {
+          return msg.copyWith(feedback: feedback.toApiValue());
+        }
+        return msg;
+      }).toList();
+      
+      emit(currentState.copyWith(messages: updatedMessages));
+
+      // 2. Find message to get conversationId
+      final message = currentState.messages.firstWhere((m) => m.id == messageId, orElse: () => currentState.messages.first);
+      if (message.conversationId != null) {
+        // 3. Call API
+        final result = await submitFeedback(
+          messageId: message.conversationId!, 
+          feedback: feedback,
+        );
+
+        result.fold(
+          (failure) {
+            print('❌ [ChatCubit] Feedback submission failed: ${failure.message}');
+            // Revert on failure (optional, maybe just show error)
+            // For now, we keep the optimistic state as it's better UX
+          },
+          (success) => print('✅ [ChatCubit] Feedback submitted successfully'),
+        );
+      } else {
+        print('⚠️ [ChatCubit] Cannot submit feedback: Message has no conversationId');
+      }
+    }
   }
 
   void clearChat() {

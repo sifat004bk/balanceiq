@@ -32,6 +32,8 @@ class DashboardSummary extends Equatable {
   final String expenseAccount;
   final String biggestCategoryName;
   final double biggestCategoryAmount;
+  final double biggestIncomeAmount;
+  final String biggestIncomeDescription;
   final String period;
   final int daysRemainingInMonth;
 
@@ -54,6 +56,8 @@ class DashboardSummary extends Equatable {
     required this.expenseAccount,
     required this.biggestCategoryName,
     required this.biggestCategoryAmount,
+    required this.biggestIncomeAmount,
+    required this.biggestIncomeDescription,
     required this.period,
     required this.daysRemainingInMonth,
   });
@@ -78,6 +82,8 @@ class DashboardSummary extends Equatable {
         expenseAccount,
         biggestCategoryName,
         biggestCategoryAmount,
+        biggestIncomeAmount,
+        biggestIncomeDescription,
         period,
         daysRemainingInMonth,
       ];

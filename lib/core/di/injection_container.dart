@@ -170,6 +170,7 @@ Future<void> init() async {
       getChatHistory: sl(),
       getTokenUsage: sl(),
       sendMessage: sl(),
+      submitFeedback: sl(),
       sharedPreferences: sl(),
       uuid: sl(),
     ),

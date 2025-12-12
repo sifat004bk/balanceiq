@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:intl/intl.dart';
 import '../../domain/entities/message.dart';
+import '../../domain/entities/chat_feedback.dart'; // For FeedbackType
 import '../chat_config.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubit/chat_cubit.dart';
@@ -355,25 +356,59 @@ class _MessageBubbleState extends State<MessageBubble>
             const SizedBox(height: 16),
           ],
           
-          // Action Row: Like, Dislike, Select Text, Copy, Regenerate
+              // Action Row: Like, Dislike, Select Text, Copy, Regenerate
           Row(
             children: [
               if (ChatConfig.showFeedbackButtons) ...[
                 IconButton(
-                  icon: Icon(Icons.thumb_up_outlined, color: GeminiColors.icon(context), size: 20),
+                  icon: Icon(
+                    widget.message.feedback == 'LIKE' ? Icons.thumb_up : Icons.thumb_up_outlined,
+                    color: widget.message.feedback == 'LIKE' 
+                        ? GeminiColors.primaryColor(context) 
+                        : GeminiColors.icon(context),
+                    size: 20,
+                  ),
                   onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Thanks for the feedback!')),
+                    final newFeedback = widget.message.feedback == 'LIKE' 
+                        ? FeedbackType.none 
+                        : FeedbackType.like;
+                    
+                    context.read<ChatCubit>().submitMessageFeedback(
+                      widget.message.id, 
+                      newFeedback
                     );
+                    
+                    if (newFeedback == FeedbackType.like) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Thanks for the feedback!')),
+                      );
+                    }
                   },
                 ),
                 const SizedBox(width: 8),
                 IconButton(
-                  icon: Icon(Icons.thumb_down_outlined, color: GeminiColors.icon(context), size: 20),
+                  icon: Icon(
+                    widget.message.feedback == 'DISLIKE' ? Icons.thumb_down : Icons.thumb_down_outlined, 
+                    color: widget.message.feedback == 'DISLIKE' 
+                        ? Colors.red 
+                        : GeminiColors.icon(context),
+                    size: 20,
+                  ),
                   onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Thanks for the feedback!')),
+                    final newFeedback = widget.message.feedback == 'DISLIKE' 
+                        ? FeedbackType.none 
+                        : FeedbackType.dislike;
+
+                    context.read<ChatCubit>().submitMessageFeedback(
+                      widget.message.id, 
+                      newFeedback
                     );
+
+                    if (newFeedback == FeedbackType.dislike) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Thanks for the feedback!')),
+                      );
+                    }
                   },
                 ),
                 const SizedBox(width: 8),

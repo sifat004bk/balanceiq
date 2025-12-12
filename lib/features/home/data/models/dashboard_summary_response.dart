@@ -20,6 +20,8 @@ class DashboardSummaryModel extends DashboardSummary {
     required super.expenseAccount,
     required super.biggestCategoryName,
     required super.biggestCategoryAmount,
+    required super.biggestIncomeAmount,
+    required super.biggestIncomeDescription,
     required super.period,
     required super.daysRemainingInMonth,
   });
@@ -104,6 +106,15 @@ class DashboardSummaryModel extends DashboardSummary {
       // Find amount for biggest category from categories map
       final double biggestCategoryAmount = categories[biggestCategoryName] ?? 0.0;
 
+      // Parse biggestIncome object
+      final dynamic biggestIncome = json['biggestIncome'];
+      final double biggestIncomeAmount = biggestIncome != null
+          ? _parseDoubleNullable(biggestIncome['amount']) ?? 0.0
+          : 0.0;
+      final String biggestIncomeDescription = biggestIncome != null
+          ? _parseStringNullable(biggestIncome['description']) ?? ''
+          : '';
+
       return DashboardSummaryModel(
         totalIncome: _parseDoubleNullable(json['totalIncome']) ?? 0.0,
         totalExpense: _parseDoubleNullable(json['totalExpense']) ?? 0.0,
@@ -123,6 +134,8 @@ class DashboardSummaryModel extends DashboardSummary {
         expenseAccount: expenseAccount,
         biggestCategoryName: biggestCategoryName,
         biggestCategoryAmount: biggestCategoryAmount,
+        biggestIncomeAmount: biggestIncomeAmount,
+        biggestIncomeDescription: biggestIncomeDescription,
         period: _parseStringNullable(json['period']) ?? '',
         daysRemainingInMonth:
             _parseIntNullable(json['daysRemainingInMonth']) ?? 0,
@@ -245,6 +258,8 @@ class DashboardSummaryModel extends DashboardSummary {
       'expense_account': expenseAccount,
       'biggest_category_name': biggestCategoryName,
       'biggest_category_amount': biggestCategoryAmount,
+      'biggest_income_amount': biggestIncomeAmount,
+      'biggest_income_description': biggestIncomeDescription,
       'period': period,
       'days_remaining_in_month': daysRemainingInMonth,
     };

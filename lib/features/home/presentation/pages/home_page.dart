@@ -13,6 +13,7 @@ import 'package:intl/intl.dart';
 
 import '../cubit/dashboard_cubit.dart';
 import '../cubit/transactions_cubit.dart';
+import '../widgets/biggest_income_widget.dart';
 import '../widgets/chat_input_button.dart';
 import '../widgets/financial_ratio_widget.dart';
 import '../widgets/home_appbar.dart';
@@ -50,10 +51,12 @@ class _DashboardViewState extends State<DashboardView> {
   void initState() {
     super.initState();
     _loadUser();
-    // We don't need to call _loadDashboard here for initial load because:
-    // 1. DashboardCubit is loaded in main.dart or previous session? No, init in main doesn't load.
-    //    We should check if we need to load it.
-    // 2. TransactionsCubit is loaded in create.
+    
+    // Initialize with current month's date range
+    final now = DateTime.now();
+    _startDate = DateTime(now.year, now.month, 1);
+    _endDate = DateTime(now.year, now.month + 1, 0); // Last day of current month
+
     _loadDashboard();
   }
 
@@ -255,6 +258,11 @@ class _DashboardViewState extends State<DashboardView> {
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: Column(
                             children: [
+                              BiggestIncomeWidget(
+                                amount: summary.biggestIncomeAmount,
+                                description: summary.biggestIncomeDescription,
+                              ),
+                              if (summary.biggestIncomeAmount > 0) const SizedBox(height: 16),
                               BiggestExpenseWidget(
                                 amount: summary.biggestExpenseAmount,
                                 description: summary.biggestExpenseDescription,

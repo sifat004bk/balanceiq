@@ -44,6 +44,7 @@ import '../../features/chat/domain/usecases/get_token_usage.dart';
 import '../../features/chat/domain/usecases/submit_feedback.dart';
 import '../../features/chat/presentation/cubit/chat_cubit.dart';
 import '../../features/chat/data/datasources/token_usage_datasource.dart';
+import '../../features/chat/data/datasources/token_usage_mock_datasource.dart';
 import '../../features/chat/data/datasources/chat_feedback_datasource.dart';
 import '../../features/chat/data/repositories/token_usage_repository_impl.dart';
 import '../../features/chat/data/repositories/chat_feedback_repository_impl.dart';
@@ -167,6 +168,7 @@ Future<void> init() async {
     () => ChatCubit(
       getMessages: sl(),
       getChatHistory: sl(),
+      getTokenUsage: sl(),
       sendMessage: sl(),
       sharedPreferences: sl(),
       uuid: sl(),
@@ -274,7 +276,16 @@ Future<void> init() async {
   );
 
   // Data sources
+  // Conditionally register mock or real token usage data source
   sl.registerLazySingleton<TokenUsageDataSource>(
-    () => TokenUsageDataSourceImpl(sl(), sl()),
+    () {
+      if (AppConstants.isMockMode) {
+        print('🎭 [DI] Registering MOCK TokenUsageDataSource');
+        return TokenUsageMockDataSource();
+      } else {
+        print('🌐 [DI] Registering REAL TokenUsageDataSource (Finance Guru API)');
+        return TokenUsageDataSourceImpl(sl(), sl());
+      }
+    },
   );
 }

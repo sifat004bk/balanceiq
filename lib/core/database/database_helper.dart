@@ -59,6 +59,8 @@ class DatabaseHelper {
         sync_status TEXT DEFAULT 'pending',
         api_message_id TEXT,
         action_type TEXT,
+        conversation_id INTEGER,
+        feedback TEXT,
 
         -- Deduplication constraint (v3: includes user_id)
         CONSTRAINT unique_message UNIQUE (user_id, bot_id, sender, server_created_at, content)
@@ -91,6 +93,16 @@ class DatabaseHelper {
     // Migrate from version 3 to 4: Add action_type column
     if (oldVersion < 4) {
       await _migrateToV4(db);
+    }
+
+    // Migrate from version 4 to 5: Add conversation_id column
+    if (oldVersion < 5) {
+      await _migrateToV5(db);
+    }
+
+    // Migrate from version 5 to 6: Add feedback column
+    if (oldVersion < 6) {
+      await _migrateToV6(db);
     }
   }
 
@@ -209,6 +221,24 @@ class DatabaseHelper {
     await db.execute('ALTER TABLE ${AppConstants.messagesTable} ADD COLUMN action_type TEXT');
     
     print('✅ Migration to v4 completed successfully');
+  }
+
+  Future<void> _migrateToV5(Database db) async {
+    print('🔄 Migrating database from v4 to v5: Adding conversation_id column');
+
+    // Add conversation_id column to existing table
+    await db.execute('ALTER TABLE ${AppConstants.messagesTable} ADD COLUMN conversation_id INTEGER');
+
+    print('✅ Migration to v5 completed successfully');
+  }
+
+  Future<void> _migrateToV6(Database db) async {
+    print('🔄 Migrating database from v5 to v6: Adding feedback column');
+
+    // Add feedback column to existing table
+    await db.execute('ALTER TABLE ${AppConstants.messagesTable} ADD COLUMN feedback TEXT');
+
+    print('✅ Migration to v6 completed successfully');
   }
 
   Future<void> close() async {

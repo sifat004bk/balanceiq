@@ -74,8 +74,8 @@ class ChatLocalDataSourceImpl implements ChatLocalDataSource {
         await txn.insert(
           AppConstants.messagesTable,
           message.toJson(),
-          // Use ignore to prevent duplicates (idempotent operation)
-          conflictAlgorithm: ConflictAlgorithm.ignore,
+          // Use replace to ensure updates (like feedback) are applied
+          conflictAlgorithm: ConflictAlgorithm.replace,
         );
       }
     });

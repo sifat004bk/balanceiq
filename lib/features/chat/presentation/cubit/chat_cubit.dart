@@ -6,6 +6,7 @@ import '../../domain/entities/message.dart';
 import '../../domain/usecases/get_chat_history.dart';
 import '../../domain/usecases/get_messages.dart';
 import '../../domain/usecases/send_message.dart';
+import '../../domain/usecases/update_message.dart';
 import '../../domain/usecases/get_token_usage.dart';
 import '../../domain/usecases/submit_feedback.dart';
 import '../../domain/entities/chat_feedback.dart';  // For FeedbackType
@@ -17,6 +18,7 @@ class ChatCubit extends Cubit<ChatState> {
   final GetChatHistory getChatHistory;
   final GetTokenUsage getTokenUsage;
   final SendMessage sendMessage;
+  final UpdateMessage updateMessage;
   final SubmitFeedback submitFeedback;
   final SharedPreferences sharedPreferences;
   final Uuid uuid;
@@ -31,6 +33,7 @@ class ChatCubit extends Cubit<ChatState> {
     required this.getChatHistory,
     required this.getTokenUsage,
     required this.sendMessage,
+    required this.updateMessage,
     required this.submitFeedback,
     required this.sharedPreferences,
     required this.uuid,
@@ -275,25 +278,28 @@ class ChatCubit extends Cubit<ChatState> {
       
       emit(currentState.copyWith(messages: updatedMessages));
 
-      // 2. Find message to get conversationId
-      final message = currentState.messages.firstWhere((m) => m.id == messageId, orElse: () => currentState.messages.first);
-      if (message.conversationId != null) {
-        // 3. Call API
+      // 2. Persist local change immediately
+      final updatedMessage = updatedMessages.firstWhere((m) => m.id == messageId);
+      await updateMessage(updatedMessage);
+
+      // 3. Find message to get conversationId (needed for API)
+      if (updatedMessage.conversationId != null) {
+        // 4. Call API
         final result = await submitFeedback(
-          messageId: message.conversationId!, 
+          messageId: updatedMessage.conversationId!, 
           feedback: feedback,
         );
 
         result.fold(
           (failure) {
-            print('❌ [ChatCubit] Feedback submission failed: ${failure.message}');
-            // Revert on failure (optional, maybe just show error)
-            // For now, we keep the optimistic state as it's better UX
+            print('❌ [ChatCubit] Feedback API failed: ${failure.message}');
+            // We kept the local update, so user sees their action. 
+            // In a robust app, we might queue the sync or show an error that it's "offline".
           },
-          (success) => print('✅ [ChatCubit] Feedback submitted successfully'),
+          (success) => print('✅ [ChatCubit] Feedback API success'),
         );
       } else {
-        print('⚠️ [ChatCubit] Cannot submit feedback: Message has no conversationId');
+        print('⚠️ [ChatCubit] Cannot submit feedback API: Message has no conversationId');
       }
     }
   }

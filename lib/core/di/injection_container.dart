@@ -40,6 +40,7 @@ import '../../features/chat/domain/repositories/chat_repository.dart';
 import '../../features/chat/domain/usecases/get_chat_history.dart';
 import '../../features/chat/domain/usecases/get_messages.dart';
 import '../../features/chat/domain/usecases/send_message.dart';
+import '../../features/chat/domain/usecases/update_message.dart';
 import '../../features/chat/domain/usecases/get_token_usage.dart';
 import '../../features/chat/domain/usecases/submit_feedback.dart';
 import '../../features/chat/presentation/cubit/chat_cubit.dart';
@@ -170,6 +171,7 @@ Future<void> init() async {
       getChatHistory: sl(),
       getTokenUsage: sl(),
       sendMessage: sl(),
+      updateMessage: sl(),
       submitFeedback: sl(),
       sharedPreferences: sl(),
       uuid: sl(),
@@ -179,6 +181,7 @@ Future<void> init() async {
   // Use cases
   sl.registerLazySingleton(() => GetMessages(sl()));
   sl.registerLazySingleton(() => SendMessage(sl()));
+  sl.registerLazySingleton(() => UpdateMessage(sl()));
   sl.registerLazySingleton(() => GetChatHistory(sl()));
 
   // Repository

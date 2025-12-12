@@ -14,6 +14,7 @@ import 'package:intl/intl.dart';
 import '../cubit/dashboard_cubit.dart';
 import '../cubit/transactions_cubit.dart';
 import '../widgets/biggest_income_widget.dart';
+import '../widgets/date_selector_bottom_sheet.dart';
 import '../widgets/chat_input_button.dart';
 import '../widgets/financial_ratio_widget.dart';
 import '../widgets/home_appbar.dart';
@@ -117,35 +118,54 @@ class _DashboardViewState extends State<DashboardView> {
     await Future.wait([dashboardFuture, transactionsFuture]);
   }
 
-  Future<void> _selectDateRange() async {
-    final picked = await showDateRangePicker(
+  void _selectDateRange() {
+    showModalBottomSheet(
       context: context,
-      firstDate: DateTime(2020),
-      lastDate: DateTime.now().add(const Duration(days: 365)),
-      initialDateRange: _startDate != null && _endDate != null
-          ? DateTimeRange(start: _startDate!, end: _endDate!)
-          : null,
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: Theme.of(context).colorScheme.copyWith(
-                  primary: AppTheme.primaryColor,
-                  onPrimary: Colors.white,
-                  surface: Theme.of(context).scaffoldBackgroundColor,
-                ),
-          ),
-          child: child!,
-        );
-      },
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => DateSelectorBottomSheet(
+        onDateSelected: (start, end) {
+          setState(() {
+            _startDate = start;
+            _endDate = end;
+          });
+          _loadDashboard();
+        },
+      ),
     );
+  }
 
-    if (picked != null) {
-      setState(() {
-        _startDate = picked.start;
-        _endDate = picked.end;
-      });
-      _loadDashboard();
+  String _getFormattedDateRange() {
+    if (_startDate == null || _endDate == null) return 'Select Date';
+    
+    final start = _startDate!;
+    final end = _endDate!;
+    final now = DateTime.now();
+
+    // Check if it's the current month fully selected
+    if (start.year == now.year && start.month == now.month && 
+        start.day == 1 && end.month == now.month && 
+        end.day == DateTime(now.year, now.month + 1, 0).day) {
+      return DateFormat('MMMM yyyy').format(start);
     }
+    
+    // Check if it's any full month
+    if (start.day == 1 && 
+        end.year == start.year && end.month == start.month &&
+        end.day == DateTime(start.year, start.month + 1, 0).day) {
+      return DateFormat('MMMM yyyy').format(start);
+    }
+
+    // Same year
+    if (start.year == end.year) {
+      if (start.month == end.month) {
+        return '${DateFormat('MMM d').format(start)} - ${DateFormat('d, yyyy').format(end)}';
+      }
+      return '${DateFormat('MMM d').format(start)} - ${DateFormat('MMM d, yyyy').format(end)}';
+    }
+
+    // Different years
+    return '${DateFormat('MMM d, yyyy').format(start)} - ${DateFormat('MMM d, yyyy').format(end)}';
   }
 
   @override
@@ -206,6 +226,7 @@ class _DashboardViewState extends State<DashboardView> {
                       Navigator.pushNamed(context, '/profile');
                     },
                     profileUrl: _profileUrl ?? '',
+                    displayDate: _getFormattedDateRange(),
                     onTapDateRange: _selectDateRange,
                   ),
 

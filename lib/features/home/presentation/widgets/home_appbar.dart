@@ -8,12 +8,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class HomeAppbar extends StatelessWidget {
   final VoidCallback onTapProfileIcon;
   final String profileUrl;
+  final String displayDate;
 
   const HomeAppbar({
     super.key,
     required this.summary,
     required this.onTapProfileIcon,
     required this.profileUrl,
+    required this.displayDate,
     this.onTapDateRange,
   });
 
@@ -37,7 +39,7 @@ class HomeAppbar extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                summary.period,
+                displayDate,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,

@@ -319,7 +319,7 @@ class _MessageBubbleState extends State<MessageBubble>
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    "Recorded as '${widget.message.actionType}'",
+                    _formatActionType(widget.message.actionType!),
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: GeminiColors.textSecondary(context),
                           fontStyle: FontStyle.italic,
@@ -494,6 +494,17 @@ class _MessageBubbleState extends State<MessageBubble>
       return 'Yesterday ${DateFormat('h:mm a').format(timestamp)}';
     } else {
       return DateFormat('MMM d, h:mm a').format(timestamp);
+    }
+  }
+
+  String _formatActionType(String type) {
+    switch (type.toUpperCase()) {
+      case 'INCOME':
+        return 'Recorded Income';
+      case 'EXPENSE':
+        return 'Recorded Expense';
+      default:
+        return "Recorded as '$type'";
     }
   }
 

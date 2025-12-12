@@ -21,6 +21,7 @@ import 'features/auth/presentation/pages/reset_password_page.dart';
 import 'features/auth/presentation/pages/verification_success_page.dart';
 import 'features/home/presentation/cubit/dashboard_cubit.dart';
 import 'features/home/presentation/pages/home_page.dart';
+import 'features/home/presentation/pages/transactions_page.dart';
 import 'features/subscription/presentation/pages/manage_subscription_page.dart';
 import 'features/subscription/presentation/pages/subscription_plans_page.dart';
 
@@ -87,6 +88,7 @@ class MyApp extends StatelessWidget {
               '/subscription-plans': (context) => const SubscriptionPlansPage(),
               '/manage-subscription': (context) =>
                   const ManageSubscriptionPage(),
+              '/transactions': (context) => const TransactionsPage(),
             },
             onGenerateRoute: (settings) {
               if (settings.name == '/email-verification') {

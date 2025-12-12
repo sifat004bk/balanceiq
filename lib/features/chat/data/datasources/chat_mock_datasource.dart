@@ -72,14 +72,18 @@ class ChatMockDataSource implements ChatRemoteDataSource {
       userId: int.tryParse(userId) ?? 0,
       conversations: [
         ConversationModel(
+          id: 1,
           userMessage: "Show me my monthly summary",
           aiResponse: 'Here is your monthly summary:\n\n```ui:summary_card\n{\n  "title": "Total Balance",\n  "value": "45,500 BDT",\n  "trend": "+12%",\n  "trendColor": "green",\n  "icon": "wallet"\n}\n```\n\n```ui:chart\n{\n  "type": "bar",\n  "title": "Income vs Expenses",\n  "data": [\n    {"label": "Income", "value": 50000, "color": "#4CAF50"},\n    {"label": "Expenses", "value": 4500, "color": "#FF5252"}\n  ],\n  "gradient": true\n}\n```',
           createdAt: DateTime.now().subtract(const Duration(days: 1)).toIso8601String(),
+          feedback: 'LIKE',
         ),
         ConversationModel(
+          id: 2,
           userMessage: "How are my investments doing?",
           aiResponse: 'Your portfolio is growing steadily:\n\n```ui:chart\n{\n  "type": "line",\n  "title": "Portfolio Growth",\n  "data": [\n    {"label": "Jan", "value": 10000},\n    {"label": "Feb", "value": 12000},\n    {"label": "Mar", "value": 11500},\n    {"label": "Apr", "value": 14000}\n  ],\n  "gradient": true\n}\n```\n\n```ui:action_list\n{\n  "title": "Actions",\n  "actions": [\n    {"label": "View Details", "action": "view_details"},\n    {"label": "Add Funds", "action": "add_funds"}\n  ]\n}\n```',
           createdAt: DateTime.now().subtract(const Duration(days: 2)).toIso8601String(),
+          feedback: null,
         ),
       ],
       pagination: PaginationModel(

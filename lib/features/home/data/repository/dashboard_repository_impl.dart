@@ -15,7 +15,10 @@ class DashboardRepositoryImpl implements DashboardRepository {
   });
 
   @override
-  Future<Either<Failure, DashboardSummary>> getDashboardSummary() async {
+  Future<Either<Failure, DashboardSummary>> getDashboardSummary({
+    String? startDate,
+    String? endDate,
+  }) async {
     try {
       // Get user from auth cache to verify logged in state
       final user = await authLocalDataSource.getCachedUser();
@@ -26,7 +29,10 @@ class DashboardRepositoryImpl implements DashboardRepository {
 
       // Fetch dashboard data
       // API uses Bearer token from SharedPreferences, no parameters needed
-      final DashboardSummary dashboard = await remoteDataSource.getDashboardSummary();
+      final DashboardSummary dashboard = await remoteDataSource.getDashboardSummary(
+        startDate: startDate,
+        endDate: endDate,
+      );
 
       return Right(dashboard);
     } on FormatException catch (e) {

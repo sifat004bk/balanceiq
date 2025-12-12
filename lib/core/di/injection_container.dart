@@ -7,7 +7,9 @@ import 'package:balance_iq/features/home/data/datasource/remote_datasource/dashb
 import 'package:balance_iq/features/home/data/repository/dashboard_repository_impl.dart';
 import 'package:balance_iq/features/home/domain/repository/dashboard_repository.dart';
 import 'package:balance_iq/features/home/domain/usecase/get_user_dashbaord.dart';
+import 'package:balance_iq/features/home/domain/usecase/get_user_dashbaord.dart';
 import 'package:balance_iq/features/home/presentation/cubit/dashboard_cubit.dart';
+import 'package:balance_iq/features/home/presentation/cubit/transactions_cubit.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -207,6 +209,7 @@ Future<void> init() async {
   //! Features - Dashboard
   // Cubit
   sl.registerFactory(() => DashboardCubit(getDashboardSummary: sl()));
+  sl.registerFactory(() => TransactionsCubit(searchTransactions: sl()));
 
   // Use cases
   sl.registerLazySingleton(() => GetDashboardSummary(sl()));

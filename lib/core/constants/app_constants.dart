@@ -57,4 +57,7 @@ class AppConstants {
   // File Size Limits (in bytes)
   static const int maxImageSize = 10 * 1024 * 1024; // 10 MB
   static const int maxAudioSize = 25 * 1024 * 1024; // 25 MB
+
+  // Feature Limits
+  static const int dailyTokenLimit = 5000;
 }

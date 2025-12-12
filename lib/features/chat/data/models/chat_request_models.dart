@@ -102,21 +102,21 @@ class TokenUsage {
   }
 }
 
-/// Query parameters for GET /api/finance-guru/chat-history
-/// Spec: ?page=1&limit=20
+/// Query parameters for GET /api/finance-guru/v1/chat-history
+/// Spec: ?page=1&size=20
 class ChatHistoryQueryParams {
   final int page;
-  final int limit;
+  final int size;
 
   ChatHistoryQueryParams({
     this.page = 1,
-    this.limit = 20,
+    this.size = 20,
   });
 
   Map<String, String> toQueryParams() {
     return {
       'page': page.toString(),
-      'limit': limit.toString(),
+      'size': size.toString(),
     };
   }
 }

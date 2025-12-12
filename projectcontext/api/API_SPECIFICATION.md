@@ -562,7 +562,7 @@ Authorization: Bearer <JWT_TOKEN>
 
 Send message to AI finance assistant and get response.
 
-**Endpoint**: `POST /api/finance-guru/chat`
+**Endpoint**: `POST /api/finance-guru/v1/chat`
 **Authentication**: Required (Bearer Token)
 **Content-Type**: `application/json`
 
@@ -643,7 +643,7 @@ Content-Type: application/json
 
 Retrieve paginated chat conversation history.
 
-**Endpoint**: `GET /api/finance-guru/chat-history`
+**Endpoint**: `GET /api/finance-guru/v1/chat-history`
 **Authentication**: Required (Bearer Token)
 **Content-Type**: `application/json`
 
@@ -659,30 +659,39 @@ Content-Type: application/json
 | Parameter | Type | Required | Default | Description |
 |-----------|------|----------|---------|-------------|
 | page | integer | No | 1 | Page number (1-indexed) |
-| limit | integer | No | 10 | Items per page (max 50) |
+| size | integer | No | 20 | Items per page (max 50) |
 
 #### Request Example
 
 ```
-GET /api/finance-guru/chat-history?page=1&limit=10
+GET /api/finance-guru/v1/chat-history?page=1&size=20
 ```
 
 #### Success Response (200 OK)
 
 ```json
 {
-  "userId": 8,
+  "userId": 5,
   "conversations": [
     {
-      "userMessage": "What is my current balance?",
-      "aiResponse": "#### Your Current Balance\n\n| **Item** | **Amount** |\n|----------|-----------|\n| Current Balance | ৳0 |",
-      "createdAt": "2025-11-29T20:05:17.909358"
+      "id": 10,
+      "userMessage": "and maid? have I paid her?",
+      "aiResponse": "⚠️ **No maid expense found**\n\n• Your recent expense breakdown does not include a maid payment.\n• Please check your records or try again later.",
+      "createdAt": "2025-12-08T10:34:10.756031",
+      "feedback": null
+    },
+    {
+      "id": 9,
+      "userMessage": "what about rent?",
+      "aiResponse": "#### 📊 **Rent Breakdown**\n\n| Category | Total (৳) | Percent | Transactions | Avg (৳) |\n|---|---|---|---|---|\n| **Rent** | 30,000.00 | 66.73% | 1 | 30,000.00 |\n",
+      "createdAt": "2025-12-08T10:33:54.831077",
+      "feedback": null
     }
   ],
   "pagination": {
     "currentPage": 1,
-    "limit": 10,
-    "returned": 1,
+    "limit": 20,
+    "returned": 2,
     "hasNext": false,
     "nextPage": null
   }
@@ -701,9 +710,11 @@ GET /api/finance-guru/chat-history?page=1&limit=10
 
 | Field | Type | Description |
 |-------|------|-------------|
+| id | integer | Unique conversation ID (required for feedback) |
 | userMessage | string | User's message |
 | aiResponse | string | AI response in markdown |
 | createdAt | string | ISO 8601 timestamp |
+| feedback | string \| null | User feedback: "LIKE", "DISLIKE", or null |
 
 #### Pagination Object
 
@@ -1125,6 +1136,7 @@ The following FinanceGuru APIs are working on the backend but not yet integrated
 
 ---
 
-**Last Updated**: 2025-12-09
+**Last Updated**: 2025-12-12
 **Tested By**: Claude AI Assistant
 **Backend Version**: Production API v1.0
+**Updated**: Finance Guru v1 API endpoints (chat and chat-history)

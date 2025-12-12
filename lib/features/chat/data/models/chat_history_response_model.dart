@@ -46,9 +46,9 @@ class ChatHistoryResponseModel {
     final messages = <MessageModel>[];
 
     for (var conversation in conversations) {
-      // User message
+      // User message - use conversation ID
       messages.add(MessageModel(
-        id: '${userId}_${conversation.createdAt}_user',
+        id: '${userId}_${conversation.id}_user',
         userId: userId.toString(),
         botId: botId,
         sender: 'user',
@@ -57,11 +57,12 @@ class ChatHistoryResponseModel {
         serverCreatedAt: DateTime.parse(conversation.createdAt),
         isSynced: true,
         syncStatus: 'sent',
+        conversationId: conversation.id,
       ));
 
-      // AI response
+      // AI response - use conversation ID
       messages.add(MessageModel(
-        id: '${userId}_${conversation.createdAt}_bot',
+        id: '${userId}_${conversation.id}_bot',
         userId: userId.toString(),
         botId: botId,
         sender: 'bot',
@@ -70,6 +71,8 @@ class ChatHistoryResponseModel {
         serverCreatedAt: DateTime.parse(conversation.createdAt).add(const Duration(milliseconds: 1)),
         isSynced: true,
         syncStatus: 'sent',
+        conversationId: conversation.id,
+        feedback: conversation.feedback,
       ));
     }
 
@@ -79,37 +82,47 @@ class ChatHistoryResponseModel {
 
 /// Represents a single conversation (user message + AI response)
 class ConversationModel {
+  final int id;
   final String userMessage;
   final String aiResponse;
   final String createdAt;
+  final String? feedback;
 
   ConversationModel({
+    required this.id,
     required this.userMessage,
     required this.aiResponse,
     required this.createdAt,
+    this.feedback,
   });
 
   factory ConversationModel.fromJson(Map<String, dynamic> json) {
     return ConversationModel(
+      id: json['id'] as int,
       userMessage: json['userMessage'] as String,
       aiResponse: json['aiResponse'] as String,
       createdAt: json['createdAt'] as String,
+      feedback: json['feedback'] as String?,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'userMessage': userMessage,
       'aiResponse': aiResponse,
       'createdAt': createdAt,
+      'feedback': feedback,
     };
   }
 
   Conversation toEntity() {
     return Conversation(
+      id: id,
       userMessage: userMessage,
       aiResponse: aiResponse,
       createdAt: createdAt,
+      feedback: feedback,
     );
   }
 }

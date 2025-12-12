@@ -9,10 +9,13 @@ class DashboardCubit extends Cubit<DashboardState> {
   DashboardCubit({required this.getDashboardSummary})
       : super(DashboardInitial());
 
-  Future<void> loadDashboard() async {
+  Future<void> loadDashboard({String? startDate, String? endDate}) async {
     emit(DashboardLoading());
 
-    final result = await getDashboardSummary();
+    final result = await getDashboardSummary(
+      startDate: startDate,
+      endDate: endDate,
+    );
 
     result.fold(
       (failure) => emit(DashboardError(failure.message)),
@@ -20,5 +23,6 @@ class DashboardCubit extends Cubit<DashboardState> {
     );
   }
 
-  Future<void> refreshDashboard() => loadDashboard();
+  Future<void> refreshDashboard({String? startDate, String? endDate}) =>
+      loadDashboard(startDate: startDate, endDate: endDate);
 }

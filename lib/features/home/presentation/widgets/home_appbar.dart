@@ -14,9 +14,11 @@ class HomeAppbar extends StatelessWidget {
     required this.summary,
     required this.onTapProfileIcon,
     required this.profileUrl,
+    this.onTapDateRange,
   });
 
   final DashboardSummary summary;
+  final VoidCallback? onTapDateRange;
 
   @override
   Widget build(BuildContext context) {
@@ -26,13 +28,30 @@ class HomeAppbar extends StatelessWidget {
       elevation: 0,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       centerTitle: true,
-      title: Text(
-        summary.period,
-        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 0.27,
-            ),
+      title: InkWell(
+        onTap: onTapDateRange,
+        borderRadius: BorderRadius.circular(8),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                summary.period,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 0.27,
+                    ),
+              ),
+              const SizedBox(width: 4),
+              Icon(
+                Icons.arrow_drop_down,
+                color: Theme.of(context).textTheme.titleMedium?.color,
+              ),
+            ],
+          ),
+        ),
       ),
       leading: Padding(
         padding: const EdgeInsets.only(left: 12),

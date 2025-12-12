@@ -4,35 +4,56 @@ import 'package:balance_iq/features/auth/data/datasources/auth_local_datasource.
 import 'package:balance_iq/features/home/presentation/cubit/dashboard_state.dart';
 import 'package:balance_iq/features/home/presentation/widgets/accounts_breakdown_widget.dart';
 import 'package:balance_iq/features/home/presentation/widgets/balance_card_widget.dart';
-import 'package:balance_iq/features/home/presentation/widgets/biggest_category_widget.dart';
 import 'package:balance_iq/features/home/presentation/widgets/biggest_expense_widget.dart';
+import 'package:balance_iq/features/home/presentation/widgets/category_breakdown_widget.dart';
 import 'package:balance_iq/features/home/presentation/widgets/dashboard_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 import '../cubit/dashboard_cubit.dart';
+import '../cubit/transactions_cubit.dart';
 import '../widgets/chat_input_button.dart';
 import '../widgets/financial_ratio_widget.dart';
 import '../widgets/home_appbar.dart';
 import '../widgets/spending_trend_chart.dart';
+import '../widgets/transaction_history_widget.dart';
 import 'error_page.dart';
 import 'welcome_page.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => sl<TransactionsCubit>()..loadTransactions(limit: 5),
+      child: const DashboardView(),
+    );
+  }
 }
 
-class _HomePageState extends State<HomePage> {
+class DashboardView extends StatefulWidget {
+  const DashboardView({super.key});
+
+  @override
+  State<DashboardView> createState() => _DashboardViewState();
+}
+
+class _DashboardViewState extends State<DashboardView> {
   String _userName = 'User';
   String? _profileUrl;
+  DateTime? _startDate;
+  DateTime? _endDate;
 
   @override
   void initState() {
     super.initState();
     _loadUser();
+    // We don't need to call _loadDashboard here for initial load because:
+    // 1. DashboardCubit is loaded in main.dart or previous session? No, init in main doesn't load.
+    //    We should check if we need to load it.
+    // 2. TransactionsCubit is loaded in create.
     _loadDashboard();
   }
 
@@ -49,11 +70,79 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _loadDashboard() {
-    context.read<DashboardCubit>().loadDashboard();
+    String? startDateStr;
+    String? endDateStr;
+
+    if (_startDate != null && _endDate != null) {
+      startDateStr = DateFormat('yyyy-MM-dd').format(_startDate!);
+      endDateStr = DateFormat('yyyy-MM-dd').format(_endDate!);
+    }
+
+    context.read<DashboardCubit>().loadDashboard(
+          startDate: startDateStr,
+          endDate: endDateStr,
+        );
+    
+    // Now this works because context is under BlocProvider
+    context.read<TransactionsCubit>().loadTransactions(
+      limit: 5,
+      startDate: startDateStr,
+      endDate: endDateStr,
+    );
   }
 
   Future<void> _refreshDashboard() async {
-    await context.read<DashboardCubit>().refreshDashboard();
+    String? startDateStr;
+    String? endDateStr;
+
+    if (_startDate != null && _endDate != null) {
+      startDateStr = DateFormat('yyyy-MM-dd').format(_startDate!);
+      endDateStr = DateFormat('yyyy-MM-dd').format(_endDate!);
+    }
+
+    final dashboardFuture = context.read<DashboardCubit>().refreshDashboard(
+          startDate: startDateStr,
+          endDate: endDateStr,
+        );
+        
+    final transactionsFuture = context.read<TransactionsCubit>().loadTransactions(
+      limit: 5,
+      startDate: startDateStr,
+      endDate: endDateStr,
+    );
+
+    await Future.wait([dashboardFuture, transactionsFuture]);
+  }
+
+  Future<void> _selectDateRange() async {
+    final picked = await showDateRangePicker(
+      context: context,
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
+      initialDateRange: _startDate != null && _endDate != null
+          ? DateTimeRange(start: _startDate!, end: _endDate!)
+          : null,
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: Theme.of(context).colorScheme.copyWith(
+                  primary: AppTheme.primaryColor,
+                  onPrimary: Colors.white,
+                  surface: Theme.of(context).scaffoldBackgroundColor,
+                ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (picked != null) {
+      setState(() {
+        _startDate = picked.start;
+        _endDate = picked.end;
+      });
+      _loadDashboard();
+    }
   }
 
   @override
@@ -114,6 +203,7 @@ class _HomePageState extends State<HomePage> {
                       Navigator.pushNamed(context, '/profile');
                     },
                     profileUrl: _profileUrl ?? '',
+                    onTapDateRange: _selectDateRange,
                   ),
 
                   // --- Dashboard Body ---
@@ -172,9 +262,13 @@ class _HomePageState extends State<HomePage> {
                                 account: summary.expenseAccount,
                               ),
                               const SizedBox(height: 16),
-                              BiggestCategoryWidget(
-                                categoryName: summary.biggestCategoryName,
-                                amount: summary.biggestCategoryAmount,
+                              if (summary.categories.isNotEmpty)
+                                CategoryBreakdownWidget(
+                                  categories: summary.categories,
+                                ),
+                              const SizedBox(height: 16),
+                              TransactionHistoryWidget(
+                                onViewAll: () => Navigator.pushNamed(context, '/transactions'),
                               ),
                             ],
                           ),

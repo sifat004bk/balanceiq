@@ -18,6 +18,8 @@ class Message extends Equatable {
   final String syncStatus;           // 'pending', 'sent', 'failed'
   final String? apiMessageId;        // Backend message ID
   final String? actionType;          // Action type (e.g., balance_query, income_log)
+  final int? conversationId;         // Links to API conversation ID (for feedback)
+  final String? feedback;            // User feedback: 'LIKE', 'DISLIKE', or null
 
   const Message({
     required this.id,
@@ -35,6 +37,8 @@ class Message extends Equatable {
     this.syncStatus = 'pending',
     this.apiMessageId,
     this.actionType,
+    this.conversationId,
+    this.feedback,
   });
 
   @override
@@ -54,6 +58,8 @@ class Message extends Equatable {
         syncStatus,
         apiMessageId,
         actionType,
+        conversationId,
+        feedback,
       ];
 
   Message copyWith({
@@ -72,6 +78,8 @@ class Message extends Equatable {
     String? syncStatus,
     String? apiMessageId,
     String? actionType,
+    int? conversationId,
+    String? feedback,
   }) {
     return Message(
       id: id ?? this.id,
@@ -89,6 +97,8 @@ class Message extends Equatable {
       syncStatus: syncStatus ?? this.syncStatus,
       apiMessageId: apiMessageId ?? this.apiMessageId,
       actionType: actionType ?? this.actionType,
+      conversationId: conversationId ?? this.conversationId,
+      feedback: feedback ?? this.feedback,
     );
   }
 }

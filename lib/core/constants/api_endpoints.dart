@@ -26,8 +26,8 @@ class ApiEndpoints {
 
   // Finance Guru APIs
   static String get dashboard => '$financeGuruBaseUrl/v1/dashboard';
-  static String get chat => '$financeGuruBaseUrl/chat';
-  static String get chatHistory => '$financeGuruBaseUrl/chat-history';
+  static String get chat => '$financeGuruBaseUrl/v1/chat';
+  static String get chatHistory => '$financeGuruBaseUrl/v1/chat-history';
   static String get transactions => '$financeGuruBaseUrl/v1/transactions';
   static String get tokenUsage => '$financeGuruBaseUrl/v1/token-usage';
 

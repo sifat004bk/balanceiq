@@ -17,6 +17,8 @@ class MessageModel extends Message {
     super.syncStatus,
     super.apiMessageId,
     super.actionType,
+    super.conversationId,
+    super.feedback,
   });
 
   factory MessageModel.fromJson(Map<String, dynamic> json) {
@@ -38,6 +40,8 @@ class MessageModel extends Message {
       syncStatus: json['sync_status'] as String? ?? 'pending',
       apiMessageId: json['api_message_id'] as String?,
       actionType: json['action_type'] as String?,
+      conversationId: json['conversation_id'] as int?,
+      feedback: json['feedback'] as String?,
     );
   }
 
@@ -58,6 +62,8 @@ class MessageModel extends Message {
       'sync_status': syncStatus,
       'api_message_id': apiMessageId,
       'action_type': actionType,
+      'conversation_id': conversationId,
+      'feedback': feedback,
     };
   }
 
@@ -78,6 +84,8 @@ class MessageModel extends Message {
       syncStatus: message.syncStatus,
       apiMessageId: message.apiMessageId,
       actionType: message.actionType,
+      conversationId: message.conversationId,
+      feedback: message.feedback,
     );
   }
 
@@ -98,6 +106,8 @@ class MessageModel extends Message {
       syncStatus: syncStatus,
       apiMessageId: apiMessageId,
       actionType: actionType,
+      conversationId: conversationId,
+      feedback: feedback,
     );
   }
 }

@@ -106,7 +106,7 @@ class ChatFinanceGuruDataSource implements ChatRemoteDataSource {
     try {
       final queryParams = ChatHistoryQueryParams(
         page: page,
-        limit: limit ?? 20,
+        size: limit ?? 20,
       );
 
       // Get auth token if available

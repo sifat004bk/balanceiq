@@ -8,7 +8,13 @@ class GetDashboardSummary {
 
   GetDashboardSummary(this.repository);
 
-  Future<Either<Failure, DashboardSummary>> call() {
-    return repository.getDashboardSummary();
+  Future<Either<Failure, DashboardSummary>> call({
+    String? startDate,
+    String? endDate,
+  }) {
+    return repository.getDashboardSummary(
+      startDate: startDate,
+      endDate: endDate,
+    );
   }
 }

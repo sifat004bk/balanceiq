@@ -18,18 +18,31 @@ class ChatHistoryResponse extends Equatable {
 
 /// Represents a single conversation (user message + AI response)
 class Conversation extends Equatable {
+  final int id;
   final String userMessage;
   final String aiResponse;
   final String createdAt;
+  final String? feedback;
 
   const Conversation({
+    required this.id,
     required this.userMessage,
     required this.aiResponse,
     required this.createdAt,
+    this.feedback,
   });
 
   @override
-  List<Object?> get props => [userMessage, aiResponse, createdAt];
+  List<Object?> get props => [id, userMessage, aiResponse, createdAt, feedback];
+
+  /// Helper to check if conversation has feedback
+  bool get hasFeedback => feedback != null && feedback!.isNotEmpty;
+
+  /// Helper to check if user liked the conversation
+  bool get isLiked => feedback == 'LIKE';
+
+  /// Helper to check if user disliked the conversation
+  bool get isDisliked => feedback == 'DISLIKE';
 }
 
 /// Pagination metadata

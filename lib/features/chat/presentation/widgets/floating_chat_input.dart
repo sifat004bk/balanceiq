@@ -270,19 +270,9 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
           remainingTokens = state.dailyTokenLimit - state.currentTokenUsage;
         }
 
-        return Container(
-          decoration: BoxDecoration(
-            color: isDark ? const Color(0xFF1A1C23) : Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 10,
-                offset: const Offset(0, -2),
-              ),
-            ],
-          ),
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
-          child: SafeArea(
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -347,7 +337,62 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                     ),
                   ),
 
-                // Main Input Container
+                // Selected image preview
+                if (_selectedImagePath != null)
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: isDark
+                          ? const Color(0xFF1e1f20)
+                          : const Color(0xFFF8F9FA),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: isDark
+                            ? primaryColor.withOpacity(0.2)
+                            : primaryColor.withOpacity(0.15),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.file(
+                            File(_selectedImagePath!),
+                            width: 60,
+                            height: 60,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            'Image selected',
+                            style: TextStyle(
+                              color: isDark
+                                  ? const Color(0xFFB0B3B8)
+                                  : const Color(0xFF65676B),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(
+                            Icons.close,
+                            color: isDark ? Colors.white : Colors.black,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _selectedImagePath = null;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+
+                // Main Input Container (Floating Pill)
                 Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 20,
@@ -513,58 +558,6 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                     ],
                   ),
                 ),
-
-                // Selected image preview
-                if (_selectedImagePath != null)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 12),
-                    child: Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: isDark
-                            ? const Color(0xFF2a2a2e)
-                            : const Color(0xFFF0F2F5),
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Row(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Image.file(
-                              File(_selectedImagePath!),
-                              width: 60,
-                              height: 60,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Text(
-                              'Image selected',
-                              style: TextStyle(
-                                color: isDark
-                                    ? const Color(0xFFB0B3B8)
-                                    : const Color(0xFF65676B),
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                          IconButton(
-                            icon: Icon(
-                              Icons.close,
-                              color: isDark ? Colors.white : Colors.black,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _selectedImagePath = null;
-                              });
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
               ],
             ),
           ),

@@ -73,7 +73,7 @@ class ChatResponse {
       actionType: json['actionType'] as String?,
       table: json['table'] as bool? ?? false,
       tableData: json['tableData'] != null
-          ? TableDataModel.fromJson(json['tableData'] as List<dynamic>)
+          ? TableDataModel.fromList(json['tableData'] as List<dynamic>)
           : null,
       graphType: json['graphType'] as String?,
       graphData: json['graphData'] != null

@@ -30,11 +30,11 @@ class MessageModel extends Message {
 
   factory MessageModel.fromJson(Map<String, dynamic> json) {
     // Parse table data from JSON string
-    TableData? parsedTableData;
+    GenUITableData? parsedTableData;
     if (json['table_data'] != null && json['table_data'] is String) {
       try {
         final tableJson = jsonDecode(json['table_data'] as String);
-        parsedTableData = TableDataModel.fromJson(tableJson as List<dynamic>);
+        parsedTableData = GenUITableData.fromJson(tableJson as Map<String, dynamic>);
       } catch (e) {
         // If parsing fails, leave as null
       }

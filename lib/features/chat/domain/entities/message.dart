@@ -24,7 +24,7 @@ class Message extends Equatable {
 
   // Rendering metadata (from API response)
   final bool hasTable;               // Whether response includes table data
-  final TableData? tableData;        // Table data for rendering
+  final GenUITableData? tableData;        // Table data for rendering
   final GraphType? graphType;        // Type of graph (line, bar, or null)
   final GraphData? graphData;        // Graph data for rendering charts
 
@@ -96,7 +96,7 @@ class Message extends Equatable {
     int? conversationId,
     String? feedback,
     bool? hasTable,
-    TableData? tableData,
+    GenUITableData? tableData,
     GraphType? graphType,
     GraphData? graphData,
   }) {

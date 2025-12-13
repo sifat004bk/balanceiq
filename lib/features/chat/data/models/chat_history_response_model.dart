@@ -1,4 +1,5 @@
 import '../../domain/entities/chat_history_response.dart';
+import '../../domain/entities/chart_data.dart';
 import 'message_model.dart';
 
 /// Response model for chat history API
@@ -73,6 +74,10 @@ class ChatHistoryResponseModel {
         syncStatus: 'sent',
         conversationId: conversation.id,
         feedback: conversation.feedback,
+        hasTable: conversation.hasTable,
+        tableData: conversation.tableData,
+        graphType: conversation.graphType,
+        graphData: conversation.graphData,
       ));
     }
 
@@ -88,12 +93,22 @@ class ConversationModel {
   final String createdAt;
   final String? feedback;
 
+  // GenUI Data
+  final bool hasTable;
+  final GenUITableData? tableData;
+  final GraphType? graphType;
+  final GraphData? graphData;
+
   ConversationModel({
     required this.id,
     required this.userMessage,
     required this.aiResponse,
     required this.createdAt,
     this.feedback,
+    this.hasTable = false,
+    this.tableData,
+    this.graphType,
+    this.graphData,
   });
 
   factory ConversationModel.fromJson(Map<String, dynamic> json) {
@@ -103,6 +118,14 @@ class ConversationModel {
       aiResponse: json['aiResponse'] as String,
       createdAt: json['createdAt'] as String,
       feedback: json['feedback'] as String?,
+      hasTable: json['hasTable'] as bool? ?? false,
+      tableData: json['tableData'] != null
+          ? GenUITableData.fromJson(json['tableData'] as Map<String, dynamic>)
+          : null,
+      graphType: GraphType.fromString(json['graphType'] as String?),
+      graphData: json['graphData'] != null
+          ? GraphData.fromJson(json['graphData'] as Map<String, dynamic>)
+          : null,
     );
   }
 
@@ -113,6 +136,10 @@ class ConversationModel {
       'aiResponse': aiResponse,
       'createdAt': createdAt,
       'feedback': feedback,
+      'hasTable': hasTable,
+      'tableData': tableData?.toJson(),
+      'graphType': graphType?.value,
+      'graphData': graphData?.toJson(),
     };
   }
 
@@ -123,6 +150,10 @@ class ConversationModel {
       aiResponse: aiResponse,
       createdAt: createdAt,
       feedback: feedback,
+      hasTable: hasTable,
+      tableData: tableData,
+      graphType: graphType,
+      graphData: graphData,
     );
   }
 }

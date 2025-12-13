@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'chart_data.dart';
 
 /// Domain entity for chat history API response
 class ChatHistoryResponse extends Equatable {
@@ -23,6 +24,12 @@ class Conversation extends Equatable {
   final String aiResponse;
   final String createdAt;
   final String? feedback;
+  
+  // GenUI Data
+  final bool hasTable;
+  final GenUITableData? tableData;
+  final GraphType? graphType;
+  final GraphData? graphData;
 
   const Conversation({
     required this.id,
@@ -30,10 +37,24 @@ class Conversation extends Equatable {
     required this.aiResponse,
     required this.createdAt,
     this.feedback,
+    this.hasTable = false,
+    this.tableData,
+    this.graphType,
+    this.graphData,
   });
 
   @override
-  List<Object?> get props => [id, userMessage, aiResponse, createdAt, feedback];
+  List<Object?> get props => [
+        id,
+        userMessage,
+        aiResponse,
+        createdAt,
+        feedback,
+        hasTable,
+        tableData,
+        graphType,
+        graphData,
+  ];
 
   /// Helper to check if conversation has feedback
   bool get hasFeedback => feedback != null && feedback!.isNotEmpty;

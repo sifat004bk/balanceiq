@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:markdown/markdown.dart' as md;
+import '../../../domain/entities/chart_data.dart' as charts;
 import 'gen_ui_chart.dart';
 import 'gen_ui_table.dart';
 import 'gen_ui_metric_card.dart';
@@ -37,9 +38,22 @@ class GenUIChartBuilder extends MarkdownElementBuilder {
     try {
       final content = element.textContent;
       final jsonMap = jsonDecode(content);
+      
+      final graphData = charts.GraphData.fromJson(jsonMap);
+      final graphType = charts.GraphType.fromString(jsonMap['type'] as String?);
+      final title = jsonMap['title'] as String?;
+
+      if (graphType == null) {
+          return const Text('Error rendering chart: Missing or invalid chart type', style: TextStyle(color: Colors.red));
+      }
+
       return GenUIAnimatedWrapper(
         delay: 100,
-        child: GenUIChart(data: jsonMap),
+        child: GenUIChart(
+            data: graphData, 
+            type: graphType,
+            title: title,
+        ),
       );
     } catch (e) {
       return Text('Error rendering chart: $e',
@@ -59,11 +73,16 @@ class GenUITableBuilder extends MarkdownElementBuilder {
     try {
       final content = element.textContent;
       final jsonMap = jsonDecode(content);
+      
+      // If the JSON is directly the TableData structure
+      final tableData = charts.GenUITableData.fromJson(jsonMap);
+
       return GenUIAnimatedWrapper(
         delay: 100,
-        child: GenUITable(data: jsonMap),
+        child: GenUITable(data: tableData),
       );
     } catch (e) {
+      // Fallback for potential legacy format or errors
       return Text('Error rendering table: $e',
           style: const TextStyle(color: Colors.red));
     }

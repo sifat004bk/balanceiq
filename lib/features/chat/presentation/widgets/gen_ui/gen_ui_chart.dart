@@ -1,7 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import '../../../../../core/constants/gemini_colors.dart';
-import '../../domain/entities/chart_data.dart';
+import '../../../domain/entities/chart_data.dart';
 
 class GenUIChart extends StatelessWidget {
   final GraphData data;

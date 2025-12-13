@@ -74,12 +74,12 @@ class GraphDataModel extends GraphData {
 }
 
 /// Data model for TableData
-class TableDataModel extends TableData {
+class TableDataModel extends GenUITableData {
   const TableDataModel({
     required super.rows,
   });
 
-  factory TableDataModel.fromJson(List<dynamic> json) {
+  factory TableDataModel.fromList(List<dynamic> json) {
     return TableDataModel(
       rows: json
           .map((row) => Map<String, dynamic>.from(row as Map<dynamic, dynamic>))
@@ -87,18 +87,21 @@ class TableDataModel extends TableData {
     );
   }
 
-  List<dynamic> toJson() {
-    return rows;
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      'rows': rows,
+    };
   }
 
-  factory TableDataModel.fromEntity(TableData entity) {
+  factory TableDataModel.fromEntity(GenUITableData entity) {
     return TableDataModel(
       rows: entity.rows,
     );
   }
 
-  TableData toEntity() {
-    return TableData(
+  GenUITableData toEntity() {
+    return GenUITableData(
       rows: rows,
     );
   }

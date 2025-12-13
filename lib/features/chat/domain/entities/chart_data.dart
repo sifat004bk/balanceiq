@@ -10,6 +10,20 @@ class ChartDataset extends Equatable {
     required this.data,
   });
 
+  factory ChartDataset.fromJson(Map<String, dynamic> json) {
+    return ChartDataset(
+      label: json['label'] as String,
+      data: (json['data'] as List).map((e) => e as num).toList(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'label': label,
+      'data': data,
+    };
+  }
+
   @override
   List<Object?> get props => [label, data];
 
@@ -27,6 +41,22 @@ class GraphData extends Equatable {
     required this.labels,
     required this.datasets,
   });
+
+  factory GraphData.fromJson(Map<String, dynamic> json) {
+    return GraphData(
+      labels: (json['labels'] as List).map((e) => e as String).toList(),
+      datasets: (json['datasets'] as List)
+          .map((e) => ChartDataset.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'labels': labels,
+      'datasets': datasets.map((e) => e.toJson()).toList(),
+    };
+  }
 
   @override
   List<Object?> get props => [labels, datasets];
@@ -64,12 +94,31 @@ enum GraphType {
 
 /// Table data entity for rendering tables
 /// Represents a list of rows where each row is a map of column name to value
-class TableData extends Equatable {
+/// Table data entity for rendering tables
+/// Represents a list of rows where each row is a map of column name to value
+class GenUITableData extends Equatable {
   final List<Map<String, dynamic>> rows;
 
-  const TableData({
+  const GenUITableData({
     required this.rows,
   });
+
+  factory GenUITableData.fromJson(Map<String, dynamic> json) {
+    // Handle both 'rows' key or direct list if simplified structure
+    if (json.containsKey('rows')) {
+       return GenUITableData(
+        rows: (json['rows'] as List).cast<Map<String, dynamic>>(),
+      );
+    }
+    // Fallback if structure is different
+    return const GenUITableData(rows: []); 
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'rows': rows,
+    };
+  }
 
   @override
   List<Object?> get props => [rows];
@@ -90,5 +139,5 @@ class TableData extends Equatable {
   int get columnCount => columnNames.length;
 
   @override
-  String toString() => 'TableData(rows: $rowCount, columns: $columnCount)';
+  String toString() => 'GenUITableData(rows: $rowCount, columns: $columnCount)';
 }

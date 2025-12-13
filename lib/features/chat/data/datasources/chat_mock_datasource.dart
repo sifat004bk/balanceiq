@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/chat_request_models.dart';
 import '../models/chat_history_response_model.dart';
 import '../models/message_model.dart';
+import '../../domain/entities/chart_data.dart';
 import 'chat_remote_datasource.dart';
 
 /// Mock implementation of ChatRemoteDataSource for testing without API calls
@@ -73,23 +74,107 @@ class ChatMockDataSource implements ChatRemoteDataSource {
       conversations: [
         ConversationModel(
           id: 1,
-          userMessage: "Show me my monthly summary",
-          aiResponse: 'Here is your monthly summary:\n\n```ui:summary_card\n{\n  "title": "Total Balance",\n  "value": "45,500 BDT",\n  "trend": "+12%",\n  "trendColor": "green",\n  "icon": "wallet"\n}\n```\n\n```ui:chart\n{\n  "type": "bar",\n  "title": "Income vs Expenses",\n  "data": [\n    {"label": "Income", "value": 50000, "color": "#4CAF50"},\n    {"label": "Expenses", "value": 4500, "color": "#FF5252"}\n  ],\n  "gradient": true\n}\n```',
+          userMessage: "Show detailed financial report",
+          aiResponse: 'Here is your comprehensive financial report with detailed metrics:',
           createdAt: DateTime.now().subtract(const Duration(days: 1)).toIso8601String(),
           feedback: 'LIKE',
+          hasTable: true,
+          tableData: const GenUITableData(
+            rows: [
+              {
+                'ID': 'TRX-001',
+                'Date': '2024-12-14',
+                'Type': 'Expense',
+                'Category': 'Groceries',
+                'Method': 'Credit Card',
+                'Bank': 'City Bank',
+                'Merchant': 'Shwapno',
+                'Amount': '5,200',
+                'Tax': '250',
+                'Status': 'Completed',
+              },
+              {
+                'ID': 'TRX-002',
+                'Date': '2024-12-13',
+                'Type': 'Income',
+                'Category': 'Salary',
+                'Method': 'Bank Transfer',
+                'Bank': 'EBL',
+                'Merchant': 'Tech Corp',
+                'Amount': '125,000',
+                'Tax': '12,500',
+                'Status': 'Received',
+              },
+              {
+                'ID': 'TRX-003',
+                'Date': '2024-12-12',
+                'Type': 'Expense',
+                'Category': 'Electronics',
+                'Method': 'Debit Card',
+                'Bank': 'Brac Bank',
+                'Merchant': 'Star Tech',
+                'Amount': '85,000',
+                'Tax': '4,250',
+                'Status': 'Processed',
+              },
+              {
+                'ID': 'TRX-004',
+                'Date': '2024-12-10',
+                'Type': 'Transfer',
+                'Category': 'Savings',
+                'Method': 'App',
+                'Bank': 'Bkash',
+                'Merchant': 'Self',
+                'Amount': '10,000',
+                'Tax': '0',
+                'Status': 'Success',
+              },
+            ],
+          ),
         ),
         ConversationModel(
           id: 2,
-          userMessage: "How are my investments doing?",
-          aiResponse: 'Your portfolio is growing steadily:\n\n```ui:chart\n{\n  "type": "line",\n  "title": "Portfolio Growth",\n  "data": [\n    {"label": "Jan", "value": 10000},\n    {"label": "Feb", "value": 12000},\n    {"label": "Mar", "value": 11500},\n    {"label": "Apr", "value": 14000}\n  ],\n  "gradient": true\n}\n```\n\n```ui:action_list\n{\n  "title": "Actions",\n  "actions": [\n    {"label": "View Details", "action": "view_details"},\n    {"label": "Add Funds", "action": "add_funds"}\n  ]\n}\n```',
+          userMessage: "Show my portfolio performance trend",
+          aiResponse: 'Here is the performance trend of your investment portfolio over the last 6 months:',
           createdAt: DateTime.now().subtract(const Duration(days: 2)).toIso8601String(),
           feedback: null,
+          graphType: GraphType.line,
+          graphData: const GraphData(
+            labels: ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [
+              ChartDataset(
+                label: 'Portfolio Value (k)',
+                data: [120, 135, 128, 142, 155, 165],
+              ),
+              ChartDataset(
+                label: 'Benchmark (k)',
+                data: [110, 115, 120, 125, 130, 135],
+              ),
+            ],
+          ),
+        ),
+        ConversationModel(
+          id: 3,
+          userMessage: "Analyze expenses by department",
+          aiResponse: 'Here is the expense breakdown across 8 different departments:',
+          createdAt: DateTime.now().subtract(const Duration(days: 3)).toIso8601String(),
+          feedback: null,
+          graphType: GraphType.bar,
+          graphData: const GraphData(
+            labels: ['HR', 'IT', 'Marketing', 'Sales', 'Ops', 'Finance', 'Legal', 'R&D'],
+            datasets: [
+              ChartDataset(
+                label: 'Expenses (M)',
+                data: [1.2, 3.5, 2.1, 2.8, 1.5, 0.9, 0.5, 4.2],
+              ),
+            ],
+          ),
         ),
       ],
       pagination: PaginationModel(
         currentPage: page,
         limit: limit ?? 20,
-        returned: 2,
+        returned: 3,
         hasNext: false,
         nextPage: null,
       ),

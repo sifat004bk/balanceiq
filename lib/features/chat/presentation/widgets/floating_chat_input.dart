@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -270,154 +271,175 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
           remainingTokens = state.dailyTokenLimit - state.currentTokenUsage;
         }
 
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Token Warning Banner
-                if (isLimitReached)
-                  Container(
-                    width: double.infinity,
-                    margin: const EdgeInsets.only(bottom: 12),
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.red.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.red.withOpacity(0.5)),
-                    ),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.error_outline, color: Colors.red, size: 18),
-                        SizedBox(width: 8),
-                        Text(
-                          'Daily limit reached',
-                          style: TextStyle(
-                            color: Colors.red,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 13,
+        return ClipRect(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: isDark
+                      ? [
+                          Colors.black.withOpacity(0.0),
+                          Colors.black.withOpacity(0.3),
+                          Colors.black.withOpacity(0.7),
+                        ]
+                      : [
+                          Colors.white.withOpacity(0.0),
+                          Colors.white.withOpacity(0.3),
+                          Colors.white.withOpacity(0.7),
+                        ],
+                ),
+              ),
+              child: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Token Warning Banner
+                      if (isLimitReached)
+                        Container(
+                          width: double.infinity,
+                          margin: const EdgeInsets.only(bottom: 12),
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.red.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: Colors.red.withOpacity(0.5)),
+                          ),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.error_outline, color: Colors.red, size: 18),
+                              SizedBox(width: 8),
+                              Text(
+                                'Daily limit reached',
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      else if (isNearLimit)
+                        Container(
+                          width: double.infinity,
+                          margin: const EdgeInsets.only(bottom: 12),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.orange.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: Colors.orange.withOpacity(0.5)),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Icons.warning_amber_rounded,
+                                color: Colors.orange,
+                                size: 16,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                'Near limit ($remainingTokens remaining)',
+                                style: const TextStyle(
+                                  color: Colors.orange,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
-                  )
-                else if (isNearLimit)
-                  Container(
-                    width: double.infinity,
-                    margin: const EdgeInsets.only(bottom: 12),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 8,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.orange.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.orange.withOpacity(0.5)),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          Icons.warning_amber_rounded,
-                          color: Colors.orange,
-                          size: 16,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Near limit ($remainingTokens remaining)',
-                          style: const TextStyle(
-                            color: Colors.orange,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
 
-                // Selected image preview
-                if (_selectedImagePath != null)
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 12),
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: isDark
-                          ? const Color(0xFF1e1f20)
-                          : const Color(0xFFF8F9FA),
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: isDark
-                            ? primaryColor.withOpacity(0.2)
-                            : primaryColor.withOpacity(0.15),
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image.file(
-                            File(_selectedImagePath!),
-                            width: 60,
-                            height: 60,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            'Image selected',
-                            style: TextStyle(
+                      // Selected image preview
+                      if (_selectedImagePath != null)
+                        Container(
+                          margin: const EdgeInsets.only(bottom: 12),
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: isDark
+                                ? const Color(0xFF1e1f20)
+                                : const Color(0xFFF8F9FA),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
                               color: isDark
-                                  ? const Color(0xFFB0B3B8)
-                                  : const Color(0xFF65676B),
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
+                                  ? primaryColor.withOpacity(0.2)
+                                  : primaryColor.withOpacity(0.15),
                             ),
                           ),
-                        ),
-                        IconButton(
-                          icon: Icon(
-                            Icons.close,
-                            color: isDark ? Colors.white : Colors.black,
+                          child: Row(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Image.file(
+                                  File(_selectedImagePath!),
+                                  width: 60,
+                                  height: 60,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  'Image selected',
+                                  style: TextStyle(
+                                    color: isDark
+                                        ? const Color(0xFFB0B3B8)
+                                        : const Color(0xFF65676B),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              IconButton(
+                                icon: Icon(
+                                  Icons.close,
+                                  color: isDark ? Colors.white : Colors.black,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _selectedImagePath = null;
+                                  });
+                                },
+                              ),
+                            ],
                           ),
-                          onPressed: () {
-                            setState(() {
-                              _selectedImagePath = null;
-                            });
-                          },
                         ),
-                      ],
-                    ),
-                  ),
 
-                // Main Input Container (Floating Pill)
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 12,
-                  ),
-                  decoration: BoxDecoration(
-                    color: isDark ? const Color(0xFF1e1f20) : const Color(0xFFF8F9FA),
-                    borderRadius: BorderRadius.circular(30),
-                    border: Border.all(
-                      color: isDark
-                          ? primaryColor.withOpacity(0.2)
-                          : primaryColor.withOpacity(0.15),
-                      width: 1.5,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: primaryColor.withOpacity(0.08),
-                        blurRadius: 16,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
+                      // Main Input Container (Floating Pill)
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 12,
+                        ),
+                              decoration: BoxDecoration(
+                          color: isDark ? const Color(0xFF1e1f20) : const Color(0xFFF8F9FA),
+                          borderRadius: BorderRadius.circular(30),
+                          border: Border.all(
+                            color: isDark
+                                ? primaryColor.withOpacity(0.2)
+                                : primaryColor.withOpacity(0.15),
+                            width: 1.5,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: primaryColor.withOpacity(0.08),
+                              blurRadius: 16,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
                       // Attachment button
                       if (ChatConfig.showAttachments)
                         GestureDetector(
@@ -560,11 +582,13 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                             size: 22,
                           ),
                         ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         );

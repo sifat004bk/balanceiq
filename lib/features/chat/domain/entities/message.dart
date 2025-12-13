@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'chart_data.dart';
 
 class Message extends Equatable {
   final String id;
@@ -21,6 +22,12 @@ class Message extends Equatable {
   final int? conversationId;         // Links to API conversation ID (for feedback)
   final String? feedback;            // User feedback: 'LIKE', 'DISLIKE', or null
 
+  // Rendering metadata (from API response)
+  final bool hasTable;               // Whether response includes table data
+  final TableData? tableData;        // Table data for rendering
+  final GraphType? graphType;        // Type of graph (line, bar, or null)
+  final GraphData? graphData;        // Graph data for rendering charts
+
   const Message({
     required this.id,
     required this.userId,
@@ -39,6 +46,10 @@ class Message extends Equatable {
     this.actionType,
     this.conversationId,
     this.feedback,
+    this.hasTable = false,
+    this.tableData,
+    this.graphType,
+    this.graphData,
   });
 
   @override
@@ -60,6 +71,10 @@ class Message extends Equatable {
         actionType,
         conversationId,
         feedback,
+        hasTable,
+        tableData,
+        graphType,
+        graphData,
       ];
 
   Message copyWith({
@@ -80,6 +95,10 @@ class Message extends Equatable {
     String? actionType,
     int? conversationId,
     String? feedback,
+    bool? hasTable,
+    TableData? tableData,
+    GraphType? graphType,
+    GraphData? graphData,
   }) {
     return Message(
       id: id ?? this.id,
@@ -99,6 +118,10 @@ class Message extends Equatable {
       actionType: actionType ?? this.actionType,
       conversationId: conversationId ?? this.conversationId,
       feedback: feedback ?? this.feedback,
+      hasTable: hasTable ?? this.hasTable,
+      tableData: tableData ?? this.tableData,
+      graphType: graphType ?? this.graphType,
+      graphData: graphData ?? this.graphData,
     );
   }
 }

@@ -62,6 +62,12 @@ class DatabaseHelper {
         conversation_id INTEGER,
         feedback TEXT,
 
+        -- Chart data fields (v7)
+        has_table INTEGER DEFAULT 0,
+        table_data TEXT,
+        graph_type TEXT,
+        graph_data TEXT,
+
         -- Deduplication constraint (v3: includes user_id)
         CONSTRAINT unique_message UNIQUE (user_id, bot_id, sender, server_created_at, content)
       )
@@ -103,6 +109,11 @@ class DatabaseHelper {
     // Migrate from version 5 to 6: Add feedback column
     if (oldVersion < 6) {
       await _migrateToV6(db);
+    }
+
+    // Migrate from version 6 to 7: Add chart data fields
+    if (oldVersion < 7) {
+      await _migrateToV7(db);
     }
   }
 
@@ -239,6 +250,18 @@ class DatabaseHelper {
     await db.execute('ALTER TABLE ${AppConstants.messagesTable} ADD COLUMN feedback TEXT');
 
     print('✅ Migration to v6 completed successfully');
+  }
+
+  Future<void> _migrateToV7(Database db) async {
+    print('🔄 Migrating database from v6 to v7: Adding chart data fields');
+
+    // Add chart data columns to existing table
+    await db.execute('ALTER TABLE ${AppConstants.messagesTable} ADD COLUMN has_table INTEGER DEFAULT 0');
+    await db.execute('ALTER TABLE ${AppConstants.messagesTable} ADD COLUMN table_data TEXT');
+    await db.execute('ALTER TABLE ${AppConstants.messagesTable} ADD COLUMN graph_type TEXT');
+    await db.execute('ALTER TABLE ${AppConstants.messagesTable} ADD COLUMN graph_data TEXT');
+
+    print('✅ Migration to v7 completed successfully');
   }
 
   Future<void> close() async {

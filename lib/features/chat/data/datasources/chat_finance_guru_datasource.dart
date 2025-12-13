@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/constants/api_endpoints.dart';
+import '../../domain/entities/chart_data.dart';
 import '../models/chat_request_models.dart';
 import '../models/chat_history_response_model.dart';
 import '../models/message_model.dart';
@@ -63,6 +64,11 @@ class ChatFinanceGuruDataSource implements ChatRemoteDataSource {
         // Parse the response
         final chatResponse = ChatResponse.fromJson(response.data);
 
+        // Convert graphType string to GraphType enum
+        final graphTypeEnum = chatResponse.graphType != null
+            ? (chatResponse.graphType == 'line' ? GraphType.line : GraphType.bar)
+            : null;
+
         // Create a message model from the bot's response
         final botMessage = MessageModel(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -74,6 +80,10 @@ class ChatFinanceGuruDataSource implements ChatRemoteDataSource {
           isSending: false,
           hasError: false,
           actionType: chatResponse.actionType,
+          hasTable: chatResponse.table,
+          tableData: chatResponse.tableData,
+          graphType: graphTypeEnum,
+          graphData: chatResponse.graphData,
         );
 
         return botMessage;

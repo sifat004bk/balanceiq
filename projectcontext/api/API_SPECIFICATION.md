@@ -578,7 +578,8 @@ Content-Type: application/json
 ```json
 {
   "text": "string (required, user message)",
-  "username": "string (required, username for context)"
+  "username": "string (optional, username for context)",
+  "imageBase64": "string (optional, base64 encoded image)"
 }
 ```
 
@@ -596,15 +597,19 @@ Content-Type: application/json
 ```json
 {
   "success": true,
-  "message": "#### Your Current Balance\n\n| **Item** | **Amount** |\n|----------|-----------|\n| Current Balance | ৳0 |",
-  "userId": 8,
-  "timestamp": "2025-11-29T20:05:17.924603407",
+  "message": "#### Markdown formatted text",
+  "userId": 5,
+  "timestamp": "2025-12-13T12:39:50.938",
   "tokenUsage": {
-    "promptTokens": 398,
-    "completionTokens": 334,
-    "totalTokens": 732
+    "promptTokens": 500,
+    "completionTokens": 100,
+    "totalTokens": 600
   },
-  "actionType": "balance_query"
+  "actionType": "record_expense",
+  "table": false,
+  "tableData": null,
+  "graphType": null,
+  "graphData": null
 }
 ```
 
@@ -613,22 +618,78 @@ Content-Type: application/json
 | Field | Type | Description |
 |-------|------|-------------|
 | success | boolean | Whether request was successful |
-| message | string | AI response in markdown format |
+| message | string | AI response in markdown format (no tables in markdown) |
 | userId | integer | User ID |
 | timestamp | string | ISO 8601 timestamp of response |
 | tokenUsage | object | LLM token usage statistics |
 | tokenUsage.promptTokens | integer | Tokens used in prompt |
 | tokenUsage.completionTokens | integer | Tokens used in completion |
 | tokenUsage.totalTokens | integer | Total tokens used |
-| actionType | string | Type of action performed (e.g., "balance_query", "expense_log") |
+| actionType | string | Type of action performed (see Action Types below) |
+| table | boolean | Whether to render a table (if true, use tableData) |
+| tableData | array \| null | Array of objects for table rendering: `[{"col1": "val1", "col2": "val2"}, ...]` |
+| graphType | string \| null | Type of graph: `"line"`, `"bar"`, or `null` |
+| graphData | object \| null | Chart.js compatible format (see graphData Format below) |
+
+#### graphData Format
+
+When `graphType` is not null, the `graphData` field contains Chart.js compatible data:
+
+```json
+{
+  "labels": ["Jan", "Feb", "Mar"],
+  "datasets": [
+    {
+      "label": "Expenses",
+      "data": [1000, 2000, 1500]
+    },
+    {
+      "label": "Income",
+      "data": [5000, 5500, 6000]
+    }
+  ]
+}
+```
+
+#### Graph Type Mapping
+
+| graphType | Common Action Types |
+|-----------|---------------------|
+| `"line"` | summary, top_expenses, compare_periods, monthly_trend, financial_health |
+| `"bar"` | balance, get_balance, list_accounts, list_categories, category_breakdown |
+| `null` | record_transaction, batch_record_transaction, delete_transaction, update_transaction, search_transactions |
 
 #### Action Types
 
-- `balance_query` - Balance inquiry
-- `expense_log` - Logging an expense
-- `income_log` - Logging income
-- `budget_query` - Budget-related query
-- `general_advice` - General financial advice
+**Transaction Actions:**
+- `record_expense` - A single expense transaction was recorded
+- `record_income` - A single income transaction was recorded
+- `record_transaction` - A transaction was recorded (generic)
+- `batch_record_transaction` - Multiple transactions recorded in batch
+- `update_transaction` - An existing transaction was updated
+- `delete_transaction` - A transaction was deleted
+- `batch_update_transaction` - Multiple transactions updated
+- `batch_delete_transaction` - Multiple transactions deleted
+- `search_transactions` - Transaction search performed
+
+**Analytics & Reporting:**
+- `summary` - General financial summary retrieved
+- `balance`, `get_balance` - Current account balance(s) retrieved
+- `top_expenses` - List of top spending items or categories
+- `monthly_trend` - Monthly spending/income trend data
+- `category_breakdown` - Spending breakdown by category
+- `compare_periods` - Comparison between time periods
+- `financial_health` - Financial health score or assessment
+
+**Category Management:**
+- `list_categories` - List of available categories retrieved
+- `list_accounts` - List of accounts retrieved
+- `manage_category` - Category created, updated, or deleted
+
+**System & Conversation:**
+- `general_chat` - Non-financial conversation
+- `clarification_needed` - Bot needs more information
+- `error` - Error occurred while processing
 
 #### Error Responses
 

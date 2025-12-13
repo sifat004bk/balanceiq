@@ -1,4 +1,7 @@
+import 'dart:convert';
 import '../../domain/entities/message.dart';
+import '../../domain/entities/chart_data.dart';
+import 'chart_data_model.dart';
 
 class MessageModel extends Message {
   const MessageModel({
@@ -19,9 +22,41 @@ class MessageModel extends Message {
     super.actionType,
     super.conversationId,
     super.feedback,
+    super.hasTable,
+    super.tableData,
+    super.graphType,
+    super.graphData,
   });
 
   factory MessageModel.fromJson(Map<String, dynamic> json) {
+    // Parse table data from JSON string
+    TableData? parsedTableData;
+    if (json['table_data'] != null && json['table_data'] is String) {
+      try {
+        final tableJson = jsonDecode(json['table_data'] as String);
+        parsedTableData = TableDataModel.fromJson(tableJson as List<dynamic>);
+      } catch (e) {
+        // If parsing fails, leave as null
+      }
+    }
+
+    // Parse graph data from JSON string
+    GraphData? parsedGraphData;
+    if (json['graph_data'] != null && json['graph_data'] is String) {
+      try {
+        final graphJson = jsonDecode(json['graph_data'] as String);
+        parsedGraphData = GraphDataModel.fromJson(graphJson as Map<String, dynamic>);
+      } catch (e) {
+        // If parsing fails, leave as null
+      }
+    }
+
+    // Parse graph type from string
+    GraphType? parsedGraphType;
+    if (json['graph_type'] != null) {
+      parsedGraphType = GraphType.fromString(json['graph_type'] as String);
+    }
+
     return MessageModel(
       id: json['id'] as String,
       userId: json['user_id'] as String,
@@ -42,6 +77,10 @@ class MessageModel extends Message {
       actionType: json['action_type'] as String?,
       conversationId: json['conversation_id'] as int?,
       feedback: json['feedback'] as String?,
+      hasTable: json['has_table'] == 1,
+      tableData: parsedTableData,
+      graphType: parsedGraphType,
+      graphData: parsedGraphData,
     );
   }
 
@@ -64,6 +103,14 @@ class MessageModel extends Message {
       'action_type': actionType,
       'conversation_id': conversationId,
       'feedback': feedback,
+      'has_table': hasTable ? 1 : 0,
+      'table_data': tableData != null
+          ? jsonEncode(TableDataModel.fromEntity(tableData!).toJson())
+          : null,
+      'graph_type': graphType?.value,
+      'graph_data': graphData != null
+          ? jsonEncode(GraphDataModel.fromEntity(graphData!).toJson())
+          : null,
     };
   }
 
@@ -86,6 +133,10 @@ class MessageModel extends Message {
       actionType: message.actionType,
       conversationId: message.conversationId,
       feedback: message.feedback,
+      hasTable: message.hasTable,
+      tableData: message.tableData,
+      graphType: message.graphType,
+      graphData: message.graphData,
     );
   }
 
@@ -108,6 +159,10 @@ class MessageModel extends Message {
       actionType: actionType,
       conversationId: conversationId,
       feedback: feedback,
+      hasTable: hasTable,
+      tableData: tableData,
+      graphType: graphType,
+      graphData: graphData,
     );
   }
 }

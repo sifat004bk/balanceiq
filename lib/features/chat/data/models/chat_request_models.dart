@@ -1,34 +1,39 @@
 /// Request and response models for Finance Guru Chat API endpoints
 /// Based on Postman API Collection spec
+import 'chart_data_model.dart';
 
 /// Request model for POST /api/finance-guru/chat
-/// Spec: {"text": "...", "username": "..."}
+/// Spec: {"text": "...", "username": "...", "imageBase64": "..."}
 class ChatRequest {
   final String text;
-  final String username;
+  final String? username;
+  final String? imageBase64;
 
   ChatRequest({
     required this.text,
-    required this.username,
+    this.username,
+    this.imageBase64,
   });
 
   Map<String, dynamic> toJson() {
     return {
       'text': text,
-      'username': username,
+      if (username != null) 'username': username,
+      if (imageBase64 != null) 'imageBase64': imageBase64,
     };
   }
 
   factory ChatRequest.fromJson(Map<String, dynamic> json) {
     return ChatRequest(
       text: json['text'] as String,
-      username: json['username'] as String,
+      username: json['username'] as String?,
+      imageBase64: json['imageBase64'] as String?,
     );
   }
 }
 
 /// Response model for POST /api/finance-guru/chat
-/// Actual API response includes token usage and action type
+/// API response includes token usage, action type, table data, and graph data
 class ChatResponse {
   final bool success;
   final String message;
@@ -36,6 +41,10 @@ class ChatResponse {
   final String timestamp;
   final TokenUsage? tokenUsage;
   final String? actionType;
+  final bool table;
+  final TableDataModel? tableData;
+  final String? graphType;
+  final GraphDataModel? graphData;
 
   ChatResponse({
     required this.success,
@@ -44,6 +53,10 @@ class ChatResponse {
     required this.timestamp,
     this.tokenUsage,
     this.actionType,
+    this.table = false,
+    this.tableData,
+    this.graphType,
+    this.graphData,
   });
 
   factory ChatResponse.fromJson(Map<String, dynamic> json) {
@@ -58,6 +71,14 @@ class ChatResponse {
           ? TokenUsage.fromJson(json['tokenUsage'] as Map<String, dynamic>)
           : null,
       actionType: json['actionType'] as String?,
+      table: json['table'] as bool? ?? false,
+      tableData: json['tableData'] != null
+          ? TableDataModel.fromJson(json['tableData'] as List<dynamic>)
+          : null,
+      graphType: json['graphType'] as String?,
+      graphData: json['graphData'] != null
+          ? GraphDataModel.fromJson(json['graphData'] as Map<String, dynamic>)
+          : null,
     );
   }
 
@@ -69,6 +90,10 @@ class ChatResponse {
       'timestamp': timestamp,
       if (tokenUsage != null) 'tokenUsage': tokenUsage!.toJson(),
       if (actionType != null) 'actionType': actionType,
+      'table': table,
+      if (tableData != null) 'tableData': tableData!.toJson(),
+      if (graphType != null) 'graphType': graphType,
+      if (graphData != null) 'graphData': graphData!.toJson(),
     };
   }
 }

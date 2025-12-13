@@ -464,7 +464,13 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                               fontWeight: FontWeight.w500,
                             ),
                             border: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            disabledBorder: InputBorder.none,
+                            errorBorder: InputBorder.none,
+                            focusedErrorBorder: InputBorder.none,
                             isDense: true,
+                            filled: false,
                             contentPadding: const EdgeInsets.symmetric(
                               vertical: 8,
                             ),

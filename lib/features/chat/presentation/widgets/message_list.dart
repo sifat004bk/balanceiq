@@ -13,6 +13,7 @@ class MessageList extends StatelessWidget {
   final bool hasMore;
   final bool isLoadingMore;
   final ScrollController? scrollController;
+  final EdgeInsets? padding;
 
   const MessageList({
     super.key,
@@ -23,6 +24,7 @@ class MessageList extends StatelessWidget {
     this.hasMore = false,
     this.isLoadingMore = false,
     this.scrollController,
+    this.padding,
   });
 
   @override
@@ -63,9 +65,9 @@ class MessageList extends StatelessWidget {
       controller: scrollController,
       reverse: true,
       slivers: [
-        // Bottom Spacer
-        const SliverToBoxAdapter(
-          child: SizedBox(height: 16),
+        // Bottom Spacer (dynamic padding for floating widget)
+        SliverToBoxAdapter(
+          child: SizedBox(height: padding?.bottom ?? 16),
         ),
 
         // Message List

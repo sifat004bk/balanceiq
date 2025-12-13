@@ -15,7 +15,7 @@ import '../cubit/dashboard_cubit.dart';
 import '../cubit/transactions_cubit.dart';
 import '../widgets/biggest_income_widget.dart';
 import '../widgets/date_selector_bottom_sheet.dart';
-import '../widgets/chat_input_button.dart';
+import '../widgets/floating_chat_button.dart';
 import '../widgets/financial_ratio_widget.dart';
 import '../widgets/home_appbar.dart';
 import '../widgets/spending_trend_chart.dart';
@@ -318,9 +318,9 @@ class _DashboardViewState extends State<DashboardView> {
         buildWhen: (previous, current) => current is DashboardLoaded,
         builder: (context, state) {
           if (state is DashboardLoaded) {
-            return Hero(
+            return const Hero(
               tag: 'chat_input',
-              child: ChatInputButton(),
+              child: FloatingChatButton(),
             );
           }
 

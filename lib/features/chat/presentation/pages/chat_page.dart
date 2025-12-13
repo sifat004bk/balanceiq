@@ -6,7 +6,7 @@ import '../../../../core/di/injection_container.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../cubit/chat_cubit.dart';
 import '../cubit/chat_state.dart';
-import '../widgets/chat_input.dart';
+import '../widgets/floating_chat_input.dart';
 import '../widgets/message_list.dart';
 import '../widgets/suggested_prompts.dart';
 
@@ -165,7 +165,7 @@ class _ChatViewState extends State<ChatView> {
                 },
               ),
             ),
-            ChatInput(
+            FloatingChatInput(
               botId: widget.botId,
               botColor: AppTheme.getBotColor(widget.botId),
             ),

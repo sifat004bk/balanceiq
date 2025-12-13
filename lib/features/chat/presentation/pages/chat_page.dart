@@ -89,100 +89,82 @@ class _ChatViewState extends State<ChatView> {
     return Scaffold(
       backgroundColor: GeminiColors.background(context),
       body: SafeArea(
-        child: Stack(
-          children: [
-            // Messages list - fills entire screen
-            BlocConsumer<ChatCubit, ChatState>(
-              listener: (context, state) {
-                // Auto-scroll to bottom ONLY when a NEW message arrives (latest message changes)
-                if (state is ChatLoaded && state.messages.isNotEmpty) {
-                  final latestMessage = state.messages.first;
-                  // Check if the latest message is different from what we saw last time
-                  if (_latestMessageId != latestMessage.id) {
-                    _latestMessageId = latestMessage.id;
-                    _scrollToBottom();
-                  }
-                }
-              },
-              builder: (context, state) {
-                if (state is ChatLoading) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (state is ChatLoaded) {
-                  // Show suggested prompts if no messages
-                  if (state.messages.isEmpty && !state.isSending) {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 80),
-                      child: SuggestedPrompts(
-                        botId: widget.botId,
-                        onPromptSelected: (prompt) {
-                          context.read<ChatCubit>().sendNewMessage(
-                                botId: widget.botId,
-                                content: prompt,
-                              );
-                        },
-                      ),
-                    );
-                  }
+        child: BlocConsumer<ChatCubit, ChatState>(
+          listener: (context, state) {
+            // Auto-scroll to bottom ONLY when a NEW message arrives (latest message changes)
+            if (state is ChatLoaded && state.messages.isNotEmpty) {
+              final latestMessage = state.messages.first;
+              // Check if the latest message is different from what we saw last time
+              if (_latestMessageId != latestMessage.id) {
+                _latestMessageId = latestMessage.id;
+                _scrollToBottom();
+              }
+            }
+          },
+          builder: (context, state) {
+            if (state is ChatLoading) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (state is ChatLoaded) {
+              // Show suggested prompts if no messages
+              if (state.messages.isEmpty && !state.isSending) {
+                return SuggestedPrompts(
+                  botId: widget.botId,
+                  onPromptSelected: (prompt) {
+                    context.read<ChatCubit>().sendNewMessage(
+                          botId: widget.botId,
+                          content: prompt,
+                        );
+                  },
+                );
+              }
 
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 80),
-                    child: MessageList(
-                      messages: state.messages,
-                      botId: widget.botId,
-                      botName: widget.botName,
-                      isSending: state.isSending,
-                      hasMore: state.hasMore,
-                      isLoadingMore: state.isLoadingMore,
-                      scrollController: _scrollController,
-                    ),
-                  );
-                } else if (state is ChatError) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          Icons.error_outline,
-                          size: 64,
-                          color: Colors.red,
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          'Error: ${state.message}',
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.bodyLarge,
-                        ),
-                        const SizedBox(height: 16),
-                        ElevatedButton(
-                          onPressed: () {
-                            context
-                                .read<ChatCubit>()
-                                .loadChatHistory(widget.botId);
-                          },
-                          child: const Text('Retry'),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-                return const SizedBox.shrink();
-              },
-            ),
-
-            // Floating input at bottom
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: FloatingChatInput(
+              return MessageList(
+                messages: state.messages,
                 botId: widget.botId,
-                botColor: AppTheme.getBotColor(widget.botId),
-              ),
-            ),
-          ],
+                botName: widget.botName,
+                isSending: state.isSending,
+                hasMore: state.hasMore,
+                isLoadingMore: state.isLoadingMore,
+                scrollController: _scrollController,
+              );
+            } else if (state is ChatError) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.error_outline,
+                      size: 64,
+                      color: Colors.red,
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Error: ${state.message}',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        context
+                            .read<ChatCubit>()
+                            .loadChatHistory(widget.botId);
+                      },
+                      child: const Text('Retry'),
+                    ),
+                  ],
+                ),
+              );
+            }
+            return const SizedBox.shrink();
+          },
         ),
+      ),
+      bottomSheet: FloatingChatInput(
+        botId: widget.botId,
+        botColor: AppTheme.getBotColor(widget.botId),
       ),
     );
   }

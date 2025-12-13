@@ -591,7 +591,7 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
               ),
             ),
           ),
-        );
+        ));
       },
     );
   }

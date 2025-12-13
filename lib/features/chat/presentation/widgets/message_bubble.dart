@@ -10,6 +10,9 @@ import '../chat_config.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubit/chat_cubit.dart';
 import 'gen_ui/gen_ui_builder.dart';
+import 'gen_ui/gen_ui_chart.dart';
+import 'gen_ui/gen_ui_table.dart';
+import '../../domain/entities/chart_data.dart';
 
 /// Gemini-style message bubble with animations
 class MessageBubble extends StatefulWidget {
@@ -179,33 +182,6 @@ class _MessageBubbleState extends State<MessageBubble>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header: Avatar + Name - REMOVED (Moved avatar to outer row)
-          // Row(
-          //   children: [
-          //     CircleAvatar(
-          //       radius: 16,
-          //       backgroundColor: GeminiColors.botAvatarBg,
-          //       child: const Icon(
-          //         Icons.auto_awesome, // Gemini sparkle icon
-          //         color: GeminiColors.botAvatarIcon,
-          //         size: 18,
-          //       ),
-          //     ),
-          //     const SizedBox(width: 12),
-          //     Expanded(
-          //       child: Text(
-          //         'BalanceIQ', // App Name
-          //         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-          //               color: GeminiColors.textSecondary(context),
-          //               fontSize: 14,
-          //               fontWeight: FontWeight.w500,
-          //             ),
-          //       ),
-          //     ),
-          //   ],
-          // ),
-          // const SizedBox(height: 16),
-          
           // Content
           if (widget.message.content.isNotEmpty)
             MarkdownBody(
@@ -305,6 +281,21 @@ class _MessageBubbleState extends State<MessageBubble>
             
           const SizedBox(height: 16),
 
+          // GenUI Table
+          if (widget.message.hasTable && widget.message.tableData != null) ...[
+             GenUITable(data: widget.message.tableData!),
+             const SizedBox(height: 16),
+          ],
+
+          // GenUI Chart
+          if (widget.message.graphType != null && widget.message.graphData != null) ...[
+             GenUIChart(
+               data: widget.message.graphData!, 
+               type: widget.message.graphType!
+             ),
+             const SizedBox(height: 16),
+          ],
+
           // Action Type Display & Change Button
           if (widget.message.actionType != null && widget.message.actionType!.isNotEmpty) ...[
             Container(
@@ -346,6 +337,7 @@ class _MessageBubbleState extends State<MessageBubble>
                                 color: GeminiColors.primaryColor(context),
                                 fontWeight: FontWeight.bold,
                               ),
+
                         ),
                       ),
                     ),
@@ -482,6 +474,7 @@ class _MessageBubbleState extends State<MessageBubble>
       ),
     );
   }
+
 
   Widget _buildImage(String imageUrl) {
     if (imageUrl.startsWith('http')) {

@@ -1,17 +1,19 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import '../../../../../core/constants/gemini_colors.dart';
+import '../../domain/entities/chart_data.dart';
 
 class GenUITable extends StatelessWidget {
-  final Map<String, dynamic> data;
+  final TableData data;
 
   const GenUITable({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
-    final columns = (data['columns'] as List).cast<String>();
-    final rows = (data['rows'] as List).map((row) => (row as List).cast<String>()).toList();
+    if (!data.isValid) return const SizedBox.shrink();
 
+    final columns = data.columnNames;
+    final rows = data.rows;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
@@ -47,51 +49,73 @@ class GenUITable extends StatelessWidget {
                   end: Alignment.bottomRight,
                 ),
               ),
-              child: Row(
-                children: columns
-                    .map((col) => Expanded(
-                          child: Text(
-                            col,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: GeminiColors.primaryColor(context),
-                              fontSize: 13,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: columns
+                      .map((col) => Padding(
+                        padding: const EdgeInsets.only(right: 16.0),
+                        child: Text(
+                              col.toUpperCase(),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: GeminiColors.primaryColor(context),
+                                fontSize: 12,
+                                letterSpacing: 0.5,
+                              ),
                             ),
-                          ),
-                        ))
-                    .toList(),
+                      ))
+                      .toList(),
+                ),
               ),
             ),
             // Table Body
             Expanded(
-              child: SingleChildScrollView(
-                child: DataTable(
-                  headingRowHeight: 0, // Hide default header
-                  horizontalMargin: 16,
-                  columnSpacing: 12,
-                  dividerThickness: 0.5,
-                  columns: columns
-                      .map((col) => const DataColumn(label: SizedBox.shrink()))
-                      .toList(),
-                  rows: rows.asMap().entries.map((entry) {
-                    final index = entry.key;
-                    final row = entry.value;
-                    final isEven = index % 2 == 0;
-                    return DataRow(
-                      color: WidgetStateProperty.all(
-                        isEven
-                            ? Colors.transparent
-                            : GeminiColors.primaryColor(context).withOpacity(0.02),
-                      ),
-                      cells: row.map((cell) => DataCell(Text(
-                        cell,
-                        style: TextStyle(
-                          color: GeminiColors.aiMessageText(context),
-                          fontSize: 13,
-                        ),
-                      ))).toList(),
-                    );
-                  }).toList(),
+              child: Scrollbar(
+                 thumbVisibility: true,
+                 trackVisibility: true,
+                 thickness: 4,
+                 radius: const Radius.circular(4),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: DataTable(
+                      headingRowHeight: 0, // Hide default header as we built a custom one
+                      horizontalMargin: 16,
+                      columnSpacing: 24,
+                      dividerThickness: 0.5,
+                      showCheckboxColumn: false,
+                      columns: columns
+                          .map((col) => const DataColumn(label: SizedBox.shrink()))
+                          .toList(),
+                      rows: rows.asMap().entries.map((entry) {
+                        final index = entry.key;
+                        final rowMap = entry.value;
+                        final isEven = index % 2 == 0;
+                        
+                        return DataRow(
+                          color: WidgetStateProperty.all(
+                            isEven
+                                ? Colors.transparent
+                                : GeminiColors.primaryColor(context).withOpacity(0.02),
+                          ),
+                          cells: columns.map((colName) {
+                            final cellValue = rowMap[colName]?.toString() ?? '';
+                            return DataCell(
+                              Text(
+                                cellValue,
+                                style: TextStyle(
+                                  color: GeminiColors.aiMessageText(context),
+                                  fontSize: 13,
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        );
+                      }).toList(),
+                    ),
+                  ),
                 ),
               ),
             ),

@@ -1,16 +1,23 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import '../../../../../core/constants/gemini_colors.dart';
+import '../../domain/entities/chart_data.dart';
 
 class GenUIChart extends StatelessWidget {
-  final Map<String, dynamic> data;
+  final GraphData data;
+  final GraphType type;
+  final String? title;
 
-  const GenUIChart({super.key, required this.data});
+  const GenUIChart({
+    super.key,
+    required this.data,
+    required this.type,
+    this.title,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final type = data['type'] as String?;
-    final title = data['title'] as String?;
+    if (!data.isValid) return const SizedBox.shrink();
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
@@ -25,7 +32,7 @@ class GenUIChart extends StatelessWidget {
         children: [
           if (title != null) ...[
             Text(
-              title,
+              title!,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -34,97 +41,30 @@ class GenUIChart extends StatelessWidget {
           ],
           SizedBox(
             height: 200,
-            child: _buildChart(context, type),
+            child: _buildChart(context),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildChart(BuildContext context, String? type) {
+  Widget _buildChart(BuildContext context) {
     switch (type) {
-      case 'pie':
-        return _buildPieChart(context);
-      case 'bar':
+      case GraphType.bar:
         return _buildBarChart(context);
-      case 'line':
+      case GraphType.line:
         return _buildLineChart(context);
       default:
-        return Center(child: Text('Unsupported chart type: $type'));
+        return Center(child: Text('Unsupported chart type: ${type.value}'));
     }
   }
 
-  Widget _buildPieChart(BuildContext context) {
-    final chartData = (data['data'] as List).cast<Map<String, dynamic>>();
-
-    return TweenAnimationBuilder<double>(
-      tween: Tween(begin: 0.0, end: 1.0),
-      duration: const Duration(milliseconds: 800),
-      curve: Curves.easeOutCubic,
-      builder: (context, animationValue, child) {
-        return PieChart(
-          PieChartData(
-            sectionsSpace: 2,
-            centerSpaceRadius: 40,
-            pieTouchData: PieTouchData(
-              touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                // Add touch feedback for interactivity
-              },
-            ),
-            sections: chartData.asMap().entries.map((entry) {
-              final item = entry.value;
-              final value = (item['value'] as num).toDouble();
-              final animatedValue = value * animationValue;
-              final colorHex = item['color'] as String?;
-              final color = colorHex != null
-                  ? _parseColor(colorHex)
-                  : GeminiColors.primaryColor(context);
-
-              return PieChartSectionData(
-                color: color,
-                value: animatedValue,
-                title: '${value.toInt()}',
-                radius: 50,
-                titleStyle: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-                badgeWidget: item['label'] != null
-                    ? Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              blurRadius: 4,
-                            ),
-                          ],
-                        ),
-                        child: Text(
-                          item['label'],
-                          style: TextStyle(
-                            fontSize: 10,
-                            color: color,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      )
-                    : null,
-                badgePositionPercentageOffset: 1.3,
-              );
-            }).toList(),
-          ),
-        );
-      },
-    );
-  }
-
   Widget _buildBarChart(BuildContext context) {
-    final chartData = (data['data'] as List).cast<Map<String, dynamic>>();
-    final useGradient = data['gradient'] == true;
+    // We'll use the first dataset for the bar chart for now
+    // If there are multiple datasets, they could be grouped
+    final dataset = data.datasets.first;
+    final labels = data.labels;
+    final useGradient = true; 
 
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0.0, end: 1.0),
@@ -134,7 +74,7 @@ class GenUIChart extends StatelessWidget {
         return BarChart(
           BarChartData(
             alignment: BarChartAlignment.spaceAround,
-            maxY: _getMaxValue(chartData) * 1.2,
+            maxY: _getMaxValue() * 1.2,
             barTouchData: BarTouchData(
               enabled: true,
               touchTooltipData: BarTouchTooltipData(
@@ -158,11 +98,11 @@ class GenUIChart extends StatelessWidget {
                 sideTitles: SideTitles(
                   showTitles: true,
                   getTitlesWidget: (value, meta) {
-                    if (value.toInt() >= 0 && value.toInt() < chartData.length) {
+                    if (value.toInt() >= 0 && value.toInt() < labels.length) {
                       return Padding(
                         padding: const EdgeInsets.only(top: 8.0),
                         child: Text(
-                          chartData[value.toInt()]['label'] ?? '',
+                          labels[value.toInt()],
                           style: TextStyle(
                             fontSize: 10,
                             color: GeminiColors.textSecondary(context),
@@ -182,7 +122,7 @@ class GenUIChart extends StatelessWidget {
             gridData: FlGridData(
               show: true,
               drawVerticalLine: false,
-              horizontalInterval: _getMaxValue(chartData) / 4,
+              horizontalInterval: _getMaxValue() / 4,
               getDrawingHorizontalLine: (value) => FlLine(
                 color: GeminiColors.divider(context).withOpacity(0.5),
                 strokeWidth: 1,
@@ -190,17 +130,14 @@ class GenUIChart extends StatelessWidget {
               ),
             ),
             borderData: FlBorderData(show: false),
-            barGroups: chartData.asMap().entries.map((entry) {
-              final index = entry.key;
-              final item = entry.value;
-              final targetValue = (item['value'] as num).toDouble();
-              final animatedValue = targetValue * animationValue;
-              final colorHex = item['color'] as String?;
-              final color = colorHex != null
-                  ? _parseColor(colorHex)
-                  : GeminiColors.primaryColor(context);
+            barGroups: List.generate(dataset.data.length, (index) {
+                if (index >= labels.length) return null; // Safety check
+                
+                final val = dataset.data[index].toDouble();
+                final animatedValue = val * animationValue;
+                final color = GeminiColors.primaryColor(context);
 
-              return BarChartGroupData(
+               return BarChartGroupData(
                 x: index,
                 barRods: [
                   BarChartRodData(
@@ -218,13 +155,13 @@ class GenUIChart extends StatelessWidget {
                         const BorderRadius.vertical(top: Radius.circular(6)),
                     backDrawRodData: BackgroundBarChartRodData(
                       show: true,
-                      toY: _getMaxValue(chartData) * 1.2,
+                      toY: _getMaxValue() * 1.2,
                       color: GeminiColors.divider(context).withOpacity(0.2),
                     ),
                   ),
                 ],
               );
-            }).toList(),
+            }).whereType<BarChartGroupData>().toList(),
           ),
           swapAnimationDuration: const Duration(milliseconds: 600),
           swapAnimationCurve: Curves.easeOutCubic,
@@ -234,15 +171,12 @@ class GenUIChart extends StatelessWidget {
   }
 
   Widget _buildLineChart(BuildContext context) {
-    final chartData = (data['data'] as List).cast<Map<String, dynamic>>();
-    
-    // Assuming simple line chart where x is index
-    final spots = chartData.asMap().entries.map((entry) {
-      final index = entry.key;
-      final item = entry.value;
-      final value = (item['value'] as num).toDouble();
-      return FlSpot(index.toDouble(), value);
-    }).toList();
+     final dataset = data.datasets.first;
+     final labels = data.labels;
+
+    final spots = List.generate(dataset.data.length, (index) {
+       return FlSpot(index.toDouble(), dataset.data[index].toDouble());
+    });
 
     final primaryColor = GeminiColors.primaryColor(context);
 
@@ -251,7 +185,7 @@ class GenUIChart extends StatelessWidget {
         gridData: FlGridData(
           show: true,
           drawVerticalLine: false,
-          horizontalInterval: _getMaxValue(chartData) / 4,
+          horizontalInterval: _getMaxValue() / 4,
           getDrawingHorizontalLine: (value) => FlLine(
             color: GeminiColors.divider(context).withOpacity(0.5),
             strokeWidth: 1,
@@ -263,11 +197,11 @@ class GenUIChart extends StatelessWidget {
             sideTitles: SideTitles(
               showTitles: true,
               getTitlesWidget: (value, meta) {
-                if (value.toInt() >= 0 && value.toInt() < chartData.length) {
+               if (value.toInt() >= 0 && value.toInt() < labels.length) {
                   return Padding(
                     padding: const EdgeInsets.only(top: 8.0),
                     child: Text(
-                      chartData[value.toInt()]['label'] ?? '',
+                      labels[value.toInt()],
                       style: TextStyle(
                         fontSize: 10,
                         color: GeminiColors.textSecondary(context),
@@ -337,20 +271,15 @@ class GenUIChart extends StatelessWidget {
     );
   }
 
-  double _getMaxValue(List<Map<String, dynamic>> data) {
+  double _getMaxValue() {
     double max = 0;
-    for (var item in data) {
-      final val = (item['value'] as num).toDouble();
-      if (val > max) max = val;
+    for (var dataset in data.datasets) {
+      for(var val in dataset.data) {
+        if (val.toDouble() > max) max = val.toDouble();
+      }
     }
+    // Prevent div by zero or small scales
+    if (max == 0) return 10;
     return max;
-  }
-
-  Color _parseColor(String hexColor) {
-    hexColor = hexColor.replaceAll('#', '');
-    if (hexColor.length == 6) {
-      hexColor = 'FF$hexColor';
-    }
-    return Color(int.parse('0x$hexColor'));
   }
 }

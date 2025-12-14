@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:balance_iq/core/theme/app_theme.dart';
+import 'package:balance_iq/features/home/presentation/widgets/custom_calendar_date_range_picker.dart';
 import 'package:flutter/material.dart';
 
 class DateSelectorBottomSheet extends StatefulWidget {
@@ -173,33 +174,23 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
           
           const SizedBox(height: 20),
 
-          // Custom Range Option with gradient icon
           InkWell(
             onTap: () async {
               Navigator.pop(context);
               
               final now = DateTime.now();
-              final picked = await showDateRangePicker(
+              
+              // Show custom calendar picker
+              await showDialog(
                 context: context,
-                firstDate: DateTime(2020),
-                lastDate: now.add(const Duration(days: 365)),
-                builder: (context, child) {
-                  return Theme(
-                    data: Theme.of(context).copyWith(
-                      colorScheme: Theme.of(context).colorScheme.copyWith(
-                            primary: isDark ? AppTheme.primaryDark : AppTheme.primaryLight,
-                            onPrimary: Colors.white,
-                            surface: Theme.of(context).scaffoldBackgroundColor,
-                          ),
-                    ),
-                    child: child!,
-                  );
-                },
+                builder: (context) => CustomCalendarDateRangePicker(
+                  minDate: DateTime(2020),
+                  maxDate: now.add(const Duration(days: 365)),
+                  onDateRangeSelected: (startDate, endDate) {
+                    widget.onDateSelected(startDate, endDate);
+                  },
+                ),
               );
-
-              if (picked != null) {
-                widget.onDateSelected(picked.start, picked.end);
-              }
             },
             borderRadius: BorderRadius.circular(16),
             child: Container(

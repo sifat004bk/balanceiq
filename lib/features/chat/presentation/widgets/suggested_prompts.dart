@@ -128,42 +128,106 @@ class SuggestedPrompts extends StatelessWidget {
     final prompts = _getPromptsForBot(botId);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Welcome icon
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: GeminiColors.primary.withValues(alpha: 0.1),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.auto_awesome,
-              size: 48,
-              color: GeminiColors.primary,
-            ),
-          ),
-          const SizedBox(height: 24),
-          // Welcome text
-          Text(
-            'How can I help you today?',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w500,
-                  color: GeminiColors.aiMessageText(context),
+          // Animated welcome icon (2025 redesign)
+          TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0.0, end: 1.0),
+            duration: const Duration(milliseconds: 800),
+            curve: Curves.elasticOut,
+            builder: (context, value, child) {
+              return Transform.scale(
+                scale: value,
+                child: Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        GeminiColors.primaryLight,
+                        GeminiColors.primaryLight.withOpacity(0.7),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: GeminiColors.primaryLight.withOpacity(0.3),
+                        blurRadius: 24,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
+                  ),
+                  child: const Icon(
+                    Icons.auto_awesome,
+                    size: 56,
+                    color: Colors.white,
+                  ),
                 ),
-            textAlign: TextAlign.center,
+              );
+            },
           ),
           const SizedBox(height: 32),
-          // Suggested prompts as chips
+          // Welcome text with fade-in
+          TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0.0, end: 1.0),
+            duration: const Duration(milliseconds: 600),
+            curve: Curves.easeOut,
+            builder: (context, value, child) {
+              return Opacity(
+                opacity: value,
+                child: child,
+              );
+            },
+            child: Column(
+              children: [
+                Text(
+                  'How can I help you today?',
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: GeminiColors.aiMessageText(context),
+                        letterSpacing: -0.5,
+                      ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Choose a prompt or type your own question',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: GeminiColors.textSecondary(context),
+                        fontSize: 14,
+                      ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 40),
+          // Suggested prompts with staggered animation
           Wrap(
             spacing: 12,
             runSpacing: 12,
             alignment: WrapAlignment.center,
-            children: prompts
-                .map((prompt) => _buildPromptChip(context, prompt))
-                .toList(),
+            children: List.generate(
+              prompts.length,
+              (index) => TweenAnimationBuilder<double>(
+                tween: Tween(begin: 0.0, end: 1.0),
+                duration: Duration(milliseconds: 400 + (index * 100)),
+                curve: Curves.easeOutCubic,
+                builder: (context, value, child) {
+                  return Transform.translate(
+                    offset: Offset(0, 20 * (1 - value)),
+                    child: Opacity(
+                      opacity: value,
+                      child: child,
+                    ),
+                  );
+                },
+                child: _buildPromptChip(context, prompts[index]),
+              ),
+            ),
           ),
         ],
       ),
@@ -171,37 +235,62 @@ class SuggestedPrompts extends StatelessWidget {
   }
 
   Widget _buildPromptChip(BuildContext context, PromptChip chip) {
-    return InkWell(
-      onTap: () => onPromptSelected(chip.prompt),
-      borderRadius: BorderRadius.circular(20),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: BoxDecoration(
-          color: GeminiColors.chipBackground(context),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: GeminiColors.chipBorder(context),
-            width: 1,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () => onPromptSelected(chip.prompt),
+        borderRadius: BorderRadius.circular(24),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                GeminiColors.primaryGlowLight.withOpacity(0.15),
+                GeminiColors.primaryGlowLight.withOpacity(0.08),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(
+              color: GeminiColors.primaryLight.withOpacity(0.3),
+              width: 1.5,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: GeminiColors.primaryLight.withOpacity(0.1),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
           ),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              chip.icon,
-              size: 18,
-              color: GeminiColors.primary,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              chip.label,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: GeminiColors.aiMessageText(context),
-                  ),
-            ),
-          ],
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: GeminiColors.primaryLight.withOpacity(0.15),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  chip.icon,
+                  size: 16,
+                  color: GeminiColors.primaryLight,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                chip.label,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: GeminiColors.aiMessageText(context),
+                      letterSpacing: 0.2,
+                    ),
+              ),
+            ],
+          ),
         ),
       ),
     );

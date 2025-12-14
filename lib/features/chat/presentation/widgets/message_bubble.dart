@@ -46,7 +46,8 @@ class _MessageBubbleState extends State<MessageBubble>
     super.initState();
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 400), // Slightly longer for smoothness
+      duration:
+          const Duration(milliseconds: 400), // Slightly longer for smoothness
     );
 
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
@@ -82,7 +83,8 @@ class _MessageBubbleState extends State<MessageBubble>
 
   Widget _buildMessageContent(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4), // Reduced vertical padding
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      // Reduced vertical padding
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -123,10 +125,11 @@ class _MessageBubbleState extends State<MessageBubble>
                         padding: const EdgeInsets.only(top: 4, right: 4),
                         child: Text(
                           _formatTimestamp(widget.message.timestamp),
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                fontSize: 10,
-                                color: GeminiColors.textSecondary(context),
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    fontSize: 10,
+                                    color: GeminiColors.textSecondary(context),
+                                  ),
                         ),
                       ),
                   ],
@@ -139,7 +142,7 @@ class _MessageBubbleState extends State<MessageBubble>
     );
   }
 
-  /// User message with dark grey background
+  /// User message with gradient background (2025 redesign)
   Widget _buildUserMessage(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -173,15 +176,61 @@ class _MessageBubbleState extends State<MessageBubble>
     );
   }
 
-  /// AI message with header, actions, and disclaimer
+  /// AI message with glassmorphism and modern design (2025 redesign)
   Widget _buildAiMessage(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+      constraints: const BoxConstraints(maxWidth: 500),
+      // Wider for AI responses
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Bot header with avatar
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8, left: 4),
+            child: Row(
+              children: [
+                Container(
+                  width: 28,
+                  height: 28,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        widget.botColor,
+                        widget.botColor.withOpacity(0.8),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: widget.botColor.withOpacity(0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: const Icon(
+                    Icons.auto_awesome,
+                    color: Colors.white,
+                    size: 16,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  widget.botName,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: GeminiColors.textSecondary(context),
+                        fontSize: 13,
+                      ),
+                ),
+              ],
+            ),
+          ),
+
           // Content
           if (widget.message.content.isNotEmpty)
             MarkdownBody(
@@ -230,13 +279,16 @@ class _MessageBubbleState extends State<MessageBubble>
                     ),
                 code: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontFamily: 'Google Sans Mono',
-                      backgroundColor:
-                          isDark ? const Color(0xFF1e1f20) : const Color(0xFFf5f5f5),
+                      backgroundColor: isDark
+                          ? const Color(0xFF1e1f20)
+                          : const Color(0xFFf5f5f5),
                       color: GeminiColors.aiMessageText(context),
                       fontSize: 13,
                     ),
                 codeblockDecoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF1e1f20) : const Color(0xFFf5f5f5),
+                  color: isDark
+                      ? const Color(0xFF1e1f20)
+                      : const Color(0xFFf5f5f5),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 blockquote: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -278,32 +330,34 @@ class _MessageBubbleState extends State<MessageBubble>
                 ),
               ),
             ),
-            
+
           const SizedBox(height: 16),
 
           // GenUI Table
           if (widget.message.hasTable && widget.message.tableData != null) ...[
-             GenUITable(data: widget.message.tableData!),
-             const SizedBox(height: 16),
+            GenUITable(data: widget.message.tableData!),
+            const SizedBox(height: 16),
           ],
 
           // GenUI Chart
-          if (widget.message.graphType != null && widget.message.graphData != null) ...[
-             GenUIChart(
-               data: widget.message.graphData!, 
-               type: widget.message.graphType!
-             ),
-             const SizedBox(height: 16),
+          if (widget.message.graphType != null &&
+              widget.message.graphData != null) ...[
+            GenUIChart(
+                data: widget.message.graphData!,
+                type: widget.message.graphType!),
+            const SizedBox(height: 16),
           ],
 
           // Action Type Display & Change Button - only for record_income/record_expense
           if (widget.message.actionType != null &&
               (widget.message.actionType!.toLowerCase() == 'record_income' ||
-               widget.message.actionType!.toLowerCase() == 'record_expense')) ...[
+                  widget.message.actionType!.toLowerCase() ==
+                      'record_expense')) ...[
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF2a2a2e) : const Color(0xFFf0f0f0),
+                color:
+                    isDark ? const Color(0xFF2a2a2e) : const Color(0xFFf0f0f0),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
                   color: GeminiColors.divider(context),
@@ -324,9 +378,11 @@ class _MessageBubbleState extends State<MessageBubble>
                     GestureDetector(
                       onTap: () => _showActionTypeOptions(context),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(
-                          color: GeminiColors.primaryColor(context).withOpacity(0.1),
+                          color: GeminiColors.primaryColor(context)
+                              .withOpacity(0.1),
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
                             color: GeminiColors.primaryColor(context),
@@ -335,11 +391,11 @@ class _MessageBubbleState extends State<MessageBubble>
                         ),
                         child: Text(
                           'Change',
-                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                color: GeminiColors.primaryColor(context),
-                                fontWeight: FontWeight.bold,
-                              ),
-
+                          style:
+                              Theme.of(context).textTheme.labelSmall?.copyWith(
+                                    color: GeminiColors.primaryColor(context),
+                                    fontWeight: FontWeight.bold,
+                                  ),
                         ),
                       ),
                     ),
@@ -349,119 +405,128 @@ class _MessageBubbleState extends State<MessageBubble>
             ),
             const SizedBox(height: 16),
           ],
-          
-              // Action Row: Like, Dislike, Select Text, Copy, Regenerate
+
+          // Action Row: Like, Dislike, Select Text, Copy, Regenerate (Enhanced 2025)
+          const SizedBox(height: 12),
           Row(
             children: [
               if (ChatConfig.showFeedbackButtons) ...[
-                IconButton(
-                  icon: Icon(
-                    widget.message.feedback == 'LIKE' ? Icons.thumb_up : Icons.thumb_up_outlined,
-                    color: widget.message.feedback == 'LIKE' 
-                        ? GeminiColors.primaryColor(context) 
-                        : GeminiColors.icon(context),
-                    size: 20,
-                  ),
+                _buildActionButton(
+                  context,
+                  icon: widget.message.feedback == 'LIKE'
+                      ? Icons.thumb_up
+                      : Icons.thumb_up_outlined,
+                  color: widget.message.feedback == 'LIKE'
+                      ? GeminiColors.primaryColor(context)
+                      : GeminiColors.icon(context).withOpacity(0.6),
                   onPressed: () {
-                    final newFeedback = widget.message.feedback == 'LIKE' 
-                        ? FeedbackType.none 
+                    final newFeedback = widget.message.feedback == 'LIKE'
+                        ? FeedbackType.none
                         : FeedbackType.like;
-                    
-                    context.read<ChatCubit>().submitMessageFeedback(
-                      widget.message.id, 
-                      newFeedback
-                    );
-                    
+
+                    context
+                        .read<ChatCubit>()
+                        .submitMessageFeedback(widget.message.id, newFeedback);
+
                     if (newFeedback == FeedbackType.like) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Thanks for the feedback!')),
+                        const SnackBar(
+                            content: Text('Thanks for the feedback!')),
                       );
                     }
                   },
                 ),
-                const SizedBox(width: 8),
-                IconButton(
-                  icon: Icon(
-                    widget.message.feedback == 'DISLIKE' ? Icons.thumb_down : Icons.thumb_down_outlined, 
-                    color: widget.message.feedback == 'DISLIKE' 
-                        ? Colors.red 
-                        : GeminiColors.icon(context),
-                    size: 20,
-                  ),
+                const SizedBox(width: 4),
+                _buildActionButton(
+                  context,
+                  icon: widget.message.feedback == 'DISLIKE'
+                      ? Icons.thumb_down
+                      : Icons.thumb_down_outlined,
+                  color: widget.message.feedback == 'DISLIKE'
+                      ? Colors.red
+                      : GeminiColors.icon(context).withOpacity(0.6),
                   onPressed: () {
-                    final newFeedback = widget.message.feedback == 'DISLIKE' 
-                        ? FeedbackType.none 
+                    final newFeedback = widget.message.feedback == 'DISLIKE'
+                        ? FeedbackType.none
                         : FeedbackType.dislike;
 
-                    context.read<ChatCubit>().submitMessageFeedback(
-                      widget.message.id, 
-                      newFeedback
-                    );
+                    context
+                        .read<ChatCubit>()
+                        .submitMessageFeedback(widget.message.id, newFeedback);
 
                     if (newFeedback == FeedbackType.dislike) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Thanks for the feedback!')),
+                        const SnackBar(
+                            content: Text('Thanks for the feedback!')),
                       );
                     }
                   },
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: 4),
               ],
-              
+
               // Select Text (Replaces Filter/Tune)
               if (ChatConfig.showSelectTextButton) ...[
-                IconButton(
-                  icon: Icon(Icons.select_all, color: GeminiColors.icon(context), size: 20),
+                _buildActionButton(
+                  context,
+                  icon: Icons.select_all,
+                  color: GeminiColors.icon(context).withOpacity(0.6),
                   onPressed: () {
-                     // Placeholder for select text functionality
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Select text mode')),
                     );
                   },
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: 4),
               ],
 
               if (ChatConfig.showCopyButton) ...[
-                IconButton(
-                  icon: Icon(Icons.content_copy, color: GeminiColors.icon(context), size: 20),
+                _buildActionButton(
+                  context,
+                  icon: Icons.content_copy,
+                  color: GeminiColors.icon(context).withOpacity(0.6),
                   onPressed: () {
-                    Clipboard.setData(ClipboardData(text: widget.message.content));
+                    Clipboard.setData(
+                        ClipboardData(text: widget.message.content));
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Copied to clipboard')),
                     );
                   },
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: 4),
               ],
 
               // Regenerate Button
               if (ChatConfig.showRegenerateButton)
-                IconButton(
-                  icon: Icon(Icons.refresh, color: GeminiColors.icon(context), size: 20),
+                _buildActionButton(
+                  context,
+                  icon: Icons.refresh,
+                  color: GeminiColors.icon(context).withOpacity(0.6),
                   onPressed: () {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Regenerating response...')),
                     );
-                    // Trigger regeneration logic here if available
                   },
                 ),
               // Disclaimer
               if (ChatConfig.bottomDisclaimerText != null)
-                Center(
-                  child: Text(
-                    ChatConfig.bottomDisclaimerText!,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: GeminiColors.textSecondary(context),
-                      fontSize: 12,
-                    ),
-                    textAlign: TextAlign.center,
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        ChatConfig.bottomDisclaimerText!,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: GeminiColors.textSecondary(context),
+                              fontSize: 12,
+                            ),
+                        textAlign: TextAlign.right,
+                      ),
+                    ],
                   ),
                 ),
             ],
           ),
-
-
 
           // Image logic
           if (widget.message.imageUrl != null &&
@@ -476,7 +541,6 @@ class _MessageBubbleState extends State<MessageBubble>
       ),
     );
   }
-
 
   Widget _buildImage(String imageUrl) {
     if (imageUrl.startsWith('http')) {
@@ -564,7 +628,8 @@ class _MessageBubbleState extends State<MessageBubble>
                 ),
                 const SizedBox(height: 16),
                 ListTile(
-                  leading: const Icon(Icons.arrow_downward, color: Colors.green),
+                  leading:
+                      const Icon(Icons.arrow_downward, color: Colors.green),
                   title: const Text('Income'),
                   onTap: () {
                     Navigator.pop(context);
@@ -588,10 +653,40 @@ class _MessageBubbleState extends State<MessageBubble>
   }
 
   void _sendCorrectionMessage(ChatCubit chatCubit, String newType) {
-    final correctionText = "change the actiontype of the last entry as $newType";
+    final correctionText =
+        "change the actiontype of the last entry as $newType";
     chatCubit.sendNewMessage(
-          botId: widget.message.botId,
-          content: correctionText,
-        );
+      botId: widget.message.botId,
+      content: correctionText,
+    );
+  }
+
+  /// Modern action button with proper touch targets (2025 design)
+  Widget _buildActionButton(
+    BuildContext context, {
+    required IconData icon,
+    required Color color,
+    required VoidCallback onPressed,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onPressed,
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
+          width: 36,
+          height: 36,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Icon(
+            icon,
+            color: color,
+            size: 18,
+          ),
+        ),
+      ),
+    );
   }
 }

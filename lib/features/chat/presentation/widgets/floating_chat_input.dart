@@ -51,6 +51,46 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
     super.dispose();
   }
 
+  /// Animated recording indicator (2025 design)
+  Widget _buildRecordingAnimation() {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0.0, end: 1.0),
+      duration: const Duration(milliseconds: 800),
+      curve: Curves.easeInOut,
+      builder: (context, value, child) {
+        return Stack(
+          alignment: Alignment.center,
+          children: [
+            // Pulsing outer ring
+            Container(
+              width: 30 + (value * 4),
+              height: 30 + (value * 4),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Colors.white.withOpacity(0.6 * (1 - value)),
+                  width: 2,
+                ),
+              ),
+            ),
+            // Stop icon
+            const Icon(
+              Icons.stop_rounded,
+              color: Colors.white,
+              size: 20,
+            ),
+          ],
+        );
+      },
+      onEnd: () {
+        // Restart animation if still recording
+        if (_isRecording && mounted) {
+          setState(() {});
+        }
+      },
+    );
+  }
+
   void _onTextChanged() {
     final newHasContent = _textController.text.trim().isNotEmpty ||
         _selectedImagePath != null ||
@@ -463,26 +503,38 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                       ),
                     ),
 
-                  // Main Input Container (Floating Pill)
+                  // Main Input Container (Enhanced Floating Pill - 2025)
                   Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 20,
                       vertical: 12,
                     ),
-                          decoration: BoxDecoration(
-                      color: isDark ? const Color(0xFF1e1f20) : const Color(0xFFF8F9FA),
-                      borderRadius: BorderRadius.circular(30),
+                    decoration: BoxDecoration(
+                      // Glassmorphic background
+                      color: isDark
+                          ? const Color(0xFF1e1f20).withOpacity(0.95)
+                          : const Color(0xFFFEFBFF).withOpacity(0.95),
+                      borderRadius: BorderRadius.circular(28),
                       border: Border.all(
-                        color: isDark
-                            ? primaryColor.withOpacity(0.2)
-                            : primaryColor.withOpacity(0.15),
-                        width: 1.5,
+                        color: _hasContent
+                            ? primaryColor.withOpacity(0.6) // Active state glow
+                            : (isDark ? primaryColor.withOpacity(0.2) : primaryColor.withOpacity(0.15)),
+                        width: _hasContent ? 2.0 : 1.5,
                       ),
                       boxShadow: [
+                        // Primary shadow with glow effect
                         BoxShadow(
-                          color: primaryColor.withOpacity(0.2), // Stronger shadow
-                          blurRadius: 16,
+                          color: _hasContent
+                              ? primaryColor.withOpacity(0.35)
+                              : primaryColor.withOpacity(0.15),
+                          blurRadius: _hasContent ? 20 : 16,
                           offset: const Offset(0, 4),
+                        ),
+                        // Depth shadow
+                        BoxShadow(
+                          color: Colors.black.withOpacity(isDark ? 0.4 : 0.08),
+                          blurRadius: 12,
+                          offset: const Offset(0, 2),
                         ),
                       ],
                     ),
@@ -557,29 +609,52 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
 
                   const SizedBox(width: 12),
 
-                  // Voice recording button
+                  // Voice recording button with visual feedback (2025)
                   if (ChatConfig.showAudioRecording)
-                    GestureDetector(
-                      onTap: isLimitReached ? null : _toggleRecording,
-                      child: Container(
-                        width: 36,
-                        height: 36,
-                        decoration: BoxDecoration(
-                          color: _isRecording
-                              ? Colors.red.withOpacity(0.1)
-                              : (isDark
-                                  ? const Color(0xFF2a2a2e)
-                                  : const Color(0xFFE8EAED)),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          _isRecording ? Icons.stop : Icons.mic_none,
-                          color: _isRecording
-                              ? Colors.red
-                              : (isLimitReached
-                                  ? Colors.grey
-                                  : primaryColor),
-                          size: 20,
+                    AnimatedScale(
+                      scale: _isRecording ? 1.1 : 1.0,
+                      duration: const Duration(milliseconds: 200),
+                      child: GestureDetector(
+                        onTap: isLimitReached ? null : _toggleRecording,
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            gradient: _isRecording
+                                ? const LinearGradient(
+                                    colors: [Color(0xFFFF5252), Color(0xFFFF1744)],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  )
+                                : null,
+                            color: _isRecording
+                                ? null
+                                : (isDark ? const Color(0xFF2a2a2e) : const Color(0xFFE8EAED)),
+                            shape: BoxShape.circle,
+                            boxShadow: _isRecording
+                                ? [
+                                    BoxShadow(
+                                      color: Colors.red.withOpacity(0.4),
+                                      blurRadius: 16,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                    BoxShadow(
+                                      color: Colors.red.withOpacity(0.2),
+                                      blurRadius: 8,
+                                      spreadRadius: 2,
+                                    ),
+                                  ]
+                                : null,
+                          ),
+                          child: _isRecording
+                              ? _buildRecordingAnimation()
+                              : Icon(
+                                  Icons.mic_none,
+                                  color: isLimitReached
+                                      ? Colors.grey
+                                      : primaryColor,
+                                  size: 22,
+                                ),
                         ),
                       ),
                     ),
@@ -587,51 +662,56 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                   if (ChatConfig.showAudioRecording)
                     const SizedBox(width: 8),
 
-                  // Send button
-                  GestureDetector(
-                    onTap:
-                        (_hasContent && !isLimitReached) ? _sendMessage : null,
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        gradient: (_hasContent && !isLimitReached)
-                            ? LinearGradient(
-                                colors: [
-                                  primaryColor,
-                                  primaryColor.withOpacity(0.8),
-                                ],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              )
-                            : null,
-                        color: (_hasContent && !isLimitReached)
-                            ? null
-                            : (isDark
-                                ? const Color(0xFF2a2a2e)
-                                : const Color(0xFFE8EAED)),
-                        shape: BoxShape.circle,
-                        boxShadow: (_hasContent && !isLimitReached)
-                            ? [
-                                BoxShadow(
-                                  color: primaryColor.withOpacity(0.3),
-                                  blurRadius: 12,
-                                  offset: const Offset(0, 3),
-                                ),
-                              ]
-                            : null,
-                      ),
-                      child: Icon(
-                        Icons.arrow_upward_rounded,
-                        color: (_hasContent && !isLimitReached)
-                            ? Colors.white
-                            : (isDark
-                                ? const Color(0xFF65676B)
-                                : const Color(0xFF9AA0A6)),
-                        size: 22,
+                  // Send button (Enhanced with animation - 2025)
+                  AnimatedScale(
+                    scale: (_hasContent && !isLimitReached) ? 1.0 : 0.9,
+                    duration: const Duration(milliseconds: 200),
+                    curve: Curves.easeOutCubic,
+                    child: GestureDetector(
+                      onTap: (_hasContent && !isLimitReached) ? _sendMessage : null,
+                      child: Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          gradient: (_hasContent && !isLimitReached)
+                              ? LinearGradient(
+                                  colors: [
+                                    primaryColor,
+                                    primaryColor.withOpacity(0.85),
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                )
+                              : null,
+                          color: (_hasContent && !isLimitReached)
+                              ? null
+                              : (isDark ? const Color(0xFF2a2a2e) : const Color(0xFFE8EAED)),
+                          shape: BoxShape.circle,
+                          boxShadow: (_hasContent && !isLimitReached)
+                              ? [
+                                  BoxShadow(
+                                    color: primaryColor.withOpacity(0.4),
+                                    blurRadius: 16,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                  BoxShadow(
+                                    color: primaryColor.withOpacity(0.2),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ]
+                              : null,
+                        ),
+                        child: Icon(
+                          Icons.arrow_upward_rounded,
+                          color: (_hasContent && !isLimitReached)
+                              ? Colors.white
+                              : (isDark ? const Color(0xFF65676B) : const Color(0xFF9AA0A6)),
+                          size: 24,
+                        ),
                       ),
                     ),
-                      ),
+                  ),
                     ],
                   ),
                 ),

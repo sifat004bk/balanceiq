@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:balance_iq/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
@@ -25,46 +26,73 @@ class BalanceCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         children: [
-          // Net Balance Section
-          Text(
-            'Net Balance',
-            style: textTheme.bodySmall?.copyWith(
-              color: isDark ? AppTheme.textSubtleDark : AppTheme.textSubtleLight,
-              fontWeight: FontWeight.w400,
+          // Net Balance Section with subtle glow
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: (isDark ? AppTheme.primaryDark : AppTheme.primaryLight)
+                      .withOpacity(0.1),
+                  blurRadius: 24,
+                  spreadRadius: 8,
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                Text(
+                  'Net Balance',
+                  style: textTheme.bodySmall?.copyWith(
+                    color: isDark ? AppTheme.textSubtleDark : AppTheme.textSubtleLight,
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                ShaderMask(
+                  shaderCallback: (bounds) {
+                    return (isDark 
+                        ? AppTheme.accentGradientDark 
+                        : AppTheme.accentGradientLight)
+                        .createShader(bounds);
+                  },
+                  child: Text(
+                    '\$${_formatCurrency(netBalance)}',
+                    style: textTheme.displayLarge?.copyWith(
+                      fontSize: 48,
+                      fontWeight: FontWeight.w900,
+                      height: 1.2,
+                      letterSpacing: -1.0,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 4),
-          Text(
-            '\$${_formatCurrency(netBalance)}',
-            style: textTheme.displayLarge?.copyWith(
-              fontSize: 40,
-              fontWeight: FontWeight.bold,
-              height: 1.2,
-              letterSpacing: -0.6,
-            ),
-          ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 32),
 
-          // Income and Expense Cards
+          // Income and Expense Cards with glassmorphism
           Row(
             children: [
               Expanded(
                 child: _buildIncomeExpenseCard(
                   context,
-                  icon: Icons.arrow_downward,
+                  icon: Icons.arrow_downward_rounded,
                   label: 'Income',
                   amount: totalIncome,
-                  iconColor: AppTheme.primaryColor,
+                  isIncome: true,
                 ),
               ),
               const SizedBox(width: 16),
               Expanded(
                 child: _buildIncomeExpenseCard(
                   context,
-                  icon: Icons.arrow_upward,
+                  icon: Icons.arrow_upward_rounded,
                   label: 'Expense',
                   amount: totalExpense,
-                  iconColor: Colors.red,
+                  isIncome: false,
                 ),
               ),
             ],
@@ -79,56 +107,110 @@ class BalanceCard extends StatelessWidget {
     required IconData icon,
     required String label,
     required double amount,
-    required Color iconColor,
+    required bool isIncome,
   }) {
     final textTheme = Theme.of(context).textTheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    
+    final iconColor = isIncome
+        ? (isDark ? AppTheme.incomeDark : AppTheme.incomeLight)
+        : (isDark ? AppTheme.expenseDark : AppTheme.expenseLight);
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: isDark
-            ? Colors.black.withOpacity(0.2)
-            : Colors.white,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: 16,
-                height: 16,
-                decoration: BoxDecoration(
-                  color: iconColor.withOpacity(0.2),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  icon,
-                  color: iconColor,
-                  size: 10,
-                ),
+        gradient: isDark
+            ? LinearGradient(
+                colors: [
+                  AppTheme.surfaceDark.withOpacity(0.6),
+                  AppTheme.surfaceDark.withOpacity(0.3),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              )
+            : LinearGradient(
+                colors: [
+                  Colors.white,
+                  Colors.white.withOpacity(0.9),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
-              const SizedBox(width: 8),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isDark
+              ? Colors.white.withOpacity(0.1)
+              : Colors.black.withOpacity(0.05),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: isDark
+                ? Colors.black.withOpacity(0.3)
+                : iconColor.withOpacity(0.08),
+            offset: const Offset(0, 4),
+            blurRadius: 12,
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: isDark ? 10 : 0, sigmaY: isDark ? 10 : 0),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 24,
+                    height: 24,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          iconColor,
+                          iconColor.withOpacity(0.7),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: iconColor.withOpacity(0.3),
+                          blurRadius: 8,
+                          spreadRadius: 1,
+                        ),
+                      ],
+                    ),
+                    child: Icon(
+                      icon,
+                      color: Colors.white,
+                      size: 14,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    label,
+                    style: textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.2,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
               Text(
-                label,
-                style: textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w500,
+                '\$${_formatCurrency(amount)}',
+                style: textTheme.titleLarge?.copyWith(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: -0.5,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 8),
-          Text(
-            '\$${_formatCurrency(amount)}',
-            style: textTheme.titleLarge?.copyWith(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              letterSpacing: -0.2,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

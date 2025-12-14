@@ -24,6 +24,8 @@ class HomeAppbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return SliverAppBar(
       floating: true,
       snap: true,
@@ -32,24 +34,59 @@ class HomeAppbar extends StatelessWidget {
       centerTitle: true,
       title: InkWell(
         onTap: onTapDateRange,
-        borderRadius: BorderRadius.circular(8),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        borderRadius: BorderRadius.circular(50),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(
+            gradient: isDark
+                ? LinearGradient(
+                    colors: [
+                      AppTheme.surfaceVariantDark.withOpacity(0.5),
+                      AppTheme.surfaceVariantDark.withOpacity(0.3),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  )
+                : LinearGradient(
+                    colors: [
+                      AppTheme.surfaceVariantLight,
+                      AppTheme.surfaceVariantLight.withOpacity(0.8),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+            borderRadius: BorderRadius.circular(50),
+            border: Border.all(
+              color: isDark
+                  ? Colors.white.withOpacity(0.1)
+                  : Colors.black.withOpacity(0.05),
+              width: 1,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: (isDark ? AppTheme.primaryDark : AppTheme.primaryLight)
+                    .withOpacity(0.1),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
                 displayDate,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 0.27,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 0.2,
                     ),
               ),
               const SizedBox(width: 4),
               Icon(
-                Icons.arrow_drop_down,
+                Icons.arrow_drop_down_rounded,
                 color: Theme.of(context).textTheme.titleMedium?.color,
+                size: 20,
               ),
             ],
           ),
@@ -65,20 +102,44 @@ class HomeAppbar extends StatelessWidget {
             height: 40,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(
-                color: AppTheme.primaryColor.withOpacity(0.2),
-                width: 1,
-              ),
+              gradient: isDark
+                  ? AppTheme.primaryGradientDark
+                  : AppTheme.primaryGradientLight,
+              boxShadow: [
+                BoxShadow(
+                  color: (isDark ? AppTheme.primaryDark : AppTheme.primaryLight)
+                      .withOpacity(0.3),
+                  blurRadius: 8,
+                  spreadRadius: 1,
+                ),
+              ],
             ),
-            child: profileUrl.isEmpty
-                ? Icon(
-                    Icons.person,
-                  )
-                : CircleAvatar(
-                    radius: 50,
-                    backgroundImage: NetworkImage(profileUrl),
-                    backgroundColor: Colors.transparent,
-                  ),
+            child: Container(
+              margin: const EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Theme.of(context).scaffoldBackgroundColor,
+              ),
+              child: profileUrl.isEmpty
+                  ? Icon(
+                      Icons.person_rounded,
+                      size: 20,
+                      color: isDark ? AppTheme.primaryDark : AppTheme.primaryLight,
+                    )
+                  : ClipOval(
+                      child: Image.network(
+                        profileUrl,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Icon(
+                            Icons.person_rounded,
+                            size: 20,
+                            color: isDark ? AppTheme.primaryDark : AppTheme.primaryLight,
+                          );
+                        },
+                      ),
+                    ),
+            ),
           ),
         ),
       ),
@@ -93,7 +154,29 @@ class HomeAppbar extends StatelessWidget {
               width: 40,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Theme.of(context).colorScheme.surface,
+                gradient: isDark
+                    ? LinearGradient(
+                        colors: [
+                          AppTheme.surfaceVariantDark.withOpacity(0.5),
+                          AppTheme.surfaceVariantDark.withOpacity(0.3),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      )
+                    : LinearGradient(
+                        colors: [
+                          AppTheme.surfaceVariantLight,
+                          AppTheme.surfaceVariantLight.withOpacity(0.8),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                border: Border.all(
+                  color: isDark
+                      ? Colors.white.withOpacity(0.1)
+                      : Colors.black.withOpacity(0.05),
+                  width: 1,
+                ),
               ),
               child: InkWell(
                 onTap: () {
@@ -101,14 +184,15 @@ class HomeAppbar extends StatelessWidget {
                 },
                 borderRadius: BorderRadius.circular(50),
                 child: Icon(
-                  isDark ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
+                  isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
                   size: 20,
+                  color: isDark ? AppTheme.primaryDark : AppTheme.primaryLight,
                 ),
               ),
             );
           },
         ),
-        const SizedBox(width: 8),
+        const SizedBox(width: 12),
       ],
     );
   }

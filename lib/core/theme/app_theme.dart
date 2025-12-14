@@ -1,55 +1,112 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  // New Design System Colors (Updated to match design)
-  static const Color primaryColor = Color(0xFF2bee4b); // Primary green (brighter)
-  static const Color accentColor = Color(0xFF2bee4b);
-  static const Color backgroundLight =
-      Color(0xFFF6F8F6); // Light theme background
-  static const Color backgroundDark =
-      Color(0xFF102213); // Dark theme background (darker green-tint)
+  // Material 3 Expressive - Primary Palette
+  static const Color primaryLight = Color(0xFF6750A4); // Deep Purple
+  static const Color primaryDark = Color(0xFFD0BCFF);
+  static const Color primaryContainerLight = Color(0xFFEADDFF);
+  static const Color primaryContainerDark = Color(0xFF4F378B);
+  
+  // Secondary & Tertiary
+  static const Color secondaryLight = Color(0xFF625B71);
+  static const Color secondaryDark = Color(0xFFCCC2DC);
+  static const Color tertiaryLight = Color(0xFF7D5260); // Warm Rose
+  static const Color tertiaryDark = Color(0xFFEFB8C8);
+  
+  // Semantic Colors - Income/Expense
+  static const Color incomeLight = Color(0xFF00C853); // Vibrant Green
+  static const Color incomeDark = Color(0xFF69F0AE);
+  static const Color expenseLight = Color(0xFFFF5252); // Coral Red
+  static const Color expenseDark = Color(0xFFFF8A80);
+  static const Color neutralLight = Color(0xFF625B71);
+  static const Color neutralDark = Color(0xFF938F99);
+  
+  // Surface & Background
+  static const Color backgroundLight = Color(0xFFFEF7FF); // Warm Off-white
+  static const Color backgroundDark = Color(0xFF1C1B1F); // Deep charcoal
+  static const Color surfaceLight = Color(0xFFFFFBFE);
+  static const Color surfaceDark = Color(0xFF2B2930);
+  static const Color surfaceVariantLight = Color(0xFFE7E0EC);
+  static const Color surfaceVariantDark = Color(0xFF49454F);
 
   // Text Colors
-  static const Color textLightTheme = Color(0xFF111827);
-  static const Color textDarkTheme = Color(0xFFE5E7EB);
-  static const Color textSubtleLight = Color(0xFF6B7280);
-  static const Color textSubtleDark = Color(0xFF9CA3AF);
+  static const Color textLightTheme = Color(0xFF1C1B1F);
+  static const Color textDarkTheme = Color(0xFFE6E1E5);
+  static const Color textSubtleLight = Color(0xFF49454F);
+  static const Color textSubtleDark = Color(0xFFCAC4D0);
 
-  // Bot Colors
-  static const Color balanceTrackerColor = Color(0xFF4CAF50); // Green
-  static const Color investmentGuruColor = Color(0xFF9C27B0); // Purple
-  static const Color budgetPlannerColor = Color(0xFF2196F3); // Blue
-  static const Color finTipsColor = Color(0xFFFFC107); // Yellow
+  // Bot Colors (kept for chat functionality)
+  static const Color balanceTrackerColor = Color(0xFF4CAF50);
+  static const Color investmentGuruColor = Color(0xFF9C27B0);
+  static const Color budgetPlannerColor = Color(0xFF2196F3);
+  static const Color finTipsColor = Color(0xFFFFC107);
 
-  // Text Colors
-  static const Color textDark = Color(0xFF000000);
+  // Legacy compatibility
+  static const Color textDark = Color(0xFF1C1B1F);
   static const Color textLight = Color(0xFFFFFFFF);
   static const Color textGrey = Color(0xFF757575);
 
   // Message Bubble Colors
-  static const Color userMessageColor = primaryColor;
-  static const Color botMessageLightColor = Color(0xFFE0E0E0);
-  static const Color botMessageDarkColor = Color(0xFF283339);
+  static Color userMessageColor = primaryLight;
+  static const Color botMessageLightColor = Color(0xFFE7E0EC);
+  static const Color botMessageDarkColor = Color(0xFF2B2930);
+  
+  // Gradient Definitions
+  static const LinearGradient primaryGradientLight = LinearGradient(
+    colors: [Color(0xFF6750A4), Color(0xFF5E4FA2)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+  
+  static const LinearGradient primaryGradientDark = LinearGradient(
+    colors: [Color(0xFFD0BCFF), Color(0xFFBBA4E8)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+  
+  static const LinearGradient accentGradientLight = LinearGradient(
+    colors: [Color(0xFF6750A4), Color(0xFF5E8FD9)], // Purple to Blue
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+  
+  static const LinearGradient accentGradientDark = LinearGradient(
+    colors: [Color(0xFFD0BCFF), Color(0xFFEFB8C8)], // Purple to Pink
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  // Compatibility property for files still using primaryColor
+  static const Color primaryColor = primaryLight;
+  static const Color accentColor = primaryLight;
 
   static ThemeData lightTheme() {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
-      primaryColor: primaryColor,
+      primaryColor: primaryLight,
       scaffoldBackgroundColor: backgroundLight,
-      bottomSheetTheme: BottomSheetThemeData(
+      bottomSheetTheme: const BottomSheetThemeData(
         backgroundColor: Colors.transparent,
       ),
       colorScheme: const ColorScheme.light(
-        primary: primaryColor,
-        secondary: accentColor,
-        surface: Colors.white,
-        error: Colors.red,
-        onPrimary: investmentGuruColor,
+        primary: primaryLight,
+        onPrimary: Colors.white,
+        primaryContainer: primaryContainerLight,
+        onPrimaryContainer: Color(0xFF21005D),
+        secondary: secondaryLight,
+        onSecondary: Colors.white,
+        tertiary: tertiaryLight,
+        onTertiary: Colors.white,
+        surface: surfaceLight,
+        onSurface: textLightTheme,
+        surfaceContainerHighest: surfaceVariantLight,
+        error: expenseLight,
+        onError: Colors.white,
       ),
-      appBarTheme: const AppBarTheme(
-        backgroundColor: backgroundDark,
-        foregroundColor: textDark,
+      appBarTheme: AppBarTheme(
+        backgroundColor: backgroundLight,
+        foregroundColor: textLightTheme,
         elevation: 0,
         centerTitle: true,
       ),
@@ -57,48 +114,52 @@ class AppTheme {
       textTheme: const TextTheme(
         displayLarge: TextStyle(
           fontSize: 32,
-          fontWeight: FontWeight.bold,
-          color: textDark,
+          fontWeight: FontWeight.w800,
+          color: textLightTheme,
+          letterSpacing: -0.5,
         ),
         displayMedium: TextStyle(
           fontSize: 24,
-          fontWeight: FontWeight.bold,
-          color: textDark,
+          fontWeight: FontWeight.w700,
+          color: textLightTheme,
+          letterSpacing: -0.3,
         ),
         displaySmall: TextStyle(
           fontSize: 20,
-          fontWeight: FontWeight.bold,
-          color: textDark,
+          fontWeight: FontWeight.w700,
+          color: textLightTheme,
+          letterSpacing: -0.2,
         ),
         bodyLarge: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.normal,
-          color: textDark,
+          color: textLightTheme,
         ),
         bodyMedium: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.normal,
-          color: textDark,
+          color: textLightTheme,
         ),
         bodySmall: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.normal,
-          color: textGrey,
+          color: textSubtleLight,
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: primaryColor,
-          foregroundColor: textLight,
+          backgroundColor: primaryLight,
+          foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(24),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          elevation: 2,
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: Colors.grey[200],
+        fillColor: surfaceVariantLight,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(24),
           borderSide: BorderSide.none,
@@ -113,21 +174,29 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
-      primaryColor: primaryColor,
+      primaryColor: primaryDark,
       scaffoldBackgroundColor: backgroundDark,
-      bottomSheetTheme: BottomSheetThemeData(
+      bottomSheetTheme: const BottomSheetThemeData(
         backgroundColor: Colors.transparent,
       ),
-      colorScheme: ColorScheme.dark(
-        primary: primaryColor,
-        secondary: accentColor,
-        surface: Colors.black.withOpacity(0.2), // Match design card backgrounds
-        error: Colors.red,
-        onPrimary: budgetPlannerColor,
+      colorScheme: const ColorScheme.dark(
+        primary: primaryDark,
+        onPrimary: Color(0xFF381E72),
+        primaryContainer: primaryContainerDark,
+        onPrimaryContainer: Color(0xFFEADDFF),
+        secondary: secondaryDark,
+        onSecondary: Color(0xFF332D41),
+        tertiary: tertiaryDark,
+        onTertiary: Color(0xFF492532),
+        surface: surfaceDark,
+        onSurface: textDarkTheme,
+        surfaceContainerHighest: surfaceVariantDark,
+        error: expenseDark,
+        onError: Color(0xFF690005),
       ),
-      appBarTheme: const AppBarTheme(
+      appBarTheme: AppBarTheme(
         backgroundColor: backgroundDark,
-        foregroundColor: textLight,
+        foregroundColor: textDarkTheme,
         elevation: 0,
         centerTitle: true,
       ),
@@ -135,48 +204,53 @@ class AppTheme {
       textTheme: const TextTheme(
         displayLarge: TextStyle(
           fontSize: 32,
-          fontWeight: FontWeight.bold,
-          color: textLight,
+          fontWeight: FontWeight.w800,
+          color: textDarkTheme,
+          letterSpacing: -0.5,
         ),
         displayMedium: TextStyle(
           fontSize: 24,
-          fontWeight: FontWeight.bold,
-          color: textLight,
+          fontWeight: FontWeight.w700,
+          color: textDarkTheme,
+          letterSpacing: -0.3,
         ),
         displaySmall: TextStyle(
           fontSize: 20,
-          fontWeight: FontWeight.bold,
-          color: textLight,
+          fontWeight: FontWeight.w700,
+          color: textDarkTheme,
+          letterSpacing: -0.2,
         ),
         bodyLarge: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.normal,
-          color: textLight,
+          color: textDarkTheme,
         ),
         bodyMedium: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.normal,
-          color: textLight,
+          color: textDarkTheme,
         ),
         bodySmall: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.normal,
-          color: Color(0xFFB0B0B0),
+          color: textSubtleDark,
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: primaryColor,
-          foregroundColor: textLight,
+          backgroundColor: primaryDark,
+          foregroundColor: Color(0xFF381E72),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(24),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          elevation: 0,
+          shadowColor: primaryDark.withOpacity(0.3),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: const Color(0xFF2C2C2C),
+        fillColor: surfaceVariantDark,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(24),
           borderSide: BorderSide.none,

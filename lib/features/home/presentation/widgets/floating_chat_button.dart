@@ -1,3 +1,4 @@
+import 'package:balance_iq/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import '../../../chat/presentation/pages/chat_page.dart';
 
@@ -9,7 +10,6 @@ class FloatingChatButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryColor = Theme.of(context).colorScheme.primary;
 
     return GestureDetector(
       onTap: () {
@@ -27,20 +27,37 @@ class FloatingChatButton extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         decoration: BoxDecoration(
-          color: isDark ? const Color(0xFF1e1f20) : const Color(0xFFF8F9FA),
+          gradient: isDark
+              ? LinearGradient(
+                  colors: [
+                    AppTheme.surfaceDark,
+                    AppTheme.surfaceDark.withOpacity(0.8),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                )
+              : LinearGradient(
+                  colors: [
+                    AppTheme.surfaceLight,
+                    AppTheme.surfaceVariantLight.withOpacity(0.5),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
           borderRadius: BorderRadius.circular(30),
           border: Border.all(
             color: isDark
-                ? primaryColor.withOpacity(0.2)
-                : primaryColor.withOpacity(0.15),
+                ? AppTheme.primaryDark.withOpacity(0.3)
+                : AppTheme.primaryLight.withOpacity(0.2),
             width: 1.5,
           ),
           boxShadow: [
             BoxShadow(
-              color: primaryColor.withOpacity(0.08),
-              blurRadius: 16,
+              color: (isDark ? AppTheme.primaryDark : AppTheme.primaryLight)
+                  .withOpacity(0.15),
+              blurRadius: 20,
               offset: const Offset(0, 4),
-              spreadRadius: 0,
+              spreadRadius: 2,
             ),
             if (isDark)
               BoxShadow(
@@ -52,18 +69,28 @@ class FloatingChatButton extends StatelessWidget {
         ),
         child: Row(
           children: [
-            // Placeholder icon
+            // Chat icon with gradient
             Container(
               width: 36,
               height: 36,
               decoration: BoxDecoration(
-                color: primaryColor.withOpacity(0.1),
+                gradient: isDark
+                    ? AppTheme.primaryGradientDark
+                    : AppTheme.primaryGradientLight,
                 shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: (isDark ? AppTheme.primaryDark : AppTheme.primaryLight)
+                        .withOpacity(0.3),
+                    blurRadius: 8,
+                    spreadRadius: 1,
+                  ),
+                ],
               ),
-              child: Icon(
+              child: const Icon(
                 Icons.chat_bubble_outline_rounded,
-                color: primaryColor,
-                size: 20,
+                color: Colors.white,
+                size: 18,
               ),
             ),
             const SizedBox(width: 12),
@@ -74,11 +101,11 @@ class FloatingChatButton extends StatelessWidget {
                 'Ask me anything about your finances...',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: isDark
-                      ? const Color(0xFFB0B3B8)
-                      : const Color(0xFF65676B),
+                      ? AppTheme.textSubtleDark
+                      : AppTheme.textSubtleLight,
                   fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: 0.1,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.2,
                 ),
               ),
             ),
@@ -90,20 +117,17 @@ class FloatingChatButton extends StatelessWidget {
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    primaryColor,
-                    primaryColor.withOpacity(0.8),
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
+                gradient: isDark
+                    ? AppTheme.accentGradientDark
+                    : AppTheme.accentGradientLight,
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: primaryColor.withOpacity(0.3),
+                    color: (isDark ? AppTheme.primaryDark : AppTheme.primaryLight)
+                        .withOpacity(0.4),
                     blurRadius: 12,
                     offset: const Offset(0, 3),
+                    spreadRadius: 1,
                   ),
                 ],
               ),

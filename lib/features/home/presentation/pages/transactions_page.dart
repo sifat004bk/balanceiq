@@ -5,6 +5,7 @@ import 'package:balance_iq/features/home/presentation/cubit/transactions_cubit.d
 import 'package:balance_iq/features/home/presentation/cubit/transactions_state.dart';
 import 'package:balance_iq/features/home/presentation/widgets/transactions_shimmer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
@@ -120,7 +121,7 @@ class _TransactionsViewState extends State<TransactionsView> {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                // Search Bar
+                // Search Bar - Fade in and slide down
                 TextField(
                   controller: _searchController,
                   decoration: InputDecoration(
@@ -135,9 +136,17 @@ class _TransactionsViewState extends State<TransactionsView> {
                     contentPadding: const EdgeInsets.symmetric(vertical: 0),
                   ),
                   onSubmitted: (_) => _onFilterChanged(),
-                ),
+                )
+                    .animate()
+                    .fadeIn(duration: 400.ms, curve: Curves.easeOutCubic)
+                    .slideY(
+                      begin: -0.2,
+                      end: 0,
+                      duration: 400.ms,
+                      curve: Curves.easeOutCubic,
+                    ),
                 const SizedBox(height: 12),
-                // Filter Chips
+                // Filter Chips - Staggered entrance
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
@@ -151,7 +160,10 @@ class _TransactionsViewState extends State<TransactionsView> {
                           backgroundColor: AppTheme.primaryColor.withOpacity(0.1),
                           side: BorderSide(color: AppTheme.primaryColor),
                           labelStyle: TextStyle(color: AppTheme.primaryColor),
-                        ),
+                        )
+                            .animate()
+                            .fadeIn(delay: 100.ms, duration: 300.ms)
+                            .scaleXY(begin: 0.8, end: 1, delay: 100.ms, duration: 300.ms),
                         const SizedBox(width: 8),
                       ],
                       FilterChip(
@@ -161,7 +173,10 @@ class _TransactionsViewState extends State<TransactionsView> {
                         selected: _startDate != null,
                         onSelected: (_) => _selectDateRange(),
                         backgroundColor: Theme.of(context).cardColor,
-                      ),
+                      )
+                          .animate()
+                          .fadeIn(delay: 150.ms, duration: 300.ms)
+                          .slideX(begin: 0.2, end: 0, delay: 150.ms, duration: 300.ms, curve: Curves.easeOutCubic),
                       const SizedBox(width: 8),
                       ChoiceChip(
                         label: const Text('All'),
@@ -172,7 +187,10 @@ class _TransactionsViewState extends State<TransactionsView> {
                             _onFilterChanged();
                           }
                         },
-                      ),
+                      )
+                          .animate()
+                          .fadeIn(delay: 200.ms, duration: 300.ms)
+                          .slideX(begin: 0.2, end: 0, delay: 200.ms, duration: 300.ms, curve: Curves.easeOutCubic),
                       const SizedBox(width: 8),
                       ChoiceChip(
                         label: const Text('Income'),
@@ -181,7 +199,10 @@ class _TransactionsViewState extends State<TransactionsView> {
                           setState(() => _selectedType = selected ? 'INCOME' : null);
                           _onFilterChanged();
                         },
-                      ),
+                      )
+                          .animate()
+                          .fadeIn(delay: 250.ms, duration: 300.ms)
+                          .slideX(begin: 0.2, end: 0, delay: 250.ms, duration: 300.ms, curve: Curves.easeOutCubic),
                       const SizedBox(width: 8),
                       ChoiceChip(
                         label: const Text('Expense'),
@@ -190,14 +211,17 @@ class _TransactionsViewState extends State<TransactionsView> {
                           setState(() => _selectedType = selected ? 'EXPENSE' : null);
                           _onFilterChanged();
                         },
-                      ),
+                      )
+                          .animate()
+                          .fadeIn(delay: 300.ms, duration: 300.ms)
+                          .slideX(begin: 0.2, end: 0, delay: 300.ms, duration: 300.ms, curve: Curves.easeOutCubic),
                     ],
                   ),
                 ),
               ],
             ),
           ),
-          
+
           // List
           Expanded(
             child: BlocBuilder<TransactionsCubit, TransactionsState>(
@@ -211,13 +235,21 @@ class _TransactionsViewState extends State<TransactionsView> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.error_outline, size: 48, color: Colors.grey),
+                        const Icon(Icons.error_outline, size: 48, color: Colors.grey)
+                            .animate()
+                            .fadeIn(duration: 400.ms)
+                            .shake(delay: 200.ms, duration: 500.ms),
                         const SizedBox(height: 16),
-                        Text('Error: ${state.message}'),
+                        Text('Error: ${state.message}')
+                            .animate()
+                            .fadeIn(delay: 100.ms, duration: 400.ms),
                         ElevatedButton(
                           onPressed: _onFilterChanged,
                           child: const Text('Retry'),
-                        ),
+                        )
+                            .animate()
+                            .fadeIn(delay: 200.ms, duration: 400.ms)
+                            .scaleXY(begin: 0.9, end: 1, delay: 200.ms, duration: 400.ms),
                       ],
                     ),
                   );
@@ -225,8 +257,11 @@ class _TransactionsViewState extends State<TransactionsView> {
 
                 if (state is TransactionsLoaded) {
                   if (state.transactions.isEmpty) {
-                    return const Center(
-                      child: Text('No transactions found matching your criteria.'),
+                    return Center(
+                      child: const Text('No transactions found matching your criteria.')
+                          .animate()
+                          .fadeIn(duration: 400.ms)
+                          .slideY(begin: 0.1, end: 0, duration: 400.ms),
                     );
                   }
 
@@ -235,7 +270,7 @@ class _TransactionsViewState extends State<TransactionsView> {
                     itemCount: state.transactions.length,
                     separatorBuilder: (context, index) => const SizedBox(height: 12),
                     itemBuilder: (context, index) {
-                      return _buildTransactionItem(context, state.transactions[index]);
+                      return _buildTransactionItem(context, state.transactions[index], index);
                     },
                   );
                 }
@@ -249,10 +284,13 @@ class _TransactionsViewState extends State<TransactionsView> {
     );
   }
 
-  Widget _buildTransactionItem(BuildContext context, Transaction transaction) {
+  Widget _buildTransactionItem(BuildContext context, Transaction transaction, int index) {
     final isIncome = transaction.isIncome;
     final colorScheme = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    // Calculate staggered delay - cap at 10 items to avoid long waits
+    final staggerDelay = Duration(milliseconds: 50 * (index < 10 ? index : 10));
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -288,8 +326,8 @@ class _TransactionsViewState extends State<TransactionsView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  transaction.description.isNotEmpty 
-                      ? transaction.description 
+                  transaction.description.isNotEmpty
+                      ? transaction.description
                       : transaction.category,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
@@ -321,6 +359,19 @@ class _TransactionsViewState extends State<TransactionsView> {
           ),
         ],
       ),
-    );
+    )
+        .animate()
+        .fadeIn(
+          delay: staggerDelay,
+          duration: 400.ms,
+          curve: Curves.easeOutCubic,
+        )
+        .slideX(
+          begin: 0.1,
+          end: 0,
+          delay: staggerDelay,
+          duration: 400.ms,
+          curve: Curves.easeOutCubic,
+        );
   }
 }

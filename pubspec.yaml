@@ -75,6 +75,7 @@ dependencies:
   smooth_page_indicator: ^1.2.0+3
   fl_chart: ^0.68.0
   data_table_2: ^2.5.15
+  flutter_animate: ^4.5.2
 
 dev_dependencies:
   flutter_test:

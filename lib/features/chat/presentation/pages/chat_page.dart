@@ -6,6 +6,7 @@ import '../../../../core/di/injection_container.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../cubit/chat_cubit.dart';
 import '../cubit/chat_state.dart';
+import '../widgets/chat_shimmer.dart';
 import '../widgets/floating_chat_input.dart';
 import '../widgets/message_list.dart';
 import '../widgets/suggested_prompts.dart';
@@ -117,7 +118,7 @@ class _ChatViewState extends State<ChatView> {
                 },
                 builder: (context, state) {
                   if (state is ChatLoading) {
-                    return const Center(child: CircularProgressIndicator());
+                    return const ChatShimmer();
                   } else if (state is ChatLoaded) {
                     if (state.messages.isEmpty && !state.isSending) {
                       return SuggestedPrompts(

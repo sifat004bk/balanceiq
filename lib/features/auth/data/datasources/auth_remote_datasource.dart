@@ -14,6 +14,7 @@ abstract class AuthRemoteDataSource {
   // Backend API Methods
   Future<SignupResponse> signup(SignupRequest request);
   Future<LoginResponse> login(LoginRequest request);
+  Future<RefreshTokenResponse> refreshToken(String refreshToken); // Added
   Future<UserInfo> getProfile(String token);
   Future<void> changePassword(ChangePasswordRequest request, String token);
   Future<void> forgotPassword(ForgotPasswordRequest request);
@@ -115,6 +116,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         if (loginResponse.data?.token != null) {
           await sharedPreferences.setString('auth_token', loginResponse.data!.token);
         }
+        if (loginResponse.data?.refreshToken != null) {
+           await sharedPreferences.setString('refresh_token', loginResponse.data!.refreshToken);
+        }
 
         return loginResponse;
       } else {
@@ -130,6 +134,36 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       }
     } catch (e) {
       throw Exception('Failed to login: $e');
+    }
+  }
+
+  @override
+  Future<RefreshTokenResponse> refreshToken(String refreshToken) async {
+    try {
+      final response = await dio.post(
+        ApiEndpoints.refreshToken,
+        data: RefreshTokenRequest(refreshToken: refreshToken).toJson(),
+        options: Options(
+          headers: {'Content-Type': 'application/json'},
+          sendTimeout: AppConstants.apiTimeout,
+          receiveTimeout: AppConstants.apiTimeout,
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        final refreshResponse = RefreshTokenResponse.fromJson(response.data);
+         if (refreshResponse.data?.token != null) {
+          await sharedPreferences.setString('auth_token', refreshResponse.data!.token);
+        }
+        if (refreshResponse.data?.refreshToken != null) {
+           await sharedPreferences.setString('refresh_token', refreshResponse.data!.refreshToken);
+        }
+        return refreshResponse;
+      } else {
+        throw Exception('Refresh token failed: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to refresh token: $e');
     }
   }
 

@@ -169,11 +169,57 @@ class AuthMockDataSource implements AuthRemoteDataSource {
       message: 'Login successful.',
       data: LoginData(
         token: token,
+        refreshToken: 'mock_refresh_token_${user.id}',
         userId: int.tryParse(user.id) ?? 0,
         username: user.username,
         email: user.email,
         role: user.roles.contains('admin') ? 'ADMIN' : 'USER',
         isEmailVerified: true,
+      ),
+      timestamp: DateTime.now().millisecondsSinceEpoch,
+    );
+  }
+
+  @override
+  Future<RefreshTokenResponse> refreshToken(String refreshToken) async {
+    await _simulateDelay();
+
+    // Validate refresh token
+    if (refreshToken.isEmpty || !refreshToken.startsWith('mock_refresh_token_')) {
+      throw Exception('Invalid refresh token');
+    }
+
+    // Extract user ID from refresh token
+    final userId = refreshToken.replaceFirst('mock_refresh_token_', '');
+
+     // Find user
+    final user = _users.values.firstWhere(
+      (u) => u.id == userId,
+      orElse: () => throw Exception('User not found'),
+    );
+    
+    final newToken = _generateMockToken(userId);
+    final newRefreshToken = 'mock_refresh_token_$userId';
+
+      // Store token in SharedPreferences
+    await sharedPreferences.setString('auth_token', newToken);
+    await sharedPreferences.setString('refresh_token', newRefreshToken);
+
+    return RefreshTokenResponse(
+      success: true,
+      message: 'Token refreshed successfully',
+      data: RefreshTokenData(
+        token: newToken,
+        refreshToken: newRefreshToken,
+        user: {
+            "id": int.tryParse(user.id) ?? 0,
+            "email": user.email,
+            "username": user.username,
+            "fullName": user.fullName,
+            "userRole": user.roles.contains('admin') ? 'SUPER_ADMIN' : 'USER',
+            "isActive": true,
+            "isEmailVerified": true,
+        }
       ),
       timestamp: DateTime.now().millisecondsSinceEpoch,
     );

@@ -60,6 +60,7 @@ import '../../features/home/domain/usecases/search_transactions.dart';
 import '../../features/home/domain/usecases/update_transaction.dart';
 import '../database/database_helper.dart';
 import '../network/logging_interceptor.dart';
+import '../network/auth_interceptor.dart';
 import '../theme/theme_cubit.dart';
 
 final sl = GetIt.instance;
@@ -81,6 +82,12 @@ Future<void> init() async {
 
     // Add logging interceptor - only logs in debug mode, no logs in release
     dio.interceptors.add(LoggingInterceptor());
+    
+    // Add AuthInterceptor - Instantiate directly to pass the dio instance and avoid circular dependency
+    dio.interceptors.add(AuthInterceptor(
+      sharedPreferences: sl(),
+      dio: dio,
+    ));
 
     return dio;
   });

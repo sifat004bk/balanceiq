@@ -196,6 +196,7 @@ class LoginResponse {
 
 class LoginData {
   final String token;
+  final String refreshToken;
   final int userId;
   final String username;
   final String email;
@@ -204,6 +205,7 @@ class LoginData {
 
   LoginData({
     required this.token,
+    required this.refreshToken,
     required this.userId,
     required this.username,
     required this.email,
@@ -214,6 +216,7 @@ class LoginData {
   factory LoginData.fromJson(Map<String, dynamic> json) {
     return LoginData(
       token: json['token'] as String? ?? '',
+      refreshToken: json['refreshToken'] as String? ?? '',
       userId: json['userId'] as int? ?? 0,
       username: json['username'] as String? ?? '',
       email: json['email'] as String? ?? '',
@@ -298,5 +301,65 @@ class UserInfo {
       if (photoUrl != null) 'photoUrl': photoUrl,
       'roles': roles,
     };
+  }
+}
+
+class RefreshTokenRequest {
+  final String refreshToken;
+
+  RefreshTokenRequest({required this.refreshToken});
+
+  Map<String, dynamic> toJson() {
+    return {
+      'refreshToken': refreshToken,
+    };
+  }
+}
+
+class RefreshTokenResponse {
+  final bool success;
+  final String message;
+  final RefreshTokenData? data;
+  final String? error;
+  final int timestamp;
+
+  RefreshTokenResponse({
+    required this.success,
+    required this.message,
+    this.data,
+    this.error,
+    required this.timestamp,
+  });
+
+  factory RefreshTokenResponse.fromJson(Map<String, dynamic> json) {
+    return RefreshTokenResponse(
+      success: json['success'] as bool? ?? false,
+      message: json['message'] as String? ?? '',
+      data: json['data'] != null
+          ? RefreshTokenData.fromJson(json['data'] as Map<String, dynamic>)
+          : null,
+      error: json['error'] as String?,
+      timestamp: json['timestamp'] as int? ?? 0,
+    );
+  }
+}
+
+class RefreshTokenData {
+  final String token;
+  final String refreshToken;
+  final dynamic user;
+
+  RefreshTokenData({
+    required this.token,
+    required this.refreshToken,
+    this.user,
+  });
+
+  factory RefreshTokenData.fromJson(Map<String, dynamic> json) {
+    return RefreshTokenData(
+      token: json['token'] as String? ?? '',
+      refreshToken: json['refreshToken'] as String? ?? '',
+      user: json['user'],
+    );
   }
 }

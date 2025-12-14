@@ -158,13 +158,18 @@ class _TransactionsViewState extends State<TransactionsView> {
                           label: Text(_selectedCategory!),
                           deleteIcon: const Icon(Icons.close, size: 18),
                           onDeleted: _clearCategoryFilter,
-                          backgroundColor: AppTheme.primaryColor.withOpacity(0.1),
+                          backgroundColor:
+                              AppTheme.primaryColor.withOpacity(0.1),
                           side: BorderSide(color: AppTheme.primaryColor),
                           labelStyle: TextStyle(color: AppTheme.primaryColor),
                         )
                             .animate()
                             .fadeIn(delay: 100.ms, duration: 300.ms)
-                            .scaleXY(begin: 0.8, end: 1, delay: 100.ms, duration: 300.ms),
+                            .scaleXY(
+                                begin: 0.8,
+                                end: 1,
+                                delay: 100.ms,
+                                duration: 300.ms),
                         const SizedBox(width: 8),
                       ],
                       FilterChip(
@@ -177,7 +182,12 @@ class _TransactionsViewState extends State<TransactionsView> {
                       )
                           .animate()
                           .fadeIn(delay: 150.ms, duration: 300.ms)
-                          .slideX(begin: 0.2, end: 0, delay: 150.ms, duration: 300.ms, curve: Curves.easeOutCubic),
+                          .slideX(
+                              begin: 0.2,
+                              end: 0,
+                              delay: 150.ms,
+                              duration: 300.ms,
+                              curve: Curves.easeOutCubic),
                       const SizedBox(width: 8),
                       ChoiceChip(
                         label: const Text('All'),
@@ -191,31 +201,48 @@ class _TransactionsViewState extends State<TransactionsView> {
                       )
                           .animate()
                           .fadeIn(delay: 200.ms, duration: 300.ms)
-                          .slideX(begin: 0.2, end: 0, delay: 200.ms, duration: 300.ms, curve: Curves.easeOutCubic),
+                          .slideX(
+                              begin: 0.2,
+                              end: 0,
+                              delay: 200.ms,
+                              duration: 300.ms,
+                              curve: Curves.easeOutCubic),
                       const SizedBox(width: 8),
                       ChoiceChip(
                         label: const Text('Income'),
                         selected: _selectedType == 'INCOME',
                         onSelected: (selected) {
-                          setState(() => _selectedType = selected ? 'INCOME' : null);
+                          setState(
+                              () => _selectedType = selected ? 'INCOME' : null);
                           _onFilterChanged();
                         },
                       )
                           .animate()
                           .fadeIn(delay: 250.ms, duration: 300.ms)
-                          .slideX(begin: 0.2, end: 0, delay: 250.ms, duration: 300.ms, curve: Curves.easeOutCubic),
+                          .slideX(
+                              begin: 0.2,
+                              end: 0,
+                              delay: 250.ms,
+                              duration: 300.ms,
+                              curve: Curves.easeOutCubic),
                       const SizedBox(width: 8),
                       ChoiceChip(
                         label: const Text('Expense'),
                         selected: _selectedType == 'EXPENSE',
                         onSelected: (selected) {
-                          setState(() => _selectedType = selected ? 'EXPENSE' : null);
+                          setState(() =>
+                              _selectedType = selected ? 'EXPENSE' : null);
                           _onFilterChanged();
                         },
                       )
                           .animate()
                           .fadeIn(delay: 300.ms, duration: 300.ms)
-                          .slideX(begin: 0.2, end: 0, delay: 300.ms, duration: 300.ms, curve: Curves.easeOutCubic),
+                          .slideX(
+                              begin: 0.2,
+                              end: 0,
+                              delay: 300.ms,
+                              duration: 300.ms,
+                              curve: Curves.easeOutCubic),
                     ],
                   ),
                 ),
@@ -236,7 +263,8 @@ class _TransactionsViewState extends State<TransactionsView> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.error_outline, size: 48, color: Colors.grey)
+                        const Icon(Icons.error_outline,
+                                size: 48, color: Colors.grey)
                             .animate()
                             .fadeIn(duration: 400.ms)
                             .shake(delay: 200.ms, duration: 500.ms),
@@ -250,7 +278,11 @@ class _TransactionsViewState extends State<TransactionsView> {
                         )
                             .animate()
                             .fadeIn(delay: 200.ms, duration: 400.ms)
-                            .scaleXY(begin: 0.9, end: 1, delay: 200.ms, duration: 400.ms),
+                            .scaleXY(
+                                begin: 0.9,
+                                end: 1,
+                                delay: 200.ms,
+                                duration: 400.ms),
                       ],
                     ),
                   );
@@ -259,7 +291,8 @@ class _TransactionsViewState extends State<TransactionsView> {
                 if (state is TransactionsLoaded) {
                   if (state.transactions.isEmpty) {
                     return Center(
-                      child: const Text('No transactions found matching your criteria.')
+                      child: const Text(
+                              'No transactions found matching your criteria.')
                           .animate()
                           .fadeIn(duration: 400.ms)
                           .slideY(begin: 0.1, end: 0, duration: 400.ms),
@@ -267,11 +300,14 @@ class _TransactionsViewState extends State<TransactionsView> {
                   }
 
                   return ListView.separated(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     itemCount: state.transactions.length,
-                    separatorBuilder: (context, index) => const SizedBox(height: 12),
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 12),
                     itemBuilder: (context, index) {
-                      return _buildTransactionItem(context, state.transactions[index], index);
+                      return _buildTransactionItem(
+                          context, state.transactions[index], index);
                     },
                   );
                 }
@@ -300,7 +336,8 @@ class _TransactionsViewState extends State<TransactionsView> {
     );
   }
 
-  Widget _buildTransactionItem(BuildContext context, Transaction transaction, int index) {
+  Widget _buildTransactionItem(
+      BuildContext context, Transaction transaction, int index) {
     final isIncome = transaction.isIncome;
     final colorScheme = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -318,7 +355,9 @@ class _TransactionsViewState extends State<TransactionsView> {
         child: Ink(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: isDark ? colorScheme.surface.withValues(alpha: 0.05) : Colors.white,
+            color: isDark
+                ? colorScheme.surface.withValues(alpha: 0.05)
+                : Colors.white,
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               if (!isDark)
@@ -351,9 +390,7 @@ class _TransactionsViewState extends State<TransactionsView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      transaction.description.isNotEmpty
-                          ? transaction.description
-                          : transaction.category,
+                      transaction.category,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
@@ -362,7 +399,9 @@ class _TransactionsViewState extends State<TransactionsView> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '${DateFormat('MMM d').format(transaction.transactionDate)} • ${transaction.category}',
+                      '${DateFormat('MMM d').format(transaction.transactionDate)} • ${transaction.description}',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: Theme.of(context)
                                 .textTheme
@@ -382,10 +421,11 @@ class _TransactionsViewState extends State<TransactionsView> {
                     children: [
                       Text(
                         '${isIncome ? '+' : '-'} ${transaction.formattedAmount}',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: isIncome ? Colors.green : Colors.red,
-                            ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: isIncome ? Colors.green : Colors.red,
+                                ),
                       ),
                     ],
                   ),

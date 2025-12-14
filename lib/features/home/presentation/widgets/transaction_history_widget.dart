@@ -163,9 +163,7 @@ class TransactionHistoryWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      transaction.description.isNotEmpty
-                          ? transaction.description
-                          : transaction.category,
+                      transaction.category,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),

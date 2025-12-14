@@ -3,6 +3,7 @@ import 'package:balance_iq/core/theme/app_theme.dart';
 import 'package:balance_iq/features/home/domain/entities/transaction.dart';
 import 'package:balance_iq/features/home/presentation/cubit/transactions_cubit.dart';
 import 'package:balance_iq/features/home/presentation/cubit/transactions_state.dart';
+import 'package:balance_iq/features/home/presentation/widgets/transaction_detail_modal.dart';
 import 'package:balance_iq/features/home/presentation/widgets/transactions_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -284,6 +285,23 @@ class _TransactionsViewState extends State<TransactionsView> {
     );
   }
 
+  void _showTransactionDetail(Transaction transaction) {
+    TransactionDetailModal.show(
+      context,
+      transaction: transaction,
+      onUpdate: (updatedTransaction) {
+        // TODO: Implement API call when ready
+        // For now, just refresh the list
+        _onFilterChanged();
+      },
+      onDelete: (deletedTransaction) {
+        // TODO: Implement API call when ready
+        // For now, just refresh the list
+        _onFilterChanged();
+      },
+    );
+  }
+
   Widget _buildTransactionItem(BuildContext context, Transaction transaction, int index) {
     final isIncome = transaction.isIncome;
     final colorScheme = Theme.of(context).colorScheme;
@@ -292,72 +310,98 @@ class _TransactionsViewState extends State<TransactionsView> {
     // Calculate staggered delay - cap at 10 items to avoid long waits
     final staggerDelay = Duration(milliseconds: 50 * (index < 10 ? index : 10));
 
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: isDark ? colorScheme.surface.withOpacity(0.05) : Colors.white,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () => _showTransactionDetail(transaction),
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          if (!isDark)
-            BoxShadow(
-              color: Colors.black.withOpacity(0.03),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: isIncome ? Colors.green.withOpacity(0.1) : Colors.red.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(14),
-            ),
-            child: Icon(
-              isIncome ? Icons.arrow_downward : Icons.arrow_upward,
-              color: isIncome ? Colors.green : Colors.red,
-              size: 24,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  transaction.description.isNotEmpty
-                      ? transaction.description
-                      : transaction.category,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+        splashColor: AppTheme.primaryColor.withValues(alpha: 0.1),
+        highlightColor: AppTheme.primaryColor.withValues(alpha: 0.05),
+        child: Ink(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: isDark ? colorScheme.surface.withValues(alpha: 0.05) : Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              if (!isDark)
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.03),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  '${DateFormat('MMM d').format(transaction.transactionDate)} • ${transaction.category}',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.7),
-                      ),
-                ),
-              ],
-            ),
+            ],
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
+          child: Row(
             children: [
-              Text(
-                '${isIncome ? '+' : '-'} ${transaction.formattedAmount}',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: isIncome ? Colors.green : Colors.red,
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: isIncome
+                      ? Colors.green.withValues(alpha: 0.1)
+                      : Colors.red.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Icon(
+                  isIncome ? Icons.arrow_downward : Icons.arrow_upward,
+                  color: isIncome ? Colors.green : Colors.red,
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      transaction.description.isNotEmpty
+                          ? transaction.description
+                          : transaction.category,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '${DateFormat('MMM d').format(transaction.transactionDate)} • ${transaction.category}',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(context)
+                                .textTheme
+                                .bodySmall
+                                ?.color
+                                ?.withValues(alpha: 0.7),
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        '${isIncome ? '+' : '-'} ${transaction.formattedAmount}',
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: isIncome ? Colors.green : Colors.red,
+                            ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(width: 8),
+                  Icon(
+                    Icons.chevron_right,
+                    color: isDark ? Colors.white38 : Colors.grey[400],
+                    size: 20,
+                  ),
+                ],
               ),
             ],
           ),
-        ],
+        ),
       ),
     )
         .animate()

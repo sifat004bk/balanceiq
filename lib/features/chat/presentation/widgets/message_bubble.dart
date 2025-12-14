@@ -296,8 +296,10 @@ class _MessageBubbleState extends State<MessageBubble>
              const SizedBox(height: 16),
           ],
 
-          // Action Type Display & Change Button
-          if (widget.message.actionType != null && widget.message.actionType!.isNotEmpty) ...[
+          // Action Type Display & Change Button - only for record_income/record_expense
+          if (widget.message.actionType != null &&
+              (widget.message.actionType!.toLowerCase() == 'record_income' ||
+               widget.message.actionType!.toLowerCase() == 'record_expense')) ...[
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
@@ -526,13 +528,13 @@ class _MessageBubbleState extends State<MessageBubble>
   }
 
   String _formatActionType(String type) {
-    switch (type.toUpperCase()) {
-      case 'INCOME':
+    switch (type.toLowerCase()) {
+      case 'record_income':
         return 'Recorded Income';
-      case 'EXPENSE':
+      case 'record_expense':
         return 'Recorded Expense';
       default:
-        return "Recorded as '$type'";
+        return '';
     }
   }
 

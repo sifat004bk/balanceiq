@@ -3,24 +3,30 @@ import 'package:balance_iq/core/theme/app_theme.dart';
 import 'package:balance_iq/features/home/domain/entities/transaction.dart';
 import 'package:balance_iq/features/home/presentation/cubit/transactions_cubit.dart';
 import 'package:balance_iq/features/home/presentation/cubit/transactions_state.dart';
+import 'package:balance_iq/features/home/presentation/widgets/transactions_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 class TransactionsPage extends StatelessWidget {
-  const TransactionsPage({super.key});
+  final String? category;
+
+  const TransactionsPage({super.key, this.category});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => sl<TransactionsCubit>()..loadTransactions(limit: 50),
-      child: const TransactionsView(),
+      create: (context) => sl<TransactionsCubit>()
+        ..loadTransactions(limit: 50, category: category),
+      child: TransactionsView(initialCategory: category),
     );
   }
 }
 
 class TransactionsView extends StatefulWidget {
-  const TransactionsView({super.key});
+  final String? initialCategory;
+
+  const TransactionsView({super.key, this.initialCategory});
 
   @override
   State<TransactionsView> createState() => _TransactionsViewState();
@@ -29,8 +35,15 @@ class TransactionsView extends StatefulWidget {
 class _TransactionsViewState extends State<TransactionsView> {
   final TextEditingController _searchController = TextEditingController();
   String? _selectedType;
+  String? _selectedCategory;
   DateTime? _startDate;
   DateTime? _endDate;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedCategory = widget.initialCategory;
+  }
 
   void _onFilterChanged() {
     String? startDateStr;
@@ -45,11 +58,19 @@ class _TransactionsViewState extends State<TransactionsView> {
 
     context.read<TransactionsCubit>().loadTransactions(
           search: _searchController.text,
+          category: _selectedCategory,
           type: _selectedType,
           startDate: startDateStr,
           endDate: endDateStr,
           limit: 50,
         );
+  }
+
+  void _clearCategoryFilter() {
+    setState(() {
+      _selectedCategory = null;
+    });
+    _onFilterChanged();
   }
 
   Future<void> _selectDateRange() async {
@@ -121,6 +142,18 @@ class _TransactionsViewState extends State<TransactionsView> {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: [
+                      // Category Filter Chip (if category is selected)
+                      if (_selectedCategory != null) ...[
+                        Chip(
+                          label: Text(_selectedCategory!),
+                          deleteIcon: const Icon(Icons.close, size: 18),
+                          onDeleted: _clearCategoryFilter,
+                          backgroundColor: AppTheme.primaryColor.withOpacity(0.1),
+                          side: BorderSide(color: AppTheme.primaryColor),
+                          labelStyle: TextStyle(color: AppTheme.primaryColor),
+                        ),
+                        const SizedBox(width: 8),
+                      ],
                       FilterChip(
                         label: Text(_startDate != null && _endDate != null
                             ? '${DateFormat('MMM d').format(_startDate!)} - ${DateFormat('MMM d').format(_endDate!)}'
@@ -170,7 +203,7 @@ class _TransactionsViewState extends State<TransactionsView> {
             child: BlocBuilder<TransactionsCubit, TransactionsState>(
               builder: (context, state) {
                 if (state is TransactionsLoading) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const TransactionsShimmer();
                 }
 
                 if (state is TransactionsError) {

@@ -1,4 +1,5 @@
 import 'package:balance_iq/core/theme/app_theme.dart';
+import 'package:balance_iq/features/home/presentation/pages/transactions_page.dart';
 import 'package:flutter/material.dart';
 
 class CategoryBreakdownWidget extends StatelessWidget {
@@ -76,12 +77,21 @@ class CategoryBreakdownWidget extends StatelessWidget {
                 padding: EdgeInsets.only(
                   right: index == sortedCategories.length - 1 ? 0 : 12,
                 ),
-                child: _buildCategoryCard(
-                  context,
-                  categoryName: entry.key,
-                  amount: entry.value,
-                  percentage: percentage,
-                  index: index,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => TransactionsPage(category: entry.key),
+                      ),
+                    );
+                  },
+                  child: _buildCategoryCard(
+                    context,
+                    categoryName: entry.key,
+                    amount: entry.value,
+                    percentage: percentage,
+                    index: index,
+                  ),
                 ),
               );
             },

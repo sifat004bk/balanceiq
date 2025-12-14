@@ -150,7 +150,40 @@ class _ChatViewState extends State<ChatView> {
               ),
             ),
 
-            // Layer 2: Floating Draggable Input - positioned from bottom
+            // Layer 2: Floating Back Button
+            Positioned(
+              top: 8,
+              left: 8,
+              child: GestureDetector(
+                onTap: () => Navigator.of(context).pop(),
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.black54
+                        : Colors.white.withOpacity(0.9),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Icon(
+                    Icons.arrow_back,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black87,
+                    size: 20,
+                  ),
+                ),
+              ),
+            ),
+
+            // Layer 3: Floating Draggable Input - positioned from bottom
             Positioned(
               left: clampedHorizontalOffset,
               right: clampedHorizontalOffset,

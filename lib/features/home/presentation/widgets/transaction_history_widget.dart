@@ -49,7 +49,8 @@ class TransactionHistoryWidget extends StatelessWidget {
         BlocBuilder<TransactionsCubit, TransactionsState>(
           builder: (context, state) {
             if (state is TransactionsLoading) {
-              return const Center(child: Padding(
+              return const Center(
+                  child: Padding(
                 padding: EdgeInsets.all(16.0),
                 child: CircularProgressIndicator(),
               ));
@@ -78,9 +79,11 @@ class TransactionHistoryWidget extends StatelessWidget {
                 shrinkWrap: true,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 itemCount: state.transactions.length,
-                separatorBuilder: (context, index) => const SizedBox(height: 12),
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: 12),
                 itemBuilder: (context, index) {
-                  return _buildTransactionItem(context, state.transactions[index]);
+                  return _buildTransactionItem(
+                      context, state.transactions[index]);
                 },
               );
             }
@@ -97,14 +100,12 @@ class TransactionHistoryWidget extends StatelessWidget {
       context,
       transaction: transaction,
       onUpdate: (updatedTransaction) {
-        // TODO: Implement API call when ready
-        // Refresh transactions after update
-        context.read<TransactionsCubit>().loadTransactions(limit: 5);
+        context.read<TransactionsCubit>().updateTransaction(updatedTransaction);
       },
       onDelete: (deletedTransaction) {
-        // TODO: Implement API call when ready
-        // Refresh transactions after delete
-        context.read<TransactionsCubit>().loadTransactions(limit: 5);
+        context
+            .read<TransactionsCubit>()
+            .deleteTransaction(deletedTransaction.transactionId);
       },
     );
   }
@@ -124,7 +125,9 @@ class TransactionHistoryWidget extends StatelessWidget {
         child: Ink(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: isDark ? colorScheme.surface.withValues(alpha: 0.05) : Colors.white,
+            color: isDark
+                ? colorScheme.surface.withValues(alpha: 0.05)
+                : Colors.white,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: isDark ? Colors.white10 : Colors.grey.shade200,
@@ -170,7 +173,8 @@ class TransactionHistoryWidget extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
-                      DateFormat('MMM d, h:mm a').format(transaction.transactionDate),
+                      DateFormat('MMM d, h:mm a')
+                          .format(transaction.createdAt.toLocal()),
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: Theme.of(context)
                                 .textTheme

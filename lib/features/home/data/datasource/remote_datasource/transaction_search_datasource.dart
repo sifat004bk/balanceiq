@@ -17,6 +17,18 @@ abstract class TransactionSearchDataSource {
     double? maxAmount,
     int? limit,
   });
+
+  Future<void> updateTransaction({
+    required int id,
+    int? categoryId,
+    String? category,
+    String? type,
+    double? amount,
+    String? description,
+    DateTime? transactionDate,
+  });
+
+  Future<void> deleteTransaction(int id);
 }
 
 /// Implementation of transaction search data source
@@ -119,6 +131,77 @@ class TransactionSearchDataSourceImpl implements TransactionSearchDataSource {
         rethrow;
       }
       throw Exception('Failed to search transactions: $e');
+    }
+  }
+
+  @override
+  Future<void> updateTransaction({
+    required int id,
+    int? categoryId,
+    String? category,
+    String? type,
+    double? amount,
+    String? description,
+    DateTime? transactionDate,
+  }) async {
+    try {
+      final token = sharedPreferences.getString('auth_token');
+      if (token == null) {
+        throw Exception('Authentication required. Please login.');
+      }
+
+      final data = <String, dynamic>{};
+      if (categoryId != null) data['categoryId'] = categoryId;
+      if (category != null) data['category'] = category;
+      if (type != null) data['type'] = type;
+      if (amount != null) data['amount'] = amount;
+      if (description != null) data['description'] = description;
+      if (transactionDate != null) {
+        data['transactionDate'] = transactionDate.toIso8601String();
+      }
+
+      final response = await dio.patch(
+        '${ApiEndpoints.transactions}/$id',
+        data: data,
+        options: Options(
+          headers: <String, String>{
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception('Failed to update transaction: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to update transaction: $e');
+    }
+  }
+
+  @override
+  Future<void> deleteTransaction(int id) async {
+    try {
+      final token = sharedPreferences.getString('auth_token');
+      if (token == null) {
+        throw Exception('Authentication required. Please login.');
+      }
+
+      final response = await dio.delete(
+        '${ApiEndpoints.transactions}/$id',
+        options: Options(
+          headers: <String, String>{
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      if (response.statusCode != 200 && response.statusCode != 204) {
+        throw Exception('Failed to delete transaction: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to delete transaction: $e');
     }
   }
 }

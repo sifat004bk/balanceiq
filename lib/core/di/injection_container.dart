@@ -7,6 +7,7 @@ import 'package:balance_iq/features/home/data/datasource/remote_datasource/dashb
 import 'package:balance_iq/features/home/data/repository/dashboard_repository_impl.dart';
 import 'package:balance_iq/features/home/domain/repository/dashboard_repository.dart';
 import 'package:balance_iq/features/home/domain/usecase/get_user_dashbaord.dart';
+import 'package:balance_iq/features/home/domain/usecases/delete_transaction.dart';
 import 'package:balance_iq/features/home/presentation/cubit/dashboard_cubit.dart';
 import 'package:balance_iq/features/home/presentation/cubit/transactions_cubit.dart';
 import 'package:dio/dio.dart';
@@ -56,6 +57,7 @@ import '../../features/home/data/repositories/transaction_repository_impl.dart';
 import '../../features/home/domain/repositories/transaction_repository.dart';
 import '../../features/home/domain/usecases/search_transactions.dart';
 // Core
+import '../../features/home/domain/usecases/update_transaction.dart';
 import '../database/database_helper.dart';
 import '../network/logging_interceptor.dart';
 import '../theme/theme_cubit.dart';
@@ -85,7 +87,8 @@ Future<void> init() async {
 
   sl.registerLazySingleton(
     () => GoogleSignIn(
-      clientId: '1072498309198-vvl8ij402i0da40e9fhl06102b6n45u2.apps.googleusercontent.com',
+      clientId:
+          '1072498309198-vvl8ij402i0da40e9fhl06102b6n45u2.apps.googleusercontent.com',
       scopes: [
         'email',
         'profile',
@@ -205,7 +208,8 @@ Future<void> init() async {
         print('🎭 [DI] Registering MOCK ChatRemoteDataSource');
         return ChatMockDataSource(sl());
       } else {
-        print('🌐 [DI] Registering REAL ChatRemoteDataSource (Finance Guru API)');
+        print(
+            '🌐 [DI] Registering REAL ChatRemoteDataSource (Finance Guru API)');
         return ChatFinanceGuruDataSource(sl(), sl());
       }
     },
@@ -214,7 +218,13 @@ Future<void> init() async {
   //! Features - Dashboard
   // Cubit
   sl.registerFactory(() => DashboardCubit(getDashboardSummary: sl()));
-  sl.registerFactory(() => TransactionsCubit(searchTransactions: sl()));
+  sl.registerFactory(
+    () => TransactionsCubit(
+      searchTransactions: sl(),
+      updateTransactionUseCase: sl(),
+      deleteTransactionUseCase: sl(),
+    ),
+  );
 
   // Use cases
   sl.registerLazySingleton(() => GetDashboardSummary(sl()));
@@ -235,7 +245,8 @@ Future<void> init() async {
         print('🎭 [DI] Registering MOCK DashboardRemoteDataSource');
         return DashboardMockDataSource();
       } else {
-        print('🌐 [DI] Registering REAL DashboardRemoteDataSource (Finance Guru API)');
+        print(
+            '🌐 [DI] Registering REAL DashboardRemoteDataSource (Finance Guru API)');
         return DashboardFinanceGuruDataSource(sl(), sl());
       }
     },
@@ -244,6 +255,8 @@ Future<void> init() async {
   //! Features - Transaction Search
   // Use cases
   sl.registerLazySingleton(() => SearchTransactions(sl()));
+  sl.registerLazySingleton(() => UpdateTransaction(sl()));
+  sl.registerLazySingleton(() => DeleteTransaction(sl()));
 
   // Repository
   sl.registerLazySingleton<TransactionRepository>(
@@ -286,7 +299,8 @@ Future<void> init() async {
         print('🎭 [DI] Registering MOCK TokenUsageDataSource');
         return TokenUsageMockDataSource();
       } else {
-        print('🌐 [DI] Registering REAL TokenUsageDataSource (Finance Guru API)');
+        print(
+            '🌐 [DI] Registering REAL TokenUsageDataSource (Finance Guru API)');
         return TokenUsageDataSourceImpl(sl(), sl());
       }
     },

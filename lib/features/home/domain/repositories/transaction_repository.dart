@@ -27,4 +27,10 @@ abstract class TransactionRepository {
     double? maxAmount,
     int? limit,
   });
+
+  /// Update an existing transaction
+  Future<Either<Failure, Unit>> updateTransaction(Transaction transaction);
+
+  /// Delete a transaction by ID
+  Future<Either<Failure, Unit>> deleteTransaction(int id);
 }

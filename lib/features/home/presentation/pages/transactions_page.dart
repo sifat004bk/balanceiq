@@ -290,14 +290,12 @@ class _TransactionsViewState extends State<TransactionsView> {
       context,
       transaction: transaction,
       onUpdate: (updatedTransaction) {
-        // TODO: Implement API call when ready
-        // For now, just refresh the list
-        _onFilterChanged();
+        context.read<TransactionsCubit>().updateTransaction(updatedTransaction);
       },
       onDelete: (deletedTransaction) {
-        // TODO: Implement API call when ready
-        // For now, just refresh the list
-        _onFilterChanged();
+        context
+            .read<TransactionsCubit>()
+            .deleteTransaction(deletedTransaction.transactionId);
       },
     );
   }

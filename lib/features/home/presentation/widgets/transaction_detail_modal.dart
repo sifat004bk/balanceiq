@@ -100,7 +100,6 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
   }
 
   void _handleUpdate() {
-    // TODO: Implement API call when ready
     final updatedTransaction = Transaction(
       transactionId: widget.transaction.transactionId,
       type: _selectedType,
@@ -115,17 +114,6 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
     );
 
     widget.onUpdate?.call(updatedTransaction);
-
-    // Show success feedback
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text('Transaction updated successfully'),
-        backgroundColor: AppTheme.primaryColor,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      ),
-    );
-
     Navigator.pop(context);
   }
 
@@ -175,16 +163,6 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
                 widget.onDelete?.call(widget.transaction);
                 if (!mounted) return;
                 navigator.pop(); // Close modal
-
-                scaffoldMessenger.showSnackBar(
-                  SnackBar(
-                    content: const Text('Transaction deleted'),
-                    backgroundColor: Colors.red,
-                    behavior: SnackBarBehavior.floating,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                  ),
-                );
               });
             },
             style: ElevatedButton.styleFrom(

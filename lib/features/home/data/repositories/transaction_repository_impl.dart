@@ -74,4 +74,38 @@ class TransactionRepositoryImpl implements TransactionRepository {
       }
     }
   }
+
+  @override
+  Future<Either<Failure, Unit>> updateTransaction(
+      Transaction transaction) async {
+    try {
+      await remoteDataSource.updateTransaction(
+        id: transaction.transactionId,
+        category: transaction.category,
+        type: transaction.type,
+        amount: transaction.amount,
+        description: transaction.description,
+        transactionDate: transaction.transactionDate,
+      );
+      return Right(unit);
+    } catch (e) {
+      if (e.toString().contains('Authentication required')) {
+        return Left(AuthFailure('Please login to update transaction'));
+      }
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> deleteTransaction(int id) async {
+    try {
+      await remoteDataSource.deleteTransaction(id);
+      return Right(unit);
+    } catch (e) {
+      if (e.toString().contains('Authentication required')) {
+        return Left(AuthFailure('Please login to delete transaction'));
+      }
+      return Left(ServerFailure(e.toString()));
+    }
+  }
 }

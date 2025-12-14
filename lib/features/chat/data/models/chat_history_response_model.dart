@@ -74,6 +74,7 @@ class ChatHistoryResponseModel {
         syncStatus: 'sent',
         conversationId: conversation.id,
         feedback: conversation.feedback,
+        actionType: conversation.actionType,
         hasTable: conversation.hasTable,
         tableData: conversation.tableData,
         graphType: conversation.graphType,
@@ -92,6 +93,7 @@ class ConversationModel {
   final String aiResponse;
   final String createdAt;
   final String? feedback;
+  final String? actionType;
 
   // GenUI Data
   final bool hasTable;
@@ -105,6 +107,7 @@ class ConversationModel {
     required this.aiResponse,
     required this.createdAt,
     this.feedback,
+    this.actionType,
     this.hasTable = false,
     this.tableData,
     this.graphType,
@@ -112,16 +115,32 @@ class ConversationModel {
   });
 
   factory ConversationModel.fromJson(Map<String, dynamic> json) {
+    // Parse tableData - now comes as a direct array instead of {rows: [...]}
+    GenUITableData? parsedTableData;
+    if (json['tableData'] != null) {
+      if (json['tableData'] is List) {
+        // New format: direct array of objects
+        parsedTableData = GenUITableData(
+          rows: (json['tableData'] as List)
+              .map((item) => Map<String, dynamic>.from(item as Map))
+              .toList(),
+        );
+      } else if (json['tableData'] is Map) {
+        // Legacy format: {rows: [...]}
+        parsedTableData = GenUITableData.fromJson(json['tableData'] as Map<String, dynamic>);
+      }
+    }
+
     return ConversationModel(
       id: json['id'] as int,
       userMessage: json['userMessage'] as String,
       aiResponse: json['aiResponse'] as String,
       createdAt: json['createdAt'] as String,
       feedback: json['feedback'] as String?,
-      hasTable: json['hasTable'] as bool? ?? false,
-      tableData: json['tableData'] != null
-          ? GenUITableData.fromJson(json['tableData'] as Map<String, dynamic>)
-          : null,
+      actionType: json['actionType'] as String?,
+      // API uses 'table' boolean field
+      hasTable: json['table'] as bool? ?? false,
+      tableData: parsedTableData,
       graphType: GraphType.fromString(json['graphType'] as String?),
       graphData: json['graphData'] != null
           ? GraphData.fromJson(json['graphData'] as Map<String, dynamic>)
@@ -136,8 +155,9 @@ class ConversationModel {
       'aiResponse': aiResponse,
       'createdAt': createdAt,
       'feedback': feedback,
-      'hasTable': hasTable,
-      'tableData': tableData?.toJson(),
+      'actionType': actionType,
+      'table': hasTable,
+      'tableData': tableData?.rows, // Output as direct array
       'graphType': graphType?.value,
       'graphData': graphData?.toJson(),
     };
@@ -150,6 +170,7 @@ class ConversationModel {
       aiResponse: aiResponse,
       createdAt: createdAt,
       feedback: feedback,
+      actionType: actionType,
       hasTable: hasTable,
       tableData: tableData,
       graphType: graphType,

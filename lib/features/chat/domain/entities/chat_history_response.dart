@@ -24,7 +24,8 @@ class Conversation extends Equatable {
   final String aiResponse;
   final String createdAt;
   final String? feedback;
-  
+  final String? actionType;
+
   // GenUI Data
   final bool hasTable;
   final GenUITableData? tableData;
@@ -37,6 +38,7 @@ class Conversation extends Equatable {
     required this.aiResponse,
     required this.createdAt,
     this.feedback,
+    this.actionType,
     this.hasTable = false,
     this.tableData,
     this.graphType,
@@ -50,6 +52,7 @@ class Conversation extends Equatable {
         aiResponse,
         createdAt,
         feedback,
+        actionType,
         hasTable,
         tableData,
         graphType,

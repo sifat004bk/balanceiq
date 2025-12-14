@@ -84,24 +84,22 @@ class _ChatViewState extends State<ChatView> {
     }
   }
 
-  Offset _offset = const Offset(20, 20); // Initial position (relative to bottom-right or just default)
-  bool _isInit = true;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_isInit) {
-      // Initialize position to bottom center-ish
-      final size = MediaQuery.of(context).size;
-      _offset = Offset(size.width * 0.05, size.height - 180); 
-      _isInit = false;
-    }
-  }
+  // Horizontal offset for dragging (vertical is handled by keyboard-aware positioning)
+  double _horizontalOffset = 20;
+  // Bottom offset from the keyboard/bottom of screen
+  double _bottomOffset = 20;
 
   @override
   Widget build(BuildContext context) {
+    final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    // Clamp horizontal offset to keep input on screen
+    final clampedHorizontalOffset = _horizontalOffset.clamp(0.0, screenWidth - 350);
+
     return Scaffold(
       backgroundColor: GeminiColors.background(context),
+      resizeToAvoidBottomInset: false, // We handle keyboard manually
       body: SafeArea(
         child: Stack(
           children: [
@@ -141,8 +139,8 @@ class _ChatViewState extends State<ChatView> {
                       hasMore: state.hasMore,
                       isLoadingMore: state.isLoadingMore,
                       scrollController: _scrollController,
-                      // Add padding at bottom for the floating widget
-                      padding: const EdgeInsets.only(bottom: 100), 
+                      // Add padding at bottom for the floating widget + keyboard
+                      padding: EdgeInsets.only(bottom: 120 + keyboardHeight),
                     );
                   } else if (state is ChatError) {
                     return Center(child: Text('Error: ${state.message}'));
@@ -151,16 +149,19 @@ class _ChatViewState extends State<ChatView> {
                 },
               ),
             ),
-            
-            // Layer 2: Floating Draggable Input
+
+            // Layer 2: Floating Draggable Input - positioned from bottom
             Positioned(
-              left: _offset.dx,
-              top: _offset.dy,
+              left: clampedHorizontalOffset,
+              right: clampedHorizontalOffset,
+              bottom: _bottomOffset + keyboardHeight,
               child: GestureDetector(
                 onPanUpdate: (details) {
                   setState(() {
-                    _offset += details.delta;
-                    // Ideally clamp to screen bounds here
+                    _horizontalOffset += details.delta.dx;
+                    _bottomOffset -= details.delta.dy; // Invert because we're using bottom
+                    // Clamp bottom offset
+                    _bottomOffset = _bottomOffset.clamp(10.0, 200.0);
                   });
                 },
                 child: FloatingChatInput(
@@ -172,7 +173,6 @@ class _ChatViewState extends State<ChatView> {
           ],
         ),
       ),
-      // bottomSheet removed
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'core/di/injection_container.dart' as di;
+import 'core/navigation/navigator_service.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_cubit.dart';
 import 'core/theme/theme_state.dart';
@@ -68,6 +69,7 @@ class MyApp extends StatelessWidget {
               : ThemeMode.system;
 
           return MaterialApp(
+            navigatorKey: navigatorKey,
             title: 'BalanceIQ',
             debugShowCheckedModeBanner: false,
             theme: AppTheme.lightTheme(),

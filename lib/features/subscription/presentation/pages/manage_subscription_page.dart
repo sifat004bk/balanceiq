@@ -1,17 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/gemini_colors.dart';
+import '../../../../core/di/injection_container.dart';
+import '../../domain/entities/subscription.dart';
+import '../cubit/subscription_cubit.dart';
+import '../cubit/subscription_state.dart';
 
 class ManageSubscriptionPage extends StatelessWidget {
   const ManageSubscriptionPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => sl<SubscriptionCubit>()..loadSubscriptionStatus(),
+      child: const _ManageSubscriptionView(),
+    );
+  }
+}
+
+class _ManageSubscriptionView extends StatelessWidget {
+  const _ManageSubscriptionView();
+
+  @override
+  Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark
-          ? const Color(0xFF0F1419)
-          : const Color(0xFFF5F7FA),
+      backgroundColor:
+          isDark ? const Color(0xFF0F1419) : const Color(0xFFF5F7FA),
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(
@@ -31,43 +47,152 @@ class ManageSubscriptionPage extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
+      body: BlocBuilder<SubscriptionCubit, SubscriptionState>(
+        builder: (context, state) {
+          if (state is SubscriptionStatusLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (state is SubscriptionStatusLoaded) {
+            if (!state.status.hasActiveSubscription) {
+              return _buildNoSubscriptionView(context, isDark);
+            }
+            return _buildSubscriptionContent(
+                context, isDark, state.status.subscription!);
+          }
+
+          if (state is SubscriptionError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.error_outline,
+                      size: 64, color: Colors.red.shade300),
+                  const SizedBox(height: 16),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 32),
+                    child: Text(
+                      state.message,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: isDark
+                            ? Colors.grey.shade400
+                            : Colors.grey.shade600,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () => context
+                        .read<SubscriptionCubit>()
+                        .loadSubscriptionStatus(),
+                    child: const Text('Retry'),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          return const Center(child: CircularProgressIndicator());
+        },
+      ),
+    );
+  }
+
+  Widget _buildNoSubscriptionView(BuildContext context, bool isDark) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Current Plan Card
-            _buildCurrentPlanCard(context, isDark),
+            Icon(
+              Icons.card_membership,
+              size: 80,
+              color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,
+            ),
+            const SizedBox(height: 24),
+            Text(
+              'No Active Subscription',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: isDark ? Colors.white : Colors.black87,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              'Subscribe to a plan to unlock premium features',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 16,
+                color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+              ),
+            ),
             const SizedBox(height: 32),
-
-            // Billing History
-            _buildSectionTitle('Billing History', isDark),
-            const SizedBox(height: 16),
-            _buildBillingHistoryList(isDark),
-            const SizedBox(height: 32),
-
-            // Payment Methods
-            _buildSectionTitle('Payment Methods', isDark),
-            const SizedBox(height: 16),
-            _buildPaymentMethodsList(context, isDark),
-            const SizedBox(height: 32),
-
-            // Settings
-            _buildSectionTitle('Settings', isDark),
-            const SizedBox(height: 16),
-            _buildAutoRenewalToggle(isDark),
-            const SizedBox(height: 32),
-
-            // Cancel Subscription Button
-            _buildCancelSubscriptionButton(context, isDark),
-            const SizedBox(height: 32),
+            ElevatedButton(
+              onPressed: () async {
+                final result =
+                    await Navigator.pushNamed(context, '/subscription-plans');
+                if (result == true) {
+                  if (context.mounted) {
+                    context.read<SubscriptionCubit>().loadSubscriptionStatus();
+                  }
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: GeminiColors.primary,
+                foregroundColor: Colors.white,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: const Text(
+                'View Plans',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildCurrentPlanCard(BuildContext context, bool isDark) {
+  Widget _buildSubscriptionContent(
+      BuildContext context, bool isDark, Subscription subscription) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Current Plan Card
+          _buildCurrentPlanCard(context, isDark, subscription),
+          const SizedBox(height: 32),
+
+          // Billing Info
+          _buildSectionTitle('Subscription Details', isDark),
+          const SizedBox(height: 16),
+          _buildSubscriptionDetailsCard(isDark, subscription),
+          const SizedBox(height: 32),
+
+          // Settings
+          // _buildSectionTitle('Settings', isDark),
+          // const SizedBox(height: 16),
+          // _buildAutoRenewalToggle(isDark),
+          // const SizedBox(height: 32),
+          //
+          // // Cancel Subscription Button
+          // _buildCancelSubscriptionButton(context, isDark),
+          // const SizedBox(height: 32),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCurrentPlanCard(
+      BuildContext context, bool isDark, Subscription subscription) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -91,23 +216,26 @@ class ManageSubscriptionPage extends StatelessWidget {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: GeminiColors.primary,
+                  color: subscription.isActive
+                      ? GeminiColors.primary
+                      : Colors.grey,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
-                      Icons.star,
+                      subscription.isActive ? Icons.star : Icons.pause_circle,
                       size: 16,
                       color: Colors.white,
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      'Current Plan',
-                      style: TextStyle(
+                      subscription.isActive ? 'Active Plan' : 'Inactive',
+                      style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: Colors.white,
@@ -120,7 +248,7 @@ class ManageSubscriptionPage extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            'Pro Plan',
+            subscription.plan.displayName,
             style: TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.bold,
@@ -132,7 +260,7 @@ class ManageSubscriptionPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                '\$19',
+                subscription.plan.formattedPrice,
                 style: TextStyle(
                   fontSize: 40,
                   fontWeight: FontWeight.bold,
@@ -143,7 +271,7 @@ class ManageSubscriptionPage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
                 child: Text(
-                  '/ month',
+                  '/ ${subscription.plan.billingCycle.toLowerCase()}',
                   style: TextStyle(
                     fontSize: 16,
                     color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
@@ -154,18 +282,48 @@ class ManageSubscriptionPage extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            'Next billing date: December 24, 2024',
+            'Next billing date: ${subscription.formattedEndDate}',
             style: TextStyle(
               fontSize: 14,
               color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
             ),
           ),
+          if (subscription.isExpiringSoon)
+            Container(
+              margin: const EdgeInsets.only(top: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: Colors.orange.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.warning, size: 16, color: Colors.orange.shade700),
+                  const SizedBox(width: 4),
+                  Text(
+                    'Expires in ${subscription.daysRemaining} days',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.orange.shade700,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           const SizedBox(height: 24),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/subscription-plans');
+              onPressed: () async {
+                final result =
+                    await Navigator.pushNamed(context, '/subscription-plans');
+                if (result == true) {
+                  if (context.mounted) {
+                    context.read<SubscriptionCubit>().loadSubscriptionStatus();
+                  }
+                }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: GeminiColors.primary,
@@ -201,29 +359,7 @@ class ManageSubscriptionPage extends StatelessWidget {
     );
   }
 
-  Widget _buildBillingHistoryList(bool isDark) {
-    final invoices = [
-      {'date': 'Nov 24, 2024', 'amount': '\$19.00', 'status': 'Paid'},
-      {'date': 'Oct 24, 2024', 'amount': '\$19.00', 'status': 'Paid'},
-      {'date': 'Sep 24, 2024', 'amount': '\$19.00', 'status': 'Paid'},
-    ];
-
-    return Column(
-      children: invoices.map((invoice) {
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 12),
-          child: _buildInvoiceCard(
-            invoice['date']!,
-            invoice['amount']!,
-            invoice['status']!,
-            isDark,
-          ),
-        );
-      }).toList(),
-    );
-  }
-
-  Widget _buildInvoiceCard(String date, String amount, String status, bool isDark) {
+  Widget _buildSubscriptionDetailsCard(bool isDark, Subscription subscription) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -234,81 +370,45 @@ class ManageSubscriptionPage extends StatelessWidget {
           width: 1,
         ),
       ),
-      child: Row(
+      child: Column(
         children: [
-          Container(
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              color: GeminiColors.primary.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(
-              Icons.receipt_long,
-              color: GeminiColors.primary,
-              size: 24,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  date,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: isDark ? Colors.white : Colors.black87,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    Text(
-                      amount,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: Colors.green.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        status,
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.green.shade700,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+          _buildDetailRow(
+              'Start Date', _formatDate(subscription.startDate), isDark),
+          Divider(color: isDark ? Colors.grey.shade800 : Colors.grey.shade200),
+          _buildDetailRow(
+              'End Date', _formatDate(subscription.endDate), isDark),
+          Divider(color: isDark ? Colors.grey.shade800 : Colors.grey.shade200),
+          _buildDetailRow(
+              'Days Remaining', '${subscription.daysRemaining} days', isDark),
+          Divider(color: isDark ? Colors.grey.shade800 : Colors.grey.shade200),
+          _buildDetailRow(
+              'Status', subscription.isActive ? 'Active' : 'Inactive', isDark,
+              valueColor: subscription.isActive ? Colors.green : Colors.red),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDetailRow(String label, String value, bool isDark,
+      {Color? valueColor}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 14,
+              color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
             ),
           ),
-          TextButton.icon(
-            onPressed: () {
-              // TODO: Download invoice
-            },
-            icon: Icon(
-              Icons.download,
-              size: 18,
-              color: GeminiColors.primary,
-            ),
-            label: Text(
-              'Download',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: GeminiColors.primary,
-              ),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: valueColor ?? (isDark ? Colors.white : Colors.black87),
             ),
           ),
         ],
@@ -316,166 +416,22 @@ class ManageSubscriptionPage extends StatelessWidget {
     );
   }
 
-  Widget _buildPaymentMethodsList(BuildContext context, bool isDark) {
-    return Column(
-      children: [
-        _buildPaymentMethodCard(
-          'Visa ending in 4242',
-          'Expires 12/25',
-          Icons.credit_card,
-          true,
-          isDark,
-        ),
-        const SizedBox(height: 12),
-        _buildAddPaymentMethodCard(context, isDark),
-      ],
-    );
-  }
-
-  Widget _buildPaymentMethodCard(
-    String cardInfo,
-    String expiry,
-    IconData icon,
-    bool isDefault,
-    bool isDark,
-  ) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1A1C23) : Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: isDefault
-              ? GeminiColors.primary
-              : (isDark ? Colors.grey.shade800 : Colors.grey.shade200),
-          width: isDefault ? 2 : 1,
-        ),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              color: GeminiColors.primary.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(
-              icon,
-              color: GeminiColors.primary,
-              size: 24,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      cardInfo,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: isDark ? Colors.white : Colors.black87,
-                      ),
-                    ),
-                    if (isDefault) ...[
-                      const SizedBox(width: 8),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: GeminiColors.primary.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          'Default',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: GeminiColors.primary,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  expiry,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          IconButton(
-            onPressed: () {
-              // TODO: Edit payment method
-            },
-            icon: Icon(
-              Icons.more_vert,
-              color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildAddPaymentMethodCard(BuildContext context, bool isDark) {
-    return InkWell(
-      onTap: () {
-        // TODO: Add new payment method
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Add payment method coming soon')),
-        );
-      },
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: isDark ? const Color(0xFF1A1C23) : Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
-            width: 1,
-            style: BorderStyle.solid,
-          ),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                color: isDark
-                    ? Colors.grey.shade800.withOpacity(0.5)
-                    : Colors.grey.shade100,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(
-                Icons.add,
-                color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
-                size: 24,
-              ),
-            ),
-            const SizedBox(width: 16),
-            Text(
-              'Add new payment method',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+  String _formatDate(DateTime date) {
+    final months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
+    ];
+    return '${months[date.month - 1]} ${date.day}, ${date.year}';
   }
 
   Widget _buildAutoRenewalToggle(bool isDark) {
@@ -526,7 +482,9 @@ class ManageSubscriptionPage extends StatelessWidget {
                       'Automatically renew subscription',
                       style: TextStyle(
                         fontSize: 14,
-                        color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                        color: isDark
+                            ? Colors.grey.shade400
+                            : Colors.grey.shade600,
                       ),
                     ),
                   ],
@@ -538,7 +496,7 @@ class ManageSubscriptionPage extends StatelessWidget {
                   setState(() {
                     autoRenew = value;
                   });
-                  // TODO: Save auto-renewal preference
+                  // TODO: Update auto-renewal preference via API
                 },
                 activeColor: GeminiColors.primary,
               ),
@@ -570,7 +528,7 @@ class ManageSubscriptionPage extends StatelessWidget {
                 TextButton(
                   onPressed: () {
                     Navigator.pop(context);
-                    // TODO: Handle subscription cancellation
+                    // TODO: Implement cancel subscription API call
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text('Subscription cancellation coming soon'),

@@ -1,14 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/gemini_colors.dart';
+import '../../../../core/di/injection_container.dart';
+import '../../domain/entities/plan.dart';
+import '../cubit/subscription_cubit.dart';
+import '../cubit/subscription_state.dart';
 
-class SubscriptionPlansPage extends StatefulWidget {
+class SubscriptionPlansPage extends StatelessWidget {
   const SubscriptionPlansPage({super.key});
 
   @override
-  State<SubscriptionPlansPage> createState() => _SubscriptionPlansPageState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => sl<SubscriptionCubit>()..loadPlansAndStatus(),
+      child: const _SubscriptionPlansView(),
+    );
+  }
 }
 
-class _SubscriptionPlansPageState extends State<SubscriptionPlansPage> {
+class _SubscriptionPlansView extends StatefulWidget {
+  const _SubscriptionPlansView();
+
+  @override
+  State<_SubscriptionPlansView> createState() => _SubscriptionPlansViewState();
+}
+
+class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
   bool _isMonthly = true;
 
   @override
@@ -38,106 +55,146 @@ class _SubscriptionPlansPageState extends State<SubscriptionPlansPage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          children: [
-            // Monthly/Yearly Toggle
-            _buildBillingToggle(isDark),
-            const SizedBox(height: 8),
-            // Savings Text
-            Text(
-              'Save 20% with yearly billing',
-              style: TextStyle(
-                fontSize: 14,
-                color: GeminiColors.primary,
-                fontWeight: FontWeight.w600,
+      body: BlocConsumer<SubscriptionCubit, SubscriptionState>(
+        listener: (context, state) {
+          if (state is SubscriptionCreated) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Successfully subscribed to ${state.subscription.plan.displayName}!'),
+                backgroundColor: Colors.green,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
+            );
+            Navigator.pop(context, true);
+          } else if (state is SubscriptionError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: Colors.red,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            );
+            // Reload plans after error
+            context.read<SubscriptionCubit>().loadPlansAndStatus();
+          }
+        },
+        builder: (context, state) {
+          if (state is PlansLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (state is CreatingSubscription) {
+            return const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 16),
+                  Text('Creating subscription...'),
+                ],
+              ),
+            );
+          }
+
+          if (state is PlansLoaded) {
+            return _buildPlansContent(context, isDark, state.plans, state.subscriptionStatus?.subscription?.plan?.name);
+          }
+
+          if (state is SubscriptionError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.error_outline, size: 64, color: Colors.red.shade300),
+                  const SizedBox(height: 16),
+                  Text(state.message, textAlign: TextAlign.center),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () => context.read<SubscriptionCubit>().loadPlansAndStatus(),
+                    child: const Text('Retry'),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          return const Center(child: CircularProgressIndicator());
+        },
+      ),
+    );
+  }
+
+  Widget _buildPlansContent(BuildContext context, bool isDark, List<Plan> plans, String? currentPlanName) {
+    // Sort plans by tier
+    final sortedPlans = List<Plan>.from(plans)..sort((a, b) => a.tier.compareTo(b.tier));
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        children: [
+          // Monthly/Yearly Toggle
+          _buildBillingToggle(isDark),
+          const SizedBox(height: 8),
+          // Savings Text
+          Text(
+            'Save 20% with yearly billing',
+            style: TextStyle(
+              fontSize: 14,
+              color: GeminiColors.primary,
+              fontWeight: FontWeight.w600,
             ),
-            const SizedBox(height: 32),
-            // Starter Plan
-            _buildPlanCard(
+          ),
+          const SizedBox(height: 32),
+          // Plan Cards
+          ...sortedPlans.map((plan) => Padding(
+            padding: const EdgeInsets.only(bottom: 20),
+            child: _buildPlanCard(
               context,
               isDark: isDark,
-              title: 'Starter',
-              price: _isMonthly ? '\$9' : '\$7',
-              period: 'month',
-              features: [
-                'Limited n8n automations',
-                'Standard AI chat access',
-                'Basic support',
-              ],
-              buttonText: 'Get Started',
-              isPopular: false,
+              plan: plan,
+              isCurrentPlan: plan.name == currentPlanName,
+              isPopular: plan.tier == 2, // Pro plan is typically tier 2
             ),
-            const SizedBox(height: 20),
-            // Pro Plan (Most Popular)
-            _buildPlanCard(
-              context,
-              isDark: isDark,
-              title: 'Pro',
-              price: _isMonthly ? '\$19' : '\$15',
-              period: 'month',
-              features: [
-                'Expanded automations',
-                'FinanceGuru integration',
-                'Priority support',
-                'Advanced AI chat',
-              ],
-              buttonText: 'Upgrade to Pro',
-              isPopular: true,
-            ),
-            const SizedBox(height: 20),
-            // Business Plan
-            _buildPlanCard(
-              context,
-              isDark: isDark,
-              title: 'Business',
-              price: _isMonthly ? '\$49' : '\$39',
-              period: 'month',
-              features: [
-                'All Pro features',
-                'WooCommerce integration',
-                'Social Media Automation',
-                'Dedicated support',
-              ],
-              buttonText: 'Go Business',
-              isPopular: false,
-            ),
-            const SizedBox(height: 32),
-            // Footer Links
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    // TODO: Show terms of service
-                  },
-                  child: Text(
-                    'Terms of Service',
-                    style: TextStyle(
-                      color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
-                      fontSize: 14,
-                    ),
+          )),
+          const SizedBox(height: 12),
+          // Footer Links
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextButton(
+                onPressed: () {
+                  // TODO: Show terms of service
+                },
+                child: Text(
+                  'Terms of Service',
+                  style: TextStyle(
+                    color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                    fontSize: 14,
                   ),
                 ),
-                const SizedBox(width: 16),
-                TextButton(
-                  onPressed: () {
-                    // TODO: Show privacy policy
-                  },
-                  child: Text(
-                    'Privacy Policy',
-                    style: TextStyle(
-                      color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
-                      fontSize: 14,
-                    ),
+              ),
+              const SizedBox(width: 16),
+              TextButton(
+                onPressed: () {
+                  // TODO: Show privacy policy
+                },
+                child: Text(
+                  'Privacy Policy',
+                  style: TextStyle(
+                    color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                    fontSize: 14,
                   ),
                 ),
-              ],
-            ),
-          ],
-        ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -217,13 +274,13 @@ class _SubscriptionPlansPageState extends State<SubscriptionPlansPage> {
   Widget _buildPlanCard(
     BuildContext context, {
     required bool isDark,
-    required String title,
-    required String price,
-    required String period,
-    required List<String> features,
-    required String buttonText,
+    required Plan plan,
+    required bool isCurrentPlan,
     required bool isPopular,
   }) {
+    // Calculate display price (20% off for yearly)
+    final displayPrice = _isMonthly ? plan.price : plan.price * 0.8;
+    
     return Container(
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF1A1C23) : Colors.white,
@@ -248,17 +305,31 @@ class _SubscriptionPlansPageState extends State<SubscriptionPlansPage> {
       child: Stack(
         children: [
           Padding(
-            padding: const EdgeInsets.all(24),
+            padding: EdgeInsets.only(
+              top: isPopular ? 48 : 24,
+              left: 24,
+              right: 24,
+              bottom: 24,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Title
                 Text(
-                  title,
+                  plan.displayName,
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: isDark ? Colors.white : Colors.black87,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                // Description
+                Text(
+                  plan.description,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -267,7 +338,7 @@ class _SubscriptionPlansPageState extends State<SubscriptionPlansPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      price,
+                      '\$${displayPrice.toStringAsFixed(0)}',
                       style: TextStyle(
                         fontSize: 40,
                         fontWeight: FontWeight.bold,
@@ -278,7 +349,7 @@ class _SubscriptionPlansPageState extends State<SubscriptionPlansPage> {
                     Padding(
                       padding: const EdgeInsets.only(top: 12),
                       child: Text(
-                        '/ $period',
+                        '/ month',
                         style: TextStyle(
                           fontSize: 16,
                           color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
@@ -289,7 +360,7 @@ class _SubscriptionPlansPageState extends State<SubscriptionPlansPage> {
                 ),
                 const SizedBox(height: 24),
                 // Features
-                ...features.map((feature) => Padding(
+                ...plan.features.take(4).map((feature) => Padding(
                       padding: const EdgeInsets.only(bottom: 12),
                       child: Row(
                         children: [
@@ -301,7 +372,7 @@ class _SubscriptionPlansPageState extends State<SubscriptionPlansPage> {
                           const SizedBox(width: 12),
                           Expanded(
                             child: Text(
-                              feature,
+                              feature.name,
                               style: TextStyle(
                                 fontSize: 16,
                                 color: isDark ? Colors.white : Colors.black87,
@@ -316,26 +387,25 @@ class _SubscriptionPlansPageState extends State<SubscriptionPlansPage> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {
-                      // TODO: Handle subscription selection
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Selected $title plan'),
-                          backgroundColor: GeminiColors.primary,
-                          behavior: SnackBarBehavior.floating,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                      );
-                    },
+                    onPressed: isCurrentPlan
+                        ? null
+                        : () {
+                            context.read<SubscriptionCubit>().createSubscription(
+                              planName: plan.name,
+                              autoRenew: true,
+                            );
+                          },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: isPopular
-                          ? GeminiColors.primary
-                          : (isDark ? const Color(0xFF2D3142) : Colors.grey.shade200),
-                      foregroundColor: isPopular
+                      backgroundColor: isCurrentPlan
+                          ? Colors.grey.shade400
+                          : isPopular
+                              ? GeminiColors.primary
+                              : (isDark ? const Color(0xFF2D3142) : Colors.grey.shade200),
+                      foregroundColor: isCurrentPlan
                           ? Colors.white
-                          : (isDark ? Colors.white : Colors.black87),
+                          : isPopular
+                              ? Colors.white
+                              : (isDark ? Colors.white : Colors.black87),
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -343,7 +413,7 @@ class _SubscriptionPlansPageState extends State<SubscriptionPlansPage> {
                       elevation: 0,
                     ),
                     child: Text(
-                      buttonText,
+                      isCurrentPlan ? 'Current Plan' : 'Subscribe',
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -374,6 +444,27 @@ class _SubscriptionPlansPageState extends State<SubscriptionPlansPage> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          // Current Plan Badge
+          if (isCurrentPlan)
+            Positioned(
+              top: isPopular ? 40 : 12,
+              right: 12,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.green,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Text(
+                  'Active',
+                  style: TextStyle(
+                    fontSize: 12,
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
                   ),

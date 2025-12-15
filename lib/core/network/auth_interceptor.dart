@@ -1,12 +1,17 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../features/auth/data/models/auth_request_models.dart';
 import '../constants/api_endpoints.dart';
 import '../constants/app_constants.dart';
+import '../navigation/navigator_service.dart';
 
 class AuthInterceptor extends Interceptor {
   final SharedPreferences sharedPreferences;
   final Dio dio; // This should be the main Dio instance to retry the request
+  
+  // Flag to prevent infinite refresh loops
+  bool _isRefreshing = false;
 
   AuthInterceptor({
     required this.sharedPreferences,
@@ -20,44 +25,93 @@ class AuthInterceptor extends Interceptor {
     if (token != null) {
       options.headers['Authorization'] = 'Bearer $token';
     }
+    
+    if (kDebugMode) {
+      print('🔐 [AuthInterceptor] Request: ${options.method} ${options.path}');
+      print('🔐 [AuthInterceptor] Has token: ${token != null}');
+    }
+    
     handler.next(options);
   }
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
-    if (err.response?.statusCode == 401) {
-      // If the error is 401, try to refresh the token
+    if (kDebugMode) {
+      print('🔐 [AuthInterceptor] Error: ${err.response?.statusCode} for ${err.requestOptions.path}');
+    }
+    
+    // Only handle 401 errors and prevent infinite refresh loops
+    if (err.response?.statusCode == 401 && !_isRefreshing) {
+      // Skip refresh for auth endpoints to prevent loops
+      final requestPath = err.requestOptions.path;
+      if (requestPath.contains('/auth/login') || 
+          requestPath.contains('/auth/signup') ||
+          requestPath.contains('/auth/refresh-token')) {
+        if (kDebugMode) {
+          print('🔐 [AuthInterceptor] Skipping refresh for auth endpoint: $requestPath');
+        }
+        return handler.next(err);
+      }
+      
       final refreshToken = sharedPreferences.getString('refresh_token');
+      
+      if (kDebugMode) {
+        print('🔐 [AuthInterceptor] Got 401, attempting token refresh...');
+        print('🔐 [AuthInterceptor] Has refresh token: ${refreshToken != null}');
+      }
 
-      if (refreshToken != null) {
+      if (refreshToken != null && refreshToken.isNotEmpty) {
+        _isRefreshing = true;
+        
         try {
           // Create a new Dio instance to avoid circular dependency and interceptor loops
           final tokenDio = Dio();
           tokenDio.options.headers['Content-Type'] = 'application/json';
-           tokenDio.options.sendTimeout = AppConstants.apiTimeout;
+          tokenDio.options.sendTimeout = AppConstants.apiTimeout;
           tokenDio.options.receiveTimeout = AppConstants.apiTimeout;
+
+          if (kDebugMode) {
+            print('🔐 [AuthInterceptor] Calling refresh token endpoint: ${ApiEndpoints.refreshToken}');
+          }
 
           final response = await tokenDio.post(
             ApiEndpoints.refreshToken,
             data: RefreshTokenRequest(refreshToken: refreshToken).toJson(),
           );
 
+          if (kDebugMode) {
+            print('🔐 [AuthInterceptor] Refresh response status: ${response.statusCode}');
+          }
+
           if (response.statusCode == 200) {
             final refreshResponse = RefreshTokenResponse.fromJson(response.data);
 
-            if (refreshResponse.data != null) {
+            if (refreshResponse.success && refreshResponse.data != null) {
+              if (kDebugMode) {
+                print('🔐 [AuthInterceptor] Token refresh successful! Updating tokens...');
+              }
+              
               // Update the stored tokens
               await sharedPreferences.setString(
                   'auth_token', refreshResponse.data!.token);
               await sharedPreferences.setString(
                   'refresh_token', refreshResponse.data!.refreshToken);
 
+              _isRefreshing = false;
+
               // Retry the original request with the new token
               final opts = err.requestOptions;
-              opts.headers['Authorization'] =
-                  'Bearer ${refreshResponse.data!.token}';
+              opts.headers['Authorization'] = 'Bearer ${refreshResponse.data!.token}';
+
+              if (kDebugMode) {
+                print('🔐 [AuthInterceptor] Retrying original request: ${opts.method} ${opts.path}');
+              }
+
+              // Use a fresh Dio without the interceptor to avoid loops
+              final retryDio = Dio();
+              retryDio.options.baseUrl = dio.options.baseUrl;
               
-              final clonedRequest = await dio.request(
+              final clonedRequest = await retryDio.request(
                 opts.path,
                 options: Options(
                   method: opts.method,
@@ -73,18 +127,54 @@ class AuthInterceptor extends Interceptor {
                 data: opts.data,
                 queryParameters: opts.queryParameters,
               );
-              
+
               return handler.resolve(clonedRequest);
+            } else {
+              if (kDebugMode) {
+                print('🔐 [AuthInterceptor] Refresh response unsuccessful: ${refreshResponse.message}');
+              }
             }
           }
+          
+          // If we get here, refresh was unsuccessful (non-200 or no data)
+          _isRefreshing = false;
+          await _handleRefreshFailure();
+          return handler.reject(err);
+          
         } catch (e) {
-          // Refresh failed, proceed with error
-          // Optionally clear tokens here if refresh fails?
-           await sharedPreferences.remove('auth_token');
-           await sharedPreferences.remove('refresh_token');
+          // Refresh failed, clear tokens and navigate to login
+          _isRefreshing = false;
+          if (kDebugMode) {
+            print('🔐 [AuthInterceptor] Token refresh failed with exception: $e');
+          }
+          await _handleRefreshFailure();
+          return handler.reject(err);
         }
+      } else {
+        // No refresh token available, navigate to login
+        if (kDebugMode) {
+          print('🔐 [AuthInterceptor] No refresh token available, redirecting to login');
+        }
+        await _handleRefreshFailure();
+        return handler.reject(err);
       }
     }
+    
     handler.next(err);
+  }
+
+  /// Handles token refresh failure by clearing tokens and navigating to login
+  Future<void> _handleRefreshFailure() async {
+    // Clear stored tokens
+    await sharedPreferences.remove('auth_token');
+    await sharedPreferences.remove('refresh_token');
+    await sharedPreferences.remove('user_id');
+    
+    if (kDebugMode) {
+      print('🔐 [AuthInterceptor] Session expired. Tokens cleared. Navigating to login screen.');
+    }
+    
+    // Navigate to login screen
+    navigateToLogin();
   }
 }

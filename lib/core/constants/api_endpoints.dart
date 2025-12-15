@@ -35,4 +35,12 @@ class ApiEndpoints {
   // Chat feedback endpoint (requires message ID)
   static String chatFeedback(int messageId) =>
       '$financeGuruBaseUrl/chat-history/$messageId/feedback';
+
+  // Subscription APIs
+  static String get subscriptionsBaseUrl => '$backendBaseUrl/api/subscriptions';
+  static String get plansBaseUrl => '$backendBaseUrl/api/plans';
+  
+  static String get allPlans => plansBaseUrl;
+  static String get subscriptionStatus => '$subscriptionsBaseUrl/status';
+  static String get createSubscription => subscriptionsBaseUrl;
 }

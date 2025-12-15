@@ -59,6 +59,14 @@ import '../../features/home/domain/usecases/search_transactions.dart';
 // Core
 import '../../features/home/domain/usecases/update_transaction.dart';
 import '../database/database_helper.dart';
+// Features - Subscription
+import '../../features/subscription/data/datasources/subscription_datasource.dart';
+import '../../features/subscription/data/repositories/subscription_repository_impl.dart';
+import '../../features/subscription/domain/repositories/subscription_repository.dart';
+import '../../features/subscription/domain/usecases/get_all_plans.dart';
+import '../../features/subscription/domain/usecases/get_subscription_status.dart';
+import '../../features/subscription/domain/usecases/create_subscription.dart';
+import '../../features/subscription/presentation/cubit/subscription_cubit.dart';
 import '../network/logging_interceptor.dart';
 import '../network/auth_interceptor.dart';
 import '../theme/theme_cubit.dart';
@@ -312,4 +320,30 @@ Future<void> init() async {
       }
     },
   );
+
+  //! Features - Subscription
+  // Data sources
+  sl.registerLazySingleton<SubscriptionDataSource>(
+    () => SubscriptionDataSourceImpl(sl(), sl()),
+  );
+
+  // Repository
+  sl.registerLazySingleton<SubscriptionRepository>(
+    () => SubscriptionRepositoryImpl(remoteDataSource: sl()),
+  );
+
+  // Use cases
+  sl.registerLazySingleton(() => GetAllPlans(sl()));
+  sl.registerLazySingleton(() => GetSubscriptionStatus(sl()));
+  sl.registerLazySingleton(() => CreateSubscription(sl()));
+
+  // Cubit
+  sl.registerFactory(
+    () => SubscriptionCubit(
+      getAllPlansUseCase: sl(),
+      getSubscriptionStatusUseCase: sl(),
+      createSubscriptionUseCase: sl(),
+    ),
+  );
 }
+

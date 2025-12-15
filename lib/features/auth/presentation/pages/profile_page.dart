@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../../../core/constants/gemini_colors.dart';
+import '../../../../core/di/injection_container.dart';
+import '../../../subscription/domain/entities/subscription_status.dart';
+import '../../../subscription/presentation/cubit/subscription_cubit.dart';
+import '../../../subscription/presentation/cubit/subscription_state.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
 
@@ -12,44 +17,51 @@ class ProfilePage extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final colorScheme = Theme.of(context).colorScheme;
 
-    return BlocListener<AuthCubit, AuthState>(
-      listener: (context, state) {
-        if (state is AuthUnauthenticated) {
-          Navigator.of(context).pushReplacementNamed('/login');
-        } else if (state is AuthError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: Colors.red.shade700,
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-          );
-        }
-      },
-      child: Scaffold(
-        backgroundColor: isDark ? GeminiColors.backgroundDark : GeminiColors.backgroundLight,
-        body: BlocBuilder<AuthCubit, AuthState>(
-          builder: (context, state) {
-            if (state is AuthLoading) {
-              return Center(
-                child: CircularProgressIndicator(
-                  color: GeminiColors.primary,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => sl<SubscriptionCubit>()..loadSubscriptionStatus(),
+        ),
+      ],
+      child: BlocListener<AuthCubit, AuthState>(
+        listener: (context, state) {
+          if (state is AuthUnauthenticated) {
+            Navigator.of(context).pushReplacementNamed('/login');
+          } else if (state is AuthError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: Colors.red.shade700,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
                 ),
-              );
-            }
-
-            if (state is AuthAuthenticated) {
-              final user = state.user;
-              return _buildProfileContent(context, user, isDark, colorScheme);
-            }
-
-            return const Center(
-              child: Text('Please login to view your profile'),
+              ),
             );
-          },
+          }
+        },
+        child: Scaffold(
+          backgroundColor: isDark ? GeminiColors.backgroundDark : GeminiColors.backgroundLight,
+          body: BlocBuilder<AuthCubit, AuthState>(
+            builder: (context, state) {
+              if (state is AuthLoading) {
+                return Center(
+                  child: CircularProgressIndicator(
+                    color: GeminiColors.primary,
+                  ),
+                );
+              }
+
+              if (state is AuthAuthenticated) {
+                final user = state.user;
+                return _buildProfileContent(context, user, isDark, colorScheme);
+              }
+
+              return const Center(
+                child: Text('Please login to view your profile'),
+              );
+            },
+          ),
         ),
       ),
     );
@@ -105,11 +117,32 @@ class ProfilePage extends StatelessWidget {
             child: Column(
               children: [
                 const SizedBox(height: 16),
-                // Profile Header
-                _buildProfileHeader(user, isDark),
+                // Profile Header with dynamic subscription badge
+                BlocBuilder<SubscriptionCubit, SubscriptionState>(
+                  builder: (context, subState) {
+                    SubscriptionStatus? status;
+                    if (subState is SubscriptionStatusLoaded) {
+                      status = subState.status;
+                    }
+                    return _buildProfileHeader(user, isDark, status);
+                  },
+                ),
                 const SizedBox(height: 40),
-                // Subscription Card
-                _buildSubscriptionCard(context, isDark),
+                // Subscription Card with real data
+                BlocBuilder<SubscriptionCubit, SubscriptionState>(
+                  builder: (context, subState) {
+                    if (subState is SubscriptionStatusLoading) {
+                      return _buildSubscriptionCardLoading(isDark);
+                    }
+                    if (subState is SubscriptionStatusLoaded) {
+                      return _buildSubscriptionCard(context, isDark, subState.status);
+                    }
+                    if (subState is SubscriptionError) {
+                      return _buildSubscriptionCardError(context, isDark, subState.message);
+                    }
+                    return _buildSubscriptionCardLoading(isDark);
+                  },
+                ),
                 const SizedBox(height: 32),
                 // Menu Items
                 _buildMenuItem(
@@ -185,7 +218,10 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildProfileHeader(dynamic user, bool isDark) {
+  Widget _buildProfileHeader(dynamic user, bool isDark, SubscriptionStatus? status) {
+    final hasSubscription = status?.hasActiveSubscription ?? false;
+    final planName = status?.subscription?.plan.displayName ?? 'Free';
+    
     return Column(
       children: [
         // Avatar with glow effect
@@ -231,7 +267,7 @@ class ProfilePage extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 24),
-        // User Name with Premium Badge
+        // User Name with Subscription Badge
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -247,10 +283,12 @@ class ProfilePage extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: GeminiColors.primary.withOpacity(0.2),
+                color: hasSubscription 
+                    ? GeminiColors.primary.withOpacity(0.2)
+                    : Colors.grey.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
-                  color: GeminiColors.primary,
+                  color: hasSubscription ? GeminiColors.primary : Colors.grey,
                   width: 1,
                 ),
               ),
@@ -258,17 +296,17 @@ class ProfilePage extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(
-                    Icons.star,
+                    hasSubscription ? Icons.star : Icons.star_border,
                     size: 16,
-                    color: GeminiColors.primary,
+                    color: hasSubscription ? GeminiColors.primary : Colors.grey,
                   ),
                   const SizedBox(width: 4),
                   Text(
-                    'Premium',
+                    planName,
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: GeminiColors.primary,
+                      color: hasSubscription ? GeminiColors.primary : Colors.grey,
                     ),
                   ),
                 ],
@@ -289,7 +327,109 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildSubscriptionCard(BuildContext context, bool isDark) {
+  Widget _buildSubscriptionCardLoading(bool isDark) {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0xFF1A1C23) : Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
+          width: 1,
+        ),
+      ),
+      child: Shimmer.fromColors(
+        baseColor: isDark ? Colors.grey.shade800 : Colors.grey.shade300,
+        highlightColor: isDark ? Colors.grey.shade700 : Colors.grey.shade100,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: 120,
+              height: 14,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 150,
+                      height: 20,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      width: 180,
+                      height: 14,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                  ],
+                ),
+                Container(
+                  width: 80,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSubscriptionCardError(BuildContext context, bool isDark, String message) {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0xFF1A1C23) : Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
+          width: 1,
+        ),
+      ),
+      child: Column(
+        children: [
+          Icon(Icons.error_outline, color: Colors.red.shade300, size: 32),
+          const SizedBox(height: 8),
+          Text(
+            'Failed to load subscription',
+            style: TextStyle(color: isDark ? Colors.white : Colors.black87),
+          ),
+          const SizedBox(height: 8),
+          TextButton(
+            onPressed: () => context.read<SubscriptionCubit>().loadSubscriptionStatus(),
+            child: const Text('Retry'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSubscriptionCard(BuildContext context, bool isDark, SubscriptionStatus status) {
+    if (!status.hasActiveSubscription) {
+      return _buildNoSubscriptionCard(context, isDark);
+    }
+    
+    final subscription = status.subscription!;
+    
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -315,41 +455,75 @@ class ProfilePage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'My Subscription',
-            style: TextStyle(
-              fontSize: 14,
-              color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'My Subscription',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                ),
+              ),
+              if (subscription.isExpiringSoon)
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.orange.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.warning, size: 14, color: Colors.orange.shade700),
+                      const SizedBox(width: 4),
+                      Text(
+                        '${subscription.daysRemaining} days left',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.orange.shade700,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+            ],
           ),
           const SizedBox(height: 12),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Plan: Premium',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: isDark ? Colors.white : Colors.black87,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Plan: ${subscription.plan.displayName}',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: isDark ? Colors.white : Colors.black87,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Renews on Dec 24, 2024',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                    const SizedBox(height: 8),
+                    Text(
+                      'Renews on ${subscription.formattedEndDate}',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
+              const SizedBox(width: 16),
               ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/manage-subscription');
+                onPressed: () async {
+                  final result = await Navigator.pushNamed(context, '/manage-subscription');
+                  if (result == true && context.mounted) {
+                    context.read<SubscriptionCubit>().loadSubscriptionStatus();
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: GeminiColors.primary,
@@ -362,6 +536,95 @@ class ProfilePage extends StatelessWidget {
                 ),
                 child: const Text(
                   'Manage',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNoSubscriptionCard(BuildContext context, bool isDark) {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0xFF1A1C23) : Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            spreadRadius: 0,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'My Subscription',
+            style: TextStyle(
+              fontSize: 14,
+              color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+            ),
+          ),
+          const SizedBox(height: 12),
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'No Active Plan',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: isDark ? Colors.white : Colors.black87,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Subscribe to unlock premium features',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 16),
+              ElevatedButton(
+                onPressed: () async {
+                  final result = await Navigator.pushNamed(context, '/subscription-plans');
+                  if (result == true && context.mounted) {
+                    context.read<SubscriptionCubit>().loadSubscriptionStatus();
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: GeminiColors.primary,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  elevation: 0,
+                ),
+                child: const Text(
+                  'Subscribe',
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,

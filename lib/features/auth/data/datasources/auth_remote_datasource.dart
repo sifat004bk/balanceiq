@@ -299,12 +299,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<void> sendVerificationEmail(String token) async {
     try {
+      // Note: AuthInterceptor automatically adds Authorization header from SharedPreferences
       final response = await dio.post(
         ApiEndpoints.sendVerification,
         options: Options(
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer $token',
           },
           sendTimeout: AppConstants.apiTimeout,
           receiveTimeout: AppConstants.apiTimeout,
@@ -318,7 +318,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       }
     } on DioException catch (e) {
       if (e.response?.statusCode == 400) {
-        throw Exception(e.response?.data['message'] ?? 'Failed to send verification email');
+        final message = e.response?.data is Map
+            ? e.response?.data['message']
+            : e.response?.data?.toString();
+        throw Exception(message ?? 'Failed to send verification email');
       } else if (e.response?.statusCode == 401) {
         throw Exception('Unauthorized. Please login again.');
       } else {

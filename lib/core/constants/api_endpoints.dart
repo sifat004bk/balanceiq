@@ -20,7 +20,7 @@ class ApiEndpoints {
   static String get signup => '$authBaseUrl/signup';
   static String get login => '$authBaseUrl/login';
   static String get refreshToken => '$authBaseUrl/refresh-token';
-  static String get getProfile => '$authBaseUrl/me';
+  static String get getProfile => '$authBaseUrl/profile';
   static String get forgotPassword => '$authBaseUrl/forgot-password';
   static String get resetPassword => '$authBaseUrl/reset-password';
   static String get changePassword => '$authBaseUrl/change-password';
@@ -42,7 +42,7 @@ class ApiEndpoints {
   // Subscription APIs
   static String get subscriptionsBaseUrl => '$backendBaseUrl/api/subscriptions';
   static String get plansBaseUrl => '$backendBaseUrl/api/plans';
-  
+
   static String get allPlans => plansBaseUrl;
   static String get subscriptionStatus => '$subscriptionsBaseUrl/status';
   static String get createSubscription => subscriptionsBaseUrl;

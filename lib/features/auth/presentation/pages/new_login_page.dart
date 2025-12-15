@@ -45,6 +45,16 @@ class _NewLoginPageState extends State<NewLoginPage> {
 
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args = ModalRoute.of(context)?.settings.arguments;
+    if (args != null && args is String && _emailController.text.isEmpty) {
+      _emailController.text = args;
+    }
+  }
+
+
+  @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 

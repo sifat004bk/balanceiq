@@ -10,8 +10,19 @@ import '../../../subscription/presentation/cubit/subscription_state.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
+
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<AuthCubit>().getUserProfile();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,13 +57,19 @@ class ProfilePage extends StatelessWidget {
               ? GeminiColors.backgroundDark
               : GeminiColors.backgroundLight,
           body: BlocBuilder<AuthCubit, AuthState>(
+            buildWhen: (previous, current) {
+              // Don't rebuild for intermediate verification states
+              // The banner widget handles those separately
+              if (current is VerificationEmailSending ||
+                  current is VerificationEmailSent ||
+                  current is VerificationEmailError) {
+                return false;
+              }
+              return true;
+            },
             builder: (context, state) {
               if (state is AuthLoading) {
-                return Center(
-                  child: CircularProgressIndicator(
-                    color: GeminiColors.primary,
-                  ),
-                );
+                return _buildProfileShimmer(isDark);
               }
 
               if (state is AuthAuthenticated) {
@@ -76,152 +93,147 @@ class ProfilePage extends StatelessWidget {
     bool isDark,
     ColorScheme colorScheme,
   ) {
-    return CustomScrollView(
-      slivers: [
-        // App Bar
-        SliverAppBar(
-          floating: true,
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-              color: isDark ? Colors.white : Colors.black87,
-            ),
-            onPressed: () => Navigator.pop(context),
-          ),
-          title: Text(
-            'Profile',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              color: isDark ? Colors.white : Colors.black87,
-            ),
-          ),
-          actions: [
-            IconButton(
-              icon: Icon(
-                Icons.wb_sunny_outlined,
-                color: isDark ? Colors.white : Colors.black87,
+    return Stack(
+      children: [
+        CustomScrollView(
+          physics: const BouncingScrollPhysics(),
+          slivers: [
+            SliverSafeArea(
+              bottom: false,
+              sliver: SliverToBoxAdapter(
+                child: SizedBox(height: 5),
               ),
-              onPressed: () {
-                // TODO: Toggle theme
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Theme toggle coming soon')),
-                );
-              },
+            ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 16),
+                    // Email Verification Banner (if not verified)
+                    if (!user.isEmailVerified)
+                      _buildEmailVerificationBanner(context, user, isDark),
+                    // Profile Header with dynamic subscription badge
+                    BlocBuilder<SubscriptionCubit, SubscriptionState>(
+                      builder: (context, subState) {
+                        SubscriptionStatus? status;
+                        if (subState is SubscriptionStatusLoaded) {
+                          status = subState.status;
+                        }
+                        return _buildProfileHeader(user, isDark, status);
+                      },
+                    ),
+                    const SizedBox(height: 40),
+                    // Subscription Card with real data
+                    BlocBuilder<SubscriptionCubit, SubscriptionState>(
+                      builder: (context, subState) {
+                        if (subState is SubscriptionStatusLoading) {
+                          return _buildSubscriptionCardLoading(isDark);
+                        }
+                        if (subState is SubscriptionStatusLoaded) {
+                          return _buildSubscriptionCard(
+                              context, isDark, subState.status);
+                        }
+                        if (subState is SubscriptionError) {
+                          return _buildSubscriptionCardError(
+                              context, isDark, subState.message);
+                        }
+                        return _buildSubscriptionCardLoading(isDark);
+                      },
+                    ),
+                    const SizedBox(height: 32),
+                    // Menu Items
+                    _buildMenuItem(
+                      context,
+                      icon: Icons.person_outline,
+                      title: 'Account Details',
+                      isDark: isDark,
+                      onTap: () {
+                        // TODO: Navigate to account details
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text('Account Details coming soon')),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 12),
+                    _buildMenuItem(
+                      context,
+                      icon: Icons.lock_outline,
+                      title: 'Security',
+                      isDark: isDark,
+                      onTap: () {
+                        Navigator.pushNamed(context, '/change-password');
+                      },
+                    ),
+                    const SizedBox(height: 12),
+                    _buildMenuItem(
+                      context,
+                      icon: Icons.notifications_outlined,
+                      title: 'Notifications',
+                      isDark: isDark,
+                      onTap: () {
+                        // TODO: Navigate to notifications
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text('Notifications coming soon')),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 12),
+                    _buildMenuItem(
+                      context,
+                      icon: Icons.palette_outlined,
+                      title: 'Appearance',
+                      isDark: isDark,
+                      onTap: () {
+                        // TODO: Navigate to appearance settings
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text('Appearance settings coming soon')),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 12),
+                    _buildMenuItem(
+                      context,
+                      icon: Icons.help_outline,
+                      title: 'Help Center',
+                      isDark: isDark,
+                      onTap: () {
+                        // TODO: Navigate to help center
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text('Help Center coming soon')),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 40),
+                    // Log Out Button
+                    _buildLogOutButton(context, isDark),
+                    const SizedBox(height: 32),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
-
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              children: [
-                const SizedBox(height: 16),
-                // Email Verification Banner (if not verified)
-                if (!user.isEmailVerified)
-                  _buildEmailVerificationBanner(context, user, isDark),
-                // Profile Header with dynamic subscription badge
-                BlocBuilder<SubscriptionCubit, SubscriptionState>(
-                  builder: (context, subState) {
-                    SubscriptionStatus? status;
-                    if (subState is SubscriptionStatusLoaded) {
-                      status = subState.status;
-                    }
-                    return _buildProfileHeader(user, isDark, status);
-                  },
-                ),
-                const SizedBox(height: 40),
-                // Subscription Card with real data
-                BlocBuilder<SubscriptionCubit, SubscriptionState>(
-                  builder: (context, subState) {
-                    if (subState is SubscriptionStatusLoading) {
-                      return _buildSubscriptionCardLoading(isDark);
-                    }
-                    if (subState is SubscriptionStatusLoaded) {
-                      return _buildSubscriptionCard(
-                          context, isDark, subState.status);
-                    }
-                    if (subState is SubscriptionError) {
-                      return _buildSubscriptionCardError(
-                          context, isDark, subState.message);
-                    }
-                    return _buildSubscriptionCardLoading(isDark);
-                  },
-                ),
-                const SizedBox(height: 32),
-                // Menu Items
-                _buildMenuItem(
-                  context,
-                  icon: Icons.person_outline,
-                  title: 'Account Details',
-                  isDark: isDark,
-                  onTap: () {
-                    // TODO: Navigate to account details
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                          content: Text('Account Details coming soon')),
-                    );
-                  },
-                ),
-                const SizedBox(height: 12),
-                _buildMenuItem(
-                  context,
-                  icon: Icons.lock_outline,
-                  title: 'Security',
-                  isDark: isDark,
-                  onTap: () {
-                    Navigator.pushNamed(context, '/change-password');
-                  },
-                ),
-                const SizedBox(height: 12),
-                _buildMenuItem(
-                  context,
-                  icon: Icons.notifications_outlined,
-                  title: 'Notifications',
-                  isDark: isDark,
-                  onTap: () {
-                    // TODO: Navigate to notifications
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                          content: Text('Notifications coming soon')),
-                    );
-                  },
-                ),
-                const SizedBox(height: 12),
-                _buildMenuItem(
-                  context,
-                  icon: Icons.palette_outlined,
-                  title: 'Appearance',
-                  isDark: isDark,
-                  onTap: () {
-                    // TODO: Navigate to appearance settings
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                          content: Text('Appearance settings coming soon')),
-                    );
-                  },
-                ),
-                const SizedBox(height: 12),
-                _buildMenuItem(
-                  context,
-                  icon: Icons.help_outline,
-                  title: 'Help Center',
-                  isDark: isDark,
-                  onTap: () {
-                    // TODO: Navigate to help center
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Help Center coming soon')),
-                    );
-                  },
-                ),
-                const SizedBox(height: 40),
-                // Log Out Button
-                _buildLogOutButton(context, isDark),
-                const SizedBox(height: 32),
-              ],
+        Positioned(
+          top: MediaQuery.of(context).padding.top + 8,
+          left: 16,
+          child: Container(
+            decoration: BoxDecoration(
+              color: isDark
+                  ? Colors.black.withOpacity(0.2)
+                  : Colors.white.withValues(alpha: 0.5),
+              shape: BoxShape.circle,
+            ),
+            child: IconButton(
+              icon: Icon(
+                Icons.arrow_back,
+                color: isDark ? Colors.white : Colors.black87,
+              ),
+              onPressed: () => Navigator.pop(context),
             ),
           ),
         ),
@@ -258,7 +270,8 @@ class ProfilePage extends StatelessWidget {
               backgroundColor: GeminiColors.incomeGreen,
               behavior: SnackBarBehavior.floating,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(DesignConstants.radiusMedium),
+                borderRadius:
+                    BorderRadius.circular(DesignConstants.radiusMedium),
               ),
             ),
           );
@@ -269,7 +282,8 @@ class ProfilePage extends StatelessWidget {
               backgroundColor: GeminiColors.errorRed,
               behavior: SnackBarBehavior.floating,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(DesignConstants.radiusMedium),
+                borderRadius:
+                    BorderRadius.circular(DesignConstants.radiusMedium),
               ),
             ),
           );
@@ -298,7 +312,8 @@ class ProfilePage extends StatelessWidget {
                     padding: EdgeInsets.all(DesignConstants.space2),
                     decoration: BoxDecoration(
                       color: iconBgColor,
-                      borderRadius: BorderRadius.circular(DesignConstants.radiusSmall),
+                      borderRadius:
+                          BorderRadius.circular(DesignConstants.radiusSmall),
                     ),
                     child: Icon(
                       Icons.warning_amber_rounded,
@@ -344,10 +359,13 @@ class ProfilePage extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: GeminiColors.warningOrange,
                     foregroundColor: Colors.white,
-                    disabledBackgroundColor: GeminiColors.warningOrange.withValues(alpha: 0.5),
-                    padding: EdgeInsets.symmetric(vertical: DesignConstants.space3),
+                    disabledBackgroundColor:
+                        GeminiColors.warningOrange.withValues(alpha: 0.5),
+                    padding:
+                        EdgeInsets.symmetric(vertical: DesignConstants.space3),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(DesignConstants.radiusMedium),
+                      borderRadius:
+                          BorderRadius.circular(DesignConstants.radiusMedium),
                     ),
                     elevation: 0,
                   ),
@@ -384,46 +402,69 @@ class ProfilePage extends StatelessWidget {
     return Column(
       children: [
         // Avatar with glow effect
-        Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: GeminiColors.primary.withOpacity(0.4),
-                blurRadius: 40,
-                spreadRadius: 10,
-              ),
-            ],
-          ),
-          child: Container(
-            width: 120,
-            height: 120,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: GeminiColors.primary,
-                width: 3,
-              ),
-              gradient: const LinearGradient(
-                colors: [
-                  Color(0xFFFFC2A1),
-                  Color(0xFFFFD8B8),
+        // Avatar with glow effect
+        Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: GeminiColors.primary.withOpacity(0.4),
+                    blurRadius: 40,
+                    spreadRadius: 10,
+                  ),
                 ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
               ),
-            ),
-            child: Center(
-              child: Text(
-                user.name.isNotEmpty ? user.name[0].toUpperCase() : 'U',
-                style: const TextStyle(
-                  fontSize: 48,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF2D3142),
+              child: Container(
+                width: 120,
+                height: 120,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: GeminiColors.primary,
+                    width: 3,
+                  ),
+                  gradient: const LinearGradient(
+                    colors: [
+                      Color(0xFFFFC2A1),
+                      Color(0xFFFFD8B8),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+                child: Center(
+                  child: Text(
+                    user.name.isNotEmpty ? user.name[0].toUpperCase() : 'U',
+                    style: const TextStyle(
+                      fontSize: 48,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF2D3142),
+                    ),
+                  ),
                 ),
               ),
             ),
-          ),
+            if (user.isEmailVerified)
+              Positioned(
+                bottom: 0,
+                right: 0,
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: isDark ? const Color(0xFF1F2937) : Colors.white,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.verified_rounded,
+                    color: GeminiColors.incomeGreen,
+                    size: 24,
+                  ),
+                ),
+              ),
+          ],
         ),
         const SizedBox(height: 24),
         // User Name with Subscription Badge
@@ -439,39 +480,46 @@ class ProfilePage extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 8),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: hasSubscription
-                    ? GeminiColors.primary.withOpacity(0.2)
-                    : Colors.grey.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: hasSubscription ? GeminiColors.primary : Colors.grey,
-                  width: 1,
+            if (hasSubscription)
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: hasSubscription
+                      ? GeminiColors.primary.withOpacity(0.2)
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: hasSubscription
+                        ? GeminiColors.primary
+                        : Colors.transparent,
+                    width: 1,
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      hasSubscription ? Icons.star : null,
+                      size: 16,
+                      color: hasSubscription
+                          ? GeminiColors.primary
+                          : Colors.transparent,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      planName,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: hasSubscription
+                            ? GeminiColors.primary
+                            : Colors.grey,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    hasSubscription ? Icons.star : Icons.star_border,
-                    size: 16,
-                    color: hasSubscription ? GeminiColors.primary : Colors.grey,
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    planName,
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color:
-                          hasSubscription ? GeminiColors.primary : Colors.grey,
-                    ),
-                  ),
-                ],
-              ),
-            ),
           ],
         ),
         const SizedBox(height: 8),
@@ -710,6 +758,76 @@ class ProfilePage extends StatelessWidget {
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildProfileShimmer(bool isDark) {
+    return Shimmer.fromColors(
+      baseColor: isDark ? Colors.grey.shade800 : Colors.grey.shade300,
+      highlightColor: isDark ? Colors.grey.shade700 : Colors.grey.shade100,
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            children: [
+              const SizedBox(height: 56), // Approximate AppBar height
+              // Avatar Shimmer
+              Container(
+                width: 120,
+                height: 120,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                ),
+              ),
+              const SizedBox(height: 24),
+              // Name Shimmer
+              Container(
+                width: 200,
+                height: 24,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ),
+              const SizedBox(height: 8),
+              // Email Shimmer
+              Container(
+                width: 150,
+                height: 14,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ),
+              const SizedBox(height: 40),
+              // Subscription Card Shimmer
+              Container(
+                height: 120,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+              const SizedBox(height: 32),
+              // Menu Items Shimmer
+              for (int i = 0; i < 5; i++)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: Container(
+                    height: 56,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
       ),
     );
   }

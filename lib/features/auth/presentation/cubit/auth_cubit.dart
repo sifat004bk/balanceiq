@@ -154,8 +154,9 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> getUserProfile() async {
     emit(AuthLoading());
 
-    // TODO: Implement token storage and retrieval
-    final result = await getProfile('');
+    // Get token from storage
+    final token = sharedPreferences.getString('auth_token') ?? '';
+    final result = await getProfile(token);
 
     result.fold(
       (failure) => emit(AuthError(failure.message)),
@@ -167,6 +168,7 @@ class AuthCubit extends Cubit<AuthState> {
           photoUrl: userInfo.photoUrl,
           authProvider: 'email',
           createdAt: DateTime.now(),
+          isEmailVerified: userInfo.isEmailVerified,
         );
         emit(AuthAuthenticated(user));
       },
@@ -235,14 +237,23 @@ class AuthCubit extends Cubit<AuthState> {
       return;
     }
 
+    final user = currentState.user;
     emit(VerificationEmailSending());
 
     final token = sharedPreferences.getString('auth_token') ?? '';
     final result = await sendVerificationEmail(token: token);
 
     result.fold(
-      (failure) => emit(VerificationEmailError(failure.message)),
-      (_) => emit(VerificationEmailSent(currentState.user.email)),
+      (failure) {
+        emit(VerificationEmailError(failure.message));
+        // Restore authenticated state so UI doesn't break
+        emit(AuthAuthenticated(user));
+      },
+      (_) {
+        emit(VerificationEmailSent(user.email));
+        // Restore authenticated state so UI doesn't break
+        emit(AuthAuthenticated(user));
+      },
     );
   }
 

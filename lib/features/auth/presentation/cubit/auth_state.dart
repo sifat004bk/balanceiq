@@ -54,3 +54,24 @@ class SignupSuccess extends AuthState {
   @override
   List<Object?> get props => [email];
 }
+
+// Email verification states
+class VerificationEmailSending extends AuthState {}
+
+class VerificationEmailSent extends AuthState {
+  final String email;
+
+  const VerificationEmailSent(this.email);
+
+  @override
+  List<Object?> get props => [email];
+}
+
+class VerificationEmailError extends AuthState {
+  final String message;
+
+  const VerificationEmailError(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}

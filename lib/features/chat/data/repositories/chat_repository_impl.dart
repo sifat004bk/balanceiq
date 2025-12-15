@@ -8,7 +8,7 @@ import '../../../../core/constants/app_constants.dart';
 import '../../../../core/error/failures.dart';
 import '../datasources/chat_local_datasource.dart';
 import '../datasources/chat_remote_datasource.dart';
-import '../models/chat_history_response_model.dart';
+import '../datasources/chat_finance_guru_datasource.dart';
 import '../models/message_model.dart';
 
 class ChatRepositoryImpl implements ChatRepository {
@@ -74,8 +74,30 @@ class ChatRepositoryImpl implements ChatRepository {
       await localDataSource.saveMessage(botMessage);
 
       return Right(botMessage);
+    } on ChatApiException catch (e) {
+      // Map ChatApiException to ChatApiFailure
+      final failureType = _mapChatApiErrorType(e.errorType);
+      return Left(ChatApiFailure(e.message, failureType: failureType));
     } catch (e) {
       return Left(ServerFailure('Failed to send message: $e'));
+    }
+  }
+
+  /// Maps ChatApiErrorType to ChatFailureType
+  ChatFailureType _mapChatApiErrorType(ChatApiErrorType errorType) {
+    switch (errorType) {
+      case ChatApiErrorType.emailNotVerified:
+        return ChatFailureType.emailNotVerified;
+      case ChatApiErrorType.subscriptionRequired:
+        return ChatFailureType.subscriptionRequired;
+      case ChatApiErrorType.subscriptionExpired:
+        return ChatFailureType.subscriptionExpired;
+      case ChatApiErrorType.tokenLimitExceeded:
+        return ChatFailureType.tokenLimitExceeded;
+      case ChatApiErrorType.rateLimitExceeded:
+        return ChatFailureType.rateLimitExceeded;
+      case ChatApiErrorType.general:
+        return ChatFailureType.general;
     }
   }
 

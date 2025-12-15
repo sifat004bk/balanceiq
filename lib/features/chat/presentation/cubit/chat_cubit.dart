@@ -12,6 +12,7 @@ import '../../domain/usecases/submit_feedback.dart';
 import '../../domain/entities/chat_feedback.dart';  // For FeedbackType
 import 'chat_state.dart';
 import '../../../../core/constants/app_constants.dart';
+import '../../../../core/error/failures.dart';
 
 class ChatCubit extends Cubit<ChatState> {
   final GetMessages getMessages;
@@ -244,24 +245,56 @@ class ChatCubit extends Cubit<ChatState> {
           result.fold(
             (failure) {
               print('❌ [ChatCubit] sendNewMessage failed: ${failure.message}');
-              // Optionally show error state or undo optimistic update
+
+              // Handle ChatApiFailure with specific error types
+              if (failure is ChatApiFailure) {
+                final errorType = _mapChatFailureType(failure.failureType);
+                emit(ChatError(
+                  message: failure.message,
+                  messages: currentState.messages,
+                  errorType: errorType,
+                ));
+                return;
+              }
+              // For other errors, just update the sending state
             },
             (_) => null,
           );
 
-          print('🔄 [ChatCubit] Reloading messages from cache');
-          final reloadResult = await getMessages(userId, botId, limit: currentState.messages.length + 2);
-          reloadResult.fold(
-            (failure) => emit(currentState.copyWith(isSending: false)),
-            (messages) {
-              emit(currentState.copyWith(messages: messages, isSending: false));
-              // Update token usage
-              loadTokenUsage();
-            },
-          );
+          // Only reload if we didn't emit an error
+          if (state is! ChatError) {
+            print('🔄 [ChatCubit] Reloading messages from cache');
+            final reloadResult = await getMessages(userId, botId, limit: currentState.messages.length + 2);
+            reloadResult.fold(
+              (failure) => emit(currentState.copyWith(isSending: false)),
+              (messages) {
+                emit(currentState.copyWith(messages: messages, isSending: false));
+                // Update token usage
+                loadTokenUsage();
+              },
+            );
+          }
         }
       }
     });
+  }
+
+  /// Maps ChatFailureType to ChatErrorType for state emission
+  ChatErrorType _mapChatFailureType(ChatFailureType failureType) {
+    switch (failureType) {
+      case ChatFailureType.emailNotVerified:
+        return ChatErrorType.emailNotVerified;
+      case ChatFailureType.subscriptionRequired:
+        return ChatErrorType.subscriptionRequired;
+      case ChatFailureType.subscriptionExpired:
+        return ChatErrorType.subscriptionExpired;
+      case ChatFailureType.tokenLimitExceeded:
+        return ChatErrorType.tokenLimitExceeded;
+      case ChatFailureType.rateLimitExceeded:
+        return ChatErrorType.rateLimitExceeded;
+      case ChatFailureType.general:
+        return ChatErrorType.general;
+    }
   }
 
   Future<void> submitMessageFeedback(String messageId, FeedbackType feedback) async {

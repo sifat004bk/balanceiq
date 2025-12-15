@@ -31,6 +31,8 @@ import '../../features/auth/domain/usecases/reset_password.dart';
 import '../../features/auth/domain/usecases/sign_in_with_google.dart';
 import '../../features/auth/domain/usecases/sign_out.dart';
 import '../../features/auth/domain/usecases/signup.dart';
+import '../../features/auth/domain/usecases/send_verification_email.dart';
+import '../../features/auth/domain/usecases/resend_verification_email.dart';
 import '../../features/auth/presentation/cubit/auth_cubit.dart';
 // Features - Chat
 import '../../features/chat/data/datasources/chat_local_datasource.dart';
@@ -133,6 +135,10 @@ Future<void> init() async {
       changePassword: sl(),
       forgotPassword: sl(),
       resetPassword: sl(),
+      // Email verification
+      sendVerificationEmail: sl(),
+      resendVerificationEmail: sl(),
+      sharedPreferences: sl(),
     ),
   );
 
@@ -146,6 +152,8 @@ Future<void> init() async {
   sl.registerLazySingleton(() => ChangePassword(sl()));
   sl.registerLazySingleton(() => ForgotPassword(sl()));
   sl.registerLazySingleton(() => ResetPassword(sl()));
+  sl.registerLazySingleton(() => SendVerificationEmail(sl()));
+  sl.registerLazySingleton(() => ResendVerificationEmail(sl()));
 
   // Repository
   sl.registerLazySingleton<AuthRepository>(

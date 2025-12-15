@@ -36,3 +36,22 @@ class PermissionFailure extends Failure {
 class NotFoundFailure extends Failure {
   const NotFoundFailure(super.message);
 }
+
+/// Chat API failure with specific error types for 403/429 handling
+enum ChatFailureType {
+  emailNotVerified,
+  subscriptionRequired,
+  subscriptionExpired,
+  tokenLimitExceeded,
+  rateLimitExceeded,
+  general,
+}
+
+class ChatApiFailure extends Failure {
+  final ChatFailureType failureType;
+
+  const ChatApiFailure(super.message, {this.failureType = ChatFailureType.general});
+
+  @override
+  List<Object> get props => [message, failureType];
+}

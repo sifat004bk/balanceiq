@@ -5,8 +5,9 @@ class User extends Equatable {
   final String email;
   final String name;
   final String? photoUrl;
-  final String authProvider; // 'google' or 'apple'
+  final String authProvider; // 'google', 'apple', or 'email'
   final DateTime createdAt;
+  final bool isEmailVerified;
 
   const User({
     required this.id,
@@ -15,6 +16,7 @@ class User extends Equatable {
     this.photoUrl,
     required this.authProvider,
     required this.createdAt,
+    this.isEmailVerified = false,
   });
 
   @override
@@ -25,6 +27,7 @@ class User extends Equatable {
         photoUrl,
         authProvider,
         createdAt,
+        isEmailVerified,
       ];
 
   User copyWith({
@@ -34,6 +37,7 @@ class User extends Equatable {
     String? photoUrl,
     String? authProvider,
     DateTime? createdAt,
+    bool? isEmailVerified,
   }) {
     return User(
       id: id ?? this.id,
@@ -42,6 +46,7 @@ class User extends Equatable {
       photoUrl: photoUrl ?? this.photoUrl,
       authProvider: authProvider ?? this.authProvider,
       createdAt: createdAt ?? this.createdAt,
+      isEmailVerified: isEmailVerified ?? this.isEmailVerified,
     );
   }
 }

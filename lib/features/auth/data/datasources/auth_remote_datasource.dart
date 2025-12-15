@@ -14,11 +14,15 @@ abstract class AuthRemoteDataSource {
   // Backend API Methods
   Future<SignupResponse> signup(SignupRequest request);
   Future<LoginResponse> login(LoginRequest request);
-  Future<RefreshTokenResponse> refreshToken(String refreshToken); // Added
+  Future<RefreshTokenResponse> refreshToken(String refreshToken);
   Future<UserInfo> getProfile(String token);
   Future<void> changePassword(ChangePasswordRequest request, String token);
   Future<void> forgotPassword(ForgotPasswordRequest request);
   Future<void> resetPassword(ResetPasswordRequest request);
+
+  // Email Verification Methods
+  Future<void> sendVerificationEmail(String token);
+  Future<void> resendVerificationEmail(String email);
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -289,6 +293,70 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       }
     } catch (e) {
       throw Exception('Failed to reset password: $e');
+    }
+  }
+
+  @override
+  Future<void> sendVerificationEmail(String token) async {
+    try {
+      final response = await dio.post(
+        ApiEndpoints.sendVerification,
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+          sendTimeout: AppConstants.apiTimeout,
+          receiveTimeout: AppConstants.apiTimeout,
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        return;
+      } else {
+        throw Exception('Failed to send verification email: ${response.statusCode}');
+      }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 400) {
+        throw Exception(e.response?.data['message'] ?? 'Failed to send verification email');
+      } else if (e.response?.statusCode == 401) {
+        throw Exception('Unauthorized. Please login again.');
+      } else {
+        throw Exception('Network error: ${e.message}');
+      }
+    } catch (e) {
+      throw Exception('Failed to send verification email: $e');
+    }
+  }
+
+  @override
+  Future<void> resendVerificationEmail(String email) async {
+    try {
+      final response = await dio.post(
+        ApiEndpoints.resendVerification,
+        data: {'email': email},
+        options: Options(
+          headers: {'Content-Type': 'application/json'},
+          sendTimeout: AppConstants.apiTimeout,
+          receiveTimeout: AppConstants.apiTimeout,
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        return;
+      } else {
+        throw Exception('Failed to resend verification email: ${response.statusCode}');
+      }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 404) {
+        throw Exception('Email not found');
+      } else if (e.response?.statusCode == 400) {
+        throw Exception(e.response?.data['message'] ?? 'Email is already verified');
+      } else {
+        throw Exception('Network error: ${e.message}');
+      }
+    } catch (e) {
+      throw Exception('Failed to resend verification email: $e');
     }
   }
 }

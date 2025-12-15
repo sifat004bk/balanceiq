@@ -263,6 +263,7 @@ class UserInfo {
   final String fullName;
   final String? photoUrl;
   final List<String> roles;
+  final bool isEmailVerified;
 
   UserInfo({
     required this.id,
@@ -271,6 +272,7 @@ class UserInfo {
     required this.fullName,
     this.photoUrl,
     required this.roles,
+    this.isEmailVerified = false,
   });
 
   factory UserInfo.fromJson(Map<String, dynamic> json) {
@@ -289,6 +291,7 @@ class UserInfo {
               ?.map((e) => e.toString())
               .toList() ??
           [userData['role'] as String? ?? 'USER'],
+      isEmailVerified: userData['isEmailVerified'] as bool? ?? false,
     );
   }
 
@@ -300,6 +303,7 @@ class UserInfo {
       'fullName': fullName,
       if (photoUrl != null) 'photoUrl': photoUrl,
       'roles': roles,
+      'isEmailVerified': isEmailVerified,
     };
   }
 }

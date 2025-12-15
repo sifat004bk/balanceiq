@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../core/constants/gemini_colors.dart';
+import '../../../../core/constants/design_constants.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../subscription/domain/entities/subscription_status.dart';
 import '../../../subscription/presentation/cubit/subscription_cubit.dart';
@@ -41,7 +42,9 @@ class ProfilePage extends StatelessWidget {
           }
         },
         child: Scaffold(
-          backgroundColor: isDark ? GeminiColors.backgroundDark : GeminiColors.backgroundLight,
+          backgroundColor: isDark
+              ? GeminiColors.backgroundDark
+              : GeminiColors.backgroundLight,
           body: BlocBuilder<AuthCubit, AuthState>(
             builder: (context, state) {
               if (state is AuthLoading) {
@@ -117,6 +120,9 @@ class ProfilePage extends StatelessWidget {
             child: Column(
               children: [
                 const SizedBox(height: 16),
+                // Email Verification Banner (if not verified)
+                if (!user.isEmailVerified)
+                  _buildEmailVerificationBanner(context, user, isDark),
                 // Profile Header with dynamic subscription badge
                 BlocBuilder<SubscriptionCubit, SubscriptionState>(
                   builder: (context, subState) {
@@ -135,10 +141,12 @@ class ProfilePage extends StatelessWidget {
                       return _buildSubscriptionCardLoading(isDark);
                     }
                     if (subState is SubscriptionStatusLoaded) {
-                      return _buildSubscriptionCard(context, isDark, subState.status);
+                      return _buildSubscriptionCard(
+                          context, isDark, subState.status);
                     }
                     if (subState is SubscriptionError) {
-                      return _buildSubscriptionCardError(context, isDark, subState.message);
+                      return _buildSubscriptionCardError(
+                          context, isDark, subState.message);
                     }
                     return _buildSubscriptionCardLoading(isDark);
                   },
@@ -153,7 +161,8 @@ class ProfilePage extends StatelessWidget {
                   onTap: () {
                     // TODO: Navigate to account details
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Account Details coming soon')),
+                      const SnackBar(
+                          content: Text('Account Details coming soon')),
                     );
                   },
                 ),
@@ -176,7 +185,8 @@ class ProfilePage extends StatelessWidget {
                   onTap: () {
                     // TODO: Navigate to notifications
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Notifications coming soon')),
+                      const SnackBar(
+                          content: Text('Notifications coming soon')),
                     );
                   },
                 ),
@@ -189,7 +199,8 @@ class ProfilePage extends StatelessWidget {
                   onTap: () {
                     // TODO: Navigate to appearance settings
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Appearance settings coming soon')),
+                      const SnackBar(
+                          content: Text('Appearance settings coming soon')),
                     );
                   },
                 ),
@@ -218,10 +229,158 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildProfileHeader(dynamic user, bool isDark, SubscriptionStatus? status) {
+  Widget _buildEmailVerificationBanner(
+    BuildContext context,
+    dynamic user,
+    bool isDark,
+  ) {
+    // Use design system colors
+    final backgroundColor = isDark
+        ? GeminiColors.warningOrange.withValues(alpha: 0.15)
+        : GeminiColors.warningOrangeLight;
+    final borderColor = isDark
+        ? GeminiColors.warningOrange.withValues(alpha: 0.3)
+        : GeminiColors.warningOrange.withValues(alpha: 0.3);
+    final iconBgColor = isDark
+        ? GeminiColors.warningOrange.withValues(alpha: 0.2)
+        : GeminiColors.warningOrange.withValues(alpha: 0.15);
+    final titleColor = isDark ? Colors.white : const Color(0xFFE65100);
+    final subtitleColor = isDark
+        ? Colors.white.withValues(alpha: 0.7)
+        : GeminiColors.warningOrange;
+
+    return BlocConsumer<AuthCubit, AuthState>(
+      listener: (context, state) {
+        if (state is VerificationEmailSent) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Verification email sent to ${state.email}'),
+              backgroundColor: GeminiColors.incomeGreen,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(DesignConstants.radiusMedium),
+              ),
+            ),
+          );
+        } else if (state is VerificationEmailError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+              backgroundColor: GeminiColors.errorRed,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(DesignConstants.radiusMedium),
+              ),
+            ),
+          );
+        }
+      },
+      builder: (context, state) {
+        final isSending = state is VerificationEmailSending;
+
+        return Container(
+          margin: EdgeInsets.only(bottom: DesignConstants.space6),
+          padding: EdgeInsets.all(DesignConstants.space4),
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            borderRadius: BorderRadius.circular(DesignConstants.radiusLarge),
+            border: Border.all(
+              color: borderColor,
+              width: DesignConstants.glassBorderWidth,
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(DesignConstants.space2),
+                    decoration: BoxDecoration(
+                      color: iconBgColor,
+                      borderRadius: BorderRadius.circular(DesignConstants.radiusSmall),
+                    ),
+                    child: Icon(
+                      Icons.warning_amber_rounded,
+                      color: GeminiColors.warningOrange,
+                      size: DesignConstants.iconSizeLarge,
+                    ),
+                  ),
+                  SizedBox(width: DesignConstants.space3),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Verify your email',
+                          style: TextStyle(
+                            fontSize: DesignConstants.fontSizeL,
+                            fontWeight: DesignConstants.fontWeightSemiBold,
+                            color: titleColor,
+                          ),
+                        ),
+                        SizedBox(height: DesignConstants.space1),
+                        Text(
+                          'Please verify your email to access all features',
+                          style: TextStyle(
+                            fontSize: DesignConstants.fontSizeS,
+                            color: subtitleColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: DesignConstants.space4),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: isSending
+                      ? null
+                      : () {
+                          context.read<AuthCubit>().sendEmailVerification();
+                        },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: GeminiColors.warningOrange,
+                    foregroundColor: Colors.white,
+                    disabledBackgroundColor: GeminiColors.warningOrange.withValues(alpha: 0.5),
+                    padding: EdgeInsets.symmetric(vertical: DesignConstants.space3),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(DesignConstants.radiusMedium),
+                    ),
+                    elevation: 0,
+                  ),
+                  child: isSending
+                      ? SizedBox(
+                          height: DesignConstants.loadingIndicatorSmall,
+                          width: DesignConstants.loadingIndicatorSmall,
+                          child: const CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : Text(
+                          'Send Verification Email',
+                          style: TextStyle(
+                            fontSize: DesignConstants.fontSizeM,
+                            fontWeight: DesignConstants.fontWeightSemiBold,
+                          ),
+                        ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildProfileHeader(
+      dynamic user, bool isDark, SubscriptionStatus? status) {
     final hasSubscription = status?.hasActiveSubscription ?? false;
-    final planName = status?.subscription?.plan.displayName ?? 'Free';
-    
+    final planName = status?.subscription?.plan.displayName ?? '';
+
     return Column(
       children: [
         // Avatar with glow effect
@@ -283,7 +442,7 @@ class ProfilePage extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: hasSubscription 
+                color: hasSubscription
                     ? GeminiColors.primary.withOpacity(0.2)
                     : Colors.grey.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(20),
@@ -306,7 +465,8 @@ class ProfilePage extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: hasSubscription ? GeminiColors.primary : Colors.grey,
+                      color:
+                          hasSubscription ? GeminiColors.primary : Colors.grey,
                     ),
                   ),
                 ],
@@ -394,7 +554,8 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildSubscriptionCardError(BuildContext context, bool isDark, String message) {
+  Widget _buildSubscriptionCardError(
+      BuildContext context, bool isDark, String message) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -415,7 +576,8 @@ class ProfilePage extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           TextButton(
-            onPressed: () => context.read<SubscriptionCubit>().loadSubscriptionStatus(),
+            onPressed: () =>
+                context.read<SubscriptionCubit>().loadSubscriptionStatus(),
             child: const Text('Retry'),
           ),
         ],
@@ -423,24 +585,21 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildSubscriptionCard(BuildContext context, bool isDark, SubscriptionStatus status) {
+  Widget _buildSubscriptionCard(
+      BuildContext context, bool isDark, SubscriptionStatus status) {
     if (!status.hasActiveSubscription) {
       return _buildNoSubscriptionCard(context, isDark);
     }
-    
+
     final subscription = status.subscription!;
-    
+
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: isDark
-            ? const Color(0xFF1A1C23)
-            : Colors.white,
+        color: isDark ? const Color(0xFF1A1C23) : Colors.white,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: isDark
-              ? Colors.grey.shade800
-              : Colors.grey.shade200,
+          color: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
           width: 1,
         ),
         boxShadow: [
@@ -467,7 +626,8 @@ class ProfilePage extends StatelessWidget {
               ),
               if (subscription.isExpiringSoon)
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.orange.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
@@ -475,7 +635,8 @@ class ProfilePage extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.warning, size: 14, color: Colors.orange.shade700),
+                      Icon(Icons.warning,
+                          size: 14, color: Colors.orange.shade700),
                       const SizedBox(width: 4),
                       Text(
                         '${subscription.daysRemaining} days left',
@@ -511,7 +672,9 @@ class ProfilePage extends StatelessWidget {
                       'Renews on ${subscription.formattedEndDate}',
                       style: TextStyle(
                         fontSize: 14,
-                        color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                        color: isDark
+                            ? Colors.grey.shade400
+                            : Colors.grey.shade600,
                       ),
                     ),
                   ],
@@ -520,7 +683,8 @@ class ProfilePage extends StatelessWidget {
               const SizedBox(width: 16),
               ElevatedButton(
                 onPressed: () async {
-                  final result = await Navigator.pushNamed(context, '/manage-subscription');
+                  final result = await Navigator.pushNamed(
+                      context, '/manage-subscription');
                   if (result == true && context.mounted) {
                     context.read<SubscriptionCubit>().loadSubscriptionStatus();
                   }
@@ -528,7 +692,8 @@ class ProfilePage extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: GeminiColors.primary,
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -600,7 +765,9 @@ class ProfilePage extends StatelessWidget {
                       'Subscribe to unlock premium features',
                       style: TextStyle(
                         fontSize: 14,
-                        color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                        color: isDark
+                            ? Colors.grey.shade400
+                            : Colors.grey.shade600,
                       ),
                     ),
                   ],
@@ -609,7 +776,8 @@ class ProfilePage extends StatelessWidget {
               const SizedBox(width: 16),
               ElevatedButton(
                 onPressed: () async {
-                  final result = await Navigator.pushNamed(context, '/subscription-plans');
+                  final result =
+                      await Navigator.pushNamed(context, '/subscription-plans');
                   if (result == true && context.mounted) {
                     context.read<SubscriptionCubit>().loadSubscriptionStatus();
                   }
@@ -617,7 +785,8 @@ class ProfilePage extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: GeminiColors.primary,
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -651,14 +820,10 @@ class ProfilePage extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isDark
-              ? const Color(0xFF1A1C23)
-              : Colors.white,
+          color: isDark ? const Color(0xFF1A1C23) : Colors.white,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: isDark
-                ? Colors.grey.shade800
-                : Colors.grey.shade200,
+            color: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
             width: 1,
           ),
         ),
@@ -729,9 +894,8 @@ class ProfilePage extends StatelessWidget {
           );
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: isDark
-              ? const Color(0xFF2D1F1F)
-              : Colors.red.shade50,
+          backgroundColor:
+              isDark ? const Color(0xFF2D1F1F) : Colors.red.shade50,
           foregroundColor: Colors.red.shade700,
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(

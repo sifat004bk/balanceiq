@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../domain/usecases/sign_in_with_google.dart';
 import '../../domain/usecases/sign_out.dart';
 import '../../domain/usecases/get_current_user.dart';
@@ -8,6 +9,8 @@ import '../../domain/usecases/get_profile.dart';
 import '../../domain/usecases/change_password.dart';
 import '../../domain/usecases/forgot_password.dart';
 import '../../domain/usecases/reset_password.dart';
+import '../../domain/usecases/send_verification_email.dart';
+import '../../domain/usecases/resend_verification_email.dart';
 import '../../domain/entities/user.dart';
 import 'auth_state.dart';
 
@@ -25,6 +28,11 @@ class AuthCubit extends Cubit<AuthState> {
   final ForgotPassword forgotPassword;
   final ResetPassword resetPassword;
 
+  // Email verification dependencies
+  final SendVerificationEmail sendVerificationEmail;
+  final ResendVerificationEmail resendVerificationEmail;
+  final SharedPreferences sharedPreferences;
+
   AuthCubit({
     // OAuth dependencies
     required this.signInWithGoogle,
@@ -37,6 +45,10 @@ class AuthCubit extends Cubit<AuthState> {
     required this.changePassword,
     required this.forgotPassword,
     required this.resetPassword,
+    // Email verification
+    required this.sendVerificationEmail,
+    required this.resendVerificationEmail,
+    required this.sharedPreferences,
   }) : super(AuthInitial());
 
   // Check for existing session on app start
@@ -97,6 +109,7 @@ class AuthCubit extends Cubit<AuthState> {
             photoUrl: null,
             authProvider: 'email',
             createdAt: DateTime.now(),
+            isEmailVerified: loginResponse.data!.isEmailVerified,
           );
 
           emit(AuthAuthenticated(user));
@@ -212,5 +225,45 @@ class AuthCubit extends Cubit<AuthState> {
       (failure) => emit(AuthError(failure.message)),
       (_) => emit(PasswordResetSuccess()),
     );
+  }
+
+  /// Send verification email for the currently authenticated user
+  Future<void> sendEmailVerification() async {
+    final currentState = state;
+    if (currentState is! AuthAuthenticated) {
+      emit(const AuthError('Please login first'));
+      return;
+    }
+
+    emit(VerificationEmailSending());
+
+    final token = sharedPreferences.getString('auth_token') ?? '';
+    final result = await sendVerificationEmail(token: token);
+
+    result.fold(
+      (failure) => emit(VerificationEmailError(failure.message)),
+      (_) => emit(VerificationEmailSent(currentState.user.email)),
+    );
+  }
+
+  /// Resend verification email using email address (for non-logged in users)
+  Future<void> resendEmailVerification({required String email}) async {
+    emit(VerificationEmailSending());
+
+    final result = await resendVerificationEmail(email: email);
+
+    result.fold(
+      (failure) => emit(VerificationEmailError(failure.message)),
+      (_) => emit(VerificationEmailSent(email)),
+    );
+  }
+
+  /// Update user's email verification status (called after successful verification)
+  void updateEmailVerificationStatus(bool isVerified) {
+    final currentState = state;
+    if (currentState is AuthAuthenticated) {
+      final updatedUser = currentState.user.copyWith(isEmailVerified: isVerified);
+      emit(AuthAuthenticated(updatedUser));
+    }
   }
 }

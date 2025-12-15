@@ -8,6 +8,30 @@ import '../models/chat_history_response_model.dart';
 import '../models/message_model.dart';
 import 'chat_remote_datasource.dart';
 
+/// Error types for chat API exceptions
+enum ChatApiErrorType {
+  emailNotVerified,
+  subscriptionRequired,
+  subscriptionExpired,
+  tokenLimitExceeded,
+  rateLimitExceeded,
+  general,
+}
+
+/// Custom exception for chat API errors
+class ChatApiException implements Exception {
+  final String message;
+  final ChatApiErrorType errorType;
+
+  ChatApiException({
+    required this.message,
+    required this.errorType,
+  });
+
+  @override
+  String toString() => message;
+}
+
 /// Finance Guru API implementation based on Postman API Collection spec
 /// Endpoints:
 /// - POST /api/finance-guru/chat
@@ -97,12 +121,43 @@ class ChatFinanceGuruDataSource implements ChatRemoteDataSource {
         throw Exception('Request timeout. Please check your internet connection.');
       } else if (e.type == DioExceptionType.badResponse) {
         final statusCode = e.response?.statusCode;
-        final message = e.response?.data?['message'] ?? e.response?.data?['error'];
+        final message = e.response?.data?['message'] ?? e.response?.data?['error'] ?? '';
+
+        // Handle 403 Forbidden errors with specific error types
+        if (statusCode == 403) {
+          if (message.toString().toLowerCase().contains('verify your email')) {
+            throw ChatApiException(
+              message: message.toString(),
+              errorType: ChatApiErrorType.emailNotVerified,
+            );
+          } else if (message.toString().toLowerCase().contains('active subscription')) {
+            throw ChatApiException(
+              message: message.toString(),
+              errorType: ChatApiErrorType.subscriptionRequired,
+            );
+          } else if (message.toString().toLowerCase().contains('expired')) {
+            throw ChatApiException(
+              message: message.toString(),
+              errorType: ChatApiErrorType.subscriptionExpired,
+            );
+          } else if (message.toString().toLowerCase().contains('token limit')) {
+            throw ChatApiException(
+              message: message.toString(),
+              errorType: ChatApiErrorType.tokenLimitExceeded,
+            );
+          }
+        } else if (statusCode == 429) {
+          throw ChatApiException(
+            message: message.toString(),
+            errorType: ChatApiErrorType.rateLimitExceeded,
+          );
+        }
         throw Exception('Server error ($statusCode): ${message ?? 'Unknown error'}');
       } else {
         throw Exception('Network error: ${e.message}');
       }
     } catch (e) {
+      if (e is ChatApiException) rethrow;
       throw Exception('Failed to send message: $e');
     }
   }

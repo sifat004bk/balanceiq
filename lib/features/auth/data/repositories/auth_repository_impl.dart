@@ -101,6 +101,7 @@ class AuthRepositoryImpl implements AuthRepository {
           photoUrl: null,
           authProvider: 'email',
           createdAt: DateTime.now(),
+          isEmailVerified: response.data!.isEmailVerified,
         );
         await localDataSource.saveUser(userModel);
       }
@@ -168,6 +169,26 @@ class AuthRepositoryImpl implements AuthRepository {
       return const Right(null);
     } catch (e) {
       return Left(ServerFailure('Failed to reset password: $e'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> sendVerificationEmail(String token) async {
+    try {
+      await remoteDataSource.sendVerificationEmail(token);
+      return const Right(null);
+    } catch (e) {
+      return Left(ServerFailure('Failed to send verification email: $e'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> resendVerificationEmail(String email) async {
+    try {
+      await remoteDataSource.resendVerificationEmail(email);
+      return const Right(null);
+    } catch (e) {
+      return Left(ServerFailure('Failed to resend verification email: $e'));
     }
   }
 }

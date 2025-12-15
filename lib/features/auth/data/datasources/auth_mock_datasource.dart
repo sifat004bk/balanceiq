@@ -31,7 +31,7 @@ class AuthMockDataSource implements AuthRemoteDataSource {
   /// Initialize some test users for easy testing
   void _initializeMockUsers() {
     if (_users.isEmpty) {
-      // Test user 1: Regular user
+      // Test user 1: Regular user (email not verified - for testing verification flow)
       _users['testuser'] = _MockUser(
         id: 'user_001',
         username: 'testuser',
@@ -40,9 +40,10 @@ class AuthMockDataSource implements AuthRemoteDataSource {
         email: 'test@example.com',
         photoUrl: null,
         roles: ['user'],
+        isEmailVerified: false,
       );
 
-      // Test user 2: Admin user
+      // Test user 2: Admin user (email verified)
       _users['admin'] = _MockUser(
         id: 'user_002',
         username: 'admin',
@@ -51,9 +52,10 @@ class AuthMockDataSource implements AuthRemoteDataSource {
         email: 'admin@balanceiq.com',
         photoUrl: null,
         roles: ['user', 'admin'],
+        isEmailVerified: true,
       );
 
-      // Test user 3: Demo user
+      // Test user 3: Demo user (email verified)
       _users['demo'] = _MockUser(
         id: 'user_003',
         username: 'demo',
@@ -62,6 +64,7 @@ class AuthMockDataSource implements AuthRemoteDataSource {
         email: 'demo@balanceiq.com',
         photoUrl: 'https://i.pravatar.cc/150?u=demo',
         roles: ['user'],
+        isEmailVerified: true,
       );
     }
   }
@@ -174,7 +177,7 @@ class AuthMockDataSource implements AuthRemoteDataSource {
         username: user.username,
         email: user.email,
         role: user.roles.contains('admin') ? 'ADMIN' : 'USER',
-        isEmailVerified: true,
+        isEmailVerified: user.isEmailVerified,
       ),
       timestamp: DateTime.now().millisecondsSinceEpoch,
     );
@@ -250,6 +253,7 @@ class AuthMockDataSource implements AuthRemoteDataSource {
       email: user.email,
       photoUrl: user.photoUrl,
       roles: user.roles,
+      isEmailVerified: user.isEmailVerified,
     );
   }
 
@@ -431,6 +435,57 @@ class AuthMockDataSource implements AuthRemoteDataSource {
     throw Exception('Invalid token format');
   }
 
+  @override
+  Future<void> sendVerificationEmail(String token) async {
+    await _simulateDelay();
+
+    // Validate token
+    if (token.isEmpty) {
+      throw Exception('Unauthorized. Please login again.');
+    }
+
+    // Extract user ID from token
+    final userId = _extractUserIdFromToken(token);
+
+    // Find user
+    final user = _users.values.firstWhere(
+      (u) => u.id == userId,
+      orElse: () => throw Exception('User not found'),
+    );
+
+    if (user.isEmailVerified) {
+      throw Exception('Email is already verified');
+    }
+
+    // In real implementation, would send email
+    print('📧 [MOCK] Verification email sent to: ${user.email}');
+    print('🔗 [MOCK] Verification link: /verify-email?token=mock_verify_${user.id}');
+  }
+
+  @override
+  Future<void> resendVerificationEmail(String email) async {
+    await _simulateDelay();
+
+    // Validate email
+    if (!email.contains('@')) {
+      throw Exception('Invalid email format');
+    }
+
+    // Check if email exists
+    final user = _users.values.firstWhere(
+      (u) => u.email == email,
+      orElse: () => throw Exception('Email not found'),
+    );
+
+    if (user.isEmailVerified) {
+      throw Exception('Email is already verified');
+    }
+
+    // In real implementation, would send email
+    print('📧 [MOCK] Verification email resent to: $email');
+    print('🔗 [MOCK] Verification link: /verify-email?token=mock_verify_${user.id}');
+  }
+
   /// Clear all mock data (useful for testing)
   static void clearAllData() {
     _users.clear();
@@ -465,6 +520,7 @@ class _MockUser {
   final String email;
   final String? photoUrl;
   final List<String> roles;
+  final bool isEmailVerified;
 
   _MockUser({
     required this.id,
@@ -474,10 +530,33 @@ class _MockUser {
     required this.email,
     this.photoUrl,
     required this.roles,
+    this.isEmailVerified = false,
   });
+
+  _MockUser copyWith({
+    String? id,
+    String? username,
+    String? password,
+    String? fullName,
+    String? email,
+    String? photoUrl,
+    List<String>? roles,
+    bool? isEmailVerified,
+  }) {
+    return _MockUser(
+      id: id ?? this.id,
+      username: username ?? this.username,
+      password: password ?? this.password,
+      fullName: fullName ?? this.fullName,
+      email: email ?? this.email,
+      photoUrl: photoUrl ?? this.photoUrl,
+      roles: roles ?? this.roles,
+      isEmailVerified: isEmailVerified ?? this.isEmailVerified,
+    );
+  }
 
   @override
   String toString() {
-    return 'MockUser(id: $id, username: $username, email: $email, fullName: $fullName)';
+    return 'MockUser(id: $id, username: $username, email: $email, fullName: $fullName, isEmailVerified: $isEmailVerified)';
   }
 }

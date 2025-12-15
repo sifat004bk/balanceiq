@@ -57,12 +57,24 @@ class ChatLoaded extends ChatState {
 class ChatError extends ChatState {
   final String message;
   final List<Message>? messages;
+  final ChatErrorType? errorType;
 
   const ChatError({
     required this.message,
     this.messages,
+    this.errorType,
   });
 
   @override
-  List<Object?> get props => [message, messages];
+  List<Object?> get props => [message, messages, errorType];
+}
+
+/// Types of chat errors for specific handling
+enum ChatErrorType {
+  emailNotVerified,
+  subscriptionRequired,
+  subscriptionExpired,
+  tokenLimitExceeded,
+  rateLimitExceeded,
+  general,
 }

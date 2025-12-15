@@ -24,6 +24,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
     }
     await sharedPreferences.setString(AppConstants.keyUserAuthProvider, user.authProvider);
     await sharedPreferences.setBool(AppConstants.keyIsLoggedIn, true);
+    await sharedPreferences.setBool(AppConstants.keyIsEmailVerified, user.isEmailVerified);
   }
 
   @override
@@ -35,6 +36,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
       final name = sharedPreferences.getString(AppConstants.keyUserName);
       final photoUrl = sharedPreferences.getString(AppConstants.keyUserPhotoUrl);
       final authProvider = sharedPreferences.getString(AppConstants.keyUserAuthProvider);
+      final isEmailVerified = sharedPreferences.getBool(AppConstants.keyIsEmailVerified) ?? false;
 
       if (userId != null && email != null && name != null) {
         return UserModel(
@@ -44,6 +46,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
           photoUrl: photoUrl,
           authProvider: authProvider ?? 'google',
           createdAt: DateTime.now(),
+          isEmailVerified: isEmailVerified,
         );
       }
     }
@@ -57,6 +60,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
     await sharedPreferences.remove(AppConstants.keyUserName);
     await sharedPreferences.remove(AppConstants.keyUserPhotoUrl);
     await sharedPreferences.remove(AppConstants.keyUserAuthProvider);
+    await sharedPreferences.remove(AppConstants.keyIsEmailVerified);
     await sharedPreferences.setBool(AppConstants.keyIsLoggedIn, false);
   }
 

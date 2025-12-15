@@ -8,6 +8,7 @@ class UserModel extends User {
     super.photoUrl,
     required super.authProvider,
     required super.createdAt,
+    super.isEmailVerified = false,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -18,6 +19,7 @@ class UserModel extends User {
       photoUrl: json['photo_url'] as String?,
       authProvider: json['auth_provider'] as String,
       createdAt: DateTime.parse(json['created_at'] as String),
+      isEmailVerified: json['is_email_verified'] as bool? ?? false,
     );
   }
 
@@ -29,6 +31,7 @@ class UserModel extends User {
       'photo_url': photoUrl,
       'auth_provider': authProvider,
       'created_at': createdAt.toIso8601String(),
+      'is_email_verified': isEmailVerified,
     };
   }
 
@@ -40,6 +43,7 @@ class UserModel extends User {
       photoUrl: user.photoUrl,
       authProvider: user.authProvider,
       createdAt: user.createdAt,
+      isEmailVerified: user.isEmailVerified,
     );
   }
 
@@ -51,6 +55,7 @@ class UserModel extends User {
       photoUrl: photoUrl,
       authProvider: authProvider,
       createdAt: createdAt,
+      isEmailVerified: isEmailVerified,
     );
   }
 }

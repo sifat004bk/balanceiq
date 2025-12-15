@@ -90,6 +90,146 @@ class _ChatViewState extends State<ChatView> {
   // Bottom offset from the keyboard/bottom of screen
   double _bottomOffset = 20;
 
+  Widget _buildErrorWidget(BuildContext context, ChatError state) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    // Determine error details based on error type
+    String title;
+    String description;
+    IconData icon;
+    Color iconColor;
+    String buttonText;
+    VoidCallback onButtonPressed;
+
+    switch (state.errorType) {
+      case ChatErrorType.emailNotVerified:
+        title = 'Email Verification Required';
+        description = 'Please verify your email address to use the chat feature.';
+        icon = Icons.email_outlined;
+        iconColor = Colors.orange;
+        buttonText = 'Verify Email';
+        onButtonPressed = () => Navigator.pushNamed(context, '/profile');
+        break;
+      case ChatErrorType.subscriptionRequired:
+        title = 'Subscription Required';
+        description = 'You need an active subscription plan to use the chat feature.';
+        icon = Icons.card_membership_outlined;
+        iconColor = GeminiColors.primary;
+        buttonText = 'View Plans';
+        onButtonPressed = () => Navigator.pushNamed(context, '/subscription-plans');
+        break;
+      case ChatErrorType.subscriptionExpired:
+        title = 'Subscription Expired';
+        description = 'Your subscription has expired. Please renew to continue using the chat feature.';
+        icon = Icons.timer_off_outlined;
+        iconColor = Colors.red;
+        buttonText = 'Renew Subscription';
+        onButtonPressed = () => Navigator.pushNamed(context, '/manage-subscription');
+        break;
+      case ChatErrorType.tokenLimitExceeded:
+        title = 'Token Limit Exceeded';
+        description = state.message.isNotEmpty ? state.message : 'You have reached your daily token limit.';
+        icon = Icons.token_outlined;
+        iconColor = Colors.amber;
+        buttonText = 'Upgrade Plan';
+        onButtonPressed = () => Navigator.pushNamed(context, '/subscription-plans');
+        break;
+      case ChatErrorType.rateLimitExceeded:
+        title = 'Too Many Requests';
+        description = 'Please wait a moment before sending more messages.';
+        icon = Icons.schedule_outlined;
+        iconColor = Colors.blue;
+        buttonText = 'Got it';
+        onButtonPressed = () => context.read<ChatCubit>().loadChatHistory(widget.botId);
+        break;
+      default:
+        title = 'Something went wrong';
+        description = state.message.isNotEmpty ? state.message : 'An error occurred. Please try again.';
+        icon = Icons.error_outline;
+        iconColor = Colors.red;
+        buttonText = 'Retry';
+        onButtonPressed = () => context.read<ChatCubit>().loadChatHistory(widget.botId);
+    }
+
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: iconColor.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                icon,
+                size: 48,
+                color: iconColor,
+              ),
+            ),
+            const SizedBox(height: 24),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: isDark ? Colors.white : Colors.black87,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 12),
+            Text(
+              description,
+              style: TextStyle(
+                fontSize: 14,
+                color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 32),
+            ElevatedButton(
+              onPressed: onButtonPressed,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: GeminiColors.primary,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                elevation: 0,
+              ),
+              child: Text(
+                buttonText,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            if (state.messages?.isNotEmpty == true) ...[
+              const SizedBox(height: 16),
+              TextButton(
+                onPressed: () {
+                  // Return to showing messages if available
+                  context.read<ChatCubit>().loadChatHistory(widget.botId);
+                },
+                child: Text(
+                  'Back to Chat',
+                  style: TextStyle(
+                    color: GeminiColors.primary,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
@@ -144,7 +284,7 @@ class _ChatViewState extends State<ChatView> {
                       padding: EdgeInsets.only(bottom: 120 + keyboardHeight),
                     );
                   } else if (state is ChatError) {
-                    return Center(child: Text('Error: ${state.message}'));
+                    return _buildErrorWidget(context, state);
                   }
                   return const SizedBox.shrink();
                 },

@@ -32,6 +32,7 @@ class AppConstants {
   static const String keyUserPhotoUrl = 'user_photo_url';
   static const String keyUserAuthProvider = 'user_auth_provider';
   static const String keyIsLoggedIn = 'is_logged_in';
+  static const String keyIsEmailVerified = 'is_email_verified';
   static const String keyThemeMode = 'theme_mode';
 
   // Mock Mode

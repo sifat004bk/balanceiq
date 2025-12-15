@@ -10,6 +10,7 @@ import '../widgets/chat_shimmer.dart';
 import '../widgets/floating_chat_input.dart';
 import '../widgets/message_list.dart';
 import '../widgets/suggested_prompts.dart';
+import '../widgets/token_usage_button.dart';
 
 class ChatPage extends StatelessWidget {
   final String botId;
@@ -322,6 +323,13 @@ class _ChatViewState extends State<ChatView> {
                   ),
                 ),
               ),
+            ),
+
+            // Layer 2.5: Floating Token Usage Button (Top Right)
+            const Positioned(
+              top: 8,
+              right: 8,
+              child: TokenUsageButton(),
             ),
 
             // Layer 3: Floating Draggable Input - positioned from bottom

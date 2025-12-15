@@ -11,10 +11,31 @@ class TokenUsageHistoryItem {
   });
 
   factory TokenUsageHistoryItem.fromJson(Map<String, dynamic> json) {
+    // Parse timestamp - if no timezone info, treat as UTC then convert to local
+    final timestampStr = json['timestamp'] as String;
+    DateTime parsedTimestamp = DateTime.parse(timestampStr);
+
+    // If the timestamp doesn't end with 'Z' and isn't already UTC, treat it as UTC
+    if (!timestampStr.endsWith('Z') && !timestampStr.contains('+') && !timestampStr.contains('-', 10)) {
+      // Server sends UTC without 'Z', so parse as UTC then convert to local
+      parsedTimestamp = DateTime.utc(
+        parsedTimestamp.year,
+        parsedTimestamp.month,
+        parsedTimestamp.day,
+        parsedTimestamp.hour,
+        parsedTimestamp.minute,
+        parsedTimestamp.second,
+        parsedTimestamp.millisecond,
+        parsedTimestamp.microsecond,
+      ).toLocal();
+    } else {
+      parsedTimestamp = parsedTimestamp.toLocal();
+    }
+
     return TokenUsageHistoryItem(
       amount: json['amount'] as int,
       action: json['action'] as String,
-      timestamp: DateTime.parse(json['timestamp'] as String),
+      timestamp: parsedTimestamp,
     );
   }
 

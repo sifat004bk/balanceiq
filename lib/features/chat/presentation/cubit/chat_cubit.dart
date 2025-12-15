@@ -3,6 +3,7 @@ import 'package:uuid/uuid.dart';
 import 'package:synchronized/synchronized.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../domain/entities/message.dart';
+import '../../domain/entities/token_usage.dart';
 import '../../domain/usecases/get_chat_history.dart';
 import '../../domain/usecases/get_messages.dart';
 import '../../domain/usecases/send_message.dart';
@@ -28,6 +29,7 @@ class ChatCubit extends Cubit<ChatState> {
   int _apiPage = 0;
   bool _hasMore = true;
   final Lock _lock = Lock();  // Concurrency control
+  TokenUsage? _cachedTokenUsage;  // Cache token usage for state transitions
 
   ChatCubit({
     required this.getMessages,
@@ -45,10 +47,16 @@ class ChatCubit extends Cubit<ChatState> {
     result.fold(
       (failure) => print('⚠️ [ChatCubit] Failed to load token usage: ${failure.message}'),
       (usage) {
+        // Cache the token usage for use when ChatLoaded is emitted
+        _cachedTokenUsage = usage;
+        print('✅ [ChatCubit] Token usage loaded: ${usage.todayUsage}/${AppConstants.tokenLimitPer12Hours}');
+
+        // If already in ChatLoaded state, update immediately
         if (state is ChatLoaded) {
           emit((state as ChatLoaded).copyWith(
             currentTokenUsage: usage.todayUsage,
-            dailyTokenLimit: AppConstants.dailyTokenLimit,
+            dailyTokenLimit: AppConstants.tokenLimitPer12Hours,
+            tokenUsage: usage,
           ));
         }
       },
@@ -82,7 +90,12 @@ class ChatCubit extends Cubit<ChatState> {
       (cached) {
         if (cached.isNotEmpty && !isClosed) {
           print('✅ [ChatCubit] Cache loaded: ${cached.length} messages');
-          emit(ChatLoaded(messages: cached, hasMore: true));
+          emit(ChatLoaded(
+            messages: cached,
+            hasMore: true,
+            currentTokenUsage: _cachedTokenUsage?.todayUsage ?? 0,
+            tokenUsage: _cachedTokenUsage,
+          ));
         }
       },
     );
@@ -120,7 +133,12 @@ class ChatCubit extends Cubit<ChatState> {
             (failure) => emit(ChatError(message: failure.message)),
             (messages) {
               print('🔄 [ChatCubit] Reloaded from cache: ${messages.length} messages');
-              emit(ChatLoaded(messages: messages, hasMore: _hasMore));
+              emit(ChatLoaded(
+                messages: messages,
+                hasMore: _hasMore,
+                currentTokenUsage: _cachedTokenUsage?.todayUsage ?? 0,
+                tokenUsage: _cachedTokenUsage,
+              ));
             },
           );
         },
@@ -180,6 +198,8 @@ class ChatCubit extends Cubit<ChatState> {
                 messages: messages,
                 hasMore: _hasMore,
                 isLoadingMore: false,
+                currentTokenUsage: _cachedTokenUsage?.todayUsage ?? currentState.currentTokenUsage,
+                tokenUsage: _cachedTokenUsage ?? currentState.tokenUsage,
               ));
             },
           );

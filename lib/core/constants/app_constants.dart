@@ -61,4 +61,8 @@ class AppConstants {
 
   // Feature Limits
   static const int dailyTokenLimit = 5000;
+
+  // Token Usage Limits (per 12 hours)
+  static const int tokenLimitPer12Hours = 35000;
+  static const Duration tokenLimitResetPeriod = Duration(hours: 12);
 }

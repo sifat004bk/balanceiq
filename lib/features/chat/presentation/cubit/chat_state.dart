@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 import '../../domain/entities/message.dart';
+import '../../domain/entities/token_usage.dart';
+import '../../../../core/constants/app_constants.dart';
 
 abstract class ChatState extends Equatable {
   const ChatState();
@@ -17,6 +19,9 @@ class ChatLoaded extends ChatState {
   final bool isSending;
   final bool hasMore;          // Whether more messages are available to load
   final bool isLoadingMore;    // Whether currently loading more messages
+  final int currentTokenUsage;
+  final int dailyTokenLimit;
+  final TokenUsage? tokenUsage; // Full token usage data including history
 
   const ChatLoaded({
     required this.messages,
@@ -24,14 +29,12 @@ class ChatLoaded extends ChatState {
     this.hasMore = false,
     this.isLoadingMore = false,
     this.currentTokenUsage = 0,
-    this.dailyTokenLimit = 5000,
-  });
+    int? dailyTokenLimit,
+    this.tokenUsage,
+  }) : dailyTokenLimit = dailyTokenLimit ?? AppConstants.tokenLimitPer12Hours;
 
   @override
-  List<Object?> get props => [messages, isSending, hasMore, isLoadingMore, currentTokenUsage, dailyTokenLimit];
-
-  final int currentTokenUsage;
-  final int dailyTokenLimit;
+  List<Object?> get props => [messages, isSending, hasMore, isLoadingMore, currentTokenUsage, dailyTokenLimit, tokenUsage];
 
   bool get isTokenLimitReached => currentTokenUsage >= dailyTokenLimit;
 
@@ -42,6 +45,7 @@ class ChatLoaded extends ChatState {
     bool? isLoadingMore,
     int? currentTokenUsage,
     int? dailyTokenLimit,
+    TokenUsage? tokenUsage,
   }) {
     return ChatLoaded(
       messages: messages ?? this.messages,
@@ -50,6 +54,7 @@ class ChatLoaded extends ChatState {
       isLoadingMore: isLoadingMore ?? this.isLoadingMore,
       currentTokenUsage: currentTokenUsage ?? this.currentTokenUsage,
       dailyTokenLimit: dailyTokenLimit ?? this.dailyTokenLimit,
+      tokenUsage: tokenUsage ?? this.tokenUsage,
     );
   }
 }

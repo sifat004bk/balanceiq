@@ -1,3 +1,4 @@
+import 'package:balance_iq/core/constants/app_strings.dart';
 import 'package:balance_iq/core/di/injection_container.dart';
 import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:balance_iq/core/tour/tour.dart';
@@ -112,9 +113,8 @@ class _DashboardViewState extends State<DashboardView> {
             builder: (context, controller) {
               return TourTooltipContent(
                 icon: Icons.person_outline_rounded,
-                title: 'Complete Your Profile',
-                description:
-                    'Tap here to verify your email and set up your account.',
+                title: AppStrings.dashboard.completeProfile,
+                description: AppStrings.dashboard.verifyEmailSetup,
                 buttonText: 'Got it',
                 onButtonPressed: () {
                   controller.next();
@@ -373,204 +373,209 @@ class _DashboardViewState extends State<DashboardView> {
                     child: CustomScrollView(
                       physics: const AlwaysScrollableScrollPhysics(),
                       slivers: [
-                    // --- Animated AppBar ---
-                    HomeAppbar(
-                      summary: summary,
-                      onTapProfileIcon: () {
-                        final tourCubit = context.read<ProductTourCubit>();
-                        if (tourCubit.isAtStep(TourStep.dashboardProfileIcon)) {
-                          tourCubit.onProfileIconTapped();
-                        }
-                        Navigator.pushNamed(context, '/profile');
-                      },
-                      profileUrl: _profileUrl ?? '',
-                      displayDate: _getFormattedDateRange(),
-                      onTapDateRange: _selectDateRange,
-                      profileIconKey: _profileIconKey,
-                    ),
+                        // --- Animated AppBar ---
+                        HomeAppbar(
+                          summary: summary,
+                          onTapProfileIcon: () {
+                            final tourCubit = context.read<ProductTourCubit>();
+                            if (tourCubit
+                                .isAtStep(TourStep.dashboardProfileIcon)) {
+                              tourCubit.onProfileIconTapped();
+                            }
+                            Navigator.pushNamed(context, '/profile');
+                          },
+                          profileUrl: _profileUrl ?? '',
+                          displayDate: _getFormattedDateRange(),
+                          onTapDateRange: _selectDateRange,
+                          profileIconKey: _profileIconKey,
+                        ),
 
-                    // --- Dashboard Body ---
-                    SliverToBoxAdapter(
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 8),
+                        // --- Dashboard Body ---
+                        SliverToBoxAdapter(
+                          child: Column(
+                            children: [
+                              const SizedBox(height: 8),
 
-                          // Balance Card - Fade in and slide up
-                          BalanceCard(
-                            netBalance: summary.netBalance,
-                            totalIncome: summary.totalIncome,
-                            totalExpense: summary.totalExpense,
-                            period: summary.period,
-                          )
-                              .animate()
-                              .fadeIn(
-                                  duration: 500.ms, curve: Curves.easeOutCubic)
-                              .slideY(
-                                begin: 0.1,
-                                end: 0,
-                                duration: 500.ms,
-                                curve: Curves.easeOutCubic,
-                              ),
-                          const SizedBox(height: 24),
-
-                          // Spending Trend Chart - Fade in with scale
-                          if (summary.spendingTrend.isNotEmpty) ...[
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16),
-                              child: SpendingTrendChart(
-                                spendingTrend: summary.spendingTrend,
-                              ),
-                            )
-                                .animate()
-                                .fadeIn(
-                                  delay: 150.ms,
-                                  duration: 500.ms,
-                                  curve: Curves.easeOutCubic,
-                                )
-                                .scaleXY(
-                                  begin: 0.95,
-                                  end: 1,
-                                  delay: 150.ms,
-                                  duration: 500.ms,
-                                  curve: Curves.easeOutCubic,
-                                ),
-                            const SizedBox(height: 16),
-                          ],
-
-                          // Financial Ratios - Slide in from sides
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: FinancialRatiosWidget(
-                              expenseRatio: summary.expenseRatio,
-                              savingsRate: summary.savingsRate,
-                            ),
-                          )
-                              .animate()
-                              .fadeIn(
-                                delay: 250.ms,
-                                duration: 500.ms,
-                                curve: Curves.easeOutCubic,
+                              // Balance Card - Fade in and slide up
+                              BalanceCard(
+                                netBalance: summary.netBalance,
+                                totalIncome: summary.totalIncome,
+                                totalExpense: summary.totalExpense,
+                                period: summary.period,
                               )
-                              .slideX(
-                                begin: -0.05,
-                                end: 0,
-                                delay: 250.ms,
-                                duration: 500.ms,
-                                curve: Curves.easeOutCubic,
-                              ),
-                          const SizedBox(height: 16),
+                                  .animate()
+                                  .fadeIn(
+                                      duration: 500.ms,
+                                      curve: Curves.easeOutCubic)
+                                  .slideY(
+                                    begin: 0.1,
+                                    end: 0,
+                                    duration: 500.ms,
+                                    curve: Curves.easeOutCubic,
+                                  ),
+                              const SizedBox(height: 24),
 
-                          // Accounts Breakdown - Fade in with slide
-                          if (summary.accountsBreakdown.isNotEmpty) ...[
-                            AccountsBreakdownWidget(
-                              accountsBreakdown: summary.accountsBreakdown,
-                            )
-                                .animate()
-                                .fadeIn(
-                                  delay: 350.ms,
-                                  duration: 500.ms,
-                                  curve: Curves.easeOutCubic,
+                              // Spending Trend Chart - Fade in with scale
+                              if (summary.spendingTrend.isNotEmpty) ...[
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16),
+                                  child: SpendingTrendChart(
+                                    spendingTrend: summary.spendingTrend,
+                                  ),
                                 )
-                                .slideY(
-                                  begin: 0.05,
-                                  end: 0,
-                                  delay: 350.ms,
-                                  duration: 500.ms,
-                                  curve: Curves.easeOutCubic,
+                                    .animate()
+                                    .fadeIn(
+                                      delay: 150.ms,
+                                      duration: 500.ms,
+                                      curve: Curves.easeOutCubic,
+                                    )
+                                    .scaleXY(
+                                      begin: 0.95,
+                                      end: 1,
+                                      delay: 150.ms,
+                                      duration: 500.ms,
+                                      curve: Curves.easeOutCubic,
+                                    ),
+                                const SizedBox(height: 16),
+                              ],
+
+                              // Financial Ratios - Slide in from sides
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 16),
+                                child: FinancialRatiosWidget(
+                                  expenseRatio: summary.expenseRatio,
+                                  savingsRate: summary.savingsRate,
                                 ),
-                            const SizedBox(height: 16),
-                          ],
-
-                          // Biggest Expense & Category
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: Column(
-                              children: [
-                                BiggestIncomeWidget(
-                                  amount: summary.biggestIncomeAmount,
-                                  description: summary.biggestIncomeDescription,
-                                )
-                                    .animate()
-                                    .fadeIn(
-                                      delay: 450.ms,
-                                      duration: 500.ms,
-                                      curve: Curves.easeOutCubic,
-                                    )
-                                    .slideX(
-                                      begin: 0.05,
-                                      end: 0,
-                                      delay: 450.ms,
-                                      duration: 500.ms,
-                                      curve: Curves.easeOutCubic,
-                                    ),
-                                if (summary.biggestIncomeAmount > 0)
-                                  const SizedBox(height: 16),
-                                BiggestExpenseWidget(
-                                  amount: summary.biggestExpenseAmount,
-                                  description:
-                                      summary.biggestExpenseDescription,
-                                  category: summary.expenseCategory,
-                                  account: summary.expenseAccount,
-                                )
-                                    .animate()
-                                    .fadeIn(
-                                      delay: 550.ms,
-                                      duration: 500.ms,
-                                      curve: Curves.easeOutCubic,
-                                    )
-                                    .slideX(
-                                      begin: -0.05,
-                                      end: 0,
-                                      delay: 550.ms,
-                                      duration: 500.ms,
-                                      curve: Curves.easeOutCubic,
-                                    ),
-                                const SizedBox(height: 16),
-                                if (summary.categories.isNotEmpty)
-                                  CategoryBreakdownWidget(
-                                    categories: summary.categories,
+                              )
+                                  .animate()
+                                  .fadeIn(
+                                    delay: 250.ms,
+                                    duration: 500.ms,
+                                    curve: Curves.easeOutCubic,
                                   )
-                                      .animate()
-                                      .fadeIn(
-                                        delay: 650.ms,
-                                        duration: 500.ms,
-                                        curve: Curves.easeOutCubic,
-                                      )
-                                      .slideY(
-                                        begin: 0.05,
-                                        end: 0,
-                                        delay: 650.ms,
-                                        duration: 500.ms,
-                                        curve: Curves.easeOutCubic,
-                                      ),
-                                const SizedBox(height: 16),
-                                TransactionHistoryWidget(
-                                  onViewAll: () => Navigator.pushNamed(
-                                      context, '/transactions'),
+                                  .slideX(
+                                    begin: -0.05,
+                                    end: 0,
+                                    delay: 250.ms,
+                                    duration: 500.ms,
+                                    curve: Curves.easeOutCubic,
+                                  ),
+                              const SizedBox(height: 16),
+
+                              // Accounts Breakdown - Fade in with slide
+                              if (summary.accountsBreakdown.isNotEmpty) ...[
+                                AccountsBreakdownWidget(
+                                  accountsBreakdown: summary.accountsBreakdown,
                                 )
                                     .animate()
                                     .fadeIn(
-                                      delay: 750.ms,
+                                      delay: 350.ms,
                                       duration: 500.ms,
                                       curve: Curves.easeOutCubic,
                                     )
                                     .slideY(
                                       begin: 0.05,
                                       end: 0,
-                                      delay: 750.ms,
+                                      delay: 350.ms,
                                       duration: 500.ms,
                                       curve: Curves.easeOutCubic,
                                     ),
+                                const SizedBox(height: 16),
                               ],
-                            ),
+
+                              // Biggest Expense & Category
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 16),
+                                child: Column(
+                                  children: [
+                                    BiggestIncomeWidget(
+                                      amount: summary.biggestIncomeAmount,
+                                      description:
+                                          summary.biggestIncomeDescription,
+                                    )
+                                        .animate()
+                                        .fadeIn(
+                                          delay: 450.ms,
+                                          duration: 500.ms,
+                                          curve: Curves.easeOutCubic,
+                                        )
+                                        .slideX(
+                                          begin: 0.05,
+                                          end: 0,
+                                          delay: 450.ms,
+                                          duration: 500.ms,
+                                          curve: Curves.easeOutCubic,
+                                        ),
+                                    if (summary.biggestIncomeAmount > 0)
+                                      const SizedBox(height: 16),
+                                    BiggestExpenseWidget(
+                                      amount: summary.biggestExpenseAmount,
+                                      description:
+                                          summary.biggestExpenseDescription,
+                                      category: summary.expenseCategory,
+                                      account: summary.expenseAccount,
+                                    )
+                                        .animate()
+                                        .fadeIn(
+                                          delay: 550.ms,
+                                          duration: 500.ms,
+                                          curve: Curves.easeOutCubic,
+                                        )
+                                        .slideX(
+                                          begin: -0.05,
+                                          end: 0,
+                                          delay: 550.ms,
+                                          duration: 500.ms,
+                                          curve: Curves.easeOutCubic,
+                                        ),
+                                    const SizedBox(height: 16),
+                                    if (summary.categories.isNotEmpty)
+                                      CategoryBreakdownWidget(
+                                        categories: summary.categories,
+                                      )
+                                          .animate()
+                                          .fadeIn(
+                                            delay: 650.ms,
+                                            duration: 500.ms,
+                                            curve: Curves.easeOutCubic,
+                                          )
+                                          .slideY(
+                                            begin: 0.05,
+                                            end: 0,
+                                            delay: 650.ms,
+                                            duration: 500.ms,
+                                            curve: Curves.easeOutCubic,
+                                          ),
+                                    const SizedBox(height: 16),
+                                    TransactionHistoryWidget(
+                                      onViewAll: () => Navigator.pushNamed(
+                                          context, '/transactions'),
+                                    )
+                                        .animate()
+                                        .fadeIn(
+                                          delay: 750.ms,
+                                          duration: 500.ms,
+                                          curve: Curves.easeOutCubic,
+                                        )
+                                        .slideY(
+                                          begin: 0.05,
+                                          end: 0,
+                                          delay: 750.ms,
+                                          duration: 500.ms,
+                                          curve: Curves.easeOutCubic,
+                                        ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 120),
+                            ],
                           ),
-                          const SizedBox(height: 120),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
                   ),
                   // Positioned chat button at the bottom
                   Positioned(

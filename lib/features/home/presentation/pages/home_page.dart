@@ -1,5 +1,6 @@
 import 'package:balance_iq/core/di/injection_container.dart';
 import 'package:balance_iq/core/theme/app_theme.dart';
+import 'package:balance_iq/core/tour/tour.dart';
 import 'package:balance_iq/features/auth/data/datasources/auth_local_datasource.dart';
 import 'package:balance_iq/features/home/presentation/cubit/dashboard_state.dart';
 import 'package:balance_iq/features/home/presentation/widgets/accounts_breakdown_widget.dart';
@@ -12,6 +13,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import '../cubit/dashboard_cubit.dart';
 import '../cubit/transactions_cubit.dart';
 import '../widgets/biggest_income_widget.dart';
@@ -48,10 +50,22 @@ class _DashboardViewState extends State<DashboardView> {
   String? _profileUrl;
   DateTime? _startDate;
   DateTime? _endDate;
+  bool _tourCheckDone = false;
+  
+  // Tour related
+  final GlobalKey _profileIconKey = GlobalKey();
+  TutorialCoachMark? _tutorialCoachMark;
+  bool _tourShown = false;
 
   @override
   void initState() {
     super.initState();
+    
+    // Check initial dashboard state for tour
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkInitialDashboardState();
+    });
+
     _loadUser();
     
     // Initialize with current month's date range
@@ -60,6 +74,104 @@ class _DashboardViewState extends State<DashboardView> {
     _endDate = DateTime(now.year, now.month + 1, 0); // Last day of current month
 
     _loadDashboard();
+  }
+  
+  @override
+  void dispose() {
+    _tutorialCoachMark?.finish();
+    super.dispose();
+  }
+
+  void _showProfileIconTour() {
+    if (_tourShown) return;
+    
+    // Ensure key is attached
+    if (_profileIconKey.currentContext == null) {
+      // Retry after a short delay
+      Future.delayed(const Duration(milliseconds: 500), () {
+        if (mounted) _showProfileIconTour();
+      });
+      return;
+    }
+    
+    _tourShown = true;
+    final tourCubit = context.read<ProductTourCubit>();
+    
+    final targets = [
+      TargetFocus(
+        identify: 'profile_icon',
+        keyTarget: _profileIconKey,
+        alignSkip: Alignment.bottomRight,
+        enableOverlayTab: false,
+        enableTargetTab: true,
+        shape: ShapeLightFocus.Circle,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (context, controller) {
+              return TourTooltipContent(
+                icon: Icons.person_outline_rounded,
+                title: 'Complete Your Profile',
+                description: 'Tap here to verify your email and set up your account.',
+                buttonText: 'Got it',
+                onButtonPressed: () {
+                  controller.next();
+                },
+                showSkip: true,
+                onSkip: () {
+                  tourCubit.skipTour();
+                  controller.skip();
+                },
+              );
+            },
+          ),
+        ],
+      ),
+    ];
+    
+    _tutorialCoachMark = TutorialCoachMark(
+      targets: targets,
+      colorShadow: Colors.black,
+      opacityShadow: 0.8,
+      hideSkip: true,
+      onClickOverlay: (target) {
+        // Prevent dismissal on overlay click
+      },
+      onClickTarget: (target) {
+        // User tapped on the profile icon
+        tourCubit.onProfileIconTapped();
+        Navigator.pushNamed(context, '/profile');
+      },
+      onFinish: () {
+        // Tour step completed, navigate to profile
+        tourCubit.onProfileIconTapped();
+        Navigator.pushNamed(context, '/profile');
+      },
+      onSkip: () {
+        tourCubit.skipTour();
+        return true;
+      },
+    );
+    
+    _tutorialCoachMark!.show(context: context);
+  }
+
+  void _checkInitialDashboardState() {
+    final state = context.read<DashboardCubit>().state;
+    if (state is DashboardLoaded && !_tourCheckDone) {
+      _tourCheckDone = true;
+      final isOnboarded = state.summary.onboarded;
+      
+      final tourCubit = context.read<ProductTourCubit>();
+      tourCubit.checkAndStartTourIfNeeded(isOnboarded: isOnboarded);
+      
+      // If tour is started, show the tooltip
+      Future.delayed(const Duration(milliseconds: 500), () {
+        if (mounted && tourCubit.isAtStep(TourStep.dashboardProfileIcon)) {
+          _showProfileIconTour();
+        }
+      });
+    }
   }
 
   Future<void> _loadUser() async {
@@ -171,13 +283,42 @@ class _DashboardViewState extends State<DashboardView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BlocListener<ProductTourCubit, ProductTourState>(
+      listener: (context, tourState) {
+        if (tourState is TourActive && 
+            tourState.currentStep == TourStep.dashboardProfileIcon &&
+            !tourState.isTransitioning) {
+          // Show tour after a small delay to ensure widgets are built
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _showProfileIconTour();
+          });
+        }
+      },
+      child: Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: BlocBuilder<DashboardCubit, DashboardState>(
-        builder: (context, state) {
-          if (state is DashboardLoading) {
-            return const DashboardShimmer();
+      body: BlocConsumer<DashboardCubit, DashboardState>(
+        listener: (context, state) {
+          if (state is DashboardLoaded && !_tourCheckDone) {
+            _tourCheckDone = true;
+            // Dashboard loaded - check if we need to start the tour
+            final isOnboarded = state.summary.onboarded;
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              final tourCubit = context.read<ProductTourCubit>();
+              tourCubit.checkAndStartTourIfNeeded(isOnboarded: isOnboarded);
+              
+              // If tour is already active at dashboard step, show it
+              Future.delayed(const Duration(milliseconds: 500), () {
+                if (mounted && tourCubit.isAtStep(TourStep.dashboardProfileIcon)) {
+                  _showProfileIconTour();
+                }
+              });
+            });
           }
+        },
+          builder: (context, state) {
+            if (state is DashboardLoading) {
+              return const DashboardShimmer();
+            }
 
           if (state is DashboardError) {
             if (state.message.contains('No dashboard data')) {
@@ -224,11 +365,16 @@ class _DashboardViewState extends State<DashboardView> {
                   HomeAppbar(
                     summary: summary,
                     onTapProfileIcon: () {
+                      final tourCubit = context.read<ProductTourCubit>();
+                      if (tourCubit.isAtStep(TourStep.dashboardProfileIcon)) {
+                        tourCubit.onProfileIconTapped();
+                      }
                       Navigator.pushNamed(context, '/profile');
                     },
                     profileUrl: _profileUrl ?? '',
                     displayDate: _getFormattedDateRange(),
                     onTapDateRange: _selectDateRange,
+                    profileIconKey: _profileIconKey,
                   ),
 
                   // --- Dashboard Body ---
@@ -424,10 +570,11 @@ class _DashboardViewState extends State<DashboardView> {
             );
           }
 
-          return SizedBox.shrink();
+          return const SizedBox.shrink();
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      ),
     );
   }
 }

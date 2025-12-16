@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/gemini_colors.dart';
 import '../../../../core/di/injection_container.dart';
+import '../../../../core/tour/tour.dart';
+import '../../../chat/presentation/pages/chat_page.dart';
 import '../../domain/entities/plan.dart';
 import '../cubit/subscription_cubit.dart';
 import '../cubit/subscription_state.dart';
@@ -68,7 +70,24 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                 ),
               ),
             );
-            Navigator.pop(context, true);
+            
+            // Check if tour is active at subscription step
+            final tourCubit = context.read<ProductTourCubit>();
+            if (tourCubit.isAtStep(TourStep.profileSubscription)) {
+              // Advance tour and navigate to chat
+              tourCubit.onSubscriptionCreated();
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ChatPage(
+                    botId: "nai kichu",
+                    botName: 'BalanceIQ',
+                  ),
+                ),
+              );
+            } else {
+              Navigator.pop(context, true);
+            }
           } else if (state is SubscriptionError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(

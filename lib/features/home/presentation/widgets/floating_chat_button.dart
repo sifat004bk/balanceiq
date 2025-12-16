@@ -5,13 +5,16 @@ import '../../../chat/presentation/pages/chat_page.dart';
 /// Modern floating chat button for homepage
 /// Matches the chat input design but acts as a navigation button
 class FloatingChatButton extends StatelessWidget {
-  const FloatingChatButton({super.key});
+  final GlobalKey? targetKey;
+  
+  const FloatingChatButton({super.key, this.targetKey});
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return GestureDetector(
+      key: targetKey,
       onTap: () {
         Navigator.push(
           context,

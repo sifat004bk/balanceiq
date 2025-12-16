@@ -114,4 +114,31 @@ class DashboardFinanceGuruDataSource implements DashboardRemoteDataSource {
       throw Exception('Failed to load dashboard: $e');
     }
   }
+
+  /// Update the onboarding status via PATCH /api/finance-guru/v1/dashboard/onboarded
+  Future<bool> updateOnboarded(bool onboarded) async {
+    try {
+      final token = sharedPreferences.getString('auth_token');
+      
+      final response = await dio.patch<Map<String, dynamic>>(
+        '${ApiEndpoints.dashboard}/onboarded',
+        data: {'onboarded': onboarded},
+        options: Options(
+          headers: <String, String>{
+            'Content-Type': 'application/json',
+            if (token != null) 'Authorization': 'Bearer $token',
+          },
+          sendTimeout: const Duration(seconds: 30),
+          receiveTimeout: const Duration(seconds: 30),
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        return response.data?['onboarded'] == true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
 }

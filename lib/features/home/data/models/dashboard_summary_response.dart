@@ -24,6 +24,7 @@ class DashboardSummaryModel extends DashboardSummary {
     required super.biggestIncomeDescription,
     required super.period,
     required super.daysRemainingInMonth,
+    required super.onboarded,
   });
 
   factory DashboardSummaryModel.fromJson(Map<String, dynamic> json) {
@@ -139,6 +140,7 @@ class DashboardSummaryModel extends DashboardSummary {
         period: _parseStringNullable(json['period']) ?? '',
         daysRemainingInMonth:
             _parseIntNullable(json['daysRemainingInMonth']) ?? 0,
+        onboarded: json['onboarded'] == true,
       );
     } catch (e) {
       throw FormatException('Failed to parse DashboardSummaryModel: $e');

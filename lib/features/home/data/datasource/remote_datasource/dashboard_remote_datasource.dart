@@ -9,4 +9,7 @@ abstract class DashboardRemoteDataSource {
     String? startDate,
     String? endDate,
   });
+
+  /// Update the onboarding status
+  Future<bool> updateOnboarded(bool onboarded);
 }

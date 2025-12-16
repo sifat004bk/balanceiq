@@ -1,9 +1,12 @@
+
 import 'package:balance_iq/core/constants/gemini_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/tour/tour.dart';
 import '../cubit/chat_cubit.dart';
 import '../cubit/chat_state.dart';
 import '../widgets/chat_shimmer.dart';
@@ -49,17 +52,98 @@ class _ChatViewState extends State<ChatView> {
   final ScrollController _scrollController = ScrollController();
   String? _latestMessageId;
 
+  // Tour related
+  TutorialCoachMark? _tutorialCoachMark;
+  bool _chatTourShown = false;
+  final GlobalKey _chatInputKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
+
+    // Check if we should show tour after frame is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkAndShowChatTour();
+    });
   }
 
   @override
   void dispose() {
+    _tutorialCoachMark?.finish();
     _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
     super.dispose();
+  }
+
+  void _checkAndShowChatTour() {
+    final tourCubit = context.read<ProductTourCubit>();
+    if (tourCubit.isAtStep(TourStep.chatInputHint)) {
+      _showChatInputTour();
+    }
+  }
+
+  void _showChatInputTour() {
+    if (_chatTourShown) return;
+    if (_chatInputKey.currentContext == null) {
+      Future.delayed(const Duration(milliseconds: 500), () {
+        if (mounted) _showChatInputTour();
+      });
+      return;
+    }
+
+    _chatTourShown = true;
+    final tourCubit = context.read<ProductTourCubit>();
+
+    final targets = [
+      TargetFocus(
+        identify: 'chat_input',
+        keyTarget: _chatInputKey,
+        alignSkip: Alignment.topRight,
+        enableOverlayTab: false,
+        enableTargetTab: true,
+        shape: ShapeLightFocus.RRect,
+        radius: 30,
+        contents: [
+          TargetContent(
+            align: ContentAlign.top,
+            builder: (context, controller) {
+              return ChatInputTourTooltip(
+                onDismiss: () {
+                  controller.next();
+                  tourCubit.completeTour();
+                },
+                onSkip: () {
+                  tourCubit.skipTour();
+                  controller.skip();
+                },
+              );
+            },
+          ),
+        ],
+      ),
+    ];
+
+    _tutorialCoachMark = TutorialCoachMark(
+      targets: targets,
+      colorShadow: Colors.black,
+      opacityShadow: 0.8,
+      hideSkip: true,
+      onClickOverlay: (target) {},
+      onClickTarget: (target) {
+        // User tapped on input, complete tour
+        tourCubit.completeTour();
+      },
+      onFinish: () {
+        tourCubit.completeTour();
+      },
+      onSkip: () {
+        tourCubit.skipTour();
+        return true;
+      },
+    );
+
+    _tutorialCoachMark!.show(context: context);
   }
 
   void _onScroll() {
@@ -105,7 +189,8 @@ class _ChatViewState extends State<ChatView> {
     switch (state.errorType) {
       case ChatErrorType.emailNotVerified:
         title = 'Email Verification Required';
-        description = 'Please verify your email address to use the chat feature.';
+        description =
+            'Please verify your email address to use the chat feature.';
         icon = Icons.email_outlined;
         iconColor = Colors.orange;
         buttonText = 'Verify Email';
@@ -113,27 +198,34 @@ class _ChatViewState extends State<ChatView> {
         break;
       case ChatErrorType.subscriptionRequired:
         title = 'Subscription Required';
-        description = 'You need an active subscription plan to use the chat feature.';
+        description =
+            'You need an active subscription plan to use the chat feature.';
         icon = Icons.card_membership_outlined;
         iconColor = GeminiColors.primary;
         buttonText = 'View Plans';
-        onButtonPressed = () => Navigator.pushNamed(context, '/subscription-plans');
+        onButtonPressed =
+            () => Navigator.pushNamed(context, '/subscription-plans');
         break;
       case ChatErrorType.subscriptionExpired:
         title = 'Subscription Expired';
-        description = 'Your subscription has expired. Please renew to continue using the chat feature.';
+        description =
+            'Your subscription has expired. Please renew to continue using the chat feature.';
         icon = Icons.timer_off_outlined;
         iconColor = Colors.red;
         buttonText = 'Renew Subscription';
-        onButtonPressed = () => Navigator.pushNamed(context, '/manage-subscription');
+        onButtonPressed =
+            () => Navigator.pushNamed(context, '/manage-subscription');
         break;
       case ChatErrorType.tokenLimitExceeded:
         title = 'Token Limit Exceeded';
-        description = state.message.isNotEmpty ? state.message : 'You have reached your daily token limit.';
+        description = state.message.isNotEmpty
+            ? state.message
+            : 'You have reached your daily token limit.';
         icon = Icons.token_outlined;
         iconColor = Colors.amber;
         buttonText = 'Upgrade Plan';
-        onButtonPressed = () => Navigator.pushNamed(context, '/subscription-plans');
+        onButtonPressed =
+            () => Navigator.pushNamed(context, '/subscription-plans');
         break;
       case ChatErrorType.rateLimitExceeded:
         title = 'Too Many Requests';
@@ -141,15 +233,19 @@ class _ChatViewState extends State<ChatView> {
         icon = Icons.schedule_outlined;
         iconColor = Colors.blue;
         buttonText = 'Got it';
-        onButtonPressed = () => context.read<ChatCubit>().loadChatHistory(widget.botId);
+        onButtonPressed =
+            () => context.read<ChatCubit>().loadChatHistory(widget.botId);
         break;
       default:
         title = 'Something went wrong';
-        description = state.message.isNotEmpty ? state.message : 'An error occurred. Please try again.';
+        description = state.message.isNotEmpty
+            ? state.message
+            : 'An error occurred. Please try again.';
         icon = Icons.error_outline;
         iconColor = Colors.red;
         buttonText = 'Retry';
-        onButtonPressed = () => context.read<ChatCubit>().loadChatHistory(widget.botId);
+        onButtonPressed =
+            () => context.read<ChatCubit>().loadChatHistory(widget.botId);
     }
 
     return Center(
@@ -195,7 +291,8 @@ class _ChatViewState extends State<ChatView> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: GeminiColors.primary,
                 foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -237,124 +334,141 @@ class _ChatViewState extends State<ChatView> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     // Clamp horizontal offset to keep input on screen
-    final clampedHorizontalOffset = _horizontalOffset.clamp(0.0, screenWidth - 350);
+    final clampedHorizontalOffset =
+        _horizontalOffset.clamp(0.0, screenWidth - 350);
 
-    return Scaffold(
-      backgroundColor: GeminiColors.background(context),
-      resizeToAvoidBottomInset: false, // We handle keyboard manually
-      body: SafeArea(
-        child: Stack(
-          children: [
-            // Layer 1: Message List
-            Positioned.fill(
-              child: BlocConsumer<ChatCubit, ChatState>(
-                listener: (context, state) {
-                  if (state is ChatLoaded && state.messages.isNotEmpty) {
-                    final latestMessage = state.messages.first;
-                    if (_latestMessageId != latestMessage.id) {
-                      _latestMessageId = latestMessage.id;
-                      _scrollToBottom();
-                    }
-                  }
-                },
-                builder: (context, state) {
-                  if (state is ChatLoading) {
-                    return const ChatShimmer();
-                  } else if (state is ChatLoaded) {
-                    if (state.messages.isEmpty && !state.isSending) {
-                      return SuggestedPrompts(
-                        botId: widget.botId,
-                        onPromptSelected: (prompt) {
-                          context.read<ChatCubit>().sendNewMessage(
-                                botId: widget.botId,
-                                content: prompt,
-                              );
-                        },
-                      );
-                    }
+    return BlocListener<ProductTourCubit, ProductTourState>(
+        listener: (context, tourState) {
+          // Show tour when state changes to chatInputHint step
+          if (tourState is TourActive &&
+              tourState.currentStep == TourStep.chatInputHint &&
+              !tourState.isTransitioning) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              _showChatInputTour();
+            });
+          }
+        },
+        child: Scaffold(
+          backgroundColor: GeminiColors.background(context),
+          resizeToAvoidBottomInset: false, // We handle keyboard manually
+          body: SafeArea(
+            child: Stack(
+              children: [
+                // Layer 1: Message List
+                Positioned.fill(
+                  child: BlocConsumer<ChatCubit, ChatState>(
+                    listener: (context, state) {
+                      if (state is ChatLoaded && state.messages.isNotEmpty) {
+                        final latestMessage = state.messages.first;
+                        if (_latestMessageId != latestMessage.id) {
+                          _latestMessageId = latestMessage.id;
+                          _scrollToBottom();
+                        }
+                      }
+                    },
+                    builder: (context, state) {
+                      if (state is ChatLoading) {
+                        return const ChatShimmer();
+                      } else if (state is ChatLoaded) {
+                        if (state.messages.isEmpty && !state.isSending) {
+                          return SuggestedPrompts(
+                            botId: widget.botId,
+                            onPromptSelected: (prompt) {
+                              context.read<ChatCubit>().sendNewMessage(
+                                    botId: widget.botId,
+                                    content: prompt,
+                                  );
+                            },
+                          );
+                        }
 
-                    return MessageList(
-                      messages: state.messages,
-                      botId: widget.botId,
-                      botName: widget.botName,
-                      isSending: state.isSending,
-                      hasMore: state.hasMore,
-                      isLoadingMore: state.isLoadingMore,
-                      scrollController: _scrollController,
-                      // Add padding at bottom for the floating widget + keyboard
-                      padding: EdgeInsets.only(bottom: 120 + keyboardHeight),
-                    );
-                  } else if (state is ChatError) {
-                    return _buildErrorWidget(context, state);
-                  }
-                  return const SizedBox.shrink();
-                },
-              ),
-            ),
+                        return MessageList(
+                          messages: state.messages,
+                          botId: widget.botId,
+                          botName: widget.botName,
+                          isSending: state.isSending,
+                          hasMore: state.hasMore,
+                          isLoadingMore: state.isLoadingMore,
+                          scrollController: _scrollController,
+                          // Add padding at bottom for the floating widget + keyboard
+                          padding:
+                              EdgeInsets.only(bottom: 120 + keyboardHeight),
+                        );
+                      } else if (state is ChatError) {
+                        return _buildErrorWidget(context, state);
+                      }
+                      return const SizedBox.shrink();
+                    },
+                  ),
+                ),
 
-            // Layer 2: Floating Back Button
-            Positioned(
-              top: 8,
-              left: 8,
-              child: GestureDetector(
-                onTap: () => Navigator.of(context).pop(),
-                child: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? Colors.black54
-                        : Colors.white.withOpacity(0.9),
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
+                // Layer 2: Floating Back Button
+                Positioned(
+                  top: 8,
+                  left: 8,
+                  child: GestureDetector(
+                    onTap: () => Navigator.of(context).pop(),
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.black54
+                            : Colors.white.withOpacity(0.9),
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  child: Icon(
-                    Icons.arrow_back,
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white
-                        : Colors.black87,
-                    size: 20,
+                      child: Icon(
+                        Icons.arrow_back,
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black87,
+                        size: 20,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
 
-            // Layer 2.5: Floating Token Usage Button (Top Right)
-            const Positioned(
-              top: 8,
-              right: 8,
-              child: TokenUsageButton(),
-            ),
-
-            // Layer 3: Floating Draggable Input - positioned from bottom
-            Positioned(
-              left: clampedHorizontalOffset,
-              right: clampedHorizontalOffset,
-              bottom: _bottomOffset + keyboardHeight,
-              child: GestureDetector(
-                onPanUpdate: (details) {
-                  setState(() {
-                    _horizontalOffset += details.delta.dx;
-                    _bottomOffset -= details.delta.dy; // Invert because we're using bottom
-                    // Clamp bottom offset
-                    _bottomOffset = _bottomOffset.clamp(10.0, 200.0);
-                  });
-                },
-                child: FloatingChatInput(
-                  botId: widget.botId,
-                  botColor: AppTheme.getBotColor(widget.botId),
+                // Layer 2.5: Floating Token Usage Button (Top Right)
+                const Positioned(
+                  top: 8,
+                  right: 8,
+                  child: TokenUsageButton(),
                 ),
-              ),
+
+                // Layer 3: Floating Draggable Input - positioned from bottom
+                Positioned(
+                  left: clampedHorizontalOffset,
+                  right: clampedHorizontalOffset,
+                  bottom: _bottomOffset + keyboardHeight,
+                  child: GestureDetector(
+                    onPanUpdate: (details) {
+                      setState(() {
+                        _horizontalOffset += details.delta.dx;
+                        _bottomOffset -= details
+                            .delta.dy; // Invert because we're using bottom
+                        // Clamp bottom offset
+                        _bottomOffset = _bottomOffset.clamp(10.0, 200.0);
+                      });
+                    },
+                    child: Container(
+                      key: _chatInputKey,
+                      child: FloatingChatInput(
+                        botId: widget.botId,
+                        botColor: AppTheme.getBotColor(widget.botId),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
-    );
+          ),
+        ));
   }
 }

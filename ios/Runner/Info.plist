@@ -64,6 +64,13 @@
 			</array>
 		</dict>
 	</array>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>mailto</string>
+		<string>googlegmail</string>
+		<string>ms-outlook</string>
+		<string>ymail</string>
+	</array>
 	<key>GIDClientID</key>
 	<string>1072498309198-vvl8ij402i0da40e9fhl06102b6n45u2.apps.googleusercontent.com</string>
 </dict>

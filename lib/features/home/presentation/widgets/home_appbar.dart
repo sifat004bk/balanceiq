@@ -9,6 +9,7 @@ class HomeAppbar extends StatelessWidget {
   final VoidCallback onTapProfileIcon;
   final String profileUrl;
   final String displayDate;
+  final GlobalKey? profileIconKey;
 
   const HomeAppbar({
     super.key,
@@ -17,6 +18,7 @@ class HomeAppbar extends StatelessWidget {
     required this.profileUrl,
     required this.displayDate,
     this.onTapDateRange,
+    this.profileIconKey,
   });
 
   final DashboardSummary summary;
@@ -25,7 +27,7 @@ class HomeAppbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return SliverAppBar(
       floating: true,
       snap: true,
@@ -95,6 +97,7 @@ class HomeAppbar extends StatelessWidget {
       leading: Padding(
         padding: const EdgeInsets.only(left: 12),
         child: InkWell(
+          key: profileIconKey,
           onTap: onTapProfileIcon,
           borderRadius: BorderRadius.circular(50),
           child: Container(
@@ -124,7 +127,8 @@ class HomeAppbar extends StatelessWidget {
                   ? Icon(
                       Icons.person_rounded,
                       size: 20,
-                      color: isDark ? AppTheme.primaryDark : AppTheme.primaryLight,
+                      color:
+                          isDark ? AppTheme.primaryDark : AppTheme.primaryLight,
                     )
                   : ClipOval(
                       child: Image.network(
@@ -134,7 +138,9 @@ class HomeAppbar extends StatelessWidget {
                           return Icon(
                             Icons.person_rounded,
                             size: 20,
-                            color: isDark ? AppTheme.primaryDark : AppTheme.primaryLight,
+                            color: isDark
+                                ? AppTheme.primaryDark
+                                : AppTheme.primaryLight,
                           );
                         },
                       ),

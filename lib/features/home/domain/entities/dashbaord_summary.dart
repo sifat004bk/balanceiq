@@ -36,6 +36,7 @@ class DashboardSummary extends Equatable {
   final String biggestIncomeDescription;
   final String period;
   final int daysRemainingInMonth;
+  final bool onboarded;
 
   const DashboardSummary({
     required this.totalIncome,
@@ -60,6 +61,7 @@ class DashboardSummary extends Equatable {
     required this.biggestIncomeDescription,
     required this.period,
     required this.daysRemainingInMonth,
+    required this.onboarded,
   });
 
   @override
@@ -86,5 +88,6 @@ class DashboardSummary extends Equatable {
         biggestIncomeDescription,
         period,
         daysRemainingInMonth,
+        onboarded,
       ];
 }

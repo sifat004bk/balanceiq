@@ -76,6 +76,10 @@ dependencies:
   fl_chart: ^0.68.0
   data_table_2: ^2.5.15
   flutter_animate: ^4.5.2
+  
+  # Product Tour
+  tutorial_coach_mark: ^1.2.11
+  url_launcher: ^6.2.5
 
 dev_dependencies:
   flutter_test:

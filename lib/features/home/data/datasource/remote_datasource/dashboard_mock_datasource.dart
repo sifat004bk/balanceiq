@@ -32,4 +32,11 @@ class DashboardMockDataSource implements DashboardRemoteDataSource {
     // Convert to model
     return DashboardSummaryModel.fromJson(mockData);
   }
+
+  @override
+  Future<bool> updateOnboarded(bool onboarded) async {
+    print('🏠 [MockDashboard] Updating onboarded status: $onboarded');
+    await _simulateNetworkDelay();
+    return true;
+  }
 }

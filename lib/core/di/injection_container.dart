@@ -72,6 +72,7 @@ import '../../features/subscription/presentation/cubit/subscription_cubit.dart';
 import '../network/logging_interceptor.dart';
 import '../network/auth_interceptor.dart';
 import '../theme/theme_cubit.dart';
+import '../tour/tour.dart';
 
 final sl = GetIt.instance;
 
@@ -119,6 +120,14 @@ Future<void> init() async {
 
   //! Core - Theme
   sl.registerFactory(() => ThemeCubit(sl()));
+
+  //! Core - Product Tour
+  sl.registerLazySingleton(
+    () => ProductTourService(dashboardDataSource: sl<DashboardRemoteDataSource>()),
+  );
+  sl.registerFactory(
+    () => ProductTourCubit(tourService: sl()),
+  );
 
   //! Features - Auth
   // Cubit

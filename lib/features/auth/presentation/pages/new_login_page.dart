@@ -62,6 +62,7 @@ class _NewLoginPageState extends State<NewLoginPage> {
       listener: (context, state) {
         if (state is AuthAuthenticated) {
           // Navigate to home when authenticated
+          // Tour will be triggered from HomePage after dashboard loads
           Navigator.of(context).pushReplacementNamed('/home');
         } else if (state is AuthError) {
           // Show error message

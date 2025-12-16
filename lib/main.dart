@@ -8,6 +8,7 @@ import 'core/navigation/navigator_service.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_cubit.dart';
 import 'core/theme/theme_state.dart';
+import 'core/tour/tour.dart';
 import 'features/auth/presentation/cubit/auth_cubit.dart';
 import 'features/auth/presentation/cubit/auth_state.dart';
 import 'features/auth/presentation/pages/change_password_page.dart';
@@ -61,6 +62,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => di.sl<DashboardCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => di.sl<ProductTourCubit>(),
         ),
       ],
       child: BlocBuilder<ThemeCubit, ThemeState>(

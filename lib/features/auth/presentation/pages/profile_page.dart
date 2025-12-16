@@ -5,6 +5,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import '../../../../core/constants/design_constants.dart';
+import '../../../../core/constants/app_strings.dart';
 import '../../../../core/theme/app_palette.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/tour/tour.dart';
@@ -292,7 +293,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 return _buildProfileContent(context, user, isDark, colorScheme);
               }
 
-              return const Center(
+              return Center(
                 child: Text(AppStrings.auth.signingIn),
               );
             },
@@ -373,7 +374,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       onTap: () {
                         // TODO: Navigate to account details
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
+                          SnackBar(
                               content: Text(
                                   '${AppStrings.profile.accountDetails} ${AppStrings.common.comingSoon}')),
                         );
@@ -398,7 +399,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       onTap: () {
                         // TODO: Navigate to notifications
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
+                          SnackBar(
                               content: Text(
                                   '${AppStrings.profile.notifications} ${AppStrings.common.comingSoon}')),
                         );
@@ -413,7 +414,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       onTap: () {
                         // TODO: Navigate to appearance settings
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
+                          SnackBar(
                               content: Text(
                                   '${AppStrings.profile.appearance} ${AppStrings.common.comingSoon}')),
                         );
@@ -428,7 +429,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       onTap: () {
                         // TODO: Navigate to help center
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
+                          SnackBar(
                               content: Text(
                                   '${AppStrings.profile.helpCenter} ${AppStrings.common.comingSoon}')),
                         );

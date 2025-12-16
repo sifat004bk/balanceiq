@@ -456,7 +456,22 @@ class _ChatViewState extends State<ChatView> {
                 // Layer 3: Floating Draggable Input - Free Movement
                 Positioned(
                   left: _inputPosition.dx,
-                  top: _inputPosition.dy,
+                  top: () {
+                    // Calculate clamping for keyboard
+                    // If keyboard is open, ensure top is not below (screenHeight - keyboardHeight - widgetHeight)
+                    // We estimate widgetHeight as 100 or use dynamic if available
+                    final renderBox = _chatInputKey.currentContext
+                        ?.findRenderObject() as RenderBox?;
+                    final widgetHeight = renderBox?.size.height ?? 100.0;
+
+                    final maxVisibleTop =
+                        screenSize.height - widgetHeight - keyboardHeight - 10;
+
+                    // Use minimum of current position and max visible top
+                    // This pushes the widget up when keyboard appears, and lets it come back down
+                    // when keyboard closes (since we don't modify _inputPosition state)
+                    return _inputPosition.dy.clamp(50.0, maxVisibleTop);
+                  }(),
                   child: GestureDetector(
                     onPanUpdate: (details) {
                       setState(() {

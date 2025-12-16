@@ -1,4 +1,3 @@
-import 'package:balance_iq/core/constants/app_constants.dart';
 import 'package:balance_iq/core/constants/api_endpoints.dart';
 import 'package:balance_iq/features/home/data/models/dashboard_summary_response.dart';
 import 'package:dio/dio.dart';
@@ -100,8 +99,10 @@ class DashboardFinanceGuruDataSource implements DashboardRemoteDataSource {
       } else if (e.response?.statusCode == 404) {
         throw Exception('Service not found. Please contact support.');
       } else if (e.response?.statusCode == 500) {
-        final message = e.response?.data?['message'] ?? e.response?.data?['error'];
-        throw Exception('Server error: ${message ?? 'Please try again later.'}');
+        final message =
+            e.response?.data?['message'] ?? e.response?.data?['error'];
+        throw Exception(
+            'Server error: ${message ?? 'Please try again later.'}');
       } else if (e.response?.statusCode == 401) {
         throw Exception('Unauthorized. Please login again.');
       }
@@ -116,10 +117,11 @@ class DashboardFinanceGuruDataSource implements DashboardRemoteDataSource {
   }
 
   /// Update the onboarding status via PATCH /api/finance-guru/v1/dashboard/onboarded
+  @override
   Future<bool> updateOnboarded(bool onboarded) async {
     try {
       final token = sharedPreferences.getString('auth_token');
-      
+
       final response = await dio.patch<Map<String, dynamic>>(
         '${ApiEndpoints.dashboard}/onboarded',
         data: {'onboarded': onboarded},

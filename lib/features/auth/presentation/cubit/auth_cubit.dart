@@ -12,6 +12,7 @@ import '../../domain/usecases/reset_password.dart';
 import '../../domain/usecases/send_verification_email.dart';
 import '../../domain/usecases/resend_verification_email.dart';
 import '../../domain/entities/user.dart';
+import '../../data/models/auth_request_models.dart';
 import 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
@@ -160,7 +161,7 @@ class AuthCubit extends Cubit<AuthState> {
 
     result.fold(
       (failure) => emit(AuthError(failure.message)),
-      (userInfo) {
+      (UserInfo userInfo) {
         final user = User(
           id: userInfo.id.toString(),
           email: userInfo.email,
@@ -273,7 +274,8 @@ class AuthCubit extends Cubit<AuthState> {
   void updateEmailVerificationStatus(bool isVerified) {
     final currentState = state;
     if (currentState is AuthAuthenticated) {
-      final updatedUser = currentState.user.copyWith(isEmailVerified: isVerified);
+      final updatedUser =
+          currentState.user.copyWith(isEmailVerified: isVerified);
       emit(AuthAuthenticated(updatedUser));
     }
   }

@@ -1,7 +1,6 @@
-import 'package:balance_iq/core/theme/app_theme.dart';
+import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:balance_iq/features/home/presentation/widgets/calendar_date_cell.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class CalendarMonthView extends StatelessWidget {
   final DateTime displayedMonth;
@@ -25,8 +24,6 @@ class CalendarMonthView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    
     return Column(
       children: [
         // Day of week headers
@@ -40,8 +37,7 @@ class CalendarMonthView extends StatelessWidget {
 
   Widget _buildDayHeaders(BuildContext context) {
     final dayNames = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Row(
       children: dayNames.map((day) {
         return Expanded(
@@ -49,9 +45,7 @@ class CalendarMonthView extends StatelessWidget {
             child: Text(
               day,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: isDark
-                        ? AppTheme.textSubtleDark
-                        : AppTheme.textSubtleLight,
+                    color: AppPalette.neutralGrey,
                     fontWeight: FontWeight.w700,
                     fontSize: 12,
                     letterSpacing: 0.5,
@@ -64,7 +58,8 @@ class CalendarMonthView extends StatelessWidget {
   }
 
   Widget _buildCalendarGrid(BuildContext context) {
-    final firstDayOfMonth = DateTime(displayedMonth.year, displayedMonth.month, 1);
+    final firstDayOfMonth =
+        DateTime(displayedMonth.year, displayedMonth.month, 1);
     final lastDayOfMonth =
         DateTime(displayedMonth.year, displayedMonth.month + 1, 0);
     final firstWeekday = firstDayOfMonth.weekday % 7; // Sunday = 0
@@ -82,13 +77,14 @@ class CalendarMonthView extends StatelessWidget {
       itemCount: totalCells,
       itemBuilder: (context, index) {
         final dayNumber = index - firstWeekday + 1;
-        
+
         if (dayNumber < 1 || dayNumber > daysInMonth) {
           // Empty cell or previous/next month days
           return const SizedBox.shrink();
         }
 
-        final date = DateTime(displayedMonth.year, displayedMonth.month, dayNumber);
+        final date =
+            DateTime(displayedMonth.year, displayedMonth.month, dayNumber);
         final cellType = _getCellType(date);
         final isDisabled = _isDisabled(date);
 

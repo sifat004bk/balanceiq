@@ -222,7 +222,7 @@ class _ManageSubscriptionView extends StatelessWidget {
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
                   color: subscription.isActive
-                      ? GeminiColors.primary
+                      ? AppPalette.trustBlue
                       : Colors.grey,
                   borderRadius: BorderRadius.circular(20),
                 ),
@@ -532,7 +532,7 @@ class _ManageSubscriptionView extends StatelessWidget {
                     Navigator.pop(context);
                     // TODO: Implement cancel subscription API call
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
+                      SnackBar(
                         content: Text(
                             '${AppStrings.subscription.cancelSubscription} ${AppStrings.common.comingSoon}'),
                       ),

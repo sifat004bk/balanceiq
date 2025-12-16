@@ -42,7 +42,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
     if (_resendCooldown == 0) {
       // Mock resend
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(AppStrings.auth.emailSent),
           backgroundColor: AppTheme.primaryColor,
         ),
@@ -93,7 +93,9 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                           width: 128,
                           height: 128,
                           decoration: BoxDecoration(
-                            color: AppTheme.primaryColor.withValues(alpha: 0.2),
+                            color: (_hasContent && !_isLimitReached)
+                                ? AppTheme.trustBlue
+                                : const Color(0xFF2a2a2e),
                             shape: BoxShape.circle,
                           ),
                         ),

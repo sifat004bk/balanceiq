@@ -361,15 +361,18 @@ class _DashboardViewState extends State<DashboardView> {
             if (state is DashboardLoaded) {
               final summary = state.summary;
 
-              return RefreshIndicator(
-                onRefresh: _refreshDashboard,
-                color: AppPalette.trustBlue,
-                backgroundColor: Theme.of(context).brightness == Brightness.dark
-                    ? AppPalette.surfaceDark
-                    : AppPalette.surfaceLight,
-                child: CustomScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  slivers: [
+              return Stack(
+                children: [
+                  RefreshIndicator(
+                    onRefresh: _refreshDashboard,
+                    color: AppPalette.trustBlue,
+                    backgroundColor:
+                        Theme.of(context).brightness == Brightness.dark
+                            ? AppPalette.surfaceDark
+                            : AppPalette.surfaceLight,
+                    child: CustomScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      slivers: [
                     // --- Animated AppBar ---
                     HomeAppbar(
                       summary: summary,
@@ -568,26 +571,24 @@ class _DashboardViewState extends State<DashboardView> {
                     ),
                   ],
                 ),
+                  ),
+                  // Positioned chat button at the bottom
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: const Hero(
+                      tag: 'chat_input',
+                      child: FloatingChatButton(),
+                    ),
+                  ),
+                ],
               );
             }
 
             return const SizedBox.shrink();
           },
         ),
-        bottomSheet: BlocBuilder<DashboardCubit, DashboardState>(
-          buildWhen: (previous, current) => current is DashboardLoaded,
-          builder: (context, state) {
-            if (state is DashboardLoaded) {
-              return const Hero(
-                tag: 'chat_input',
-                child: FloatingChatButton(),
-              );
-            }
-
-            return const SizedBox.shrink();
-          },
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       ),
     );
   }

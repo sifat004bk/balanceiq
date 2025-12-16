@@ -2,7 +2,6 @@
 class AppAssets {
   const AppAssets._();
 
-  static const _iconPath = 'assets/icons';
   static const _imagePath = 'assets/images';
 
   // --- Auth ---

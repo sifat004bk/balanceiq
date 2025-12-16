@@ -1,4 +1,5 @@
-import 'package:balance_iq/core/constants/gemini_colors.dart';
+import 'package:balance_iq/core/theme/app_palette.dart';
+import '../../../../core/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/services.dart';
@@ -12,7 +13,6 @@ import '../cubit/chat_cubit.dart';
 import 'gen_ui/gen_ui_builder.dart';
 import 'gen_ui/gen_ui_chart.dart';
 import 'gen_ui/gen_ui_table.dart';
-import '../../domain/entities/chart_data.dart';
 
 /// Gemini-style message bubble with animations
 class MessageBubble extends StatefulWidget {
@@ -128,7 +128,7 @@ class _MessageBubbleState extends State<MessageBubble>
                           style:
                               Theme.of(context).textTheme.bodySmall?.copyWith(
                                     fontSize: 10,
-                                    color: GeminiColors.textSecondary(context),
+                                    color: AppPalette.neutralGrey,
                                   ),
                         ),
                       ),
@@ -147,9 +147,9 @@ class _MessageBubbleState extends State<MessageBubble>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: GeminiColors.userMessageBg, // Dark Grey
+        color: AppPalette.trustBlue,
         borderRadius: const BorderRadius.all(
-          Radius.circular(24), // Rounded
+          Radius.circular(24),
         ),
       ),
       child: Column(
@@ -158,7 +158,7 @@ class _MessageBubbleState extends State<MessageBubble>
           Text(
             widget.message.content,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: GeminiColors.userMessageText, // White
+                  color: AppPalette.neutralWhite,
                   fontSize: 16,
                   height: 1.4,
                 ),
@@ -223,7 +223,7 @@ class _MessageBubbleState extends State<MessageBubble>
                   widget.botName,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         fontWeight: FontWeight.w600,
-                        color: GeminiColors.textSecondary(context),
+                        color: AppPalette.neutralGrey,
                         fontSize: 13,
                       ),
                 ),
@@ -249,24 +249,34 @@ class _MessageBubbleState extends State<MessageBubble>
               },
               styleSheet: MarkdownStyleSheet(
                 p: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: GeminiColors.aiMessageText(context),
+                      color: isDark
+                          ? AppPalette.neutralWhite
+                          : AppPalette.neutralBlack,
                       fontSize: 16,
                       height: 1.5,
                     ),
                 h1: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      color: GeminiColors.aiMessageText(context),
+                      color: isDark
+                          ? AppPalette.neutralWhite
+                          : AppPalette.neutralBlack,
                       fontWeight: FontWeight.bold,
                     ),
                 h2: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      color: GeminiColors.aiMessageText(context),
+                      color: isDark
+                          ? AppPalette.neutralWhite
+                          : AppPalette.neutralBlack,
                       fontWeight: FontWeight.bold,
                     ),
                 h3: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: GeminiColors.aiMessageText(context),
+                      color: isDark
+                          ? AppPalette.neutralWhite
+                          : AppPalette.neutralBlack,
                       fontWeight: FontWeight.w600,
                     ),
                 h4: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: GeminiColors.aiMessageText(context),
+                      color: isDark
+                          ? AppPalette.neutralWhite
+                          : AppPalette.neutralBlack,
                       fontWeight: FontWeight.w600,
                     ),
                 h5: Theme.of(context).textTheme.titleSmall?.copyWith(
@@ -274,32 +284,36 @@ class _MessageBubbleState extends State<MessageBubble>
                       fontWeight: FontWeight.w600,
                     ),
                 h6: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: GeminiColors.aiMessageText(context),
+                      color: isDark
+                          ? AppPalette.neutralWhite
+                          : AppPalette.neutralBlack,
                       fontWeight: FontWeight.w600,
                     ),
                 code: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontFamily: 'Google Sans Mono',
                       backgroundColor: isDark
-                          ? const Color(0xFF1e1f20)
-                          : const Color(0xFFf5f5f5),
-                      color: GeminiColors.aiMessageText(context),
+                          ? AppPalette.surfaceCardDark
+                          : AppPalette.neutralGrey.withOpacity(0.1),
+                      color: isDark
+                          ? AppPalette.neutralWhite
+                          : AppPalette.neutralBlack,
                       fontSize: 13,
                     ),
                 codeblockDecoration: BoxDecoration(
                   color: isDark
-                      ? const Color(0xFF1e1f20)
-                      : const Color(0xFFf5f5f5),
+                      ? AppPalette.surfaceCardDark
+                      : AppPalette.neutralGrey.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 blockquote: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: GeminiColors.textSecondary(context),
+                      color: AppPalette.neutralGrey,
                       fontStyle: FontStyle.italic,
                     ),
                 blockquoteDecoration: BoxDecoration(
                   color: Colors.transparent,
                   border: Border(
                     left: BorderSide(
-                      color: GeminiColors.primaryColor(context),
+                      color: AppPalette.trustBlue,
                       width: 4,
                     ),
                   ),
@@ -315,7 +329,7 @@ class _MessageBubbleState extends State<MessageBubble>
                       color: GeminiColors.aiMessageText(context),
                     ),
                 a: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: GeminiColors.primaryColor(context),
+                      color: AppPalette.trustBlue,
                       decoration: TextDecoration.underline,
                     ),
                 em: const TextStyle(fontStyle: FontStyle.italic),
@@ -323,7 +337,9 @@ class _MessageBubbleState extends State<MessageBubble>
                 horizontalRuleDecoration: BoxDecoration(
                   border: Border(
                     top: BorderSide(
-                      color: GeminiColors.divider(context),
+                      color: isDark
+                          ? AppPalette.surfaceCardDark
+                          : AppPalette.neutralGrey.withOpacity(0.1),
                       width: 1,
                     ),
                   ),
@@ -356,11 +372,14 @@ class _MessageBubbleState extends State<MessageBubble>
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
-                color:
-                    isDark ? const Color(0xFF2a2a2e) : const Color(0xFFf0f0f0),
+                color: isDark
+                    ? AppPalette.surfaceCardDark
+                    : AppPalette.neutralGrey.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: GeminiColors.divider(context),
+                  color: isDark
+                      ? AppPalette.surfaceCardDark
+                      : AppPalette.neutralGrey.withOpacity(0.1),
                 ),
               ),
               child: Row(
@@ -369,7 +388,7 @@ class _MessageBubbleState extends State<MessageBubble>
                   Text(
                     _formatActionType(widget.message.actionType!),
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: GeminiColors.textSecondary(context),
+                          color: AppPalette.neutralGrey,
                           fontStyle: FontStyle.italic,
                         ),
                   ),
@@ -381,19 +400,18 @@ class _MessageBubbleState extends State<MessageBubble>
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(
-                          color: GeminiColors.primaryColor(context)
-                              .withOpacity(0.1),
+                          color: AppPalette.trustBlue.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
-                            color: GeminiColors.primaryColor(context),
+                            color: AppPalette.trustBlue,
                             width: 1,
                           ),
                         ),
                         child: Text(
-                          'Change',
+                          AppStrings.chat.change,
                           style:
                               Theme.of(context).textTheme.labelSmall?.copyWith(
-                                    color: GeminiColors.primaryColor(context),
+                                    color: AppPalette.trustBlue,
                                     fontWeight: FontWeight.bold,
                                   ),
                         ),
@@ -417,8 +435,11 @@ class _MessageBubbleState extends State<MessageBubble>
                       ? Icons.thumb_up
                       : Icons.thumb_up_outlined,
                   color: widget.message.feedback == 'LIKE'
-                      ? GeminiColors.primaryColor(context)
-                      : GeminiColors.icon(context).withOpacity(0.6),
+                      ? AppPalette.trustBlue
+                      : (isDark
+                              ? AppPalette.neutralWhite
+                              : AppPalette.neutralBlack)
+                          .withOpacity(0.6),
                   onPressed: () {
                     final newFeedback = widget.message.feedback == 'LIKE'
                         ? FeedbackType.none
@@ -430,8 +451,7 @@ class _MessageBubbleState extends State<MessageBubble>
 
                     if (newFeedback == FeedbackType.like) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text('Thanks for the feedback!')),
+                        SnackBar(content: Text(AppStrings.chat.feedbackThanks)),
                       );
                     }
                   },
@@ -443,8 +463,11 @@ class _MessageBubbleState extends State<MessageBubble>
                       ? Icons.thumb_down
                       : Icons.thumb_down_outlined,
                   color: widget.message.feedback == 'DISLIKE'
-                      ? Colors.red
-                      : GeminiColors.icon(context).withOpacity(0.6),
+                      ? AppPalette.expenseRed
+                      : (isDark
+                              ? AppPalette.neutralWhite
+                              : AppPalette.neutralBlack)
+                          .withOpacity(0.6),
                   onPressed: () {
                     final newFeedback = widget.message.feedback == 'DISLIKE'
                         ? FeedbackType.none
@@ -456,8 +479,7 @@ class _MessageBubbleState extends State<MessageBubble>
 
                     if (newFeedback == FeedbackType.dislike) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text('Thanks for the feedback!')),
+                        SnackBar(content: Text(AppStrings.chat.feedbackThanks)),
                       );
                     }
                   },
@@ -470,10 +492,13 @@ class _MessageBubbleState extends State<MessageBubble>
                 _buildActionButton(
                   context,
                   icon: Icons.select_all,
-                  color: GeminiColors.icon(context).withOpacity(0.6),
+                  color: (isDark
+                          ? AppPalette.neutralWhite
+                          : AppPalette.neutralBlack)
+                      .withOpacity(0.6),
                   onPressed: () {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Select text mode')),
+                      SnackBar(content: Text(AppStrings.common.selectTextMode)),
                     );
                   },
                 ),
@@ -484,12 +509,15 @@ class _MessageBubbleState extends State<MessageBubble>
                 _buildActionButton(
                   context,
                   icon: Icons.content_copy,
-                  color: GeminiColors.icon(context).withOpacity(0.6),
+                  color: (isDark
+                          ? AppPalette.neutralWhite
+                          : AppPalette.neutralBlack)
+                      .withOpacity(0.6),
                   onPressed: () {
                     Clipboard.setData(
                         ClipboardData(text: widget.message.content));
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Copied to clipboard')),
+                      SnackBar(content: Text(AppStrings.common.copied)),
                     );
                   },
                 ),
@@ -501,10 +529,13 @@ class _MessageBubbleState extends State<MessageBubble>
                 _buildActionButton(
                   context,
                   icon: Icons.refresh,
-                  color: GeminiColors.icon(context).withOpacity(0.6),
+                  color: (isDark
+                          ? AppPalette.neutralWhite
+                          : AppPalette.neutralBlack)
+                      .withOpacity(0.6),
                   onPressed: () {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Regenerating response...')),
+                      SnackBar(content: Text(AppStrings.chat.regenerating)),
                     );
                   },
                 ),
@@ -517,7 +548,7 @@ class _MessageBubbleState extends State<MessageBubble>
                       Text(
                         ChatConfig.bottomDisclaimerText!,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: GeminiColors.textSecondary(context),
+                              color: AppPalette.neutralGrey,
                               fontSize: 12,
                             ),
                         textAlign: TextAlign.right,
@@ -543,21 +574,26 @@ class _MessageBubbleState extends State<MessageBubble>
   }
 
   Widget _buildImage(String imageUrl) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     if (imageUrl.startsWith('http')) {
       return CachedNetworkImage(
         imageUrl: imageUrl,
         fit: BoxFit.cover,
         placeholder: (context, url) => Container(
           height: 200,
-          color: GeminiColors.divider(context),
+          color: isDark
+              ? AppPalette.surfaceCardDark
+              : AppPalette.neutralGrey.withOpacity(0.1),
           child: const Center(child: CircularProgressIndicator()),
         ),
         errorWidget: (context, url, error) => Container(
           height: 200,
-          color: GeminiColors.divider(context),
+          color: isDark
+              ? AppPalette.surfaceCardDark
+              : AppPalette.neutralGrey.withOpacity(0.1),
           child: Icon(
             Icons.error,
-            color: GeminiColors.textSecondary(context),
+            color: AppPalette.neutralGrey,
           ),
         ),
       );
@@ -568,10 +604,12 @@ class _MessageBubbleState extends State<MessageBubble>
         fit: BoxFit.cover,
         errorBuilder: (context, error, stackTrace) => Container(
           height: 200,
-          color: GeminiColors.divider(context),
+          color: isDark
+              ? AppPalette.surfaceCardDark
+              : AppPalette.neutralGrey.withOpacity(0.1),
           child: Icon(
             Icons.error,
-            color: GeminiColors.textSecondary(context),
+            color: AppPalette.neutralGrey,
           ),
         ),
       );
@@ -594,22 +632,24 @@ class _MessageBubbleState extends State<MessageBubble>
   String _formatActionType(String type) {
     switch (type.toLowerCase()) {
       case 'record_income':
-        return 'Recorded Income';
+        return AppStrings.chat.recordedIncome;
       case 'record_expense':
-        return 'Recorded Expense';
+        return AppStrings.chat.recordedExpense;
       default:
         return '';
     }
   }
 
   void _showActionTypeOptions(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     // Capture the cubit from the current context (where the provider is available)
     // before showing the bottom sheet (which pushes a new route without the provider)
     final chatCubit = context.read<ChatCubit>();
 
     showModalBottomSheet(
       context: context,
-      backgroundColor: GeminiColors.surface(context),
+      backgroundColor:
+          isDark ? AppPalette.surfaceDark : AppPalette.surfaceLight,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -621,7 +661,7 @@ class _MessageBubbleState extends State<MessageBubble>
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Change Action Type',
+                  AppStrings.chat.changeActionType,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -629,16 +669,17 @@ class _MessageBubbleState extends State<MessageBubble>
                 const SizedBox(height: 16),
                 ListTile(
                   leading:
-                      const Icon(Icons.arrow_downward, color: Colors.green),
-                  title: const Text('Income'),
+                      Icon(Icons.arrow_downward, color: AppPalette.incomeGreen),
+                  title: Text(AppStrings.dashboard.income),
                   onTap: () {
                     Navigator.pop(context);
                     _sendCorrectionMessage(chatCubit, 'income');
                   },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.arrow_upward, color: Colors.red),
-                  title: const Text('Expense'),
+                  leading:
+                      Icon(Icons.arrow_upward, color: AppPalette.expenseRed),
+                  title: Text(AppStrings.dashboard.expense),
                   onTap: () {
                     Navigator.pop(context);
                     _sendCorrectionMessage(chatCubit, 'expense');

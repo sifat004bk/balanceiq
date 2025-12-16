@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../../core/constants/gemini_colors.dart';
+import 'package:balance_iq/core/theme/app_palette.dart';
 
 class GenUIMetricCard extends StatelessWidget {
   final Map<String, dynamic> data;
@@ -20,20 +20,20 @@ class GenUIMetricCard extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            GeminiColors.primaryColor(context).withOpacity(0.1),
-            GeminiColors.primaryColor(context).withOpacity(0.05),
+            AppPalette.trustBlue.withOpacity(0.1),
+            AppPalette.trustBlue.withOpacity(0.05),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: GeminiColors.primaryColor(context).withOpacity(0.2),
+          color: AppPalette.trustBlue.withOpacity(0.2),
           width: 1.5,
         ),
         boxShadow: [
           BoxShadow(
-            color: GeminiColors.primaryColor(context).withOpacity(0.1),
+            color: AppPalette.trustBlue.withOpacity(0.1),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -65,7 +65,7 @@ class GenUIMetricCard extends StatelessWidget {
             value,
             style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: GeminiColors.primaryColor(context),
+                  color: AppPalette.trustBlue,
                 ),
           ),
           if (change != null) ...[
@@ -111,13 +111,13 @@ class GenUIMetricCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: GeminiColors.primaryColor(context).withOpacity(0.15),
+        color: AppPalette.trustBlue.withOpacity(0.15),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Icon(
         iconData,
         size: 24,
-        color: GeminiColors.primaryColor(context),
+        color: AppPalette.trustBlue,
       ),
     );
   }
@@ -129,11 +129,11 @@ class GenUIMetricCard extends StatelessWidget {
     switch (trend) {
       case 'up':
         icon = Icons.arrow_upward;
-        color = Colors.green;
+        color = AppPalette.incomeGreen;
         break;
       case 'down':
         icon = Icons.arrow_downward;
-        color = Colors.red;
+        color = AppPalette.expenseRed;
         break;
       default:
         icon = Icons.remove;
@@ -152,9 +152,9 @@ class GenUIMetricCard extends StatelessWidget {
 
   Color _getChangeColor(String change, BuildContext context) {
     if (change.startsWith('+')) {
-      return Colors.green;
+      return AppPalette.incomeGreen;
     } else if (change.startsWith('-')) {
-      return Colors.red;
+      return AppPalette.expenseRed;
     }
     return Theme.of(context).textTheme.bodySmall?.color ?? Colors.grey;
   }

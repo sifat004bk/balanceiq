@@ -1,4 +1,4 @@
-import 'package:balance_iq/core/constants/gemini_colors.dart';
+import 'package:balance_iq/core/theme/app_palette.dart';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -215,7 +215,7 @@ class _ChatViewState extends State<ChatView> {
         description =
             'You need an active subscription plan to use the chat feature.';
         icon = Icons.card_membership_outlined;
-        iconColor = GeminiColors.primary;
+        iconColor = AppPalette.trustBlue;
         buttonText = 'View Plans';
         onButtonPressed =
             () => Navigator.pushNamed(context, '/subscription-plans');
@@ -303,7 +303,7 @@ class _ChatViewState extends State<ChatView> {
             ElevatedButton(
               onPressed: onButtonPressed,
               style: ElevatedButton.styleFrom(
-                backgroundColor: GeminiColors.primary,
+                backgroundColor: AppPalette.trustBlue,
                 foregroundColor: Colors.white,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
@@ -330,7 +330,7 @@ class _ChatViewState extends State<ChatView> {
                 child: Text(
                   'Back to Chat',
                   style: TextStyle(
-                    color: GeminiColors.primary,
+                    color: AppPalette.trustBlue,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -362,7 +362,7 @@ class _ChatViewState extends State<ChatView> {
           }
         },
         child: Scaffold(
-          backgroundColor: GeminiColors.background(context),
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           resizeToAvoidBottomInset: false, // We handle keyboard manually
           body: SafeArea(
             child: Stack(

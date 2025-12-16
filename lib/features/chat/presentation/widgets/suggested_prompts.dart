@@ -1,5 +1,5 @@
 import 'package:balance_iq/core/constants/app_constants.dart';
-import 'package:balance_iq/core/constants/gemini_colors.dart';
+import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 
 /// Gemini-style suggested prompts shown in empty chat state
@@ -145,8 +145,8 @@ class SuggestedPrompts extends StatelessWidget {
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        GeminiColors.primaryLight,
-                        GeminiColors.primaryLight.withOpacity(0.7),
+                        AppPalette.trustBlue,
+                        AppPalette.trustBlue.withOpacity(0.7),
                       ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
@@ -154,7 +154,7 @@ class SuggestedPrompts extends StatelessWidget {
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: GeminiColors.primaryLight.withOpacity(0.3),
+                        color: AppPalette.trustBlue.withOpacity(0.3),
                         blurRadius: 24,
                         offset: const Offset(0, 8),
                       ),
@@ -187,7 +187,9 @@ class SuggestedPrompts extends StatelessWidget {
                   'How can I help you today?',
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                         fontWeight: FontWeight.w600,
-                        color: GeminiColors.aiMessageText(context),
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? AppPalette.neutralWhite
+                            : AppPalette.neutralBlack,
                         letterSpacing: -0.5,
                       ),
                   textAlign: TextAlign.center,
@@ -196,7 +198,7 @@ class SuggestedPrompts extends StatelessWidget {
                 Text(
                   'Choose a prompt or type your own question',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: GeminiColors.textSecondary(context),
+                        color: AppPalette.neutralGrey,
                         fontSize: 14,
                       ),
                   textAlign: TextAlign.center,
@@ -235,6 +237,7 @@ class SuggestedPrompts extends StatelessWidget {
   }
 
   Widget _buildPromptChip(BuildContext context, PromptChip chip) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -245,20 +248,20 @@ class SuggestedPrompts extends StatelessWidget {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                GeminiColors.primaryGlowLight.withOpacity(0.15),
-                GeminiColors.primaryGlowLight.withOpacity(0.08),
+                AppPalette.trustBlue.withOpacity(0.15),
+                AppPalette.trustBlue.withOpacity(0.08),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
             borderRadius: BorderRadius.circular(24),
             border: Border.all(
-              color: GeminiColors.primaryLight.withOpacity(0.3),
+              color: AppPalette.trustBlue.withOpacity(0.3),
               width: 1.5,
             ),
             boxShadow: [
               BoxShadow(
-                color: GeminiColors.primaryLight.withOpacity(0.1),
+                color: AppPalette.trustBlue.withOpacity(0.1),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -270,13 +273,13 @@ class SuggestedPrompts extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  color: GeminiColors.primaryLight.withOpacity(0.15),
+                  color: AppPalette.trustBlue.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
                   chip.icon,
                   size: 16,
-                  color: GeminiColors.primaryLight,
+                  color: AppPalette.trustBlue,
                 ),
               ),
               const SizedBox(width: 12),
@@ -285,7 +288,9 @@ class SuggestedPrompts extends StatelessWidget {
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                      color: GeminiColors.aiMessageText(context),
+                      color: isDark
+                          ? AppPalette.neutralWhite
+                          : AppPalette.neutralBlack,
                       letterSpacing: 0.2,
                     ),
               ),

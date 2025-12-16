@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/constants/app_constants.dart';
-import '../../../../core/constants/gemini_colors.dart';
+import '../../../../core/theme/app_palette.dart';
 import '../../domain/entities/token_usage.dart';
 import '../cubit/chat_cubit.dart';
 import '../cubit/chat_state.dart';
@@ -32,7 +32,8 @@ class TokenUsageSheet extends StatelessWidget {
             tokenUsage = state.tokenUsage;
           }
 
-          final percentage = limit > 0 ? (currentUsage / limit).clamp(0.0, 1.0) : 0.0;
+          final percentage =
+              limit > 0 ? (currentUsage / limit).clamp(0.0, 1.0) : 0.0;
           final remainingTokens = (limit - currentUsage).clamp(0, limit);
 
           return SingleChildScrollView(
@@ -135,11 +136,11 @@ class TokenUsageSheet extends StatelessWidget {
 
     Color progressColor;
     if (isLimitReached) {
-      progressColor = Colors.red;
+      progressColor = AppPalette.expenseRed;
     } else if (isNearLimit) {
-      progressColor = Colors.orange;
+      progressColor = AppPalette.sparkOrange;
     } else {
-      progressColor = GeminiColors.primary;
+      progressColor = AppPalette.trustBlue;
     }
 
     return Container(
@@ -294,7 +295,7 @@ class TokenUsageSheet extends StatelessWidget {
             title: 'Today',
             value: _formatTokenCount(currentUsage),
             icon: Icons.today_outlined,
-            color: GeminiColors.primary,
+            color: AppPalette.trustBlue,
             isDark: isDark,
           ),
         ),
@@ -408,7 +409,8 @@ class TokenUsageSheet extends StatelessWidget {
 
     // Format timestamp to local time
     final localTime = item.timestamp;
-    final timeString = '${localTime.hour.toString().padLeft(2, '0')}:${localTime.minute.toString().padLeft(2, '0')}';
+    final timeString =
+        '${localTime.hour.toString().padLeft(2, '0')}:${localTime.minute.toString().padLeft(2, '0')}';
     final dateString = '${localTime.day}/${localTime.month}/${localTime.year}';
 
     return Padding(
@@ -418,12 +420,12 @@ class TokenUsageSheet extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: GeminiColors.primary.withOpacity(0.15),
+              color: AppPalette.trustBlue.withOpacity(0.15),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
               _getActionIcon(item.action),
-              color: GeminiColors.primary,
+              color: AppPalette.trustBlue,
               size: 18,
             ),
           ),
@@ -483,7 +485,8 @@ class TokenUsageSheet extends StatelessWidget {
     return action
         .toLowerCase()
         .split('_')
-        .map((word) => word.isEmpty ? '' : '${word[0].toUpperCase()}${word.substring(1)}')
+        .map((word) =>
+            word.isEmpty ? '' : '${word[0].toUpperCase()}${word.substring(1)}')
         .join(' ');
   }
 
@@ -493,7 +496,8 @@ class TokenUsageSheet extends StatelessWidget {
       return Icons.trending_up_rounded;
     } else if (actionLower.contains('expense')) {
       return Icons.trending_down_rounded;
-    } else if (actionLower.contains('chat') || actionLower.contains('message')) {
+    } else if (actionLower.contains('chat') ||
+        actionLower.contains('message')) {
       return Icons.chat_bubble_outline_rounded;
     } else if (actionLower.contains('log')) {
       return Icons.receipt_long_outlined;

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/gemini_colors.dart';
 import '../../../../core/di/injection_container.dart';
+import '../../../../core/theme/app_typography.dart';
 import '../../../../core/tour/tour.dart';
 import '../../../chat/presentation/pages/chat_page.dart';
 import '../../domain/entities/plan.dart';
@@ -38,7 +39,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
 
     return Scaffold(
       backgroundColor:
-          isDark ? const Color(0xFF0F1419) : const Color(0xFFF5F7FA),
+          isDark ? AppPalette.surfaceDark : AppPalette.surfaceLight,
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(
@@ -48,10 +49,8 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          'Choose Your Plan',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
+          AppStrings.subscription.choosePlanTitle,
+          style: AppTypography.titleXLargeSemiBold.copyWith(
             color: isDark ? Colors.white : Colors.black87,
           ),
         ),
@@ -169,11 +168,9 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
           const SizedBox(height: 8),
           // Savings Text
           Text(
-            'Save 20% with yearly billing',
-            style: TextStyle(
-              fontSize: 14,
+            AppStrings.subscription.yearlySavings,
+            style: AppTypography.bodyMediumSemiBold.copyWith(
               color: GeminiColors.primary,
-              fontWeight: FontWeight.w600,
             ),
           ),
           const SizedBox(height: 32),
@@ -198,10 +195,9 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                   // TODO: Show terms of service
                 },
                 child: Text(
-                  'Terms of Service',
-                  style: TextStyle(
+                  AppStrings.subscription.termsOfService,
+                  style: AppTypography.bodyMedium.copyWith(
                     color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
-                    fontSize: 14,
                   ),
                 ),
               ),
@@ -211,10 +207,9 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                   // TODO: Show privacy policy
                 },
                 child: Text(
-                  'Privacy Policy',
-                  style: TextStyle(
+                  AppStrings.subscription.privacyPolicy,
+                  style: AppTypography.bodyMedium.copyWith(
                     color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
-                    fontSize: 14,
                   ),
                 ),
               ),
@@ -229,14 +224,14 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1A1C23) : const Color(0xFFE8ECF0),
+        color: isDark ? AppPalette.surfaceToggleDark : const Color(0xFFE8ECF0),
         borderRadius: BorderRadius.circular(30),
       ),
       child: Row(
         children: [
           Expanded(
             child: _buildToggleButton(
-              'Monthly',
+              AppStrings.subscription.monthly,
               _isMonthly,
               () => setState(() => _isMonthly = true),
               isDark,
@@ -244,7 +239,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
           ),
           Expanded(
             child: _buildToggleButton(
-              'Yearly',
+              AppStrings.subscription.yearly,
               !_isMonthly,
               () => setState(() => _isMonthly = false),
               isDark,
@@ -267,7 +262,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
           color: isActive
-              ? (isDark ? const Color(0xFF2D3142) : Colors.white)
+              ? (isDark ? AppPalette.surfaceContainerDark : Colors.white)
               : Colors.transparent,
           borderRadius: BorderRadius.circular(30),
           boxShadow: isActive
@@ -283,9 +278,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
         child: Text(
           text,
           textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
+          style: AppTypography.buttonMedium.copyWith(
             color: isActive
                 ? (isDark ? Colors.white : Colors.black87)
                 : (isDark ? Colors.grey.shade600 : Colors.grey.shade500),
@@ -307,7 +300,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
 
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1A1C23) : Colors.white,
+        color: isDark ? AppPalette.surfaceToggleDark : Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
           color: isPopular
@@ -341,9 +334,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                 // Title
                 Text(
                   plan.displayName,
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+                  style: AppTypography.headlineMediumBold.copyWith(
                     color: isDark ? Colors.white : Colors.black87,
                   ),
                 ),
@@ -351,8 +342,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                 // Description
                 Text(
                   plan.description,
-                  style: TextStyle(
-                    fontSize: 14,
+                  style: AppTypography.bodyMedium.copyWith(
                     color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
                   ),
                 ),
@@ -363,9 +353,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                   children: [
                     Text(
                       '\$${displayPrice.toStringAsFixed(0)}',
-                      style: TextStyle(
-                        fontSize: 40,
-                        fontWeight: FontWeight.bold,
+                      style: AppTypography.displayLarge.copyWith(
                         color: isDark ? Colors.white : Colors.black87,
                       ),
                     ),
@@ -373,9 +361,8 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                     Padding(
                       padding: const EdgeInsets.only(top: 12),
                       child: Text(
-                        '/ month',
-                        style: TextStyle(
-                          fontSize: 16,
+                        AppStrings.subscription.perMonth,
+                        style: AppTypography.bodyLarge.copyWith(
                           color: isDark
                               ? Colors.grey.shade400
                               : Colors.grey.shade600,
@@ -399,8 +386,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                           Expanded(
                             child: Text(
                               feature.name,
-                              style: TextStyle(
-                                fontSize: 16,
+                              style: AppTypography.bodyLarge.copyWith(
                                 color: isDark ? Colors.white : Colors.black87,
                               ),
                             ),
@@ -429,7 +415,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                           : isPopular
                               ? GeminiColors.primary
                               : (isDark
-                                  ? const Color(0xFF2D3142)
+                                  ? AppPalette.surfaceContainerDark
                                   : Colors.grey.shade200),
                       foregroundColor: isCurrentPlan
                           ? Colors.white
@@ -443,11 +429,8 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                       elevation: 0,
                     ),
                     child: Text(
-                      isCurrentPlan ? 'Current Plan' : 'Subscribe',
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      isCurrentPlan ? AppStrings.subscription.currentPlan : AppStrings.subscription.subscribeButton,
+                      style: AppTypography.buttonMedium,
                     ),
                   ),
                 ),
@@ -469,12 +452,10 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                     topRight: Radius.circular(24),
                   ),
                 ),
-                child: const Text(
-                  'Most Popular',
+                child: Text(
+                  AppStrings.subscription.mostPopular,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
+                  style: AppTypography.bodyMediumSemiBold.copyWith(
                     color: Colors.white,
                   ),
                 ),
@@ -489,14 +470,12 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 decoration: BoxDecoration(
-                  color: Colors.green,
+                  color: AppPalette.successGreen,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Text(
-                  'Active',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
+                child: Text(
+                  AppStrings.subscription.active,
+                  style: AppTypography.captionSemiBold.copyWith(
                     color: Colors.white,
                   ),
                 ),

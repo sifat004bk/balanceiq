@@ -1,4 +1,5 @@
-import 'package:balance_iq/core/theme/app_theme.dart';
+import 'package:balance_iq/core/constants/app_strings.dart';
+import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:balance_iq/features/home/domain/entities/dashbaord_summary.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +36,7 @@ class SpendingTrendChart extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Spending Trend',
+            AppStrings.dashboard.spendingTrend,
             style: textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w500,
             ),
@@ -74,8 +75,8 @@ class SpendingTrendChart extends StatelessWidget {
                               value.toInt().toString(),
                               style: textTheme.bodySmall?.copyWith(
                                 color: isDark
-                                    ? AppTheme.textSubtleDark
-                                    : AppTheme.textSubtleLight,
+                                    ? AppPalette.neutralGrey
+                                    : AppPalette.neutralGrey,
                                 fontSize: 13,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -100,7 +101,7 @@ class SpendingTrendChart extends StatelessWidget {
                         .toList(),
                     isCurved: true,
                     curveSmoothness: 0.35,
-                    color: AppTheme.primaryColor,
+                    color: AppPalette.trustBlue,
                     barWidth: 3,
                     isStrokeCapRound: true,
                     dotData: FlDotData(show: false),
@@ -110,8 +111,8 @@ class SpendingTrendChart extends StatelessWidget {
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                         colors: [
-                          AppTheme.primaryColor.withOpacity(0.3),
-                          AppTheme.primaryColor.withOpacity(0.0),
+                          AppPalette.trustBlue.withOpacity(0.3),
+                          AppPalette.trustBlue.withOpacity(0.0),
                         ],
                       ),
                     ),
@@ -120,7 +121,7 @@ class SpendingTrendChart extends StatelessWidget {
                 lineTouchData: LineTouchData(
                   touchTooltipData: LineTouchTooltipData(
                     getTooltipColor: (touchedSpot) =>
-                        AppTheme.primaryColor.withOpacity(0.9),
+                        AppPalette.trustBlue.withOpacity(0.9),
                     tooltipRoundedRadius: 8,
                     tooltipPadding: const EdgeInsets.symmetric(
                       horizontal: 12,
@@ -131,9 +132,7 @@ class SpendingTrendChart extends StatelessWidget {
                         return LineTooltipItem(
                           'Day ${spot.x.toInt()}\n\$${spot.y.toStringAsFixed(2)}',
                           TextStyle(
-                            color: isDark
-                                ? AppTheme.textDark
-                                : AppTheme.backgroundDark,
+                            color: AppPalette.neutralWhite,
                             fontWeight: FontWeight.bold,
                             fontSize: 12,
                           ),

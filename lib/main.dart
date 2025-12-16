@@ -15,6 +15,7 @@ import 'features/auth/presentation/pages/email_verification_page.dart';
 import 'features/auth/presentation/pages/forgot_password_page.dart';
 import 'features/auth/presentation/pages/loading_page.dart';
 import 'features/auth/presentation/pages/new_login_page.dart';
+import 'features/auth/presentation/pages/splash_page.dart';
 import 'features/auth/presentation/pages/new_onboarding_page.dart';
 import 'features/auth/presentation/pages/new_signup_page.dart';
 import 'features/auth/presentation/pages/profile_page.dart';
@@ -53,7 +54,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => di.sl<AuthCubit>()..checkAuthStatus(),
+          create: (context) => di.sl<AuthCubit>(),
         ),
         BlocProvider(
           create: (context) => di.sl<ThemeCubit>(),
@@ -75,7 +76,7 @@ class MyApp extends StatelessWidget {
             theme: AppTheme.lightTheme(),
             darkTheme: AppTheme.darkTheme(),
             themeMode: themeMode,
-            home: const AuthWrapper(),
+            home: const SplashPage(),
             routes: {
               '/onboarding': (context) => const NewOnboardingPage(),
               '/login': (context) => const NewLoginPage(),

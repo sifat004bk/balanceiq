@@ -44,7 +44,7 @@ class AuthInterceptor extends Interceptor {
     if (err.response?.statusCode == 401 && !_isRefreshing) {
       // Skip refresh for auth endpoints to prevent loops
       final requestPath = err.requestOptions.path;
-      if (requestPath.contains('/auth/login') || 
+      if (requestPath.contains('/auth/login') ||
           requestPath.contains('/auth/signup') ||
           requestPath.contains('/auth/refresh-token')) {
         if (kDebugMode) {
@@ -52,9 +52,9 @@ class AuthInterceptor extends Interceptor {
         }
         return handler.next(err);
       }
-      
+
       final refreshToken = sharedPreferences.getString('refresh_token');
-      
+
       if (kDebugMode) {
         print('🔐 [AuthInterceptor] Got 401, attempting token refresh...');
         print('🔐 [AuthInterceptor] Has refresh token: ${refreshToken != null}');
@@ -62,7 +62,7 @@ class AuthInterceptor extends Interceptor {
 
       if (refreshToken != null && refreshToken.isNotEmpty) {
         _isRefreshing = true;
-        
+
         try {
           // Create a new Dio instance to avoid circular dependency and interceptor loops
           final tokenDio = Dio();
@@ -81,6 +81,7 @@ class AuthInterceptor extends Interceptor {
 
           if (kDebugMode) {
             print('🔐 [AuthInterceptor] Refresh response status: ${response.statusCode}');
+            print('🔐 [AuthInterceptor] Refresh response data: ${response.data}');
           }
 
           if (response.statusCode == 200) {
@@ -90,7 +91,7 @@ class AuthInterceptor extends Interceptor {
               if (kDebugMode) {
                 print('🔐 [AuthInterceptor] Token refresh successful! Updating tokens...');
               }
-              
+
               // Update the stored tokens
               await sharedPreferences.setString(
                   'auth_token', refreshResponse.data!.token);
@@ -110,9 +111,14 @@ class AuthInterceptor extends Interceptor {
               // Use a fresh Dio without the interceptor to avoid loops
               final retryDio = Dio();
               retryDio.options.baseUrl = dio.options.baseUrl;
-              
+
+              // Determine the URL to use - if path is already absolute, use it directly
+              final requestUrl = opts.path.startsWith('http')
+                  ? opts.path
+                  : opts.uri.toString();
+
               final clonedRequest = await retryDio.request(
-                opts.path,
+                requestUrl,
                 options: Options(
                   method: opts.method,
                   headers: opts.headers,
@@ -133,14 +139,21 @@ class AuthInterceptor extends Interceptor {
               if (kDebugMode) {
                 print('🔐 [AuthInterceptor] Refresh response unsuccessful: ${refreshResponse.message}');
               }
+              // Refresh response indicated failure
+              _isRefreshing = false;
+              await _handleRefreshFailure();
+              return handler.reject(err);
             }
           }
-          
-          // If we get here, refresh was unsuccessful (non-200 or no data)
+
+          // If we get here, refresh was unsuccessful (non-200)
+          if (kDebugMode) {
+            print('🔐 [AuthInterceptor] Refresh returned non-200 status: ${response.statusCode}');
+          }
           _isRefreshing = false;
           await _handleRefreshFailure();
           return handler.reject(err);
-          
+
         } catch (e) {
           // Refresh failed, clear tokens and navigate to login
           _isRefreshing = false;
@@ -159,8 +172,9 @@ class AuthInterceptor extends Interceptor {
         return handler.reject(err);
       }
     }
-    
-    handler.next(err);
+
+    // For non-401 errors, pass through
+    return handler.next(err);
   }
 
   /// Handles token refresh failure by clearing tokens and navigating to login

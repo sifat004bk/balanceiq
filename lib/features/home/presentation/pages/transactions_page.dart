@@ -1,3 +1,4 @@
+import 'package:balance_iq/core/constants/app_strings.dart';
 import 'package:balance_iq/core/di/injection_container.dart';
 import 'package:balance_iq/core/theme/app_theme.dart';
 import 'package:balance_iq/features/home/domain/entities/transaction.dart';
@@ -109,7 +110,7 @@ class _TransactionsViewState extends State<TransactionsView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Transactions'),
+        title: Text(AppStrings.transactions.title),
         centerTitle: true,
         elevation: 0,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -126,7 +127,7 @@ class _TransactionsViewState extends State<TransactionsView> {
                 TextField(
                   controller: _searchController,
                   decoration: InputDecoration(
-                    hintText: 'Search transactions...',
+                    hintText: AppStrings.transactions.searchHint,
                     prefixIcon: const Icon(Icons.search),
                     filled: true,
                     fillColor: Theme.of(context).cardColor,

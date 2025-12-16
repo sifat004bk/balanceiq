@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:balance_iq/core/constants/app_strings.dart';
+import 'package:balance_iq/core/theme/app_palette.dart';
 import '../../../../core/constants/gemini_colors.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../domain/entities/subscription.dart';
@@ -86,7 +88,7 @@ class _ManageSubscriptionView extends StatelessWidget {
                     onPressed: () => context
                         .read<SubscriptionCubit>()
                         .loadSubscriptionStatus(),
-                    child: const Text('Retry'),
+                    child: Text(AppStrings.common.retry),
                   ),
                 ],
               ),
@@ -516,14 +518,14 @@ class _ManageSubscriptionView extends StatelessWidget {
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              title: const Text('Cancel Subscription'),
+              title: Text(AppStrings.subscription.cancelSubscription),
               content: const Text(
                 'Are you sure you want to cancel your subscription? You will lose access to all premium features at the end of your current billing period.',
               ),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text('Keep Subscription'),
+                  child: Text('Keep ${AppStrings.subscription.mySubscription}'),
                 ),
                 TextButton(
                   onPressed: () {
@@ -531,7 +533,8 @@ class _ManageSubscriptionView extends StatelessWidget {
                     // TODO: Implement cancel subscription API call
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('Subscription cancellation coming soon'),
+                        content: Text(
+                            '${AppStrings.subscription.cancelSubscription} ${AppStrings.common.comingSoon}'),
                       ),
                     );
                   },

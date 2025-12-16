@@ -1,3 +1,5 @@
+import 'package:balance_iq/core/constants/app_strings.dart';
+import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/gemini_colors.dart';
@@ -35,9 +37,8 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark
-          ? const Color(0xFF0F1419)
-          : const Color(0xFFF5F7FA),
+      backgroundColor:
+          isDark ? const Color(0xFF0F1419) : const Color(0xFFF5F7FA),
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(
@@ -62,7 +63,8 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
           if (state is SubscriptionCreated) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('Successfully subscribed to ${state.subscription.plan.displayName}!'),
+                content: Text(
+                    '${AppStrings.subscription.subscriptionSuccess} ${state.subscription.plan.displayName}!'),
                 backgroundColor: Colors.green,
                 behavior: SnackBarBehavior.floating,
                 shape: RoundedRectangleBorder(
@@ -70,7 +72,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                 ),
               ),
             );
-            
+
             // Check if tour is active at subscription step
             final tourCubit = context.read<ProductTourCubit>();
             if (tourCubit.isAtStep(TourStep.profileSubscription)) {
@@ -109,20 +111,21 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
           }
 
           if (state is CreatingSubscription) {
-            return const Center(
+            return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CircularProgressIndicator(),
                   SizedBox(height: 16),
-                  Text('Creating subscription...'),
+                  Text(AppStrings.common.processing),
                 ],
               ),
             );
           }
 
           if (state is PlansLoaded) {
-            return _buildPlansContent(context, isDark, state.plans, state.subscriptionStatus?.subscription?.plan?.name);
+            return _buildPlansContent(context, isDark, state.plans,
+                state.subscriptionStatus?.subscription?.plan?.name);
           }
 
           if (state is SubscriptionError) {
@@ -130,13 +133,15 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.error_outline, size: 64, color: Colors.red.shade300),
+                  Icon(Icons.error_outline,
+                      size: 64, color: Colors.red.shade300),
                   const SizedBox(height: 16),
                   Text(state.message, textAlign: TextAlign.center),
                   const SizedBox(height: 16),
                   ElevatedButton(
-                    onPressed: () => context.read<SubscriptionCubit>().loadPlansAndStatus(),
-                    child: const Text('Retry'),
+                    onPressed: () =>
+                        context.read<SubscriptionCubit>().loadPlansAndStatus(),
+                    child: Text(AppStrings.common.retry),
                   ),
                 ],
               ),
@@ -149,9 +154,11 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
     );
   }
 
-  Widget _buildPlansContent(BuildContext context, bool isDark, List<Plan> plans, String? currentPlanName) {
+  Widget _buildPlansContent(BuildContext context, bool isDark, List<Plan> plans,
+      String? currentPlanName) {
     // Sort plans by tier
-    final sortedPlans = List<Plan>.from(plans)..sort((a, b) => a.tier.compareTo(b.tier));
+    final sortedPlans = List<Plan>.from(plans)
+      ..sort((a, b) => a.tier.compareTo(b.tier));
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
@@ -172,15 +179,15 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
           const SizedBox(height: 32),
           // Plan Cards
           ...sortedPlans.map((plan) => Padding(
-            padding: const EdgeInsets.only(bottom: 20),
-            child: _buildPlanCard(
-              context,
-              isDark: isDark,
-              plan: plan,
-              isCurrentPlan: plan.name == currentPlanName,
-              isPopular: plan.tier == 2, // Pro plan is typically tier 2
-            ),
-          )),
+                padding: const EdgeInsets.only(bottom: 20),
+                child: _buildPlanCard(
+                  context,
+                  isDark: isDark,
+                  plan: plan,
+                  isCurrentPlan: plan.name == currentPlanName,
+                  isPopular: plan.tier == 2, // Pro plan is typically tier 2
+                ),
+              )),
           const SizedBox(height: 12),
           // Footer Links
           Row(
@@ -222,9 +229,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: isDark
-            ? const Color(0xFF1A1C23)
-            : const Color(0xFFE8ECF0),
+        color: isDark ? const Color(0xFF1A1C23) : const Color(0xFFE8ECF0),
         borderRadius: BorderRadius.circular(30),
       ),
       child: Row(
@@ -299,7 +304,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
   }) {
     // Calculate display price (20% off for yearly)
     final displayPrice = _isMonthly ? plan.price : plan.price * 0.8;
-    
+
     return Container(
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF1A1C23) : Colors.white,
@@ -371,7 +376,9 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                         '/ month',
                         style: TextStyle(
                           fontSize: 16,
-                          color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                          color: isDark
+                              ? Colors.grey.shade400
+                              : Colors.grey.shade600,
                         ),
                       ),
                     ),
@@ -409,17 +416,21 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                     onPressed: isCurrentPlan
                         ? null
                         : () {
-                            context.read<SubscriptionCubit>().createSubscription(
-                              planName: plan.name,
-                              autoRenew: true,
-                            );
+                            context
+                                .read<SubscriptionCubit>()
+                                .createSubscription(
+                                  planName: plan.name,
+                                  autoRenew: true,
+                                );
                           },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: isCurrentPlan
                           ? Colors.grey.shade400
                           : isPopular
                               ? GeminiColors.primary
-                              : (isDark ? const Color(0xFF2D3142) : Colors.grey.shade200),
+                              : (isDark
+                                  ? const Color(0xFF2D3142)
+                                  : Colors.grey.shade200),
                       foregroundColor: isCurrentPlan
                           ? Colors.white
                           : isPopular
@@ -475,7 +486,8 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
               top: isPopular ? 40 : 12,
               right: 12,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 decoration: BoxDecoration(
                   color: Colors.green,
                   borderRadius: BorderRadius.circular(12),

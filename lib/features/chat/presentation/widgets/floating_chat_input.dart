@@ -601,7 +601,7 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                           if (_focusNode.hasFocus)
                             BoxShadow(
                               color: primaryColor.withOpacity(0.5),
-                              blurRadius: 40,
+                              blurRadius: 16,
                               spreadRadius: 4,
                               offset: const Offset(0, 4),
                             ),
@@ -610,14 +610,14 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                             color: _hasContent
                                 ? primaryColor.withOpacity(0.35)
                                 : primaryColor.withOpacity(0.15),
-                            blurRadius: _hasContent ? 20 : 16,
+                            blurRadius: _hasContent ? 10 : 5,
                             offset: const Offset(0, 4),
                           ),
                           // Depth shadow
                           BoxShadow(
                             color:
                                 Colors.black.withOpacity(isDark ? 0.4 : 0.08),
-                            blurRadius: 12,
+                            blurRadius: 5,
                             offset: const Offset(0, 2),
                           ),
                         ],

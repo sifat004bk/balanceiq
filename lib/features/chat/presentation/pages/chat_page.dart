@@ -465,7 +465,7 @@ class _ChatViewState extends State<ChatView> {
                       },
                       child: AnimatedOpacity(
                         duration: const Duration(milliseconds: 200),
-                        opacity: _isInputFocused ? 1.0 : 0.0,
+                        opacity: _isInputFocused ? 0.7 : 0.0,
                         child: BackdropFilter(
                           filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
                           child: Container(

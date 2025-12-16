@@ -1,6 +1,7 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/constants/app_assets.dart';
+import '../../../../core/constants/app_strings.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
 
@@ -56,13 +57,13 @@ class OnboardingPage extends StatelessWidget {
                 const SizedBox(height: 32),
                 // App Name
                 Text(
-                  'BalanceIQ',
+                  AppStrings.auth.welcomeTitle,
                   style: Theme.of(context).textTheme.displayLarge,
                 ),
                 const SizedBox(height: 12),
                 // App Description
                 Text(
-                  'Your AI-powered personal finance assistant',
+                  AppStrings.auth.welcomeSubtitle,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         color: Colors.grey[600],
                       ),
@@ -80,13 +81,13 @@ class OnboardingPage extends StatelessWidget {
                     child: ElevatedButton.icon(
                       onPressed: () => context.read<AuthCubit>().signInGoogle(),
                       icon: Image.asset(
-                        'assets/images/google_logo.png',
+                        AppAssets.googleLogo,
                         height: 24,
                         width: 24,
                         errorBuilder: (context, error, stackTrace) =>
                             const Icon(Icons.login),
                       ),
-                      label: const Text('Continue with Google'),
+                      label: Text(AppStrings.auth.continueGoogle),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
                         foregroundColor: Colors.black87,
@@ -101,7 +102,7 @@ class OnboardingPage extends StatelessWidget {
                 const SizedBox(height: 24),
                 // Terms and Privacy
                 Text(
-                  'By continuing, you agree to our Terms of Service\nand Privacy Policy',
+                  AppStrings.auth.termsPrivacy,
                   style: Theme.of(context).textTheme.bodySmall,
                   textAlign: TextAlign.center,
                 ),

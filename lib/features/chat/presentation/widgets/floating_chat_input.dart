@@ -16,11 +16,15 @@ import '../chat_config.dart';
 class FloatingChatInput extends StatefulWidget {
   final String botId;
   final Color? botColor;
+  final double width;
+  final Function(double)? onWidthChanged;
 
   const FloatingChatInput({
     super.key,
     required this.botId,
     this.botColor,
+    this.width = 350.0,
+    this.onWidthChanged,
   });
 
   @override
@@ -345,8 +349,10 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
         }
 
         return Container(
-          // Limited width to confirm it doesn't take full width in Stack
-          constraints: const BoxConstraints(maxWidth: 400),
+          // Use provided width
+          width: widget.width,
+          constraints: const BoxConstraints(
+              maxWidth: 800), // increased max constraint for wider screens
           // No decoration here
           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
           child: Column(
@@ -355,11 +361,24 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
             children: [
               // Collapse Button (Tiny) - Optional, maybe just tap outside?
               // Let's add a small handle or minimize button
-// Centered Drag Handle
+              // Centered Drag Handle
               Align(
                 alignment: Alignment.center,
                 child: GestureDetector(
                   onTap: _toggleCollapse,
+                  onPanUpdate: (details) {
+                    // Normalize delta to handle resizing from center or edges
+                    // User said "dragging left or right... width should increase or decrease"
+                    // If we expand symmetrically, 1px drag = 2px width change?
+                    // Or simple: Right drag = increase, Left drag = decrease?
+                    // Let's assume standard resize behavior: Drag Right = Expand, Left = Shrink?
+                    // But it's centered. This is ambiguous.
+                    // "dragging left or right ... width should increase or decrease"
+                    // Let's implement: Drag Right (+) -> Increase width. Drag Left (-) -> Decrease width.
+                    if (widget.onWidthChanged != null) {
+                      widget.onWidthChanged!(details.delta.dx);
+                    }
+                  },
                   onVerticalDragEnd: (details) {
                     if (details.primaryVelocity! > 300) {
                       _toggleCollapse();

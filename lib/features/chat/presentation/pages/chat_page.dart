@@ -56,6 +56,9 @@ class _ChatViewState extends State<ChatView> {
   bool _chatTourShown = false;
   final GlobalKey _chatInputKey = GlobalKey();
 
+  // Chat input dimensions
+  double _inputWidth = 350.0;
+
   // Offset for the floating chat input position (top, left)
   Offset _inputPosition = const Offset(20, 500);
 
@@ -488,6 +491,25 @@ class _ChatViewState extends State<ChatView> {
                       child: FloatingChatInput(
                         botId: widget.botId,
                         botColor: AppTheme.getBotColor(widget.botId),
+                        width: _inputWidth,
+                        onWidthChanged: (dx) {
+                          setState(() {
+                            // Symmetric resize: grow/shrink on both sides to keep center aligned with handle
+                            // If dx > 0 (drag right), grow
+                            // If dx < 0 (drag left), shrink
+
+                            double newWidth = _inputWidth + (dx * 2);
+                            double newLeft = _inputPosition.dx - dx;
+
+                            // Clamp width
+                            if (newWidth >= 250 &&
+                                newWidth <= screenSize.width - 20) {
+                              _inputWidth = newWidth;
+                              _inputPosition =
+                                  Offset(newLeft, _inputPosition.dy);
+                            }
+                          });
+                        },
                       ),
                     ),
                   ),

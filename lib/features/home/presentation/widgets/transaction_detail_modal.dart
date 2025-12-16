@@ -1,5 +1,5 @@
 import 'package:balance_iq/core/constants/app_strings.dart';
-import 'package:balance_iq/core/theme/app_theme.dart';
+import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:balance_iq/features/home/domain/entities/transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -154,7 +154,6 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
             onPressed: () {
               // Capture context references before async gap
               final navigator = Navigator.of(context);
-              final scaffoldMessenger = ScaffoldMessenger.of(context);
 
               navigator.pop(); // Close dialog
               setState(() => _isDeleting = true);
@@ -189,7 +188,7 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: Theme.of(context).colorScheme.copyWith(
-                  primary: AppTheme.primaryColor,
+                  primary: AppPalette.trustBlue,
                   onPrimary: Colors.white,
                 ),
           ),
@@ -319,11 +318,11 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
                             onPressed: _toggleEditMode,
                             icon: Icon(
                               _isEditMode ? Icons.close : Icons.edit_outlined,
-                              color: AppTheme.primaryColor,
+                              color: AppPalette.trustBlue,
                             ),
                             style: IconButton.styleFrom(
                               backgroundColor:
-                                  AppTheme.primaryColor.withValues(alpha: 0.1),
+                                  AppPalette.trustBlue.withValues(alpha: 0.1),
                             ),
                           ).animate().fadeIn(delay: 200.ms, duration: 300.ms),
                         ],
@@ -380,7 +379,7 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
                                   ? AppStrings.common.saveChanges
                                   : AppStrings.common.edit),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: AppTheme.primaryColor,
+                                backgroundColor: AppPalette.trustBlue,
                                 foregroundColor: Colors.white,
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 14),
@@ -523,12 +522,12 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: AppTheme.primaryColor.withValues(alpha: 0.1),
+              color: AppPalette.trustBlue.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(
               icon,
-              color: AppTheme.primaryColor,
+              color: AppPalette.trustBlue,
               size: 20,
             ),
           ),
@@ -702,7 +701,7 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
                   children: [
                     Icon(
                       Icons.calendar_today_outlined,
-                      color: AppTheme.primaryColor,
+                      color: AppPalette.trustBlue,
                       size: 20,
                     ),
                     const SizedBox(width: 12),
@@ -738,7 +737,7 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
           label,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 fontWeight: FontWeight.w600,
-                color: AppTheme.primaryColor,
+                color: AppPalette.trustBlue,
               ),
         ),
         const SizedBox(height: 8),

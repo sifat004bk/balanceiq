@@ -1,278 +1,233 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'app_palette.dart';
+import 'app_typography.dart';
 
 class AppTheme {
-  // Material 3 Expressive - Primary Palette
-  static const Color primaryLight = Color(0xFF6750A4); // Deep Purple
-  static const Color primaryDark = Color(0xFFD0BCFF);
-  static const Color primaryContainerLight = Color(0xFFEADDFF);
-  static const Color primaryContainerDark = Color(0xFF4F378B);
-  
-  // Secondary & Tertiary
-  static const Color secondaryLight = Color(0xFF625B71);
-  static const Color secondaryDark = Color(0xFFCCC2DC);
-  static const Color tertiaryLight = Color(0xFF7D5260); // Warm Rose
-  static const Color tertiaryDark = Color(0xFFEFB8C8);
-  
-  // Semantic Colors - Income/Expense
-  static const Color incomeLight = Color(0xFF00C853); // Vibrant Green
-  static const Color incomeDark = Color(0xFF69F0AE);
-  static const Color expenseLight = Color(0xFFFF5252); // Coral Red
-  static const Color expenseDark = Color(0xFFFF8A80);
-  static const Color neutralLight = Color(0xFF625B71);
-  static const Color neutralDark = Color(0xFF938F99);
-  
-  // Surface & Background
-  static const Color backgroundLight = Color(0xFFFEF7FF); // Warm Off-white
-  static const Color backgroundDark = Color(0xFF1C1B1F); // Deep charcoal
-  static const Color surfaceLight = Color(0xFFFFFBFE);
-  static const Color surfaceDark = Color(0xFF2B2930);
-  static const Color surfaceVariantLight = Color(0xFFE7E0EC);
-  static const Color surfaceVariantDark = Color(0xFF49454F);
-
-  // Text Colors
-  static const Color textLightTheme = Color(0xFF1C1B1F);
-  static const Color textDarkTheme = Color(0xFFE6E1E5);
-  static const Color textSubtleLight = Color(0xFF49454F);
-  static const Color textSubtleDark = Color(0xFFCAC4D0);
-
-  // Bot Colors (kept for chat functionality)
-  static const Color balanceTrackerColor = Color(0xFF4CAF50);
-  static const Color investmentGuruColor = Color(0xFF9C27B0);
-  static const Color budgetPlannerColor = Color(0xFF2196F3);
-  static const Color finTipsColor = Color(0xFFFFC107);
-
-  // Legacy compatibility
-  static const Color textDark = Color(0xFF1C1B1F);
-  static const Color textLight = Color(0xFFFFFFFF);
-  static const Color textGrey = Color(0xFF757575);
-
-  // Message Bubble Colors
-  static Color userMessageColor = primaryLight;
-  static const Color botMessageLightColor = Color(0xFFE7E0EC);
-  static const Color botMessageDarkColor = Color(0xFF2B2930);
-  
-  // Gradient Definitions
-  static const LinearGradient primaryGradientLight = LinearGradient(
-    colors: [Color(0xFF6750A4), Color(0xFF5E4FA2)],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
-  
-  static const LinearGradient primaryGradientDark = LinearGradient(
-    colors: [Color(0xFFD0BCFF), Color(0xFFBBA4E8)],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
-  
-  static const LinearGradient accentGradientLight = LinearGradient(
-    colors: [Color(0xFF6750A4), Color(0xFF5E8FD9)], // Purple to Blue
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
-  
-  static const LinearGradient accentGradientDark = LinearGradient(
-    colors: [Color(0xFFD0BCFF), Color(0xFFEFB8C8)], // Purple to Pink
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
-
-  // Compatibility property for files still using primaryColor
-  static const Color primaryColor = primaryLight;
-  static const Color accentColor = primaryLight;
-
+  // --- 2026 Light Theme ---
   static ThemeData lightTheme() {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
-      primaryColor: primaryLight,
-      scaffoldBackgroundColor: backgroundLight,
-      bottomSheetTheme: const BottomSheetThemeData(
-        backgroundColor: Colors.transparent,
+
+      // Core Palette
+      primaryColor: AppPalette.trustBlue,
+      scaffoldBackgroundColor: AppPalette.surfaceLight,
+
+      // Color Scheme
+      colorScheme: ColorScheme.light(
+        primary: AppPalette.trustBlue,
+        onPrimary: AppPalette.neutralWhite,
+        secondary: AppPalette.sparkOrange, // Accent
+        onSecondary: AppPalette.neutralWhite,
+        surface: AppPalette.surfaceLight,
+        onSurface: AppPalette.neutralBlack,
+        error: AppPalette.expenseRed,
+        onError: AppPalette.neutralWhite,
       ),
-      colorScheme: const ColorScheme.light(
-        primary: primaryLight,
-        onPrimary: Colors.white,
-        primaryContainer: primaryContainerLight,
-        onPrimaryContainer: Color(0xFF21005D),
-        secondary: secondaryLight,
-        onSecondary: Colors.white,
-        tertiary: tertiaryLight,
-        onTertiary: Colors.white,
-        surface: surfaceLight,
-        onSurface: textLightTheme,
-        surfaceContainerHighest: surfaceVariantLight,
-        error: expenseLight,
-        onError: Colors.white,
+
+      // Typography
+      fontFamily:
+          'Manrope', // Sourced from GoogleFonts in Typography class, but set here for default.
+      textTheme: AppTypography.textTheme.copyWith(
+        displayLarge:
+            AppTypography.hero.copyWith(color: AppPalette.neutralBlack),
+        titleLarge:
+            AppTypography.heading.copyWith(color: AppPalette.neutralBlack),
+        bodyLarge: AppTypography.body.copyWith(color: AppPalette.neutralBlack),
+        bodySmall: AppTypography.detail,
       ),
+
+      // App Bar
       appBarTheme: AppBarTheme(
-        backgroundColor: backgroundLight,
-        foregroundColor: textLightTheme,
+        backgroundColor: AppPalette.surfaceLight,
+        foregroundColor: AppPalette.neutralBlack,
         elevation: 0,
         centerTitle: true,
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
-      fontFamily: 'Manrope',
-      textTheme: const TextTheme(
-        displayLarge: TextStyle(
-          fontSize: 32,
-          fontWeight: FontWeight.w800,
-          color: textLightTheme,
-          letterSpacing: -0.5,
-        ),
-        displayMedium: TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.w700,
-          color: textLightTheme,
-          letterSpacing: -0.3,
-        ),
-        displaySmall: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.w700,
-          color: textLightTheme,
-          letterSpacing: -0.2,
-        ),
-        bodyLarge: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.normal,
-          color: textLightTheme,
-        ),
-        bodyMedium: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.normal,
-          color: textLightTheme,
-        ),
-        bodySmall: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.normal,
-          color: textSubtleLight,
-        ),
-      ),
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: primaryLight,
-          foregroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-          elevation: 2,
-        ),
-      ),
+
+      // Input Decoration (Flat-Glass Base)
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: surfaceVariantLight,
+        fillColor: AppPalette.neutralGrey.withOpacity(0.05), // Extremely subtle
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(24),
-          borderSide: BorderSide.none,
+          borderSide: BorderSide(
+              color: AppPalette.neutralGrey.withOpacity(0.2), width: 0.5),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(24),
+          borderSide: BorderSide(
+              color: AppPalette.neutralGrey.withOpacity(0.2), width: 0.5),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(24),
+          borderSide: BorderSide(
+              color: AppPalette.trustBlue.withOpacity(0.5), width: 0.5),
         ),
         contentPadding:
-            const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      ),
+
+      // Buttons
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppPalette.trustBlue,
+          foregroundColor: AppPalette.neutralWhite,
+          elevation: 0,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        ),
       ),
     );
   }
 
+  // --- 2026 Dark Theme (True Black) ---
   static ThemeData darkTheme() {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
-      primaryColor: primaryDark,
-      scaffoldBackgroundColor: backgroundDark,
-      bottomSheetTheme: const BottomSheetThemeData(
-        backgroundColor: Colors.transparent,
+
+      // Core Palette
+      primaryColor: AppPalette.trustBlue,
+      scaffoldBackgroundColor: AppPalette.surfaceDark, // True Black
+
+      // Color Scheme
+      colorScheme: ColorScheme.dark(
+        primary: AppPalette.trustBlue,
+        onPrimary: AppPalette.neutralWhite,
+        secondary: AppPalette.sparkOrange,
+        onSecondary: AppPalette.neutralWhite,
+        surface: AppPalette.surfaceCardDark, // Slightly lighter for cards
+        onSurface: AppPalette.neutralWhite,
+        error: AppPalette.expenseRed,
+        onError: AppPalette.neutralWhite,
       ),
-      colorScheme: const ColorScheme.dark(
-        primary: primaryDark,
-        onPrimary: Color(0xFF381E72),
-        primaryContainer: primaryContainerDark,
-        onPrimaryContainer: Color(0xFFEADDFF),
-        secondary: secondaryDark,
-        onSecondary: Color(0xFF332D41),
-        tertiary: tertiaryDark,
-        onTertiary: Color(0xFF492532),
-        surface: surfaceDark,
-        onSurface: textDarkTheme,
-        surfaceContainerHighest: surfaceVariantDark,
-        error: expenseDark,
-        onError: Color(0xFF690005),
+
+      // Typography
+      fontFamily: 'Manrope',
+      textTheme: AppTypography.textTheme.copyWith(
+        displayLarge:
+            AppTypography.hero.copyWith(color: AppPalette.neutralWhite),
+        titleLarge:
+            AppTypography.heading.copyWith(color: AppPalette.neutralWhite),
+        bodyLarge: AppTypography.body.copyWith(color: AppPalette.neutralWhite),
+        bodySmall: AppTypography.detail.copyWith(color: AppPalette.neutralGrey),
       ),
+
+      // App Bar
       appBarTheme: AppBarTheme(
-        backgroundColor: backgroundDark,
-        foregroundColor: textDarkTheme,
+        backgroundColor: AppPalette.surfaceDark,
+        foregroundColor: AppPalette.neutralWhite,
         elevation: 0,
         centerTitle: true,
+        systemOverlayStyle: SystemUiOverlayStyle.light,
       ),
-      fontFamily: 'Manrope',
-      textTheme: const TextTheme(
-        displayLarge: TextStyle(
-          fontSize: 32,
-          fontWeight: FontWeight.w800,
-          color: textDarkTheme,
-          letterSpacing: -0.5,
-        ),
-        displayMedium: TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.w700,
-          color: textDarkTheme,
-          letterSpacing: -0.3,
-        ),
-        displaySmall: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.w700,
-          color: textDarkTheme,
-          letterSpacing: -0.2,
-        ),
-        bodyLarge: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.normal,
-          color: textDarkTheme,
-        ),
-        bodyMedium: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.normal,
-          color: textDarkTheme,
-        ),
-        bodySmall: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.normal,
-          color: textSubtleDark,
-        ),
-      ),
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: primaryDark,
-          foregroundColor: Color(0xFF381E72),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-          elevation: 0,
-          shadowColor: primaryDark.withOpacity(0.3),
-        ),
-      ),
+
+      // Input Decoration (Dark Glass)
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: surfaceVariantDark,
+        fillColor: AppPalette.surfaceCardDark,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(24),
-          borderSide: BorderSide.none,
+          borderSide: BorderSide(
+              color: AppPalette.neutralGrey.withOpacity(0.2), width: 0.5),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(24),
+          borderSide: BorderSide(
+              color: AppPalette.neutralGrey.withOpacity(0.2), width: 0.5),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(24),
+          borderSide: BorderSide(
+              color: AppPalette.trustBlue.withOpacity(0.5), width: 0.5),
         ),
         contentPadding:
-            const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      ),
+
+      // Buttons
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppPalette.trustBlue,
+          foregroundColor: AppPalette.neutralWhite,
+          elevation: 0,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        ),
       ),
     );
   }
 
+  // --- Legacy Compatibility (Mappings to 2026 Codebase) ---
+  // These allow existing widgets to build while we refactor them in Phase 2.
+  static const Color primaryColor = Color(0xFF2E5CFF); // Trust Blue
+  static const Color primaryLight = Color(0xFF2E5CFF);
+  static const Color primaryDark = Color(0xFF2E5CFF);
+
+  static const Color secondaryLight = Color(0xFFFF6F00); // Spark Orange
+  static const Color secondaryDark = Color(0xFFFF6F00);
+
+  static const Color backgroundLight = Color(0xFFFAFBFC);
+  static const Color backgroundDark = Color(0xFF000000);
+  static const Color surfaceLight = Color(0xFFFAFBFC);
+  static const Color surfaceDark = Color(0xFF000000);
+  static const Color surfaceVariantLight = Color(0xFFF0F0F5);
+  static const Color surfaceVariantDark = Color(0xFF121212);
+
+  static const Color textLightTheme = Color(0xFF1C1C1E);
+  static const Color textDarkTheme = Color(0xFFFFFFFF);
+  static const Color textDark = Color(0xFF1C1C1E); // Legacy alias
+  static const Color textLight = Color(0xFFFFFFFF); // Legacy alias
+  static const Color textSubtleLight = Color(0xFF8E8E93);
+  static const Color textSubtleDark = Color(0xFF8E8E93);
+
+  static const Color incomeLight = Color(0xFF00C853);
+  static const Color incomeDark = Color(0xFF00C853);
+  static const Color expenseLight = Color(0xFFD32F2F);
+  static const Color expenseDark = Color(0xFFD32F2F);
+
+  static const Color primaryContainerLight = Color(0xFFE3EFFF);
+  static const Color primaryContainerDark = Color(0xFF1A2A4D);
+
+  // Gradients
+  static const LinearGradient primaryGradientLight = LinearGradient(
+    colors: [Color(0xFF2E5CFF), Color(0xFF0039CC)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+  static const LinearGradient primaryGradientDark = LinearGradient(
+    colors: [Color(0xFF2E5CFF), Color(0xFF5C85FF)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+  static const LinearGradient accentGradientLight = LinearGradient(
+    colors: [Color(0xFF2E5CFF), Color(0xFF5E8FD9)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+  static const LinearGradient accentGradientDark = LinearGradient(
+    colors: [Color(0xFF2E5CFF), Color(0xFFEFB8C8)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
   static Color getBotColor(String botId) {
     switch (botId) {
       case 'balance_tracker':
-        return balanceTrackerColor;
+        return AppPalette.incomeGreen;
       case 'investment_guru':
-        return investmentGuruColor;
+        return AppPalette.trustBlue;
       case 'budget_planner':
-        return budgetPlannerColor;
+        return AppPalette.sparkOrange;
       case 'fin_tips':
-        return finTipsColor;
+        return Colors.amber;
       default:
-        return primaryColor;
+        return AppPalette.trustBlue;
     }
   }
 

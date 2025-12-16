@@ -53,10 +53,10 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
   final FocusNode _focusNode = FocusNode();
 
   @override
-  @override
   void initState() {
     super.initState();
     // No local collapse state init needed
+    // Initialize focus listener
     _textController.addListener(_onTextChanged);
     _focusNode.addListener(_onFocusChanged);
   }
@@ -73,11 +73,9 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
   @override
   void dispose() {
     _textController.removeListener(_onTextChanged);
-    _textController.removeListener(_onTextChanged);
     _textController.dispose();
     _audioRecorder.dispose();
     _focusNode.removeListener(_onFocusChanged);
-    _focusNode.dispose();
     _focusNode.dispose();
     super.dispose();
   }
@@ -395,7 +393,7 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                     // Normalize delta to handle resizing from center or edges
                     // User said "dragging left or right... width should increase or decrease"
                     // If we expand symmetrically, 1px drag = 2px width change?
-                    // Or simple: Right drag = increase, Left drag = decrease?
+                    // Or simple: Right drag = increase, Left = Shrink?
                     // Let's assume standard resize behavior: Drag Right = Expand, Left = Shrink?
                     // But it's centered. This is ambiguous.
                     // "dragging left or right ... width should increase or decrease"
@@ -612,13 +610,6 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                                 : primaryColor.withOpacity(0.15),
                             blurRadius: _hasContent ? 10 : 5,
                             offset: const Offset(0, 4),
-                          ),
-                          // Depth shadow
-                          BoxShadow(
-                            color:
-                                Colors.black.withOpacity(isDark ? 0.4 : 0.08),
-                            blurRadius: 5,
-                            offset: const Offset(0, 2),
                           ),
                         ],
                       ),

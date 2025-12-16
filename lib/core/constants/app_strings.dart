@@ -328,14 +328,15 @@ class _DashboardStrings {
   final categories = 'Top Categories';
   final categoryBreakdown = 'Category Breakdown';
   final recentTransactions = 'Recent Transactions';
-
-  // Ratios
   final expenseRatio = 'Expense Ratio';
   final savingsRate = 'Savings Rate';
+
+  // Ratios
   final incomeExpenseRatio = 'Income/Expense Ratio';
 
   // Date Selector
   final selectDateRange = 'Select Date Range';
+  final selectDate = 'Select Date';
   final customRange = 'Custom Range';
   final apply = 'Apply';
 
@@ -344,6 +345,31 @@ class _DashboardStrings {
   final noTransactionsMessage =
       'Start tracking your finances by adding transactions';
   final noDataForPeriod = 'No data for this period';
+
+  // Welcome Page
+  final welcomeToApp = 'Welcome to BalanceIQ';
+  final welcomeSubtitle =
+      'Start tracking your finances and\\ntake control of your money';
+  final trackExpenses = 'Track Expenses';
+  final trackExpensesDesc = 'Monitor your spending in real-time';
+  final smartInsights = 'Smart Insights';
+  final smartInsightsDesc = 'Get AI-powered financial advice';
+  final reachGoals = 'Reach Goals';
+  final reachGoalsDesc = 'Save smarter with personalized plans';
+
+  // Error Page
+  final errorTitle = 'Oops! Something went wrong';
+  final commonIssues = 'Common issues:';
+  final checkInternet = 'Check your internet connection';
+  final serverDown = 'Server might be temporarily down';
+  final tryAgainMoments = 'Try again in a few moments';
+  final goToLogin = 'Go to Login';
+  final backToLoginPage = 'Back to Login Page';
+
+  // Tour
+  final completeProfile = 'Complete Your Profile';
+  final verifyEmailSetup =
+      'Tap here to verify your email and set up your account.';
 }
 
 // ============================================================================

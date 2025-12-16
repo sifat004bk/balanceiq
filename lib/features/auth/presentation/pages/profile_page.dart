@@ -1,12 +1,11 @@
 import 'package:balance_iq/core/tour/tour_content_widgets.dart';
-import 'package:balance_iq/core/tour/tour_content_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import '../../../../core/constants/design_constants.dart';
-import '../../../../core/constants/gemini_colors.dart';
+import '../../../../core/theme/app_palette.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/tour/tour.dart';
 import '../../../subscription/domain/entities/subscription_status.dart';
@@ -26,7 +25,7 @@ class _ProfilePageState extends State<ProfilePage> {
   TutorialCoachMark? _tutorialCoachMark;
   bool _emailVerifyTourShown = false;
   bool _subscriptionTourShown = false;
-  
+
   // Tour keys
   final GlobalKey _emailVerifyKey = GlobalKey();
   final GlobalKey _subscriptionCardKey = GlobalKey();
@@ -270,9 +269,8 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ],
         child: Scaffold(
-          backgroundColor: isDark
-              ? GeminiColors.backgroundDark
-              : GeminiColors.backgroundLight,
+          backgroundColor:
+              isDark ? AppPalette.surfaceDark : AppPalette.surfaceLight,
           body: BlocBuilder<AuthCubit, AuthState>(
             buildWhen: (previous, current) {
               // Don't rebuild for intermediate verification states
@@ -472,18 +470,17 @@ class _ProfilePageState extends State<ProfilePage> {
   ) {
     // Use design system colors
     final backgroundColor = isDark
-        ? GeminiColors.warningOrange.withValues(alpha: 0.15)
-        : GeminiColors.warningOrangeLight;
+        ? AppPalette.sparkOrange.withOpacity(0.15)
+        : AppPalette.sparkOrange.withOpacity(0.1);
     final borderColor = isDark
-        ? GeminiColors.warningOrange.withValues(alpha: 0.3)
-        : GeminiColors.warningOrange.withValues(alpha: 0.3);
+        ? AppPalette.sparkOrange.withOpacity(0.3)
+        : AppPalette.sparkOrange.withOpacity(0.3);
     final iconBgColor = isDark
-        ? GeminiColors.warningOrange.withValues(alpha: 0.2)
-        : GeminiColors.warningOrange.withValues(alpha: 0.15);
+        ? AppPalette.sparkOrange.withOpacity(0.2)
+        : AppPalette.sparkOrange.withOpacity(0.15);
     final titleColor = isDark ? Colors.white : const Color(0xFFE65100);
-    final subtitleColor = isDark
-        ? Colors.white.withValues(alpha: 0.7)
-        : GeminiColors.warningOrange;
+    final subtitleColor =
+        isDark ? Colors.white.withValues(alpha: 0.7) : AppPalette.sparkOrange;
 
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
@@ -491,7 +488,7 @@ class _ProfilePageState extends State<ProfilePage> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Verification email sent to ${state.email}'),
-              backgroundColor: GeminiColors.incomeGreen,
+              backgroundColor: AppPalette.incomeGreen,
               behavior: SnackBarBehavior.floating,
               shape: RoundedRectangleBorder(
                 borderRadius:
@@ -503,7 +500,7 @@ class _ProfilePageState extends State<ProfilePage> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message),
-              backgroundColor: GeminiColors.errorRed,
+              backgroundColor: AppPalette.expenseRed,
               behavior: SnackBarBehavior.floating,
               shape: RoundedRectangleBorder(
                 borderRadius:
@@ -541,7 +538,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     child: Icon(
                       Icons.warning_amber_rounded,
-                      color: GeminiColors.warningOrange,
+                      color: AppPalette.sparkOrange,
                       size: DesignConstants.iconSizeLarge,
                     ),
                   ),
@@ -581,10 +578,10 @@ class _ProfilePageState extends State<ProfilePage> {
                           _handleEmailVerificationClick();
                         },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: GeminiColors.warningOrange,
+                    backgroundColor: AppPalette.sparkOrange,
                     foregroundColor: Colors.white,
                     disabledBackgroundColor:
-                        GeminiColors.warningOrange.withValues(alpha: 0.5),
+                        AppPalette.sparkOrange.withOpacity(0.5),
                     padding:
                         EdgeInsets.symmetric(vertical: DesignConstants.space3),
                     shape: RoundedRectangleBorder(
@@ -635,7 +632,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: GeminiColors.primary.withOpacity(0.4),
+                    color: AppPalette.trustBlue.withOpacity(0.4),
                     blurRadius: 40,
                     spreadRadius: 10,
                   ),
@@ -647,7 +644,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: GeminiColors.primary,
+                    color: AppPalette.trustBlue,
                     width: 3,
                   ),
                   gradient: const LinearGradient(
@@ -683,7 +680,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   child: Icon(
                     Icons.verified_rounded,
-                    color: GeminiColors.incomeGreen,
+                    color: AppPalette.incomeGreen,
                     size: 24,
                   ),
                 ),
@@ -710,12 +707,12 @@ class _ProfilePageState extends State<ProfilePage> {
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
                   color: hasSubscription
-                      ? GeminiColors.primary.withOpacity(0.2)
+                      ? AppPalette.trustBlue.withOpacity(0.2)
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
                     color: hasSubscription
-                        ? GeminiColors.primary
+                        ? AppPalette.trustBlue
                         : Colors.transparent,
                     width: 1,
                   ),
@@ -727,7 +724,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       hasSubscription ? Icons.star : null,
                       size: 16,
                       color: hasSubscription
-                          ? GeminiColors.primary
+                          ? AppPalette.trustBlue
                           : Colors.transparent,
                     ),
                     const SizedBox(width: 4),
@@ -737,7 +734,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: hasSubscription
-                            ? GeminiColors.primary
+                            ? AppPalette.trustBlue
                             : Colors.grey,
                       ),
                     ),
@@ -962,7 +959,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: GeminiColors.primary,
+                  backgroundColor: AppPalette.trustBlue,
                   foregroundColor: Colors.white,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
@@ -1125,7 +1122,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: GeminiColors.primary,
+                  backgroundColor: AppPalette.trustBlue,
                   foregroundColor: Colors.white,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
@@ -1175,12 +1172,12 @@ class _ProfilePageState extends State<ProfilePage> {
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: GeminiColors.primary.withOpacity(0.1),
+                color: AppPalette.trustBlue.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
                 icon,
-                color: GeminiColors.primary,
+                color: AppPalette.trustBlue,
                 size: 24,
               ),
             ),

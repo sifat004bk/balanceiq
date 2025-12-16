@@ -1,4 +1,4 @@
-import 'package:balance_iq/core/theme/app_theme.dart';
+import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:balance_iq/core/theme/theme_cubit.dart';
 import 'package:balance_iq/core/theme/theme_state.dart';
 import 'package:balance_iq/features/home/domain/entities/dashbaord_summary.dart';
@@ -43,16 +43,16 @@ class HomeAppbar extends StatelessWidget {
             gradient: isDark
                 ? LinearGradient(
                     colors: [
-                      AppTheme.surfaceVariantDark.withOpacity(0.5),
-                      AppTheme.surfaceVariantDark.withOpacity(0.3),
+                      AppPalette.surfaceCardDark.withOpacity(0.5),
+                      AppPalette.surfaceCardDark.withOpacity(0.3),
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   )
                 : LinearGradient(
                     colors: [
-                      AppTheme.surfaceVariantLight,
-                      AppTheme.surfaceVariantLight.withOpacity(0.8),
+                      AppPalette.surfaceCardLight,
+                      AppPalette.surfaceCardLight.withOpacity(0.8),
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -66,7 +66,7 @@ class HomeAppbar extends StatelessWidget {
             ),
             boxShadow: [
               BoxShadow(
-                color: (isDark ? AppTheme.primaryDark : AppTheme.primaryLight)
+                color: (isDark ? AppPalette.trustBlue : AppPalette.trustBlue)
                     .withOpacity(0.1),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
@@ -106,11 +106,17 @@ class HomeAppbar extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               gradient: isDark
-                  ? AppTheme.primaryGradientDark
-                  : AppTheme.primaryGradientLight,
+                  ? LinearGradient(colors: [
+                      AppPalette.trustBlue,
+                      AppPalette.trustBlue.withOpacity(0.8)
+                    ])
+                  : LinearGradient(colors: [
+                      AppPalette.trustBlue,
+                      AppPalette.trustBlue.withOpacity(0.8)
+                    ]),
               boxShadow: [
                 BoxShadow(
-                  color: (isDark ? AppTheme.primaryDark : AppTheme.primaryLight)
+                  color: (isDark ? AppPalette.trustBlue : AppPalette.trustBlue)
                       .withOpacity(0.3),
                   blurRadius: 8,
                   spreadRadius: 1,
@@ -128,7 +134,7 @@ class HomeAppbar extends StatelessWidget {
                       Icons.person_rounded,
                       size: 20,
                       color:
-                          isDark ? AppTheme.primaryDark : AppTheme.primaryLight,
+                          isDark ? AppPalette.trustBlue : AppPalette.trustBlue,
                     )
                   : ClipOval(
                       child: Image.network(
@@ -139,8 +145,8 @@ class HomeAppbar extends StatelessWidget {
                             Icons.person_rounded,
                             size: 20,
                             color: isDark
-                                ? AppTheme.primaryDark
-                                : AppTheme.primaryLight,
+                                ? AppPalette.trustBlue
+                                : AppPalette.trustBlue,
                           );
                         },
                       ),
@@ -164,16 +170,16 @@ class HomeAppbar extends StatelessWidget {
                 gradient: isDark
                     ? LinearGradient(
                         colors: [
-                          AppTheme.surfaceVariantDark.withOpacity(0.5),
-                          AppTheme.surfaceVariantDark.withOpacity(0.3),
+                          AppPalette.surfaceCardDark.withOpacity(0.5),
+                          AppPalette.surfaceCardDark.withOpacity(0.3),
                         ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       )
                     : LinearGradient(
                         colors: [
-                          AppTheme.surfaceVariantLight,
-                          AppTheme.surfaceVariantLight.withOpacity(0.8),
+                          AppPalette.surfaceCardLight,
+                          AppPalette.surfaceCardLight.withOpacity(0.8),
                         ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
@@ -193,7 +199,7 @@ class HomeAppbar extends StatelessWidget {
                 child: Icon(
                   isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
                   size: 20,
-                  color: isDark ? AppTheme.primaryDark : AppTheme.primaryLight,
+                  color: isDark ? AppPalette.trustBlue : AppPalette.trustBlue,
                 ),
               ),
             );

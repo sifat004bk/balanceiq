@@ -1,5 +1,6 @@
 import 'dart:ui';
-import 'package:balance_iq/core/theme/app_theme.dart';
+import 'package:balance_iq/core/theme/app_palette.dart';
+import 'package:balance_iq/core/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 
 class BalanceCard extends StatelessWidget {
@@ -32,7 +33,7 @@ class BalanceCard extends StatelessWidget {
             decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(
-                  color: (isDark ? AppTheme.primaryDark : AppTheme.primaryLight)
+                  color: (isDark ? AppPalette.trustBlue : AppPalette.trustBlue)
                       .withOpacity(0.1),
                   blurRadius: 24,
                   spreadRadius: 8,
@@ -42,9 +43,9 @@ class BalanceCard extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  'Net Balance',
+                  AppStrings.dashboard.walletBalance,
                   style: textTheme.bodySmall?.copyWith(
-                    color: isDark ? AppTheme.textSubtleDark : AppTheme.textSubtleLight,
+                    color: AppPalette.textSubtle,
                     fontWeight: FontWeight.w500,
                     letterSpacing: 0.5,
                   ),
@@ -52,9 +53,9 @@ class BalanceCard extends StatelessWidget {
                 const SizedBox(height: 8),
                 ShaderMask(
                   shaderCallback: (bounds) {
-                    return (isDark 
-                        ? AppTheme.accentGradientDark 
-                        : AppTheme.accentGradientLight)
+                    return (isDark
+                            ? AppPalette.primaryGradient
+                            : AppPalette.primaryGradient)
                         .createShader(bounds);
                   },
                   child: Text(
@@ -80,7 +81,7 @@ class BalanceCard extends StatelessWidget {
                 child: _buildIncomeExpenseCard(
                   context,
                   icon: Icons.arrow_downward_rounded,
-                  label: 'Income',
+                  label: AppStrings.dashboard.totalIncome,
                   amount: totalIncome,
                   isIncome: true,
                 ),
@@ -90,7 +91,7 @@ class BalanceCard extends StatelessWidget {
                 child: _buildIncomeExpenseCard(
                   context,
                   icon: Icons.arrow_upward_rounded,
-                  label: 'Expense',
+                  label: AppStrings.dashboard.totalExpense,
                   amount: totalExpense,
                   isIncome: false,
                 ),
@@ -111,10 +112,10 @@ class BalanceCard extends StatelessWidget {
   }) {
     final textTheme = Theme.of(context).textTheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     final iconColor = isIncome
-        ? (isDark ? AppTheme.incomeDark : AppTheme.incomeLight)
-        : (isDark ? AppTheme.expenseDark : AppTheme.expenseLight);
+        ? (isDark ? AppPalette.incomeGreen : AppPalette.incomeGreen)
+        : (isDark ? AppPalette.expenseRed : AppPalette.expenseRed);
 
     return Container(
       padding: const EdgeInsets.all(18),
@@ -122,8 +123,8 @@ class BalanceCard extends StatelessWidget {
         gradient: isDark
             ? LinearGradient(
                 colors: [
-                  AppTheme.surfaceDark.withOpacity(0.6),
-                  AppTheme.surfaceDark.withOpacity(0.3),
+                  AppPalette.surfaceDark.withOpacity(0.6),
+                  AppPalette.surfaceDark.withOpacity(0.3),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -156,7 +157,8 @@ class BalanceCard extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: isDark ? 10 : 0, sigmaY: isDark ? 10 : 0),
+          filter: ImageFilter.blur(
+              sigmaX: isDark ? 10 : 0, sigmaY: isDark ? 10 : 0),
           child: Column(
             children: [
               Row(

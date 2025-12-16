@@ -40,7 +40,20 @@ class AppPalette {
 
   // --- Glassmorphism ---
 
+  /// Cards & Sheets (Light Mode)
+  static final Color surfaceCardLight = const Color(0xFFFFFFFF);
+
   /// To be used with .withOpacity(0.05 - 0.08)
   static final Color glassWhite = const Color(0xFFFFFFFF);
   static final Color glassBlack = const Color(0xFF000000);
+
+  /// Text Subtle (Alias for neutralGrey)
+  static final Color textSubtle = neutralGrey;
+
+  /// Primary Gradient
+  static final LinearGradient primaryGradient = LinearGradient(
+    colors: [trustBlue, trustBlue.withOpacity(0.8)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
 }

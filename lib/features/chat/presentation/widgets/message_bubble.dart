@@ -1,5 +1,5 @@
 import 'package:balance_iq/core/theme/app_palette.dart';
-import '../../../../core/constants/app_strings.dart';
+import 'package:balance_iq/core/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/services.dart';
@@ -280,7 +280,9 @@ class _MessageBubbleState extends State<MessageBubble>
                       fontWeight: FontWeight.w600,
                     ),
                 h5: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      color: GeminiColors.aiMessageText(context),
+                      color: isDark
+                          ? AppPalette.neutralWhite
+                          : AppPalette.neutralBlack,
                       fontWeight: FontWeight.w600,
                     ),
                 h6: Theme.of(context).textTheme.bodyLarge?.copyWith(
@@ -319,14 +321,20 @@ class _MessageBubbleState extends State<MessageBubble>
                   ),
                 ),
                 listBullet: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: GeminiColors.aiMessageText(context),
+                      color: isDark
+                          ? AppPalette.neutralWhite
+                          : AppPalette.neutralBlack,
                     ),
                 tableBody: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: GeminiColors.aiMessageText(context),
+                      color: isDark
+                          ? AppPalette.neutralWhite
+                          : AppPalette.neutralBlack,
                     ),
                 tableHead: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: GeminiColors.aiMessageText(context),
+                      color: isDark
+                          ? AppPalette.neutralWhite
+                          : AppPalette.neutralBlack,
                     ),
                 a: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: AppPalette.trustBlue,

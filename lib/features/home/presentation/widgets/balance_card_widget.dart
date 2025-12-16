@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:balance_iq/core/constants/app_strings.dart';
+import 'package:balance_iq/core/widgets/glass_presets.dart';
 import 'package:flutter/material.dart';
 
 class BalanceCard extends StatelessWidget {
@@ -117,102 +118,62 @@ class BalanceCard extends StatelessWidget {
         ? (isDark ? AppPalette.incomeGreen : AppPalette.incomeGreen)
         : (isDark ? AppPalette.expenseRed : AppPalette.expenseRed);
 
-    return Container(
+    return ThemedGlass.container(
+      context: context,
+      preset: GlassPreset.card,
       padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        gradient: isDark
-            ? LinearGradient(
-                colors: [
-                  AppPalette.surfaceDark.withOpacity(0.6),
-                  AppPalette.surfaceDark.withOpacity(0.3),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              )
-            : LinearGradient(
-                colors: [
-                  Colors.white,
-                  Colors.white.withOpacity(0.9),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: isDark
-              ? Colors.white.withOpacity(0.1)
-              : Colors.black.withOpacity(0.05),
-          width: 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: isDark
-                ? Colors.black.withOpacity(0.3)
-                : iconColor.withOpacity(0.08),
-            offset: const Offset(0, 4),
-            blurRadius: 12,
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(
-              sigmaX: isDark ? 10 : 0, sigmaY: isDark ? 10 : 0),
-          child: Column(
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 24,
-                    height: 24,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          iconColor,
-                          iconColor.withOpacity(0.7),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: iconColor.withOpacity(0.3),
-                          blurRadius: 8,
-                          spreadRadius: 1,
-                        ),
-                      ],
-                    ),
-                    child: Icon(
-                      icon,
-                      color: Colors.white,
-                      size: 14,
-                    ),
+              Container(
+                width: 24,
+                height: 24,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      iconColor,
+                      iconColor.withOpacity(0.7),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
-                  const SizedBox(width: 8),
-                  Text(
-                    label,
-                    style: textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 0.2,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: iconColor.withOpacity(0.3),
+                      blurRadius: 8,
+                      spreadRadius: 1,
                     ),
-                  ),
-                ],
+                  ],
+                ),
+                child: Icon(
+                  icon,
+                  color: Colors.white,
+                  size: 14,
+                ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(width: 8),
               Text(
-                '\$${_formatCurrency(amount)}',
-                style: textTheme.titleLarge?.copyWith(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: -0.5,
+                label,
+                style: textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.2,
                 ),
               ),
             ],
           ),
-        ),
+          const SizedBox(height: 12),
+          Text(
+            '\$${_formatCurrency(amount)}',
+            style: textTheme.titleLarge?.copyWith(
+              fontSize: 22,
+              fontWeight: FontWeight.w800,
+              letterSpacing: -0.5,
+            ),
+          ),
+        ],
       ),
     );
   }

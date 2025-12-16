@@ -56,13 +56,23 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
     super.initState();
     // No local collapse state init needed
     _textController.addListener(_onTextChanged);
+    _focusNode.addListener(_onFocusChanged);
+  }
+
+  void _onFocusChanged() {
+    setState(() {
+      // Rebuild to update UI based on focus
+    });
   }
 
   @override
   void dispose() {
     _textController.removeListener(_onTextChanged);
+    _textController.removeListener(_onTextChanged);
     _textController.dispose();
     _audioRecorder.dispose();
+    _focusNode.removeListener(_onFocusChanged);
+    _focusNode.dispose();
     _focusNode.dispose();
     super.dispose();
   }
@@ -550,7 +560,12 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                       ),
 
                     // Main Input Container (Enhanced Floating Pill - 2025)
-                    Container(
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      curve: Curves.easeOutCubic,
+                      transform: Matrix4.identity()
+                        ..scale(_focusNode.hasFocus ? 1.05 : 1.0),
+                      transformAlignment: Alignment.center,
                       padding: const EdgeInsets.symmetric(
                         horizontal: 20,
                         vertical: 12,
@@ -558,20 +573,34 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                       decoration: BoxDecoration(
                         // Glassmorphic background
                         color: isDark
-                            ? const Color(0xFF1e1f20).withOpacity(0.95)
-                            : const Color(0xFFFEFBFF).withOpacity(0.95),
+                            ? const Color(0xFF1e1f20)
+                                .withOpacity(_focusNode.hasFocus ? 1.0 : 0.95)
+                            : const Color(0xFFFEFBFF)
+                                .withOpacity(_focusNode.hasFocus ? 1.0 : 0.95),
                         borderRadius: BorderRadius.circular(28),
                         border: Border.all(
-                          color: _hasContent
+                          color: _focusNode.hasFocus
                               ? primaryColor
-                                  .withOpacity(0.6) // Active state glow
-                              : (isDark
-                                  ? primaryColor.withOpacity(0.2)
-                                  : primaryColor.withOpacity(0.15)),
-                          width: _hasContent ? 2.0 : 1.5,
+                                  .withOpacity(0.8) // Stronger glow on focus
+                              : (_hasContent
+                                  ? primaryColor.withOpacity(0.6)
+                                  : (isDark
+                                      ? primaryColor.withOpacity(0.2)
+                                      : primaryColor.withOpacity(0.15))),
+                          width: _focusNode.hasFocus
+                              ? 2.5
+                              : (_hasContent ? 2.0 : 1.5),
                         ),
                         boxShadow: [
-                          // Primary shadow with glow effect
+                          // Spotlight Glow
+                          if (_focusNode.hasFocus)
+                            BoxShadow(
+                              color: primaryColor.withOpacity(0.4),
+                              blurRadius: 30,
+                              spreadRadius: 2,
+                              offset: const Offset(0, 0),
+                            ),
+                          // Primary shadow
                           BoxShadow(
                             color: _hasContent
                                 ? primaryColor.withOpacity(0.35)
@@ -621,6 +650,7 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                           Expanded(
                             child: TextField(
                               controller: _textController,
+                              focusNode: _focusNode,
                               enabled: !isLimitReached,
                               maxLines: 4,
                               minLines: 1,

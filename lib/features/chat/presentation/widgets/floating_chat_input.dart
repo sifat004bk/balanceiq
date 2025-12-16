@@ -18,6 +18,8 @@ class FloatingChatInput extends StatefulWidget {
   final Color? botColor;
   final double width;
   final Function(double)? onWidthChanged;
+  final bool isCollapsed;
+  final VoidCallback? onToggleCollapse;
 
   const FloatingChatInput({
     super.key,
@@ -25,6 +27,8 @@ class FloatingChatInput extends StatefulWidget {
     this.botColor,
     this.width = 350.0,
     this.onWidthChanged,
+    this.isCollapsed = false,
+    this.onToggleCollapse,
   });
 
   @override
@@ -33,17 +37,24 @@ class FloatingChatInput extends StatefulWidget {
 
 class _FloatingChatInputState extends State<FloatingChatInput> {
   final TextEditingController _textController = TextEditingController();
-  final ImagePicker _imagePicker = ImagePicker();
+  final ImagePicker _picker = ImagePicker();
   final AudioRecorder _audioRecorder = AudioRecorder();
 
-  String? _selectedImagePath;
+  // State for attachment
+  XFile? _selectedImage;
   String? _recordedAudioPath;
   bool _isRecording = false;
   bool _hasContent = false;
+  bool _isSending = false;
 
+  // Focus node
+  final FocusNode _focusNode = FocusNode();
+
+  @override
   @override
   void initState() {
     super.initState();
+    // No local collapse state init needed
     _textController.addListener(_onTextChanged);
   }
 
@@ -52,7 +63,12 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
     _textController.removeListener(_onTextChanged);
     _textController.dispose();
     _audioRecorder.dispose();
+    _focusNode.dispose();
     super.dispose();
+  }
+
+  void _toggleCollapse() {
+    widget.onToggleCollapse?.call();
   }
 
   /// Animated recording indicator (2025 design)
@@ -97,7 +113,7 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
 
   void _onTextChanged() {
     final newHasContent = _textController.text.trim().isNotEmpty ||
-        _selectedImagePath != null ||
+        _selectedImage != null ||
         _recordedAudioPath != null;
     if (newHasContent != _hasContent) {
       setState(() {
@@ -108,14 +124,14 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
 
   Future<void> _pickImage() async {
     try {
-      final XFile? image = await _imagePicker.pickImage(
+      final XFile? image = await _picker.pickImage(
         source: ImageSource.gallery,
         imageQuality: 80,
       );
 
       if (image != null) {
         setState(() {
-          _selectedImagePath = image.path;
+          _selectedImage = image;
           _hasContent = true;
         });
       }
@@ -126,14 +142,14 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
 
   Future<void> _takePhoto() async {
     try {
-      final XFile? image = await _imagePicker.pickImage(
+      final XFile? image = await _picker.pickImage(
         source: ImageSource.camera,
         imageQuality: 80,
       );
 
       if (image != null) {
         setState(() {
-          _selectedImagePath = image.path;
+          _selectedImage = image;
           _hasContent = true;
         });
       }
@@ -176,22 +192,20 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
   void _sendMessage() {
     final text = _textController.text.trim();
 
-    if (text.isEmpty &&
-        _selectedImagePath == null &&
-        _recordedAudioPath == null) {
+    if (text.isEmpty && _selectedImage == null && _recordedAudioPath == null) {
       return;
     }
 
     context.read<ChatCubit>().sendNewMessage(
           botId: widget.botId,
           content: text.isEmpty ? 'Sent media' : text,
-          imagePath: _selectedImagePath,
+          imagePath: _selectedImage?.path,
           audioPath: _recordedAudioPath,
         );
 
     _textController.clear();
     setState(() {
-      _selectedImagePath = null;
+      _selectedImage = null;
       _recordedAudioPath = null;
       _hasContent = false;
     });
@@ -298,39 +312,35 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
     );
   }
 
-  bool _isCollapsed = false;
-
-  void _toggleCollapse() {
-    setState(() {
-      _isCollapsed = !_isCollapsed;
-    });
+  Widget _buildCollapsedFAB() {
+    return GestureDetector(
+      onTap: _toggleCollapse,
+      child: Container(
+        width: 56,
+        height: 56,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.primary,
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: const Icon(
+          Icons.chat_bubble_outline,
+          color: Colors.white,
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_isCollapsed) {
-      return GestureDetector(
-        onTap: _toggleCollapse,
-        child: Container(
-          width: 56,
-          height: 56,
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primary,
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                blurRadius: 8,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: const Icon(
-            Icons.chat_bubble_outline,
-            color: Colors.white,
-          ),
-        ),
-      );
+    if (widget.isCollapsed) {
+      return _buildCollapsedFAB();
     }
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -478,7 +488,7 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                       ),
 
                     // Selected image preview
-                    if (_selectedImagePath != null)
+                    if (_selectedImage != null)
                       Container(
                         margin: const EdgeInsets.only(bottom: 12),
                         padding: const EdgeInsets.all(12),
@@ -505,7 +515,7 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                             ClipRRect(
                               borderRadius: BorderRadius.circular(8),
                               child: Image.file(
-                                File(_selectedImagePath!),
+                                File(_selectedImage!.path),
                                 width: 60,
                                 height: 60,
                                 fit: BoxFit.cover,
@@ -531,7 +541,7 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                               ),
                               onPressed: () {
                                 setState(() {
-                                  _selectedImagePath = null;
+                                  _selectedImage = null;
                                 });
                               },
                             ),

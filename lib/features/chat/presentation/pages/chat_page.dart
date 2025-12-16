@@ -58,6 +58,7 @@ class _ChatViewState extends State<ChatView> {
 
   // Chat input dimensions
   double _inputWidth = 350.0;
+  bool _isCollapsed = false;
 
   // Offset for the floating chat input position (top, left)
   Offset _inputPosition = const Offset(20, 500);
@@ -480,6 +481,26 @@ class _ChatViewState extends State<ChatView> {
                             keyboardHeight -
                             10;
 
+                        // Edge-based auto-collapse logic
+                        // If near top or bottom edge, narrow the width until collapse
+                        if (newTop <= minTop + 50 || newTop >= maxTop - 50) {
+                          // Shrink width
+                          if (_inputWidth > 100) {
+                            _inputWidth -= 5;
+                            // Recenter slightly
+                            newLeft += 2.5;
+                          } else if (!_isCollapsed) {
+                            // Collapse if too small
+                            _isCollapsed = true;
+                          }
+                        } else {
+                          // Expand back if moving away from edges and was auto-shrunk (optional, or manual expand?)
+                          // User asked: "scrolling ... to the top or botom ... gradually decrease the width and finally collapse"
+                          // This implies if we move back to center it might NOT auto-expand?
+                          // But usually users expect recovery.
+                          // For now, let's keep it manual expand or just let them resize.
+                        }
+
                         _inputPosition = Offset(
                           newLeft.clamp(minLeft, maxLeft),
                           newTop.clamp(minTop, maxTop),
@@ -492,6 +513,16 @@ class _ChatViewState extends State<ChatView> {
                         botId: widget.botId,
                         botColor: AppTheme.getBotColor(widget.botId),
                         width: _inputWidth,
+                        isCollapsed: _isCollapsed,
+                        onToggleCollapse: () {
+                          setState(() {
+                            _isCollapsed = !_isCollapsed;
+                            if (!_isCollapsed) {
+                              // Reset width on expand if it was shrunk
+                              if (_inputWidth < 300) _inputWidth = 350.0;
+                            }
+                          });
+                        },
                         onWidthChanged: (dx) {
                           setState(() {
                             // Symmetric resize: grow/shrink on both sides to keep center aligned with handle

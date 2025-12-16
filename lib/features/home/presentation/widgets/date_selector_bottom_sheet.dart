@@ -1,5 +1,6 @@
 import 'dart:ui';
-import 'package:balance_iq/core/theme/app_theme.dart';
+import 'package:balance_iq/core/constants/app_strings.dart';
+import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:balance_iq/features/home/presentation/widgets/custom_calendar_date_range_picker.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +13,8 @@ class DateSelectorBottomSheet extends StatefulWidget {
   });
 
   @override
-  State<DateSelectorBottomSheet> createState() => _DateSelectorBottomSheetState();
+  State<DateSelectorBottomSheet> createState() =>
+      _DateSelectorBottomSheetState();
 }
 
 class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
@@ -29,16 +31,16 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
         gradient: isDark
             ? LinearGradient(
                 colors: [
-                  AppTheme.surfaceDark,
-                  AppTheme.backgroundDark,
+                  AppPalette.surfaceDark,
+                  AppPalette.surfaceDark,
                 ],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               )
             : LinearGradient(
                 colors: [
-                  AppTheme.surfaceLight,
-                  AppTheme.backgroundLight,
+                  AppPalette.surfaceLight,
+                  AppPalette.surfaceLight,
                 ],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -62,14 +64,11 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
               width: 48,
               height: 5,
               decoration: BoxDecoration(
-                gradient: isDark
-                    ? AppTheme.primaryGradientDark
-                    : AppTheme.primaryGradientLight,
+                gradient: AppPalette.primaryGradient,
                 borderRadius: BorderRadius.circular(3),
                 boxShadow: [
                   BoxShadow(
-                    color: (isDark ? AppTheme.primaryDark : AppTheme.primaryLight)
-                        .withOpacity(0.3),
+                    color: AppPalette.trustBlue.withOpacity(0.3),
                     blurRadius: 8,
                     spreadRadius: 1,
                   ),
@@ -80,7 +79,7 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
 
           // Title with text shadow
           Text(
-            'Select Period',
+            AppStrings.dashboard.selectDateRange,
             style: theme.textTheme.headlineMedium?.copyWith(
               fontWeight: FontWeight.w800,
               fontSize: 28,
@@ -88,7 +87,7 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
               shadows: isDark
                   ? [
                       Shadow(
-                        color: AppTheme.primaryDark.withOpacity(0.3),
+                        color: AppPalette.trustBlue.withOpacity(0.3),
                         blurRadius: 12,
                       ),
                     ]
@@ -154,9 +153,9 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
               ),
             ],
           ),
-          
+
           const SizedBox(height: 28),
-          
+
           // Divider with gradient
           Container(
             height: 1,
@@ -164,22 +163,21 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
               gradient: LinearGradient(
                 colors: [
                   Colors.transparent,
-                  (isDark ? AppTheme.primaryDark : AppTheme.primaryLight)
-                      .withOpacity(0.3),
+                  AppPalette.trustBlue.withOpacity(0.3),
                   Colors.transparent,
                 ],
               ),
             ),
           ),
-          
+
           const SizedBox(height: 20),
 
           InkWell(
             onTap: () async {
               Navigator.pop(context);
-              
+
               final now = DateTime.now();
-              
+
               // Show custom calendar picker
               await showDialog(
                 context: context,
@@ -199,16 +197,16 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
                 gradient: isDark
                     ? LinearGradient(
                         colors: [
-                          AppTheme.surfaceVariantDark.withOpacity(0.5),
-                          AppTheme.surfaceVariantDark.withOpacity(0.3),
+                          AppPalette.surfaceCardDark.withOpacity(0.5),
+                          AppPalette.surfaceCardDark.withOpacity(0.3),
                         ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       )
                     : LinearGradient(
                         colors: [
-                          AppTheme.surfaceVariantLight,
-                          AppTheme.surfaceVariantLight.withOpacity(0.7),
+                          AppPalette.surfaceLight,
+                          AppPalette.surfaceLight.withOpacity(0.7),
                         ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
@@ -226,14 +224,11 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      gradient: isDark
-                          ? AppTheme.primaryGradientDark
-                          : AppTheme.primaryGradientLight,
+                      gradient: AppPalette.primaryGradient,
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: (isDark ? AppTheme.primaryDark : AppTheme.primaryLight)
-                              .withOpacity(0.3),
+                          color: AppPalette.trustBlue.withOpacity(0.3),
                           blurRadius: 8,
                           spreadRadius: 1,
                         ),
@@ -248,7 +243,7 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
                   const SizedBox(width: 16),
                   Expanded(
                     child: Text(
-                      'Custom Range',
+                      AppStrings.dashboard.customRange,
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
                         letterSpacing: 0.2,
@@ -257,7 +252,7 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
                   ),
                   Icon(
                     Icons.chevron_right_rounded,
-                    color: isDark ? AppTheme.textSubtleDark : AppTheme.textSubtleLight,
+                    color: AppPalette.neutralGrey,
                   ),
                 ],
               ),
@@ -276,7 +271,7 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
   }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final isSelected = _selectedPreset == presetKey;
-    
+
     return TweenAnimationBuilder<double>(
       duration: const Duration(milliseconds: 200),
       tween: Tween(begin: 1.0, end: isSelected ? 1.05 : 1.0),
@@ -297,28 +292,25 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
           decoration: BoxDecoration(
-            gradient: isSelected
-                ? (isDark
-                    ? AppTheme.primaryGradientDark
-                    : AppTheme.primaryGradientLight)
-                : null,
+            gradient: isSelected ? AppPalette.primaryGradient : null,
             color: isSelected
                 ? null
                 : (isDark
-                    ? AppTheme.surfaceVariantDark.withOpacity(0.5)
-                    : AppTheme.surfaceVariantLight),
+                    ? AppPalette.surfaceCardDark.withOpacity(0.5)
+                    : AppPalette.surfaceLight),
             borderRadius: BorderRadius.circular(50),
             border: Border.all(
               color: isSelected
-                  ? (isDark ? AppTheme.primaryDark : AppTheme.primaryLight)
-                  : (isDark ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.08)),
+                  ? AppPalette.trustBlue
+                  : (isDark
+                      ? Colors.white.withOpacity(0.1)
+                      : Colors.black.withOpacity(0.08)),
               width: isSelected ? 2 : 1,
             ),
             boxShadow: isSelected
                 ? [
                     BoxShadow(
-                      color: (isDark ? AppTheme.primaryDark : AppTheme.primaryLight)
-                          .withOpacity(0.3),
+                      color: AppPalette.trustBlue.withOpacity(0.3),
                       blurRadius: 12,
                       spreadRadius: 2,
                     ),
@@ -330,9 +322,7 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.w700,
                   letterSpacing: 0.3,
-                  color: isSelected
-                      ? Colors.white
-                      : (isDark ? AppTheme.textDarkTheme : AppTheme.textLightTheme),
+                  color: isSelected ? Colors.white : AppPalette.neutralGrey,
                 ),
           ),
         ),

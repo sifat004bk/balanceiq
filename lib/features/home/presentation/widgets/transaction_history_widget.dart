@@ -69,7 +69,7 @@ class TransactionHistoryWidget extends StatelessWidget {
 
             if (state is TransactionsLoaded) {
               if (state.transactions.isEmpty) {
-                return const Padding(
+                return Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: Text(AppStrings.dashboard.noTransactions),
                 );

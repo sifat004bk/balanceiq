@@ -1,4 +1,5 @@
 import 'package:balance_iq/core/theme/app_palette.dart';
+import 'package:balance_iq/core/widgets/glass_presets.dart';
 import 'package:balance_iq/core/theme/theme_cubit.dart';
 import 'package:balance_iq/core/theme/theme_state.dart';
 import 'package:balance_iq/features/home/domain/entities/dashbaord_summary.dart';
@@ -37,42 +38,11 @@ class HomeAppbar extends StatelessWidget {
       title: InkWell(
         onTap: onTapDateRange,
         borderRadius: BorderRadius.circular(50),
-        child: Container(
+        child: ThemedGlass.container(
+          context: context,
+          preset: GlassPreset.subtle,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          decoration: BoxDecoration(
-            gradient: isDark
-                ? LinearGradient(
-                    colors: [
-                      AppPalette.surfaceCardDark.withOpacity(0.5),
-                      AppPalette.surfaceCardDark.withOpacity(0.3),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  )
-                : LinearGradient(
-                    colors: [
-                      AppPalette.surfaceCardLight,
-                      AppPalette.surfaceCardLight.withOpacity(0.8),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-            borderRadius: BorderRadius.circular(50),
-            border: Border.all(
-              color: isDark
-                  ? Colors.white.withOpacity(0.1)
-                  : Colors.black.withOpacity(0.05),
-              width: 1,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: (isDark ? AppPalette.trustBlue : AppPalette.trustBlue)
-                    .withOpacity(0.1),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
+          borderRadius: 50,
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -162,44 +132,24 @@ class HomeAppbar extends StatelessWidget {
             // This properly handles ThemeMode.system
             final isDark = Theme.of(context).brightness == Brightness.dark;
 
-            return Container(
-              height: 40,
-              width: 40,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: isDark
-                    ? LinearGradient(
-                        colors: [
-                          AppPalette.surfaceCardDark.withOpacity(0.5),
-                          AppPalette.surfaceCardDark.withOpacity(0.3),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      )
-                    : LinearGradient(
-                        colors: [
-                          AppPalette.surfaceCardLight,
-                          AppPalette.surfaceCardLight.withOpacity(0.8),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                border: Border.all(
-                  color: isDark
-                      ? Colors.white.withOpacity(0.1)
-                      : Colors.black.withOpacity(0.05),
-                  width: 1,
-                ),
-              ),
+            return ThemedGlass.container(
+              context: context,
+              preset: GlassPreset.subtle,
+              borderRadius: 50,
               child: InkWell(
                 onTap: () {
                   context.read<ThemeCubit>().toggleTheme();
                 },
                 borderRadius: BorderRadius.circular(50),
-                child: Icon(
-                  isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
-                  size: 20,
-                  color: isDark ? AppPalette.trustBlue : AppPalette.trustBlue,
+                child: Container(
+                  height: 40,
+                  width: 40,
+                  alignment: Alignment.center,
+                  child: Icon(
+                    isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
+                    size: 20,
+                    color: isDark ? AppPalette.trustBlue : AppPalette.trustBlue,
+                  ),
                 ),
               ),
             );

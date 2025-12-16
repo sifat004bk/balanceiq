@@ -460,25 +460,25 @@ class _ChatViewState extends State<ChatView> {
                         double newLeft = _inputPosition.dx + details.delta.dx;
                         double newTop = _inputPosition.dy + details.delta.dy;
 
-                        // Widget approximate size (assume ~400 width max, ~100 height)
-                        // In a real scenario we'd use a GlobalKey/RenderBox to get exact size
-                        const widgetWidth = 350.0;
-                        const widgetHeight = 100.0;
+                        // Get actual widget size if available
+                        final renderBox = _chatInputKey.currentContext
+                            ?.findRenderObject() as RenderBox?;
+                        final widgetSize =
+                            renderBox?.size ?? const Size(350, 100);
 
                         // Clamp to screen boundaries (SafeArea)
-                        // Allow slight off-screen for bounce feel, or strict? strictly on screen
+                        // Keep fully on screen:
                         final minLeft = 0.0;
-                        final maxLeft =
-                            screenSize.width - 50; // allow some hanging off
+                        final maxLeft = screenSize.width - widgetSize.width;
 
-                        final minTop = 50.0; // below app bar area
+                        final minTop = padding.top + 10; // Below status bar
                         final maxTop = screenSize.height -
-                            widgetHeight -
+                            widgetSize.height -
                             keyboardHeight -
-                            20;
+                            10;
 
                         _inputPosition = Offset(
-                          newLeft.clamp(minLeft - widgetWidth / 2, maxLeft),
+                          newLeft.clamp(minLeft, maxLeft),
                           newTop.clamp(minTop, maxTop),
                         );
                       });

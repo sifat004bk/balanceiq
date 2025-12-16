@@ -78,7 +78,7 @@ class _ChatViewState extends State<ChatView> {
       setState(() {
         // Default to bottom center
         _inputPosition = Offset(
-          (size.width - 350) / 2, // Center horizontally
+          (size.width - _inputWidth) / 2, // Center horizontally
           size.height - 180 - padding.bottom, // Near bottom
         );
       });

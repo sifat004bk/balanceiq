@@ -29,9 +29,8 @@ class HomeAppbar extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return SliverAppBar(
-      pinned: true,
-      expandedHeight: 120.0,
-      collapsedHeight: 56.0,
+      floating: true,
+      snap: true,
       elevation: 0,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       centerTitle: true,

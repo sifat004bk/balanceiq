@@ -353,369 +353,408 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              // Collapse Button (Tiny) - Optional, maybe just tap outside? 
+              // Collapse Button (Tiny) - Optional, maybe just tap outside?
               // Let's add a small handle or minimize button
-               Padding(
-                padding: const EdgeInsets.only(right: 12, top: 4),
+// Centered Drag Handle
+              Align(
+                alignment: Alignment.center,
                 child: GestureDetector(
                   onTap: _toggleCollapse,
+                  onVerticalDragEnd: (details) {
+                    if (details.primaryVelocity! > 300) {
+                      _toggleCollapse();
+                    }
+                  },
+                  behavior: HitTestBehavior.translucent,
                   child: Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: isDark ? Colors.black54 : Colors.white70,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.keyboard_arrow_down,
-                      color: isDark ? Colors.white : Colors.black,
-                      size: 20,
+                    margin:
+                        const EdgeInsets.only(top: 8), // Removed bottom margin
+                    padding: const EdgeInsets.only(
+                        top: 8,
+                        left: 8,
+                        right: 8,
+                        bottom: 2), // Reduced bottom padding
+                    width: 60,
+                    alignment: Alignment.center,
+                    child: Container(
+                      width: 32,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: isDark ? Colors.grey[600] : Colors.grey[400],
+                        borderRadius: BorderRadius.circular(2),
+                      ),
                     ),
                   ),
                 ),
               ),
-              
+
               // Content Wrapper
               Padding(
-              padding: const EdgeInsets.only(left: 12, right: 12, bottom: 12),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Token Warning Banner
-                  if (isLimitReached)
-                    Container(
-                      width: double.infinity,
-                      margin: const EdgeInsets.only(bottom: 12),
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.red.withOpacity(0.9), // Higher opacity for legibility
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: Colors.red),
-                      ),
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.error_outline, color: Colors.white, size: 18),
-                          SizedBox(width: 8),
-                          Text(
-                            'Daily limit reached',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 13,
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  else if (isNearLimit)
-                    Container(
-                      width: double.infinity,
-                      margin: const EdgeInsets.only(bottom: 12),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.orange.withOpacity(0.9), // Higher opacity
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: Colors.orange),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            Icons.warning_amber_rounded,
-                            color: Colors.white,
-                            size: 16,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Near limit ($remainingTokens remaining)',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                  // Selected image preview
-                  if (_selectedImagePath != null)
-                    Container(
-                      margin: const EdgeInsets.only(bottom: 12),
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: isDark
-                            ? const Color(0xFF1e1f20)
-                            : const Color(0xFFF8F9FA),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: isDark
-                              ? primaryColor.withOpacity(0.2)
-                              : primaryColor.withOpacity(0.15),
+                padding: const EdgeInsets.only(left: 12, right: 12, bottom: 12),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Token Warning Banner
+                    if (isLimitReached)
+                      Container(
+                        width: double.infinity,
+                        margin: const EdgeInsets.only(bottom: 12),
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.red.withOpacity(
+                              0.9), // Higher opacity for legibility
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: Colors.red),
                         ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 10,
-                            offset: const Offset(0, 5),
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Image.file(
-                              File(_selectedImagePath!),
-                              width: 60,
-                              height: 60,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Text(
-                              'Image selected',
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.error_outline,
+                                color: Colors.white, size: 18),
+                            SizedBox(width: 8),
+                            Text(
+                              'Daily limit reached',
                               style: TextStyle(
-                                color: isDark
-                                    ? const Color(0xFFB0B3B8)
-                                    : const Color(0xFF65676B),
-                                fontSize: 14,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    else if (isNearLimit)
+                      Container(
+                        width: double.infinity,
+                        margin: const EdgeInsets.only(bottom: 12),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color:
+                              Colors.orange.withOpacity(0.9), // Higher opacity
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: Colors.orange),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              Icons.warning_amber_rounded,
+                              color: Colors.white,
+                              size: 16,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Near limit ($remainingTokens remaining)',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
+                          ],
+                        ),
+                      ),
+
+                    // Selected image preview
+                    if (_selectedImagePath != null)
+                      Container(
+                        margin: const EdgeInsets.only(bottom: 12),
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: isDark
+                              ? const Color(0xFF1e1f20)
+                              : const Color(0xFFF8F9FA),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: isDark
+                                ? primaryColor.withOpacity(0.2)
+                                : primaryColor.withOpacity(0.15),
                           ),
-                          IconButton(
-                            icon: Icon(
-                              Icons.close,
-                              color: isDark ? Colors.white : Colors.black,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 10,
+                              offset: const Offset(0, 5),
                             ),
-                            onPressed: () {
-                              setState(() {
-                                _selectedImagePath = null;
-                              });
-                            },
+                          ],
+                        ),
+                        child: Row(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.file(
+                                File(_selectedImagePath!),
+                                width: 60,
+                                height: 60,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                'Image selected',
+                                style: TextStyle(
+                                  color: isDark
+                                      ? const Color(0xFFB0B3B8)
+                                      : const Color(0xFF65676B),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            IconButton(
+                              icon: Icon(
+                                Icons.close,
+                                color: isDark ? Colors.white : Colors.black,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _selectedImagePath = null;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+
+                    // Main Input Container (Enhanced Floating Pill - 2025)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 12,
+                      ),
+                      decoration: BoxDecoration(
+                        // Glassmorphic background
+                        color: isDark
+                            ? const Color(0xFF1e1f20).withOpacity(0.95)
+                            : const Color(0xFFFEFBFF).withOpacity(0.95),
+                        borderRadius: BorderRadius.circular(28),
+                        border: Border.all(
+                          color: _hasContent
+                              ? primaryColor
+                                  .withOpacity(0.6) // Active state glow
+                              : (isDark
+                                  ? primaryColor.withOpacity(0.2)
+                                  : primaryColor.withOpacity(0.15)),
+                          width: _hasContent ? 2.0 : 1.5,
+                        ),
+                        boxShadow: [
+                          // Primary shadow with glow effect
+                          BoxShadow(
+                            color: _hasContent
+                                ? primaryColor.withOpacity(0.35)
+                                : primaryColor.withOpacity(0.15),
+                            blurRadius: _hasContent ? 20 : 16,
+                            offset: const Offset(0, 4),
+                          ),
+                          // Depth shadow
+                          BoxShadow(
+                            color:
+                                Colors.black.withOpacity(isDark ? 0.4 : 0.08),
+                            blurRadius: 12,
+                            offset: const Offset(0, 2),
                           ),
                         ],
                       ),
-                    ),
-
-                  // Main Input Container (Enhanced Floating Pill - 2025)
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 12,
-                    ),
-                    decoration: BoxDecoration(
-                      // Glassmorphic background
-                      color: isDark
-                          ? const Color(0xFF1e1f20).withOpacity(0.95)
-                          : const Color(0xFFFEFBFF).withOpacity(0.95),
-                      borderRadius: BorderRadius.circular(28),
-                      border: Border.all(
-                        color: _hasContent
-                            ? primaryColor.withOpacity(0.6) // Active state glow
-                            : (isDark ? primaryColor.withOpacity(0.2) : primaryColor.withOpacity(0.15)),
-                        width: _hasContent ? 2.0 : 1.5,
-                      ),
-                      boxShadow: [
-                        // Primary shadow with glow effect
-                        BoxShadow(
-                          color: _hasContent
-                              ? primaryColor.withOpacity(0.35)
-                              : primaryColor.withOpacity(0.15),
-                          blurRadius: _hasContent ? 20 : 16,
-                          offset: const Offset(0, 4),
-                        ),
-                        // Depth shadow
-                        BoxShadow(
-                          color: Colors.black.withOpacity(isDark ? 0.4 : 0.08),
-                          blurRadius: 12,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                  // Attachment button
-                  if (ChatConfig.showAttachments)
-                    GestureDetector(
-                      onTap:
-                          isLimitReached ? null : _showAttachmentOptions,
-                      child: Container(
-                        width: 36,
-                        height: 36,
-                        decoration: BoxDecoration(
-                          color: primaryColor.withOpacity(0.1),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.add_rounded,
-                          color: isLimitReached
-                              ? Colors.grey
-                              : primaryColor,
-                          size: 22,
-                        ),
-                      ),
-                    ),
-
-                  if (ChatConfig.showAttachments)
-                    const SizedBox(width: 12),
-
-                  // Text field
-                  Expanded(
-                    child: TextField(
-                      controller: _textController,
-                      enabled: !isLimitReached,
-                      maxLines: 4,
-                      minLines: 1,
-                      decoration: InputDecoration(
-                        hintText: isLimitReached
-                            ? 'Limit reached'
-                            : 'Ask me anything...',
-                        hintStyle: TextStyle(
-                          color: isLimitReached
-                              ? Colors.grey
-                              : (isDark
-                                  ? const Color(0xFFB0B3B8)
-                                  : const Color(0xFF65676B)),
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        border: InputBorder.none,
-                        enabledBorder: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                        disabledBorder: InputBorder.none,
-                        errorBorder: InputBorder.none,
-                        focusedErrorBorder: InputBorder.none,
-                        isDense: true,
-                        filled: false,
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 8,
-                        ),
-                      ),
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: isLimitReached
-                            ? Colors.grey
-                            : (isDark ? Colors.white : Colors.black),
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(width: 12),
-
-                  // Voice recording button with visual feedback (2025)
-                  if (ChatConfig.showAudioRecording)
-                    AnimatedScale(
-                      scale: _isRecording ? 1.1 : 1.0,
-                      duration: const Duration(milliseconds: 200),
-                      child: GestureDetector(
-                        onTap: isLimitReached ? null : _toggleRecording,
-                        child: Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            gradient: _isRecording
-                                ? const LinearGradient(
-                                    colors: [Color(0xFFFF5252), Color(0xFFFF1744)],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                  )
-                                : null,
-                            color: _isRecording
-                                ? null
-                                : (isDark ? const Color(0xFF2a2a2e) : const Color(0xFFE8EAED)),
-                            shape: BoxShape.circle,
-                            boxShadow: _isRecording
-                                ? [
-                                    BoxShadow(
-                                      color: Colors.red.withOpacity(0.4),
-                                      blurRadius: 16,
-                                      offset: const Offset(0, 4),
-                                    ),
-                                    BoxShadow(
-                                      color: Colors.red.withOpacity(0.2),
-                                      blurRadius: 8,
-                                      spreadRadius: 2,
-                                    ),
-                                  ]
-                                : null,
-                          ),
-                          child: _isRecording
-                              ? _buildRecordingAnimation()
-                              : Icon(
-                                  Icons.mic_none,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          // Attachment button
+                          if (ChatConfig.showAttachments)
+                            GestureDetector(
+                              onTap: isLimitReached
+                                  ? null
+                                  : _showAttachmentOptions,
+                              child: Container(
+                                width: 36,
+                                height: 36,
+                                decoration: BoxDecoration(
+                                  color: primaryColor.withOpacity(0.1),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  Icons.add_rounded,
                                   color: isLimitReached
                                       ? Colors.grey
                                       : primaryColor,
                                   size: 22,
                                 ),
-                        ),
+                              ),
+                            ),
+
+                          if (ChatConfig.showAttachments)
+                            const SizedBox(width: 12),
+
+                          // Text field
+                          Expanded(
+                            child: TextField(
+                              controller: _textController,
+                              enabled: !isLimitReached,
+                              maxLines: 4,
+                              minLines: 1,
+                              decoration: InputDecoration(
+                                hintText: isLimitReached
+                                    ? 'Limit reached'
+                                    : 'Ask me anything...',
+                                hintStyle: TextStyle(
+                                  color: isLimitReached
+                                      ? Colors.grey
+                                      : (isDark
+                                          ? const Color(0xFFB0B3B8)
+                                          : const Color(0xFF65676B)),
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                border: InputBorder.none,
+                                enabledBorder: InputBorder.none,
+                                focusedBorder: InputBorder.none,
+                                disabledBorder: InputBorder.none,
+                                errorBorder: InputBorder.none,
+                                focusedErrorBorder: InputBorder.none,
+                                isDense: true,
+                                filled: false,
+                                contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 8,
+                                ),
+                              ),
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: isLimitReached
+                                    ? Colors.grey
+                                    : (isDark ? Colors.white : Colors.black),
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(width: 12),
+
+                          // Voice recording button with visual feedback (2025)
+                          if (ChatConfig.showAudioRecording)
+                            AnimatedScale(
+                              scale: _isRecording ? 1.1 : 1.0,
+                              duration: const Duration(milliseconds: 200),
+                              child: GestureDetector(
+                                onTap: isLimitReached ? null : _toggleRecording,
+                                child: Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    gradient: _isRecording
+                                        ? const LinearGradient(
+                                            colors: [
+                                              Color(0xFFFF5252),
+                                              Color(0xFFFF1744)
+                                            ],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                          )
+                                        : null,
+                                    color: _isRecording
+                                        ? null
+                                        : (isDark
+                                            ? const Color(0xFF2a2a2e)
+                                            : const Color(0xFFE8EAED)),
+                                    shape: BoxShape.circle,
+                                    boxShadow: _isRecording
+                                        ? [
+                                            BoxShadow(
+                                              color:
+                                                  Colors.red.withOpacity(0.4),
+                                              blurRadius: 16,
+                                              offset: const Offset(0, 4),
+                                            ),
+                                            BoxShadow(
+                                              color:
+                                                  Colors.red.withOpacity(0.2),
+                                              blurRadius: 8,
+                                              spreadRadius: 2,
+                                            ),
+                                          ]
+                                        : null,
+                                  ),
+                                  child: _isRecording
+                                      ? _buildRecordingAnimation()
+                                      : Icon(
+                                          Icons.mic_none,
+                                          color: isLimitReached
+                                              ? Colors.grey
+                                              : primaryColor,
+                                          size: 22,
+                                        ),
+                                ),
+                              ),
+                            ),
+
+                          if (ChatConfig.showAudioRecording)
+                            const SizedBox(width: 8),
+
+                          // Send button (Enhanced with animation - 2025)
+                          AnimatedScale(
+                            scale: (_hasContent && !isLimitReached) ? 1.0 : 0.9,
+                            duration: const Duration(milliseconds: 200),
+                            curve: Curves.easeOutCubic,
+                            child: GestureDetector(
+                              onTap: (_hasContent && !isLimitReached)
+                                  ? _sendMessage
+                                  : null,
+                              child: Container(
+                                width: 44,
+                                height: 44,
+                                decoration: BoxDecoration(
+                                  gradient: (_hasContent && !isLimitReached)
+                                      ? LinearGradient(
+                                          colors: [
+                                            primaryColor,
+                                            primaryColor.withOpacity(0.85),
+                                          ],
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                        )
+                                      : null,
+                                  color: (_hasContent && !isLimitReached)
+                                      ? null
+                                      : (isDark
+                                          ? const Color(0xFF2a2a2e)
+                                          : const Color(0xFFE8EAED)),
+                                  shape: BoxShape.circle,
+                                  boxShadow: (_hasContent && !isLimitReached)
+                                      ? [
+                                          BoxShadow(
+                                            color:
+                                                primaryColor.withOpacity(0.4),
+                                            blurRadius: 16,
+                                            offset: const Offset(0, 4),
+                                          ),
+                                          BoxShadow(
+                                            color:
+                                                primaryColor.withOpacity(0.2),
+                                            blurRadius: 8,
+                                            offset: const Offset(0, 2),
+                                          ),
+                                        ]
+                                      : null,
+                                ),
+                                child: Icon(
+                                  Icons.arrow_upward_rounded,
+                                  color: (_hasContent && !isLimitReached)
+                                      ? Colors.white
+                                      : (isDark
+                                          ? const Color(0xFF65676B)
+                                          : const Color(0xFF9AA0A6)),
+                                  size: 24,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-
-                  if (ChatConfig.showAudioRecording)
-                    const SizedBox(width: 8),
-
-                  // Send button (Enhanced with animation - 2025)
-                  AnimatedScale(
-                    scale: (_hasContent && !isLimitReached) ? 1.0 : 0.9,
-                    duration: const Duration(milliseconds: 200),
-                    curve: Curves.easeOutCubic,
-                    child: GestureDetector(
-                      onTap: (_hasContent && !isLimitReached) ? _sendMessage : null,
-                      child: Container(
-                        width: 44,
-                        height: 44,
-                        decoration: BoxDecoration(
-                          gradient: (_hasContent && !isLimitReached)
-                              ? LinearGradient(
-                                  colors: [
-                                    primaryColor,
-                                    primaryColor.withOpacity(0.85),
-                                  ],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                )
-                              : null,
-                          color: (_hasContent && !isLimitReached)
-                              ? null
-                              : (isDark ? const Color(0xFF2a2a2e) : const Color(0xFFE8EAED)),
-                          shape: BoxShape.circle,
-                          boxShadow: (_hasContent && !isLimitReached)
-                              ? [
-                                  BoxShadow(
-                                    color: primaryColor.withOpacity(0.4),
-                                    blurRadius: 16,
-                                    offset: const Offset(0, 4),
-                                  ),
-                                  BoxShadow(
-                                    color: primaryColor.withOpacity(0.2),
-                                    blurRadius: 8,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ]
-                              : null,
-                        ),
-                        child: Icon(
-                          Icons.arrow_upward_rounded,
-                          color: (_hasContent && !isLimitReached)
-                              ? Colors.white
-                              : (isDark ? const Color(0xFF65676B) : const Color(0xFF9AA0A6)),
-                          size: 24,
-                        ),
-                      ),
-                    ),
-                  ),
-                    ],
-                  ),
+                  ],
                 ),
-                ],),),
+              ),
             ],
           ),
         );

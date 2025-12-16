@@ -462,10 +462,14 @@ class _ChatViewState extends State<ChatView> {
                     // We estimate widgetHeight as 100 or use dynamic if available
                     final renderBox = _chatInputKey.currentContext
                         ?.findRenderObject() as RenderBox?;
-                    final widgetHeight = renderBox?.size.height ?? 100.0;
+                    final widgetHeight = renderBox?.size.height ?? 120.0;
 
-                    final maxVisibleTop =
-                        screenSize.height - widgetHeight - keyboardHeight - 10;
+                    // Since Positioned is inside SafeArea, we must subtract padding.top from screen coordinates
+                    final maxVisibleTop = screenSize.height -
+                        widgetHeight -
+                        keyboardHeight -
+                        padding.top -
+                        20;
 
                     // Use minimum of current position and max visible top
                     // This pushes the widget up when keyboard appears, and lets it come back down

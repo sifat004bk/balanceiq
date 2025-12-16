@@ -1,4 +1,5 @@
-import 'package:balance_iq/core/theme/app_theme.dart';
+import 'package:balance_iq/core/constants/app_strings.dart';
+import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 
 class Error404Page extends StatelessWidget {
@@ -17,7 +18,6 @@ class Error404Page extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
       decoration: BoxDecoration(
@@ -89,7 +89,7 @@ class Error404Page extends StatelessWidget {
 
               // Error title
               Text(
-                'Oops! Something went wrong',
+                AppStrings.dashboard.errorTitle,
                 style: textTheme.headlineMedium?.copyWith(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -111,9 +111,7 @@ class Error404Page extends StatelessWidget {
                 child: Text(
                   errorMessage,
                   style: textTheme.bodyMedium?.copyWith(
-                    color: isDark
-                        ? AppTheme.textSubtleDark
-                        : AppTheme.textSubtleLight,
+                    color: AppPalette.neutralGrey,
                     height: 1.5,
                   ),
                   textAlign: TextAlign.center,
@@ -125,10 +123,10 @@ class Error404Page extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: AppTheme.primaryColor.withOpacity(0.05),
+                  color: AppPalette.trustBlue.withOpacity(0.05),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: AppTheme.primaryColor.withOpacity(0.2),
+                    color: AppPalette.trustBlue.withOpacity(0.2),
                   ),
                 ),
                 child: Column(
@@ -138,12 +136,12 @@ class Error404Page extends StatelessWidget {
                       children: [
                         Icon(
                           Icons.info_outline,
-                          color: AppTheme.primaryColor,
+                          color: AppPalette.trustBlue,
                           size: 20,
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          'Common issues:',
+                          AppStrings.dashboard.commonIssues,
                           style: textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
@@ -151,10 +149,11 @@ class Error404Page extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 12),
-                    _buildIssueItem(context, 'Check your internet connection'),
                     _buildIssueItem(
-                        context, 'Server might be temporarily down'),
-                    _buildIssueItem(context, 'Try again in a few moments'),
+                        context, AppStrings.dashboard.checkInternet),
+                    _buildIssueItem(context, AppStrings.dashboard.serverDown),
+                    _buildIssueItem(
+                        context, AppStrings.dashboard.tryAgainMoments),
                   ],
                 ),
               ),
@@ -171,20 +170,20 @@ class Error404Page extends StatelessWidget {
                     size: 24,
                   ),
                   label: Text(
-                    isAuthError ? 'Go to Login' : 'Try Again',
+                    isAuthError
+                        ? AppStrings.dashboard.goToLogin
+                        : AppStrings.common.retry,
                     style: textTheme.titleMedium?.copyWith(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color:
-                          isDark ? AppTheme.textDark : AppTheme.backgroundDark,
+                      color: AppPalette.neutralWhite,
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.primaryColor,
-                    foregroundColor:
-                        isDark ? AppTheme.textDark : AppTheme.backgroundDark,
+                    backgroundColor: AppPalette.trustBlue,
+                    foregroundColor: AppPalette.neutralWhite,
                     elevation: 8,
-                    shadowColor: AppTheme.primaryColor.withOpacity(0.3),
+                    shadowColor: AppPalette.trustBlue.withOpacity(0.3),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
@@ -200,9 +199,9 @@ class Error404Page extends StatelessWidget {
                   );
                 },
                 child: Text(
-                  'Back to Login Page',
+                  AppStrings.dashboard.backToLoginPage,
                   style: textTheme.titleMedium?.copyWith(
-                    color: isDark ? AppTheme.textSubtleDark : AppTheme.primaryColor,
+                    color: AppPalette.trustBlue,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -216,7 +215,6 @@ class Error404Page extends StatelessWidget {
 
   Widget _buildIssueItem(BuildContext context, String text) {
     final textTheme = Theme.of(context).textTheme;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
@@ -225,8 +223,8 @@ class Error404Page extends StatelessWidget {
           Container(
             width: 6,
             height: 6,
-            decoration: const BoxDecoration(
-              color: AppTheme.primaryColor,
+            decoration: BoxDecoration(
+              color: AppPalette.trustBlue,
               shape: BoxShape.circle,
             ),
           ),
@@ -235,8 +233,7 @@ class Error404Page extends StatelessWidget {
             child: Text(
               text,
               style: textTheme.bodyMedium?.copyWith(
-                color:
-                    isDark ? AppTheme.textSubtleDark : AppTheme.textSubtleLight,
+                color: AppPalette.neutralGrey,
               ),
             ),
           ),

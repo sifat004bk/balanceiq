@@ -1,4 +1,3 @@
-
 import 'package:balance_iq/core/constants/gemini_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -57,14 +56,28 @@ class _ChatViewState extends State<ChatView> {
   bool _chatTourShown = false;
   final GlobalKey _chatInputKey = GlobalKey();
 
+  // Offset for the floating chat input position (top, left)
+  Offset _inputPosition = const Offset(20, 500);
+
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
 
-    // Check if we should show tour after frame is built
+    // Check if we should show tour and init position after frame is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _checkAndShowChatTour();
+
+      // Set initial position to bottom center
+      final size = MediaQuery.of(context).size;
+      final padding = MediaQuery.of(context).padding;
+      setState(() {
+        // Default to bottom center
+        _inputPosition = Offset(
+          (size.width - 350) / 2, // Center horizontally
+          size.height - 180 - padding.bottom, // Near bottom
+        );
+      });
     });
   }
 
@@ -169,11 +182,6 @@ class _ChatViewState extends State<ChatView> {
       });
     }
   }
-
-  // Horizontal offset for dragging (vertical is handled by keyboard-aware positioning)
-  double _horizontalOffset = 20;
-  // Bottom offset from the keyboard/bottom of screen
-  double _bottomOffset = 20;
 
   Widget _buildErrorWidget(BuildContext context, ChatError state) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -330,12 +338,11 @@ class _ChatViewState extends State<ChatView> {
 
   @override
   Widget build(BuildContext context) {
-    final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
-    final screenWidth = MediaQuery.of(context).size.width;
-
-    // Clamp horizontal offset to keep input on screen
-    final clampedHorizontalOffset =
-        _horizontalOffset.clamp(0.0, screenWidth - 350);
+    // Used for bounds checking
+    final mediaQuery = MediaQuery.of(context);
+    final screenSize = mediaQuery.size;
+    final padding = mediaQuery.padding;
+    final keyboardHeight = mediaQuery.viewInsets.bottom;
 
     return BlocListener<ProductTourCubit, ProductTourState>(
         listener: (context, tourState) {
@@ -390,7 +397,7 @@ class _ChatViewState extends State<ChatView> {
                           hasMore: state.hasMore,
                           isLoadingMore: state.isLoadingMore,
                           scrollController: _scrollController,
-                          // Add padding at bottom for the floating widget + keyboard
+                          // Add padding at bottom to avoid floating widget overlap
                           padding:
                               EdgeInsets.only(bottom: 120 + keyboardHeight),
                         );
@@ -442,19 +449,38 @@ class _ChatViewState extends State<ChatView> {
                   child: TokenUsageButton(),
                 ),
 
-                // Layer 3: Floating Draggable Input - positioned from bottom
+                // Layer 3: Floating Draggable Input - Free Movement
                 Positioned(
-                  left: clampedHorizontalOffset,
-                  right: clampedHorizontalOffset,
-                  bottom: _bottomOffset + keyboardHeight,
+                  left: _inputPosition.dx,
+                  top: _inputPosition.dy,
                   child: GestureDetector(
                     onPanUpdate: (details) {
                       setState(() {
-                        _horizontalOffset += details.delta.dx;
-                        _bottomOffset -= details
-                            .delta.dy; // Invert because we're using bottom
-                        // Clamp bottom offset
-                        _bottomOffset = _bottomOffset.clamp(10.0, 200.0);
+                        // Update position based on drag delta
+                        double newLeft = _inputPosition.dx + details.delta.dx;
+                        double newTop = _inputPosition.dy + details.delta.dy;
+
+                        // Widget approximate size (assume ~400 width max, ~100 height)
+                        // In a real scenario we'd use a GlobalKey/RenderBox to get exact size
+                        const widgetWidth = 350.0;
+                        const widgetHeight = 100.0;
+
+                        // Clamp to screen boundaries (SafeArea)
+                        // Allow slight off-screen for bounce feel, or strict? strictly on screen
+                        final minLeft = 0.0;
+                        final maxLeft =
+                            screenSize.width - 50; // allow some hanging off
+
+                        final minTop = 50.0; // below app bar area
+                        final maxTop = screenSize.height -
+                            widgetHeight -
+                            keyboardHeight -
+                            20;
+
+                        _inputPosition = Offset(
+                          newLeft.clamp(minLeft - widgetWidth / 2, maxLeft),
+                          newTop.clamp(minTop, maxTop),
+                        );
                       });
                     },
                     child: Container(

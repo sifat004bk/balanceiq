@@ -1,4 +1,5 @@
-import 'package:balance_iq/core/theme/app_theme.dart';
+import 'package:balance_iq/core/constants/app_strings.dart';
+import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 import '../../../chat/presentation/pages/chat_page.dart';
 
@@ -6,7 +7,7 @@ import '../../../chat/presentation/pages/chat_page.dart';
 /// Matches the chat input design but acts as a navigation button
 class FloatingChatButton extends StatelessWidget {
   final GlobalKey? targetKey;
-  
+
   const FloatingChatButton({super.key, this.targetKey});
 
   @override
@@ -33,16 +34,16 @@ class FloatingChatButton extends StatelessWidget {
           gradient: isDark
               ? LinearGradient(
                   colors: [
-                    AppTheme.surfaceDark,
-                    AppTheme.surfaceDark.withOpacity(0.8),
+                    AppPalette.surfaceDark,
+                    AppPalette.surfaceDark.withOpacity(0.8),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 )
               : LinearGradient(
                   colors: [
-                    AppTheme.surfaceLight,
-                    AppTheme.surfaceVariantLight.withOpacity(0.5),
+                    AppPalette.surfaceLight,
+                    AppPalette.surfaceLight.withOpacity(0.5),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -50,13 +51,13 @@ class FloatingChatButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(30),
           border: Border.all(
             color: isDark
-                ? AppTheme.primaryDark.withOpacity(0.3)
-                : AppTheme.primaryLight.withOpacity(0.2),
+                ? AppPalette.trustBlue.withOpacity(0.3)
+                : AppPalette.trustBlue.withOpacity(0.2),
             width: 1.5,
           ),
           boxShadow: [
             BoxShadow(
-              color: (isDark ? AppTheme.primaryDark : AppTheme.primaryLight)
+              color: (isDark ? AppPalette.trustBlue : AppPalette.trustBlue)
                   .withOpacity(0.15),
               blurRadius: 20,
               offset: const Offset(0, 4),
@@ -77,14 +78,11 @@ class FloatingChatButton extends StatelessWidget {
               width: 36,
               height: 36,
               decoration: BoxDecoration(
-                gradient: isDark
-                    ? AppTheme.primaryGradientDark
-                    : AppTheme.primaryGradientLight,
+                gradient: AppPalette.primaryGradient,
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: (isDark ? AppTheme.primaryDark : AppTheme.primaryLight)
-                        .withOpacity(0.3),
+                    color: AppPalette.trustBlue.withOpacity(0.3),
                     blurRadius: 8,
                     spreadRadius: 1,
                   ),
@@ -101,15 +99,13 @@ class FloatingChatButton extends StatelessWidget {
             // Placeholder text
             Expanded(
               child: Text(
-                'Ask me anything about your finances...',
+                AppStrings.chat.inputPlaceholder,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: isDark
-                      ? AppTheme.textSubtleDark
-                      : AppTheme.textSubtleLight,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 0.2,
-                ),
+                      color: AppPalette.neutralGrey,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.2,
+                    ),
               ),
             ),
 
@@ -120,14 +116,11 @@ class FloatingChatButton extends StatelessWidget {
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                gradient: isDark
-                    ? AppTheme.accentGradientDark
-                    : AppTheme.accentGradientLight,
+                gradient: AppPalette.primaryGradient,
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: (isDark ? AppTheme.primaryDark : AppTheme.primaryLight)
-                        .withOpacity(0.4),
+                    color: AppPalette.trustBlue.withOpacity(0.4),
                     blurRadius: 12,
                     offset: const Offset(0, 3),
                     spreadRadius: 1,

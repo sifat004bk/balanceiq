@@ -20,6 +20,7 @@ class FloatingChatInput extends StatefulWidget {
   final Function(double)? onWidthChanged;
   final bool isCollapsed;
   final VoidCallback? onToggleCollapse;
+  final ValueChanged<bool>? onFocusChanged;
 
   const FloatingChatInput({
     super.key,
@@ -29,6 +30,7 @@ class FloatingChatInput extends StatefulWidget {
     this.onWidthChanged,
     this.isCollapsed = false,
     this.onToggleCollapse,
+    this.onFocusChanged,
   });
 
   @override
@@ -60,6 +62,9 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
   }
 
   void _onFocusChanged() {
+    if (widget.onFocusChanged != null) {
+      widget.onFocusChanged!(_focusNode.hasFocus);
+    }
     setState(() {
       // Rebuild to update UI based on focus
     });
@@ -564,7 +569,7 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                       duration: const Duration(milliseconds: 200),
                       curve: Curves.easeOutCubic,
                       transform: Matrix4.identity()
-                        ..scale(_focusNode.hasFocus ? 1.05 : 1.0),
+                        ..scale(_focusNode.hasFocus ? 1.1 : 1.0),
                       transformAlignment: Alignment.center,
                       padding: const EdgeInsets.symmetric(
                         horizontal: 20,
@@ -595,10 +600,10 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                           // Spotlight Glow
                           if (_focusNode.hasFocus)
                             BoxShadow(
-                              color: primaryColor.withOpacity(0.4),
-                              blurRadius: 30,
-                              spreadRadius: 2,
-                              offset: const Offset(0, 0),
+                              color: primaryColor.withOpacity(0.5),
+                              blurRadius: 40,
+                              spreadRadius: 4,
+                              offset: const Offset(0, 4),
                             ),
                           // Primary shadow
                           BoxShadow(

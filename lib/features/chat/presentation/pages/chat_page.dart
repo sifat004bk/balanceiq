@@ -1,4 +1,5 @@
 import 'package:balance_iq/core/constants/gemini_colors.dart';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
@@ -59,6 +60,7 @@ class _ChatViewState extends State<ChatView> {
   // Chat input dimensions
   double _inputWidth = 350.0;
   bool _isCollapsed = false;
+  bool _isInputFocused = false;
 
   // Offset for the floating chat input position (top, left)
   Offset _inputPosition = const Offset(20, 500);
@@ -453,6 +455,28 @@ class _ChatViewState extends State<ChatView> {
                   child: TokenUsageButton(),
                 ),
 
+                // Layer 2.5: Backend Blur (Spotlight Mode)
+                if (_isInputFocused)
+                  Positioned.fill(
+                    child: GestureDetector(
+                      onTap: () {
+                        // Dismiss focus when tapping background
+                        FocusScope.of(context).unfocus();
+                      },
+                      child: AnimatedOpacity(
+                        duration: const Duration(milliseconds: 200),
+                        opacity: _isInputFocused ? 1.0 : 0.0,
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                          child: Container(
+                            color:
+                                Colors.black.withOpacity(0.3), // Dim background
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
                 // Layer 3: Floating Draggable Input - Free Movement
                 Positioned(
                   left: _inputPosition.dx,
@@ -533,6 +557,11 @@ class _ChatViewState extends State<ChatView> {
                         botColor: AppTheme.getBotColor(widget.botId),
                         width: _inputWidth,
                         isCollapsed: _isCollapsed,
+                        onFocusChanged: (hasFocus) {
+                          setState(() {
+                            _isInputFocused = hasFocus;
+                          });
+                        },
                         onToggleCollapse: () {
                           setState(() {
                             _isCollapsed = !_isCollapsed;

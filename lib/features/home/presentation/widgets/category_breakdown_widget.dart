@@ -1,5 +1,6 @@
 import 'dart:ui';
-import 'package:balance_iq/core/theme/app_theme.dart';
+import 'package:balance_iq/core/constants/app_strings.dart';
+import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:balance_iq/features/home/presentation/pages/transactions_page.dart';
 import 'package:flutter/material.dart';
 
@@ -38,7 +39,7 @@ class CategoryBreakdownWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Spending by Category',
+                AppStrings.dashboard.spendingByCategory,
                 style: textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.w800,
                   fontSize: 22,
@@ -52,13 +53,14 @@ class CategoryBreakdownWidget extends StatelessWidget {
                 ),
                 decoration: BoxDecoration(
                   gradient: isDark
-                      ? AppTheme.primaryGradientDark
-                      : AppTheme.primaryGradientLight,
+                      ? AppPalette.primaryGradient
+                      : AppPalette.primaryGradient,
                   borderRadius: BorderRadius.circular(50),
                   boxShadow: [
                     BoxShadow(
-                      color: (isDark ? AppTheme.primaryDark : AppTheme.primaryLight)
-                          .withOpacity(0.3),
+                      color:
+                          (isDark ? AppPalette.trustBlue : AppPalette.trustBlue)
+                              .withOpacity(0.3),
                       blurRadius: 8,
                       spreadRadius: 1,
                     ),
@@ -85,7 +87,8 @@ class CategoryBreakdownWidget extends StatelessWidget {
             itemCount: sortedCategories.length,
             itemBuilder: (context, index) {
               final entry = sortedCategories[index];
-              final percentage = total > 0 ? (entry.value.abs() / total * 100) : 0.0;
+              final percentage =
+                  total > 0 ? (entry.value.abs() / total * 100) : 0.0;
 
               return Padding(
                 padding: EdgeInsets.only(
@@ -95,7 +98,8 @@ class CategoryBreakdownWidget extends StatelessWidget {
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => TransactionsPage(category: entry.key),
+                        builder: (context) =>
+                            TransactionsPage(category: entry.key),
                       ),
                     );
                   },
@@ -122,7 +126,6 @@ class CategoryBreakdownWidget extends StatelessWidget {
     required double percentage,
     required int index,
   }) {
-    final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
@@ -135,16 +138,16 @@ class CategoryBreakdownWidget extends StatelessWidget {
         gradient: isDark
             ? LinearGradient(
                 colors: [
-                  AppTheme.surfaceDark.withOpacity(0.6),
-                  AppTheme.surfaceDark.withOpacity(0.3),
+                  AppPalette.surfaceDark.withOpacity(0.6),
+                  AppPalette.surfaceDark.withOpacity(0.3),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               )
             : LinearGradient(
                 colors: [
-                  AppTheme.surfaceLight,
-                  AppTheme.surfaceVariantLight.withOpacity(0.5),
+                  AppPalette.surfaceLight,
+                  AppPalette.surfaceLight.withOpacity(0.5),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -169,7 +172,8 @@ class CategoryBreakdownWidget extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: isDark ? 10 : 0, sigmaY: isDark ? 10 : 0),
+          filter: ImageFilter.blur(
+              sigmaX: isDark ? 10 : 0, sigmaY: isDark ? 10 : 0),
           child: Padding(
             padding: const EdgeInsets.all(14),
             child: Column(
@@ -206,7 +210,8 @@ class CategoryBreakdownWidget extends StatelessWidget {
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: accentColor.withOpacity(0.15),
                         borderRadius: BorderRadius.circular(8),
@@ -228,9 +233,7 @@ class CategoryBreakdownWidget extends StatelessWidget {
                     Text(
                       categoryName,
                       style: textTheme.bodySmall?.copyWith(
-                        color: isDark
-                            ? AppTheme.textSubtleDark
-                            : AppTheme.textSubtleLight,
+                        color: AppPalette.neutralGrey,
                         fontWeight: FontWeight.w600,
                         fontSize: 12,
                         letterSpacing: 0.2,
@@ -261,14 +264,18 @@ class CategoryBreakdownWidget extends StatelessWidget {
 
   Color _getCategoryColor(String category, int index) {
     final name = category.toLowerCase();
-    if (name.contains('food') || name.contains('dining')) return const Color(0xFFFF9800);
+    if (name.contains('food') || name.contains('dining'))
+      return const Color(0xFFFF9800);
     if (name.contains('transport')) return const Color(0xFF2196F3);
     if (name.contains('shop')) return const Color(0xFFE91E63);
-    if (name.contains('bill') || name.contains('util')) return const Color(0xFF00BCD4);
-    if (name.contains('rent') || name.contains('house')) return const Color(0xFF3F51B5);
-    if (name.contains('health') || name.contains('med')) return const Color(0xFFF44336);
+    if (name.contains('bill') || name.contains('util'))
+      return const Color(0xFF00BCD4);
+    if (name.contains('rent') || name.contains('house'))
+      return const Color(0xFF3F51B5);
+    if (name.contains('health') || name.contains('med'))
+      return const Color(0xFFF44336);
     if (name.contains('entertain')) return const Color(0xFF9C27B0);
-    
+
     // Fallback palette with vibrant colors
     final colors = [
       const Color(0xFF009688), // Teal
@@ -282,14 +289,18 @@ class CategoryBreakdownWidget extends StatelessWidget {
 
   IconData _getCategoryIcon(String category) {
     final name = category.toLowerCase();
-    if (name.contains('food') || name.contains('dining')) return Icons.restaurant_rounded;
+    if (name.contains('food') || name.contains('dining'))
+      return Icons.restaurant_rounded;
     if (name.contains('transport')) return Icons.directions_car_rounded;
     if (name.contains('shop')) return Icons.shopping_bag_rounded;
-    if (name.contains('bill') || name.contains('util')) return Icons.receipt_long_rounded;
-    if (name.contains('rent') || name.contains('house')) return Icons.home_rounded;
-    if (name.contains('health') || name.contains('med')) return Icons.medical_services_rounded;
+    if (name.contains('bill') || name.contains('util'))
+      return Icons.receipt_long_rounded;
+    if (name.contains('rent') || name.contains('house'))
+      return Icons.home_rounded;
+    if (name.contains('health') || name.contains('med'))
+      return Icons.medical_services_rounded;
     if (name.contains('entertain')) return Icons.movie_rounded;
-    
+
     return Icons.category_rounded;
   }
 }

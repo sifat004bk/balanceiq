@@ -1,4 +1,5 @@
-import 'package:balance_iq/core/theme/app_theme.dart';
+import 'package:balance_iq/core/constants/app_strings.dart';
+import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 
 class BiggestExpenseWidget extends StatelessWidget {
@@ -19,7 +20,6 @@ class BiggestExpenseWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -51,11 +51,9 @@ class BiggestExpenseWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Biggest Expense',
+                  AppStrings.dashboard.biggestExpense,
                   style: textTheme.bodyMedium?.copyWith(
-                    color: isDark
-                        ? AppTheme.textSubtleDark
-                        : AppTheme.textSubtleLight,
+                    color: AppPalette.neutralGrey,
                   ),
                 ),
                 const SizedBox(height: 4),

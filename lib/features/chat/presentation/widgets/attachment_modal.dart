@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../../core/constants/gemini_colors.dart';
+import '../../../../core/constants/app_strings.dart';
+import '../../../../core/theme/app_palette.dart';
+import '../../../../core/theme/app_typography.dart';
 
 class AttachmentModal extends StatelessWidget {
   final VoidCallback onCameraTap;
@@ -18,9 +20,9 @@ class AttachmentModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        color: Color(0xFF1e1f20),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+      decoration: BoxDecoration(
+        color: AppPalette.surfaceModalDark,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
       ),
       child: SafeArea(
         child: Column(
@@ -32,7 +34,7 @@ class AttachmentModal extends StatelessWidget {
               width: 32,
               height: 4,
               decoration: BoxDecoration(
-                color: Colors.grey[600],
+                color: AppPalette.neutralGrey.withOpacity(0.6),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -44,25 +46,25 @@ class AttachmentModal extends StatelessWidget {
                 _buildOption(
                   context,
                   icon: Icons.camera_alt_outlined,
-                  label: 'Camera',
+                  label: AppStrings.chat.camera,
                   onTap: onCameraTap,
                 ),
                 _buildOption(
                   context,
                   icon: Icons.photo_library_outlined,
-                  label: 'Gallery',
+                  label: AppStrings.chat.gallery,
                   onTap: onGalleryTap,
                 ),
                 _buildOption(
                   context,
                   icon: Icons.insert_drive_file_outlined,
-                  label: 'Files',
+                  label: AppStrings.chat.files,
                   onTap: onFilesTap,
                 ),
                 _buildOption(
                   context,
                   icon: Icons.add_to_drive_outlined,
-                  label: 'Drive',
+                  label: AppStrings.chat.drive,
                   onTap: onDriveTap,
                 ),
               ],
@@ -88,8 +90,8 @@ class AttachmentModal extends StatelessWidget {
           Container(
             width: 64,
             height: 64,
-            decoration: const BoxDecoration(
-              color: Color(0xFF2a2a2e), // Slightly lighter than bg
+            decoration: BoxDecoration(
+              color: AppPalette.surfaceCardVariantDark, // Slightly lighter than bg
               shape: BoxShape.circle,
             ),
             child: Icon(icon, color: Colors.white, size: 28),
@@ -97,10 +99,8 @@ class AttachmentModal extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             label,
-            style: const TextStyle(
-              color: Color(0xFFc4c7c5),
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
+            style: AppTypography.captionMedium.copyWith(
+              color: AppPalette.textSubtleLight,
             ),
           ),
         ],

@@ -1,4 +1,5 @@
-import 'package:balance_iq/core/theme/app_theme.dart';
+import 'package:balance_iq/core/constants/app_strings.dart';
+import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 
 /// Minimalist Neumorphism Style - Clean and Modern
@@ -40,7 +41,7 @@ class AccountsBreakdownWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Accounts',
+                    AppStrings.dashboard.accounts,
                     style: textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                       fontSize: 22,
@@ -62,13 +63,13 @@ class AccountsBreakdownWidget extends StatelessWidget {
                   vertical: 8,
                 ),
                 decoration: BoxDecoration(
-                  color: AppTheme.primaryColor.withOpacity(0.1),
+                  color: AppPalette.trustBlue.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
                   '${sortedAccounts.length}',
                   style: textTheme.titleMedium?.copyWith(
-                    color: AppTheme.primaryColor,
+                    color: AppPalette.trustBlue,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -209,9 +210,7 @@ class AccountsBreakdownWidget extends StatelessWidget {
                 Text(
                   accountName,
                   style: textTheme.bodySmall?.copyWith(
-                    color: isDark
-                        ? AppTheme.textSubtleDark
-                        : AppTheme.textSubtleLight,
+                    color: AppPalette.neutralGrey,
                     fontSize: 18,
                     fontWeight: FontWeight.w500,
                   ),

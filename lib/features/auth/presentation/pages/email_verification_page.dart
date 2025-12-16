@@ -93,9 +93,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                           width: 128,
                           height: 128,
                           decoration: BoxDecoration(
-                            color: (_hasContent && !_isLimitReached)
-                                ? AppTheme.trustBlue
-                                : const Color(0xFF2a2a2e),
+                            color: AppTheme.primaryColor.withValues(alpha: 0.2),
                             shape: BoxShape.circle,
                           ),
                         ),

@@ -60,14 +60,14 @@ class HomepageLoadingPage extends StatelessWidget {
       height: 80,
       decoration: BoxDecoration(
         color: isDark
-            ? Colors.white.withValues(alpha: 0.1)
-            : Colors.white.withValues(alpha: 0.05),
+            ? AppPalette.neutralWhite.withValues(alpha: 0.1)
+            : AppPalette.neutralWhite.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Shimmer.fromColors(
         baseColor: isDark
-            ? Colors.white.withValues(alpha: 0.05)
-            : Colors.grey.withValues(alpha: 0.1),
+            ? AppPalette.neutralWhite.withValues(alpha: 0.05)
+            : AppPalette.neutralGrey.withValues(alpha: 0.1),
         highlightColor: AppPalette.trustBlue.withValues(alpha: 0.1),
         period: Duration(milliseconds: 1500 + (index * 250)),
         child: Padding(
@@ -80,8 +80,8 @@ class HomepageLoadingPage extends StatelessWidget {
                 height: 48,
                 decoration: BoxDecoration(
                   color: isDark
-                      ? Colors.white.withValues(alpha: 0.1)
-                      : Colors.grey.withValues(alpha: 0.2),
+                      ? AppPalette.neutralWhite.withValues(alpha: 0.1)
+                      : AppPalette.neutralGrey.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
@@ -97,8 +97,8 @@ class HomepageLoadingPage extends StatelessWidget {
                       width: double.infinity,
                       decoration: BoxDecoration(
                         color: isDark
-                            ? Colors.white.withValues(alpha: 0.1)
-                            : Colors.grey.withValues(alpha: 0.2),
+                            ? AppPalette.neutralWhite.withValues(alpha: 0.1)
+                            : AppPalette.neutralGrey.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
@@ -108,8 +108,8 @@ class HomepageLoadingPage extends StatelessWidget {
                       width: 120,
                       decoration: BoxDecoration(
                         color: isDark
-                            ? Colors.white.withValues(alpha: 0.1)
-                            : Colors.grey.withValues(alpha: 0.2),
+                            ? AppPalette.neutralWhite.withValues(alpha: 0.1)
+                            : AppPalette.neutralGrey.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),

@@ -68,7 +68,7 @@ class _NewLoginPageState extends State<NewLoginPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message),
-              backgroundColor: Colors.red,
+              backgroundColor: AppPalette.errorRed,
             ),
           );
         }
@@ -137,16 +137,16 @@ class _NewLoginPageState extends State<NewLoginPage> {
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
                               color: isDark
-                                  ? const Color(0xFF374151)
-                                  : const Color(0xFFD1D5DB),
+                                  ? AppPalette.inputBorderDark
+                                  : AppPalette.inputBorderLight,
                             ),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
                               color: isDark
-                                  ? const Color(0xFF374151)
-                                  : const Color(0xFFD1D5DB),
+                                  ? AppPalette.inputBorderDark
+                                  : AppPalette.inputBorderLight,
                             ),
                           ),
                           focusedBorder: OutlineInputBorder(
@@ -193,16 +193,16 @@ class _NewLoginPageState extends State<NewLoginPage> {
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
                               color: isDark
-                                  ? const Color(0xFF374151)
-                                  : const Color(0xFFD1D5DB),
+                                  ? AppPalette.inputBorderDark
+                                  : AppPalette.inputBorderLight,
                             ),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
                               color: isDark
-                                  ? const Color(0xFF374151)
-                                  : const Color(0xFFD1D5DB),
+                                  ? AppPalette.inputBorderDark
+                                  : AppPalette.inputBorderLight,
                             ),
                           ),
                           focusedBorder: OutlineInputBorder(
@@ -265,19 +265,19 @@ class _NewLoginPageState extends State<NewLoginPage> {
                           onPressed: isLoading ? null : _handleLogin,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppPalette.trustBlue,
-                            foregroundColor: Colors.white,
+                            foregroundColor: AppPalette.neutralWhite,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
                           child: isLoading
-                              ? const SizedBox(
+                              ? SizedBox(
                                   width: 20,
                                   height: 20,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
                                     valueColor: AlwaysStoppedAnimation<Color>(
-                                        Colors.white),
+                                        AppPalette.neutralWhite),
                                   ),
                                 )
                               : Text(
@@ -298,8 +298,8 @@ class _NewLoginPageState extends State<NewLoginPage> {
                       Expanded(
                         child: Divider(
                           color: isDark
-                              ? const Color(0xFF374151)
-                              : const Color(0xFFE5E7EB),
+                              ? AppPalette.inputBorderDark
+                              : AppPalette.dividerLight,
                         ),
                       ),
                       Padding(
@@ -315,8 +315,8 @@ class _NewLoginPageState extends State<NewLoginPage> {
                       Expanded(
                         child: Divider(
                           color: isDark
-                              ? const Color(0xFF374151)
-                              : const Color(0xFFE5E7EB),
+                              ? AppPalette.inputBorderDark
+                              : AppPalette.dividerLight,
                         ),
                       ),
                     ],
@@ -332,8 +332,8 @@ class _NewLoginPageState extends State<NewLoginPage> {
                             padding: const EdgeInsets.symmetric(vertical: 12),
                             side: BorderSide(
                               color: isDark
-                                  ? const Color(0xFF374151)
-                                  : const Color(0xFFD1D5DB),
+                                  ? AppPalette.inputBorderDark
+                                  : AppPalette.inputBorderLight,
                             ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),

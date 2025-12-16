@@ -161,7 +161,7 @@ class _VerificationSuccessPageState extends State<VerificationSuccessPage>
                     backgroundColor: AppPalette.trustBlue,
                     foregroundColor: isDark
                         ? AppPalette.surfaceDark
-                        : const Color(0xFF111827),
+                        : AppPalette.neutralBlack,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(24),
                     ),

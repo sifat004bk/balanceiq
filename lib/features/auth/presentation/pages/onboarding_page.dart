@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_assets.dart';
 import '../../../../core/constants/app_strings.dart';
+import 'package:balance_iq/core/theme/app_palette.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
 
@@ -17,7 +18,7 @@ class OnboardingPage extends StatelessWidget {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.message),
-                backgroundColor: Colors.red,
+                backgroundColor: AppPalette.errorRed,
               ),
             );
           }
@@ -48,10 +49,10 @@ class OnboardingPage extends StatelessWidget {
                     color: Theme.of(context).primaryColor,
                     borderRadius: BorderRadius.circular(30),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.account_balance_wallet,
                     size: 60,
-                    color: Colors.white,
+                    color: AppPalette.neutralWhite,
                   ),
                 ),
                 const SizedBox(height: 32),
@@ -65,7 +66,7 @@ class OnboardingPage extends StatelessWidget {
                 Text(
                   AppStrings.auth.welcomeSubtitle,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: Colors.grey[600],
+                        color: AppPalette.neutralGrey,
                       ),
                   textAlign: TextAlign.center,
                 ),
@@ -89,7 +90,7 @@ class OnboardingPage extends StatelessWidget {
                       ),
                       label: Text(AppStrings.auth.continueGoogle),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
+                        backgroundColor: AppPalette.neutralWhite,
                         foregroundColor: Colors.black87,
                         elevation: 2,
                         shape: RoundedRectangleBorder(

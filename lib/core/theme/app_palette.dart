@@ -38,6 +38,12 @@ class AppPalette {
   /// Cards & Sheets (Dark Mode) - Slightly lighter than true black
   static final Color surfaceCardDark = const Color(0xFF121212);
 
+  /// Avatar gradient start color
+  static final Color avatarGradientStart = const Color(0xFFFFC2A1);
+
+  /// Avatar gradient end color
+  static final Color avatarGradientEnd = const Color(0xFFFFD8B8);
+
   // --- Additional Surface Colors ---
 
   /// Modal surfaces in dark mode
@@ -65,6 +71,12 @@ class AppPalette {
 
   /// Input border (light theme)
   static final Color inputBorderLight = const Color(0xFFD1D5DB);
+
+  /// Divider color (light theme)
+  static final Color dividerLight = const Color(0xFFE5E7EB);
+
+  /// Divider color (dark theme)
+  static final Color dividerDark = const Color(0xFF374151);
 
   // --- Text Colors ---
 

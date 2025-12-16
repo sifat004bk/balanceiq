@@ -66,7 +66,7 @@ class NetworkErrorPage extends StatelessWidget {
                     backgroundColor: AppPalette.trustBlue,
                     foregroundColor: isDark
                         ? AppPalette.surfaceDark
-                        : const Color(0xFF111827),
+                        : AppPalette.neutralBlack,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(24),
                     ),

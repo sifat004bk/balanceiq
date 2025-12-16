@@ -146,7 +146,8 @@ class _SplashPageState extends State<SplashPage>
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? const Color(0xFF0F172A) : Colors.white,
+      backgroundColor:
+          isDark ? AppPalette.surfaceDark : AppPalette.neutralWhite,
       body: Center(
         child: AnimatedBuilder(
           animation: _animationController,
@@ -180,10 +181,10 @@ class _SplashPageState extends State<SplashPage>
                           ),
                         ],
                       ),
-                      child: const Center(
+                      child: Center(
                         child: Icon(
                           Icons.account_balance_wallet_rounded,
-                          color: Colors.white,
+                          color: AppPalette.neutralWhite,
                           size: 56,
                         ),
                       ),
@@ -192,13 +193,14 @@ class _SplashPageState extends State<SplashPage>
                     // App name
                     Text(
                       'BalanceIQ',
-                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: isDark
-                                ? AppPalette.neutralWhite
-                                : AppPalette.neutralBlack,
-                            letterSpacing: 1.2,
-                          ),
+                      style:
+                          Theme.of(context).textTheme.headlineMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: isDark
+                                    ? AppPalette.neutralWhite
+                                    : AppPalette.neutralBlack,
+                                letterSpacing: 1.2,
+                              ),
                     ),
                     const SizedBox(height: 8),
                     Text(

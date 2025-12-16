@@ -304,13 +304,13 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                             ),
                           ),
                           child: isLoading
-                              ? const SizedBox(
+                              ? SizedBox(
                                   width: 20,
                                   height: 20,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
                                     valueColor: AlwaysStoppedAnimation<Color>(
-                                        Colors.white),
+                                        AppPalette.neutralWhite),
                                   ),
                                 )
                               : Text(

@@ -109,8 +109,8 @@ class _LoadingPageState extends State<LoadingPage>
                 height: 8,
                 decoration: BoxDecoration(
                   color: isDark
-                      ? const Color(0xFF1F2937)
-                      : const Color(0xFFE5E7EB),
+                      ? AppPalette.inputBackgroundDark
+                      : AppPalette.dividerLight,
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: FractionallySizedBox(

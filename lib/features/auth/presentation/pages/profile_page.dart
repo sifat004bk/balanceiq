@@ -238,7 +238,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(state.message),
-                    backgroundColor: Colors.red.shade700,
+                    backgroundColor: AppPalette.expenseRed,
                     behavior: SnackBarBehavior.floating,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -451,14 +451,15 @@ class _ProfilePageState extends State<ProfilePage> {
           child: Container(
             decoration: BoxDecoration(
               color: isDark
-                  ? Colors.black.withOpacity(0.2)
-                  : Colors.white.withValues(alpha: 0.5),
+                  ? AppPalette.neutralBlack.withValues(alpha: 0.2)
+                  : AppPalette.neutralWhite.withValues(alpha: 0.5),
               shape: BoxShape.circle,
             ),
             child: IconButton(
               icon: Icon(
                 Icons.arrow_back,
-                color: isDark ? Colors.white : Colors.black87,
+                color:
+                    isDark ? AppPalette.neutralWhite : AppPalette.neutralBlack,
               ),
               onPressed: () => Navigator.pop(context),
             ),
@@ -483,9 +484,11 @@ class _ProfilePageState extends State<ProfilePage> {
     final iconBgColor = isDark
         ? AppPalette.sparkOrange.withOpacity(0.2)
         : AppPalette.sparkOrange.withOpacity(0.15);
-    final titleColor = isDark ? Colors.white : const Color(0xFFE65100);
-    final subtitleColor =
-        isDark ? Colors.white.withValues(alpha: 0.7) : AppPalette.sparkOrange;
+    final titleColor =
+        isDark ? AppPalette.neutralWhite : AppPalette.sparkOrange;
+    final subtitleColor = isDark
+        ? AppPalette.neutralWhite.withValues(alpha: 0.7)
+        : AppPalette.sparkOrange;
 
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
@@ -584,7 +587,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppPalette.sparkOrange,
-                    foregroundColor: Colors.white,
+                    foregroundColor: AppPalette.neutralWhite,
                     disabledBackgroundColor:
                         AppPalette.sparkOrange.withOpacity(0.5),
                     padding:
@@ -599,9 +602,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       ? SizedBox(
                           height: DesignConstants.loadingIndicatorSmall,
                           width: DesignConstants.loadingIndicatorSmall,
-                          child: const CircularProgressIndicator(
+                          child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            color: Colors.white,
+                            color: AppPalette.neutralWhite,
                           ),
                         )
                       : Text(
@@ -652,10 +655,10 @@ class _ProfilePageState extends State<ProfilePage> {
                     color: AppPalette.trustBlue,
                     width: 3,
                   ),
-                  gradient: const LinearGradient(
+                  gradient: LinearGradient(
                     colors: [
-                      Color(0xFFFFC2A1),
-                      Color(0xFFFFD8B8),
+                      AppPalette.avatarGradientStart,
+                      AppPalette.avatarGradientEnd,
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -664,10 +667,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: Center(
                   child: Text(
                     user.name.isNotEmpty ? user.name[0].toUpperCase() : 'U',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 48,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF2D3142),
+                      color: AppPalette.neutralBlack,
                     ),
                   ),
                 ),
@@ -680,7 +683,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: Container(
                   padding: const EdgeInsets.all(4),
                   decoration: BoxDecoration(
-                    color: isDark ? const Color(0xFF1F2937) : Colors.white,
+                    color: isDark
+                        ? AppPalette.inputBackgroundDark
+                        : AppPalette.neutralWhite,
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
@@ -702,7 +707,8 @@ class _ProfilePageState extends State<ProfilePage> {
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : Colors.black87,
+                color:
+                    isDark ? AppPalette.neutralWhite : AppPalette.neutralBlack,
               ),
             ),
             const SizedBox(width: 8),
@@ -740,7 +746,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         fontWeight: FontWeight.w600,
                         color: hasSubscription
                             ? AppPalette.trustBlue
-                            : Colors.grey,
+                            : AppPalette.neutralGrey,
                       ),
                     ),
                   ],
@@ -765,7 +771,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1A1C23) : Colors.white,
+        color: isDark ? AppPalette.surfaceCardDark : AppPalette.neutralWhite,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
           color: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
@@ -782,7 +788,7 @@ class _ProfilePageState extends State<ProfilePage> {
               width: 120,
               height: 14,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppPalette.neutralWhite,
                 borderRadius: BorderRadius.circular(4),
               ),
             ),
@@ -797,7 +803,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       width: 150,
                       height: 20,
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: AppPalette.neutralWhite,
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
@@ -806,7 +812,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       width: 180,
                       height: 14,
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: AppPalette.neutralWhite,
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
@@ -816,7 +822,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   width: 80,
                   height: 36,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: AppPalette.neutralWhite,
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
@@ -833,7 +839,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1A1C23) : Colors.white,
+        color: isDark ? AppPalette.surfaceCardDark : AppPalette.neutralWhite,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
           color: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
@@ -842,11 +848,13 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       child: Column(
         children: [
-          Icon(Icons.error_outline, color: Colors.red.shade300, size: 32),
+          Icon(Icons.error_outline, color: AppPalette.expenseRed, size: 32),
           const SizedBox(height: 8),
           Text(
             'Failed to load subscription',
-            style: TextStyle(color: isDark ? Colors.white : Colors.black87),
+            style: TextStyle(
+                color:
+                    isDark ? AppPalette.neutralWhite : AppPalette.neutralBlack),
           ),
           const SizedBox(height: 8),
           TextButton(
@@ -870,7 +878,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1A1C23) : Colors.white,
+        color: isDark ? AppPalette.surfaceCardDark : AppPalette.neutralWhite,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
           color: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
@@ -878,7 +886,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: AppPalette.neutralBlack.withValues(alpha: 0.05),
             blurRadius: 10,
             spreadRadius: 0,
             offset: const Offset(0, 4),
@@ -903,21 +911,21 @@ class _ProfilePageState extends State<ProfilePage> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.orange.withOpacity(0.1),
+                    color: AppPalette.sparkOrange.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(Icons.warning,
-                          size: 14, color: Colors.orange.shade700),
+                          size: 14, color: AppPalette.sparkOrange),
                       const SizedBox(width: 4),
                       Text(
                         '${subscription.daysRemaining} days left',
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
-                          color: Colors.orange.shade700,
+                          color: AppPalette.sparkOrange,
                         ),
                       ),
                     ],
@@ -938,7 +946,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: isDark ? Colors.white : Colors.black87,
+                        color: isDark
+                            ? AppPalette.neutralWhite
+                            : AppPalette.neutralBlack,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -965,7 +975,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppPalette.trustBlue,
-                  foregroundColor: Colors.white,
+                  foregroundColor: AppPalette.neutralWhite,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   shape: RoundedRectangleBorder(
@@ -1002,8 +1012,8 @@ class _ProfilePageState extends State<ProfilePage> {
               Container(
                 width: 120,
                 height: 120,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
+                decoration: BoxDecoration(
+                  color: AppPalette.neutralWhite,
                   shape: BoxShape.circle,
                 ),
               ),
@@ -1013,7 +1023,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 width: 200,
                 height: 24,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppPalette.neutralWhite,
                   borderRadius: BorderRadius.circular(4),
                 ),
               ),
@@ -1023,7 +1033,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 width: 150,
                 height: 14,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppPalette.neutralWhite,
                   borderRadius: BorderRadius.circular(4),
                 ),
               ),
@@ -1033,7 +1043,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 height: 120,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppPalette.neutralWhite,
                   borderRadius: BorderRadius.circular(20),
                 ),
               ),
@@ -1046,7 +1056,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     height: 56,
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: AppPalette.neutralWhite,
                       borderRadius: BorderRadius.circular(16),
                     ),
                   ),
@@ -1062,7 +1072,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1A1C23) : Colors.white,
+        color: isDark ? AppPalette.surfaceCardDark : AppPalette.neutralWhite,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
           color: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
@@ -1070,7 +1080,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: AppPalette.neutralBlack.withValues(alpha: 0.05),
             blurRadius: 10,
             spreadRadius: 0,
             offset: const Offset(0, 4),
@@ -1101,7 +1111,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: isDark ? Colors.white : Colors.black87,
+                        color: isDark
+                            ? AppPalette.neutralWhite
+                            : AppPalette.neutralBlack,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -1128,7 +1140,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppPalette.trustBlue,
-                  foregroundColor: Colors.white,
+                  foregroundColor: AppPalette.neutralWhite,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   shape: RoundedRectangleBorder(
@@ -1164,7 +1176,7 @@ class _ProfilePageState extends State<ProfilePage> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isDark ? const Color(0xFF1A1C23) : Colors.white,
+          color: isDark ? AppPalette.surfaceCardDark : AppPalette.neutralWhite,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
@@ -1193,7 +1205,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
-                  color: isDark ? Colors.white : Colors.black87,
+                  color: isDark
+                      ? AppPalette.neutralWhite
+                      : AppPalette.neutralBlack,
                 ),
               ),
             ),
@@ -1228,9 +1242,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     Navigator.pop(context);
                     context.read<AuthCubit>().logout();
                   },
-                  child: const Text(
+                  child: Text(
                     'Log Out',
-                    style: TextStyle(color: Colors.red),
+                    style: TextStyle(color: AppPalette.expenseRed),
                   ),
                 ),
               ],
@@ -1238,9 +1252,10 @@ class _ProfilePageState extends State<ProfilePage> {
           );
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor:
-              isDark ? const Color(0xFF2D1F1F) : Colors.red.shade50,
-          foregroundColor: Colors.red.shade700,
+          backgroundColor: isDark
+              ? AppPalette.surfaceCardDark
+              : AppPalette.expenseRed.withValues(alpha: 0.1),
+          foregroundColor: AppPalette.expenseRed,
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
@@ -1253,7 +1268,7 @@ class _ProfilePageState extends State<ProfilePage> {
             Icon(
               Icons.logout,
               size: 20,
-              color: Colors.red.shade700,
+              color: AppPalette.expenseRed,
             ),
             const SizedBox(width: 8),
             Text(
@@ -1261,7 +1276,7 @@ class _ProfilePageState extends State<ProfilePage> {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
-                color: Colors.red.shade700,
+                color: AppPalette.expenseRed,
               ),
             ),
           ],

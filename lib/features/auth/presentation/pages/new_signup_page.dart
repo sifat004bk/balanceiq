@@ -65,7 +65,7 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
             SnackBar(
               content: Text(
                   '${AppStrings.auth.accountCreated}! ${AppStrings.auth.pleaseLogin}'),
-              backgroundColor: Colors.green,
+              backgroundColor: AppPalette.successGreen,
               duration: const Duration(seconds: 5),
             ),
           );
@@ -81,7 +81,7 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
             SnackBar(
               content: Text(
                   '${AppStrings.auth.accountCreated}! ${AppStrings.auth.pleaseLogin}'),
-              backgroundColor: Colors.red,
+              backgroundColor: AppPalette.errorRed,
               duration: const Duration(seconds: 4),
             ),
           );
@@ -146,7 +146,7 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                               fontWeight: FontWeight.w500,
                               color: isDark
                                   ? AppPalette.neutralGrey
-                                  : const Color(0xFF374151),
+                                  : AppPalette.inputBorderDark,
                             ),
                       ),
                       const SizedBox(height: 8),
@@ -157,27 +157,27 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                           prefixIcon: Icon(
                             Icons.person_outline,
                             color: isDark
-                                ? const Color(0xFF9CA3AF)
-                                : const Color(0xFF6B7280),
+                                ? AppPalette.neutralGrey
+                                : AppPalette.neutralGrey,
                           ),
                           filled: true,
                           fillColor: isDark
-                              ? const Color(0xFF1F2937)
-                              : const Color(0xFFF3F4F6),
+                              ? AppPalette.inputBackgroundDark
+                              : AppPalette.inputBackgroundLight,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
                               color: isDark
-                                  ? const Color(0xFF374151)
-                                  : const Color(0xFFD1D5DB),
+                                  ? AppPalette.inputBorderDark
+                                  : AppPalette.inputBorderLight,
                             ),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
                               color: isDark
-                                  ? const Color(0xFF374151)
-                                  : const Color(0xFFD1D5DB),
+                                  ? AppPalette.inputBorderDark
+                                  : AppPalette.inputBorderLight,
                             ),
                           ),
                           focusedBorder: OutlineInputBorder(
@@ -209,7 +209,7 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                               fontWeight: FontWeight.w500,
                               color: isDark
                                   ? AppPalette.neutralGrey
-                                  : const Color(0xFF374151),
+                                  : AppPalette.inputBorderDark,
                             ),
                       ),
                       const SizedBox(height: 8),
@@ -221,27 +221,27 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                           prefixIcon: Icon(
                             Icons.mail_outline,
                             color: isDark
-                                ? const Color(0xFF9CA3AF)
-                                : const Color(0xFF6B7280),
+                                ? AppPalette.neutralGrey
+                                : AppPalette.neutralGrey,
                           ),
                           filled: true,
                           fillColor: isDark
-                              ? const Color(0xFF1F2937)
-                              : const Color(0xFFF3F4F6),
+                              ? AppPalette.inputBackgroundDark
+                              : AppPalette.inputBackgroundLight,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
                               color: isDark
-                                  ? const Color(0xFF374151)
-                                  : const Color(0xFFD1D5DB),
+                                  ? AppPalette.inputBorderDark
+                                  : AppPalette.inputBorderLight,
                             ),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
                               color: isDark
-                                  ? const Color(0xFF374151)
-                                  : const Color(0xFFD1D5DB),
+                                  ? AppPalette.inputBorderDark
+                                  : AppPalette.inputBorderLight,
                             ),
                           ),
                           focusedBorder: OutlineInputBorder(
@@ -276,7 +276,7 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                               fontWeight: FontWeight.w500,
                               color: isDark
                                   ? AppPalette.neutralGrey
-                                  : const Color(0xFF374151),
+                                  : AppPalette.inputBorderDark,
                             ),
                       ),
                       const SizedBox(height: 8),
@@ -288,27 +288,27 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                           prefixIcon: Icon(
                             Icons.lock_outline,
                             color: isDark
-                                ? const Color(0xFF9CA3AF)
-                                : const Color(0xFF6B7280),
+                                ? AppPalette.neutralGrey
+                                : AppPalette.neutralGrey,
                           ),
                           filled: true,
                           fillColor: isDark
-                              ? const Color(0xFF1F2937)
-                              : const Color(0xFFF3F4F6),
+                              ? AppPalette.inputBackgroundDark
+                              : AppPalette.inputBackgroundLight,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
                               color: isDark
-                                  ? const Color(0xFF374151)
-                                  : const Color(0xFFD1D5DB),
+                                  ? AppPalette.inputBorderDark
+                                  : AppPalette.inputBorderLight,
                             ),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
                               color: isDark
-                                  ? const Color(0xFF374151)
-                                  : const Color(0xFFD1D5DB),
+                                  ? AppPalette.inputBorderDark
+                                  : AppPalette.inputBorderLight,
                             ),
                           ),
                           focusedBorder: OutlineInputBorder(
@@ -325,8 +325,8 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                                   ? Icons.visibility
                                   : Icons.visibility_off,
                               color: isDark
-                                  ? const Color(0xFF9CA3AF)
-                                  : const Color(0xFF6B7280),
+                                  ? AppPalette.neutralGrey
+                                  : AppPalette.neutralGrey,
                             ),
                             onPressed: () {
                               setState(() {
@@ -358,7 +358,7 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                               fontWeight: FontWeight.w500,
                               color: isDark
                                   ? AppPalette.neutralGrey
-                                  : const Color(0xFF374151),
+                                  : AppPalette.inputBorderDark,
                             ),
                       ),
                       const SizedBox(height: 8),
@@ -370,27 +370,27 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                           prefixIcon: Icon(
                             Icons.lock_reset,
                             color: isDark
-                                ? const Color(0xFF9CA3AF)
-                                : const Color(0xFF6B7280),
+                                ? AppPalette.neutralGrey
+                                : AppPalette.neutralGrey,
                           ),
                           filled: true,
                           fillColor: isDark
-                              ? const Color(0xFF1F2937)
-                              : const Color(0xFFF3F4F6),
+                              ? AppPalette.inputBackgroundDark
+                              : AppPalette.inputBackgroundLight,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
                               color: isDark
-                                  ? const Color(0xFF374151)
-                                  : const Color(0xFFD1D5DB),
+                                  ? AppPalette.inputBorderDark
+                                  : AppPalette.inputBorderLight,
                             ),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
                               color: isDark
-                                  ? const Color(0xFF374151)
-                                  : const Color(0xFFD1D5DB),
+                                  ? AppPalette.inputBorderDark
+                                  : AppPalette.inputBorderLight,
                             ),
                           ),
                           focusedBorder: OutlineInputBorder(
@@ -407,8 +407,8 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                                   ? Icons.visibility
                                   : Icons.visibility_off,
                               color: isDark
-                                  ? const Color(0xFF9CA3AF)
-                                  : const Color(0xFF6B7280),
+                                  ? AppPalette.neutralGrey
+                                  : AppPalette.neutralGrey,
                             ),
                             onPressed: () {
                               setState(() {
@@ -445,19 +445,19 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                             backgroundColor: AppPalette.trustBlue,
                             foregroundColor: isDark
                                 ? AppPalette.surfaceDark
-                                : const Color(0xFF111827),
+                                : AppPalette.neutralBlack,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
                           child: isLoading
-                              ? const SizedBox(
+                              ? SizedBox(
                                   width: 20,
                                   height: 20,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
                                     valueColor: AlwaysStoppedAnimation<Color>(
-                                        Colors.white),
+                                        AppPalette.neutralWhite),
                                   ),
                                 )
                               : const Text(
@@ -478,8 +478,8 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                       Expanded(
                         child: Divider(
                           color: isDark
-                              ? const Color(0xFF374151)
-                              : const Color(0xFFE5E7EB),
+                              ? AppPalette.inputBorderDark
+                              : AppPalette.dividerLight,
                         ),
                       ),
                       Padding(
@@ -497,8 +497,8 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                       Expanded(
                         child: Divider(
                           color: isDark
-                              ? const Color(0xFF374151)
-                              : const Color(0xFFE5E7EB),
+                              ? AppPalette.inputBorderDark
+                              : AppPalette.dividerLight,
                         ),
                       ),
                     ],
@@ -514,8 +514,8 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                             padding: const EdgeInsets.symmetric(vertical: 12),
                             side: BorderSide(
                               color: isDark
-                                  ? const Color(0xFF374151)
-                                  : const Color(0xFFD1D5DB),
+                                  ? AppPalette.inputBorderDark
+                                  : AppPalette.inputBorderLight,
                             ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),

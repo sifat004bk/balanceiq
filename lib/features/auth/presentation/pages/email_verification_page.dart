@@ -162,7 +162,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                       onPressed: _openEmailApp,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppPalette.trustBlue,
-                        foregroundColor: Colors.white,
+                        foregroundColor: AppPalette.neutralWhite,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(24),
                         ),

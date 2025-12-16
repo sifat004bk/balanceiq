@@ -1,3 +1,4 @@
+import 'package:balance_iq/core/constants/app_strings.dart';
 import 'package:balance_iq/core/theme/app_theme.dart';
 import 'package:balance_iq/features/home/domain/entities/transaction.dart';
 import 'package:balance_iq/features/home/presentation/cubit/transactions_cubit.dart';
@@ -26,7 +27,7 @@ class TransactionHistoryWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Recent Transactions',
+                AppStrings.dashboard.recentTransactions,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
@@ -35,7 +36,7 @@ class TransactionHistoryWidget extends StatelessWidget {
               TextButton(
                 onPressed: onViewAll,
                 child: Text(
-                  'View All',
+                  AppStrings.common.viewAll,
                   style: TextStyle(
                     color: AppTheme.primaryColor,
                     fontWeight: FontWeight.w600,
@@ -60,7 +61,7 @@ class TransactionHistoryWidget extends StatelessWidget {
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
-                  'Failed to load transactions',
+                  AppStrings.errors.loadFailed,
                   style: TextStyle(color: Theme.of(context).colorScheme.error),
                 ),
               );
@@ -70,7 +71,7 @@ class TransactionHistoryWidget extends StatelessWidget {
               if (state.transactions.isEmpty) {
                 return const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: Text('No recent transactions found.'),
+                  child: Text(AppStrings.dashboard.noTransactions),
                 );
               }
 

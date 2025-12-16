@@ -1,3 +1,4 @@
+import 'package:balance_iq/core/constants/app_strings.dart';
 import 'package:balance_iq/core/theme/app_theme.dart';
 import 'package:balance_iq/features/home/domain/entities/transaction.dart';
 import 'package:flutter/material.dart';
@@ -53,17 +54,17 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
 
   // Available categories
   final List<String> _categories = [
-    'Food & Dining',
-    'Transportation',
-    'Shopping',
-    'Entertainment',
-    'Bills & Utilities',
-    'Healthcare',
-    'Education',
-    'Salary',
-    'Investment',
-    'Gift',
-    'Other',
+    AppStrings.transactions.categoryFood,
+    AppStrings.transactions.categoryTransport,
+    AppStrings.transactions.categoryShopping,
+    AppStrings.transactions.categoryEntertainment,
+    AppStrings.transactions.categoryBills,
+    AppStrings.transactions.categoryHealthcare,
+    AppStrings.transactions.categoryEducation,
+    AppStrings.transactions.categorySalary,
+    AppStrings.transactions.categoryInvestment,
+    AppStrings.transactions.categoryGift,
+    AppStrings.transactions.categoryOther,
   ];
 
   @override
@@ -134,17 +135,17 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
                   const Icon(Icons.delete_outline, color: Colors.red, size: 24),
             ),
             const SizedBox(width: 12),
-            const Text('Delete Transaction'),
+            Text(AppStrings.transactions.deleteTransaction),
           ],
         ),
-        content: const Text(
-          'Are you sure you want to delete this transaction? This action cannot be undone.',
+        content: Text(
+          AppStrings.transactions.deleteConfirmMessage,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
-              'Cancel',
+              AppStrings.common.cancel,
               style: TextStyle(
                   color: Theme.of(context).textTheme.bodyMedium?.color),
             ),
@@ -171,7 +172,7 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8)),
             ),
-            child: const Text('Delete'),
+            child: Text(AppStrings.common.delete),
           ),
         ],
       ),
@@ -223,7 +224,7 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
                     const CircularProgressIndicator(),
                     const SizedBox(height: 16),
                     Text(
-                      'Deleting transaction...',
+                      AppStrings.transactions.deleting,
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ],
@@ -281,8 +282,9 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
                               children: [
                                 Text(
                                   _isEditMode
-                                      ? 'Edit Transaction'
-                                      : 'Transaction Details',
+                                      ? AppStrings.transactions.editTransaction
+                                      : AppStrings
+                                          .transactions.transactionDetails,
                                   style: Theme.of(context)
                                       .textTheme
                                       .titleLarge
@@ -292,7 +294,7 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  'ID: #${widget.transaction.transactionId}',
+                                  '${AppStrings.transactions.transactionId}: #${widget.transaction.transactionId}',
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodySmall
@@ -346,7 +348,7 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
                             child: OutlinedButton.icon(
                               onPressed: _handleDelete,
                               icon: const Icon(Icons.delete_outline, size: 20),
-                              label: const Text('Delete'),
+                              label: Text(AppStrings.common.delete),
                               style: OutlinedButton.styleFrom(
                                 foregroundColor: Colors.red,
                                 side: const BorderSide(color: Colors.red),
@@ -375,8 +377,8 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
                               icon: Icon(_isEditMode ? Icons.check : Icons.edit,
                                   size: 20),
                               label: Text(_isEditMode
-                                  ? 'Save Changes'
-                                  : 'Edit Transaction'),
+                                  ? AppStrings.common.saveChanges
+                                  : AppStrings.common.edit),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppTheme.primaryColor,
                                 foregroundColor: Colors.white,
@@ -444,7 +446,9 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
             child: Column(
               children: [
                 Text(
-                  isIncome ? 'Income' : 'Expense',
+                  isIncome
+                      ? AppStrings.dashboard.income
+                      : AppStrings.dashboard.expense,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: isIncome ? Colors.green : Colors.red,
                         fontWeight: FontWeight.w500,
@@ -470,21 +474,21 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
           // Details list
           _buildDetailRow(
             icon: Icons.description_outlined,
-            label: 'Description',
+            label: AppStrings.transactions.description,
             value: transaction.description.isNotEmpty
                 ? transaction.description
-                : 'No description',
+                : AppStrings.transactions.noDescription,
             delay: 250,
           ),
           _buildDetailRow(
             icon: Icons.category_outlined,
-            label: 'Category',
+            label: AppStrings.transactions.category,
             value: transaction.category,
             delay: 300,
           ),
           _buildDetailRow(
             icon: Icons.calendar_today_outlined,
-            label: 'Date',
+            label: AppStrings.transactions.date,
             value: DateFormat('EEEE, MMMM d, yyyy')
                 .format(transaction.transactionDate),
             delay: 350,
@@ -569,7 +573,7 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
         children: [
           // Transaction Type
           _buildFormSection(
-            label: 'Transaction Type',
+            label: AppStrings.transactions.transactionType,
             child: Row(
               children: [
                 Expanded(
@@ -589,7 +593,7 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
 
           // Amount
           _buildFormSection(
-            label: 'Amount',
+            label: AppStrings.transactions.amount,
             child: TextField(
               controller: _amountController,
               keyboardType:
@@ -623,12 +627,12 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
 
           // Description
           _buildFormSection(
-            label: 'Description',
+            label: AppStrings.transactions.description,
             child: TextField(
               controller: _descriptionController,
               maxLines: 2,
               decoration: InputDecoration(
-                hintText: 'Enter description...',
+                hintText: AppStrings.transactions.descriptionHint,
                 filled: true,
                 fillColor: isDark
                     ? Colors.white.withValues(alpha: 0.05)
@@ -646,7 +650,7 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
 
           // Category
           _buildFormSection(
-            label: 'Category',
+            label: AppStrings.transactions.category,
             child: DropdownButtonFormField<String>(
               value: _categories.contains(_selectedCategory)
                   ? _selectedCategory
@@ -681,7 +685,7 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
 
           // Date
           _buildFormSection(
-            label: 'Date',
+            label: AppStrings.transactions.date,
             child: InkWell(
               onTap: _selectDate,
               borderRadius: BorderRadius.circular(12),

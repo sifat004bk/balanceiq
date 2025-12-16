@@ -293,7 +293,7 @@ class _ProfilePageState extends State<ProfilePage> {
               }
 
               return const Center(
-                child: Text('Please login to view your profile'),
+                child: Text(AppStrings.auth.signingIn),
               );
             },
           ),
@@ -374,7 +374,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         // TODO: Navigate to account details
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                              content: Text('Account Details coming soon')),
+                              content: Text(
+                                  '${AppStrings.profile.accountDetails} ${AppStrings.common.comingSoon}')),
                         );
                       },
                     ),
@@ -398,7 +399,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         // TODO: Navigate to notifications
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                              content: Text('Notifications coming soon')),
+                              content: Text(
+                                  '${AppStrings.profile.notifications} ${AppStrings.common.comingSoon}')),
                         );
                       },
                     ),
@@ -412,7 +414,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         // TODO: Navigate to appearance settings
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                              content: Text('Appearance settings coming soon')),
+                              content: Text(
+                                  '${AppStrings.profile.appearance} ${AppStrings.common.comingSoon}')),
                         );
                       },
                     ),
@@ -426,7 +429,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         // TODO: Navigate to help center
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                              content: Text('Help Center coming soon')),
+                              content: Text(
+                                  '${AppStrings.profile.helpCenter} ${AppStrings.common.comingSoon}')),
                         );
                       },
                     ),
@@ -487,7 +491,7 @@ class _ProfilePageState extends State<ProfilePage> {
         if (state is VerificationEmailSent) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Verification email sent to ${state.email}'),
+              content: Text('${AppStrings.auth.emailSent} ${state.email}'),
               backgroundColor: AppPalette.incomeGreen,
               behavior: SnackBarBehavior.floating,
               shape: RoundedRectangleBorder(
@@ -847,7 +851,7 @@ class _ProfilePageState extends State<ProfilePage> {
           TextButton(
             onPressed: () =>
                 context.read<SubscriptionCubit>().loadSubscriptionStatus(),
-            child: const Text('Retry'),
+            child: Text(AppStrings.common.retry),
           ),
         ],
       ),
@@ -1211,12 +1215,12 @@ class _ProfilePageState extends State<ProfilePage> {
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              title: const Text('Log Out'),
-              content: const Text('Are you sure you want to log out?'),
+              title: Text(AppStrings.profile.logOut),
+              content: Text(AppStrings.profile.logOutConfirm),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text('Cancel'),
+                  child: Text(AppStrings.common.cancel),
                 ),
                 TextButton(
                   onPressed: () {

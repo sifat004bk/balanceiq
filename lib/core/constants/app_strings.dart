@@ -141,7 +141,9 @@ class _AuthStrings {
   final verificationSuccess = 'Email Verified!';
   final verificationSuccessMessage =
       'Your email has been successfully verified';
-  final skipVerificationDevOnly = 'Skip Verification (Dev Only)';\n  final accountCreated = 'Account created';\n  final pleaseLogin = 'Please login to continue';
+  final skipVerificationDevOnly = 'Skip Verification (Dev Only)';
+  final accountCreated = 'Account created';
+  final pleaseLogin = 'Please login to continue';
 
   // Loading & Errors
   final signingIn = 'Signing in...';

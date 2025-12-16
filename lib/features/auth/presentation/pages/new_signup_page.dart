@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:balance_iq/core/constants/app_strings.dart';
+import '../../../../core/constants/app_strings.dart';
+import '../../../../core/theme/app_theme.dart';
 import 'package:balance_iq/core/theme/app_palette.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
@@ -78,7 +79,8 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
           // Show error message
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(state.message),
+              content: Text(
+                  '${AppStrings.auth.accountCreated}! ${AppStrings.auth.pleaseLogin}'),
               backgroundColor: Colors.red,
               duration: const Duration(seconds: 4),
             ),

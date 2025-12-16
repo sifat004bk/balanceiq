@@ -29,8 +29,9 @@ class HomeAppbar extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return SliverAppBar(
-      floating: true,
-      snap: true,
+      pinned: true,
+      expandedHeight: 120.0,
+      collapsedHeight: 56.0,
       elevation: 0,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       centerTitle: true,
@@ -152,8 +153,9 @@ class HomeAppbar extends StatelessWidget {
       actions: [
         BlocBuilder<ThemeCubit, ThemeState>(
           builder: (context, themeState) {
-            final isDark = themeState is ThemeLoaded &&
-                themeState.themeMode == ThemeMode.dark;
+            // Check actual brightness instead of just theme mode
+            // This properly handles ThemeMode.system
+            final isDark = Theme.of(context).brightness == Brightness.dark;
 
             return Container(
               height: 40,

@@ -255,7 +255,9 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                 width: 32,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: isDark ? AppPalette.neutralGrey.withOpacity(0.6) : Colors.grey[300],
+                  color: isDark
+                      ? AppPalette.neutralGrey.withOpacity(0.6)
+                      : Colors.grey[300],
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -305,7 +307,9 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
             width: 64,
             height: 64,
             decoration: BoxDecoration(
-              color: isDark ? AppPalette.surfaceCardVariantDark : const Color(0xFFF0F2F5),
+              color: isDark
+                  ? AppPalette.surfaceCardVariantDark
+                  : const Color(0xFFF0F2F5),
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -318,7 +322,8 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
           Text(
             label,
             style: AppTypography.captionMedium.copyWith(
-              color: isDark ? AppPalette.textSubtleLight : const Color(0xFF65676B),
+              color:
+                  isDark ? AppPalette.textSubtleLight : const Color(0xFF65676B),
             ),
           ),
         ],
@@ -376,7 +381,7 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
           // Use provided width
           width: widget.width,
           constraints: const BoxConstraints(
-              maxWidth: 800), // increased max constraint for wider screens
+              maxWidth: double.infinity), // Allow full width
           // No decoration here
           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
           child: Column(
@@ -423,7 +428,9 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                       width: 32,
                       height: 4,
                       decoration: BoxDecoration(
-                        color: isDark ? AppPalette.neutralGrey.withOpacity(0.6) : Colors.grey[400],
+                        color: isDark
+                            ? AppPalette.neutralGrey.withOpacity(0.6)
+                            : Colors.grey[400],
                         borderRadius: BorderRadius.circular(2),
                       ),
                     ),
@@ -473,8 +480,8 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                           vertical: 8,
                         ),
                         decoration: BoxDecoration(
-                          color:
-                              AppPalette.warningOrange.withOpacity(0.9), // Higher opacity
+                          color: AppPalette.warningOrange
+                              .withOpacity(0.9), // Higher opacity
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(color: AppPalette.warningOrange),
                         ),

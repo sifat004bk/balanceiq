@@ -1,6 +1,7 @@
 import 'package:balance_iq/core/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/theme/app_typography.dart';
 import 'dart:async';
 
 class EmailVerificationPage extends StatefulWidget {
@@ -116,10 +117,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                     // Title
                     Text(
                       AppStrings.auth.checkInbox,
-                      style:
-                          Theme.of(context).textTheme.headlineMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                      style: AppTypography.headlineMediumBold,
                     ),
                     const SizedBox(height: 12),
                     // Description
@@ -136,17 +134,16 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                                   ),
                           children: [
                             TextSpan(
-                              text: "We've sent a verification link to ",
+                              text: AppStrings.auth.verificationLinkSent,
                             ),
                             TextSpan(
                               text: widget.email,
-                              style: const TextStyle(
+                              style: AppTypography.bodyLargeBold.copyWith(
                                 color: AppTheme.primaryColor,
-                                fontWeight: FontWeight.bold,
                               ),
                             ),
                             TextSpan(
-                              text: '. Please check your spam folder as well.',
+                              text: AppStrings.auth.checkSpamFolder,
                             ),
                           ],
                         ),
@@ -171,11 +168,8 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                         ),
                       ),
                       child: Text(
-                        'Open Email App',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        AppStrings.auth.openEmailApp,
+                        style: AppTypography.buttonLarge,
                       ),
                     ),
                   ),
@@ -185,7 +179,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Didn't receive it? ",
+                        AppStrings.auth.didntReceive,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               color: isDark
                                   ? AppTheme.textSubtleDark
@@ -196,7 +190,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                         onPressed: _resendCooldown == 0 ? _resendEmail : null,
                         child: Text(
                           _resendCooldown > 0
-                              ? 'Resend in ${_resendCooldown}s'
+                              ? AppStrings.auth.resendIn(_resendCooldown)
                               : AppStrings.auth.sendVerificationEmail,
                           style: TextStyle(
                             color: _resendCooldown > 0
@@ -216,10 +210,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                     onPressed: _mockVerifyAndContinue,
                     child: Text(
                       AppStrings.auth.skipVerificationDevOnly,
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 12,
-                      ),
+                      style: AppTypography.captionSubtle,
                     ),
                   ),
                 ],

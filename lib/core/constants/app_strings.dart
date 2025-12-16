@@ -11,6 +11,7 @@ class AppStrings {
   // Feature sections
   static const common = _CommonStrings();
   static const auth = _AuthStrings();
+  static const onboarding = _OnboardingStrings();
   static const chat = _ChatStrings();
   static const dashboard = _DashboardStrings();
   static const transactions = _TransactionsStrings();
@@ -42,6 +43,7 @@ class _CommonStrings {
   final viewAll = 'View All';
   final learnMore = 'Learn More';
   final getStarted = 'Get Started';
+  final gotIt = 'Got it';
 
   // Status
   final loading = 'Loading...';
@@ -120,16 +122,44 @@ class _AuthStrings {
   // Password Management
   final forgotPasswordTitle = 'Forgot Password';
   final forgotPasswordSubtitle = 'Enter your email to reset password';
+  final resetYourPassword = 'Reset Your Password';
+  final resetInstructions =
+      'Enter your email address and we\'ll send you instructions to reset your password.';
+  final emailAddressLabel = 'Email Address';
+  final enterEmailHint = 'Enter your email';
+  final emailRequired = 'Please enter your email';
+  final emailInvalid = 'Please enter a valid email';
   final sendResetLink = 'Send Reset Link';
   final resetLinkSent = 'Reset link sent to your email';
+  String resetEmailSent(String email) => 'Password reset email sent to $email';
+  final backToLogin = 'Back to Login';
   final resetPasswordTitle = 'Reset Password';
   final resetPasswordSubtitle = 'Enter your new password';
+  final createNewPassword = 'Create New Password';
+  final enterNewPasswordHint = 'Please enter your new password.';
   final newPasswordLabel = 'New Password';
+  final enterNewPasswordPlaceholder = 'Enter new password';
+  final passwordRequired = 'Please enter a password';
+  final passwordMinLength = 'Password must be at least 6 characters';
+  final confirmPasswordRequired = 'Please confirm your password';
+  final confirmNewPasswordRequired = 'Please confirm your new password';
+  final passwordsDoNotMatch = 'Passwords do not match';
+  final confirmNewPasswordHint = 'Confirm new password';
   final resetPasswordButton = 'Reset Password';
+  final resetSuccess = 'Password reset successful! Please login.';
   final changePasswordTitle = 'Change Password';
+  final updatePasswordTitle = 'Update Your Password';
+  final updatePasswordHint =
+      'Please enter your current password and choose a new one.';
   final currentPasswordLabel = 'Current Password';
+  final enterCurrentPasswordHint = 'Enter current password';
+  final currentPasswordRequired = 'Please enter your current password';
+  final newPasswordRequired = 'Please enter a new password';
+  final passwordMustBeDifferent = 'New password must be different from current';
+  final confirmNewPasswordLabel = 'Confirm New Password';
   final changePasswordButton = 'Change Password';
   final passwordChanged = 'Password changed successfully';
+  final passwordChangeSuccess = 'Password changed successfully!';
 
   // Email Verification
   final verifyEmailTitle = 'Verify Your Email';
@@ -138,12 +168,21 @@ class _AuthStrings {
   final sendVerificationEmail = 'Send Verification Email';
   final emailSent = 'Verification email sent to';
   final checkInbox = 'Check your inbox';
+  final checkSpamFolder = '. Please check your spam folder as well.';
+  final verificationLinkSent = "We've sent a verification link to ";
   final verificationSuccess = 'Email Verified!';
   final verificationSuccessMessage =
       'Your email has been successfully verified';
+  final verificationSuccessTitle = 'Verification Successful!';
+  final verificationWelcomeMessage =
+      'Welcome, User! Your account is now active and ready to go.';
   final skipVerificationDevOnly = 'Skip Verification (Dev Only)';
   final accountCreated = 'Account created';
   final pleaseLogin = 'Please login to continue';
+  final openEmailApp = 'Open Email App';
+  final didntReceive = "Didn't receive it? ";
+  String resendIn(int seconds) => 'Resend in ${seconds}s';
+  final continueToDashboard = 'Continue to Dashboard';
 
   // Loading & Errors
   final signingIn = 'Signing in...';
@@ -156,6 +195,31 @@ class _AuthStrings {
 }
 
 // ============================================================================
+// ONBOARDING STRINGS - Onboarding Screens
+// ============================================================================
+class _OnboardingStrings {
+  const _OnboardingStrings();
+
+  // Slides
+  final slide1Title = 'Welcome to Your All-in-One BalanceIQ';
+  final slide1Description =
+      'Centralize your digital life and automate tasks with ease.';
+  final slide2Title = 'Powered by n8n Automation';
+  final slide2Description =
+      'Connect your favorite apps and create powerful workflows without any code.';
+  final slide3Title = 'Chat with Your AI Assistant';
+  final slide3Description =
+      'Get answers, generate content, and control your automations with a simple chat.';
+  final slide4Title = 'Manage Your Work & Life';
+  final slide4Description =
+      'Handle your finances, e-commerce, and social media all in one place.';
+
+  // Actions
+  final getStarted = 'Get Started';
+  final logInButton = 'Log In';
+}
+
+// ============================================================================
 // CHAT STRINGS - Chat Interface
 // ============================================================================
 class _ChatStrings {
@@ -163,8 +227,13 @@ class _ChatStrings {
 
   // Input
   final inputPlaceholder = 'Ask about your finances...';
+  final inputPlaceholderGeneral = 'What do you want to write?';
   final sendMessage = 'Send';
   final attachFile = 'Attach File';
+  final camera = 'Camera';
+  final gallery = 'Gallery';
+  final files = 'Files';
+  final drive = 'Drive';
 
   // Suggestions
   final suggestionBill = 'Add Electricity Bill';
@@ -197,6 +266,36 @@ class _ChatStrings {
   final selectImage = 'Select Image';
   final selectDocument = 'Select Document';
   final takePhoto = 'Take Photo';
+
+  // Errors & Messages
+  String imagePickFailed(String error) => 'Failed to pick image: $error';
+  String photoFailed(String error) => 'Failed to take photo: $error';
+  final micPermissionDenied = 'Microphone permission denied';
+  final sentMedia = 'Sent media';
+  final tokenLimitReached = 'Daily token limit reached. Chat unavailable.';
+  String nearTokenLimit(int remaining) =>
+      'Near token limit ($remaining remaining)';
+  final limitReached = 'Limit reached';
+
+  // Access Control
+  final emailVerificationRequired = 'Email Verification Required';
+  final emailVerificationMessage =
+      'Please verify your email address to use the chat feature.';
+  final verifyEmailButton = 'Verify Email';
+  final subscriptionRequired = 'Subscription Required';
+  final subscriptionRequiredMessage =
+      'You need an active subscription plan to use the chat feature.';
+  final viewPlans = 'View Plans';
+  final subscriptionExpired = 'Subscription Expired';
+  final subscriptionExpiredMessage =
+      'Your subscription has expired. Please renew to continue using the chat feature.';
+  final renewSubscription = 'Renew Subscription';
+  final tokenLimitExceeded = 'Token Limit Exceeded';
+  final tokenLimitExceededMessage = 'You have reached your daily token limit.';
+  final upgradePlan = 'Upgrade Plan';
+  final tooManyRequests = 'Too Many Requests';
+  final rateLimitMessage = 'Please wait a moment before sending more messages.';
+  final backToChat = 'Back to Chat';
 }
 
 // ============================================================================
@@ -221,6 +320,7 @@ class _DashboardStrings {
 
   // Widgets
   final spendingTrend = 'Spending Trend';
+  final spendingByCategory = 'Spending by Category';
   final financialRatios = 'Financial Ratios';
   final accounts = 'Accounts';
   final biggestIncome = 'Biggest Income';
@@ -253,11 +353,16 @@ class _TransactionsStrings {
   const _TransactionsStrings();
 
   // List
+  final title = 'Transactions';
   final allTransactions = 'All Transactions';
   final recentTransactions = 'Recent Transactions';
   final filterTransactions = 'Filter';
   final sortBy = 'Sort By';
   final searchTransactions = 'Search transactions...';
+  final searchHint = 'Search transactions...';
+  final dateRange = 'Date Range';
+  final all = 'All';
+  final noTransactionsFound = 'No transactions found matching your criteria.';
 
   // Detail Modal
   final transactionDetails = 'Transaction Details';
@@ -310,10 +415,19 @@ class _SubscriptionStrings {
 
   // Plans Page
   final choosePlan = 'Choose Your Plan';
+  final choosePlanTitle = 'Choose Your Plan';
   final choosePlanSubtitle = 'Select the plan that works best for you';
   final currentPlan = 'Current Plan';
   final upgradePlan = 'Upgrade Plan';
   final subscribeToPlan = 'Subscribe';
+  final subscribeButton = 'Subscribe';
+  final yearlySavings = 'Save 20% with yearly billing';
+  final termsOfService = 'Terms of Service';
+  final privacyPolicy = 'Privacy Policy';
+  final monthly = 'Monthly';
+  final yearly = 'Yearly';
+  final perMonth = '/ month';
+  final mostPopular = 'Most Popular';
 
   // Plan Names
   final freePlan = 'Free';
@@ -333,6 +447,25 @@ class _SubscriptionStrings {
 
   // Manage Subscription
   final mySubscription = 'My Subscription';
+  final manageSubscriptionTitle = 'Manage Subscription';
+  final noActiveSubscription = 'No Active Subscription';
+  final subscribeMessage = 'Subscribe to a plan to unlock premium features';
+  final viewPlans = 'View Plans';
+  final subscriptionDetails = 'Subscription Details';
+  final activePlan = 'Active Plan';
+  final inactive = 'Inactive';
+  String nextBillingDate(String date) => 'Next billing date: $date';
+  String expiresIn(int days) => 'Expires in $days days';
+  final changePlan = 'Change Plan';
+  final startDate = 'Start Date';
+  final endDate = 'End Date';
+  final daysRemaining = 'Days Remaining';
+  final status = 'Status';
+  final autoRenewal = 'Auto-renewal';
+  final autoRenewalDescription = 'Automatically renew subscription';
+  final cancelConfirmation =
+      'Are you sure you want to cancel your subscription? You will lose access to all premium features at the end of your current billing period.';
+  final cancelButton = 'Cancel Subscription';
   final planDetails = 'Plan Details';
   final renewsOn = 'Renews on';
   final expiresOn = 'Expires on';
@@ -349,7 +482,6 @@ class _SubscriptionStrings {
 
   // Messages
   final noActivePlan = 'No Active Plan';
-  final subscribeMessage = 'Subscribe to unlock premium features';
   final subscriptionSuccess = 'Subscription successful!';
   final subscriptionFailed = 'Subscription failed';
   final cancellationSuccess = 'Subscription cancelled';
@@ -444,6 +576,8 @@ class _ErrorStrings {
 
   // Generic
   final somethingWentWrong = 'Something went wrong';
+  final somethingWrong = 'Something went wrong';
+  final tryAgain = 'An error occurred. Please try again.';
   final tryAgainLater = 'Please try again later';
   final contactSupport = 'Contact support if the problem persists';
 

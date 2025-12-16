@@ -4,6 +4,35 @@ This directory contains all UI/UX design specifications, implementation checklis
 
 ## Files
 
+### COLOR_AND_TYPOGRAPHY_GUIDELINE.md
+**Purpose**: Comprehensive color and typography design system for BalanceIQ.
+
+**Contents**:
+- Complete color palette (primary, semantic, category colors)
+- Typography system (Material Design 3 type scale)
+- Material Design 3 integration
+- Glassmorphism guidelines
+- Dark/Light mode specifications
+- Screen-by-screen color usage
+- Accessibility compliance (WCAG AA/AAA)
+- Bangladesh cultural considerations
+
+**Created**: 2025-12-16
+
+### ICONS_ASSETS_AND_WIDGETS_GUIDELINE.md
+**Purpose**: Icons, asset library strategy, and widget design improvements.
+
+**Contents**:
+- Icon system design (Material 3, sizes, accessibility)
+- Icon color guidelines (semantic, category, interactive states)
+- Asset library strategy (illustrations, empty states, onboarding)
+- Current widget analysis and modification recommendations
+- Implementation roadmap with priorities
+- Flutter code examples and helper classes
+- Design resources and tools
+
+**Created**: 2025-12-16
+
 ### GEMINI_UI_DESIGN_SPECIFICATIONS.md
 **Purpose**: Complete design specifications for implementing Google Gemini-inspired UI.
 

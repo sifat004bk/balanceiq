@@ -1854,6 +1854,11 @@ This comprehensive color and typography guideline establishes BalanceIQ's visual
 
 ---
 
+**Related Guidelines**:
+- **ICONS_ASSETS_AND_WIDGETS_GUIDELINE.md** - Comprehensive icon system, asset library strategy, and widget design improvements
+
+---
+
 **Document Version**: 1.0
 **Last Updated**: 2025-12-16
 **Author**: UX Researcher Agent

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
+import '../../../../core/constants/app_strings.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/theme/app_typography.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
 import '../../domain/entities/user.dart';
@@ -128,11 +130,8 @@ class _VerificationSuccessPageState extends State<VerificationSuccessPage>
                     const SizedBox(height: 40),
                     // Title
                     Text(
-                      'Verification Successful!',
-                      style:
-                          Theme.of(context).textTheme.headlineMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                      AppStrings.auth.verificationSuccessTitle,
+                      style: AppTypography.headlineMediumBold,
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 12),
@@ -140,7 +139,7 @@ class _VerificationSuccessPageState extends State<VerificationSuccessPage>
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 32),
                       child: Text(
-                        'Welcome, User! Your account is now active and ready to go.',
+                        AppStrings.auth.verificationWelcomeMessage,
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                               color: isDark
                                   ? AppTheme.textSubtleDark
@@ -167,12 +166,9 @@ class _VerificationSuccessPageState extends State<VerificationSuccessPage>
                       borderRadius: BorderRadius.circular(24),
                     ),
                   ),
-                  child: const Text(
-                    'Continue to Dashboard',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  child: Text(
+                    AppStrings.auth.continueToDashboard,
+                    style: AppTypography.buttonLarge,
                   ),
                 ),
               ),

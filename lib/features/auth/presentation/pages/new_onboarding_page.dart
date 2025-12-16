@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import '../../../../core/constants/app_strings.dart';
+import '../../../../core/theme/app_palette.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/theme/app_typography.dart';
 
 class NewOnboardingPage extends StatefulWidget {
   const NewOnboardingPage({super.key});
@@ -46,10 +49,8 @@ class _NewOnboardingPageState extends State<NewOnboardingPage> {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    'BalanceIQ',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                    AppStrings.appName,
+                    style: AppTypography.titleLargeBold,
                   ),
                 ],
               ),
@@ -61,27 +62,23 @@ class _NewOnboardingPageState extends State<NewOnboardingPage> {
                 children: [
                   _buildSlide(
                     icon: Icons.auto_awesome,
-                    title: 'Welcome to Your All-in-One BalanceIQ',
-                    description:
-                        'Centralize your digital life and automate tasks with ease.',
+                    title: AppStrings.onboarding.slide1Title,
+                    description: AppStrings.onboarding.slide1Description,
                   ),
                   _buildSlide(
                     icon: Icons.account_tree,
-                    title: 'Powered by n8n Automation',
-                    description:
-                        'Connect your favorite apps and create powerful workflows without any code.',
+                    title: AppStrings.onboarding.slide2Title,
+                    description: AppStrings.onboarding.slide2Description,
                   ),
                   _buildSlide(
                     icon: Icons.smart_toy,
-                    title: 'Chat with Your AI Assistant',
-                    description:
-                        'Get answers, generate content, and control your automations with a simple chat.',
+                    title: AppStrings.onboarding.slide3Title,
+                    description: AppStrings.onboarding.slide3Description,
                   ),
                   _buildSlide(
                     icon: Icons.dashboard,
-                    title: 'Manage Your Work & Life',
-                    description:
-                        'Handle your finances, e-commerce, and social media all in one place.',
+                    title: AppStrings.onboarding.slide4Title,
+                    description: AppStrings.onboarding.slide4Description,
                     isLast: true,
                   ),
                 ],
@@ -95,8 +92,8 @@ class _NewOnboardingPageState extends State<NewOnboardingPage> {
                 count: 4,
                 effect: WormEffect(
                   dotColor: isDark
-                      ? const Color(0xFF32674d)
-                      : const Color(0xFFd1d5db),
+                      ? AppPalette.indicatorActiveDark
+                      : AppPalette.indicatorInactive,
                   activeDotColor: AppTheme.primaryColor,
                   dotHeight: 8,
                   dotWidth: 8,
@@ -121,12 +118,9 @@ class _NewOnboardingPageState extends State<NewOnboardingPage> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      child: const Text(
-                        'Get Started',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      child: Text(
+                        AppStrings.onboarding.getStarted,
+                        style: AppTypography.buttonLarge,
                       ),
                     ),
                   ),
@@ -137,10 +131,8 @@ class _NewOnboardingPageState extends State<NewOnboardingPage> {
                     child: TextButton(
                       onPressed: _navigateToLogin,
                       child: Text(
-                        'Log In',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
+                        AppStrings.onboarding.logInButton,
+                        style: AppTypography.buttonMediumSemiBold.copyWith(
                           color: isDark
                               ? AppTheme.textDarkTheme
                               : AppTheme.textLightTheme,
@@ -219,9 +211,7 @@ class _NewOnboardingPageState extends State<NewOnboardingPage> {
           const SizedBox(height: 48),
           Text(
             title,
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+            style: AppTypography.headlineSmallBold,
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),

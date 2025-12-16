@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/constants/app_strings.dart';
+import '../../../../core/theme/app_palette.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/theme/app_typography.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
 
@@ -49,9 +52,9 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
         if (state is PasswordResetSuccess) {
           // Show success message
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Password reset successful! Please login.'),
-              backgroundColor: Colors.green,
+            SnackBar(
+              content: Text(AppStrings.auth.resetSuccess),
+              backgroundColor: AppPalette.successGreen,
             ),
           );
           // Navigate to login
@@ -60,14 +63,14 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message),
-              backgroundColor: Colors.red,
+              backgroundColor: AppPalette.errorRed,
             ),
           );
         }
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Reset Password'),
+          title: Text(AppStrings.auth.resetPasswordTitle),
           backgroundColor: Colors.transparent,
           elevation: 0,
         ),
@@ -81,14 +84,12 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 children: [
                   const SizedBox(height: 24),
                   Text(
-                    'Create New Password',
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                    AppStrings.auth.createNewPassword,
+                    style: AppTypography.headlineMediumBold,
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    'Please enter your new password.',
+                    AppStrings.auth.enterNewPasswordHint,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           color: isDark
                               ? AppTheme.textSubtleDark
@@ -98,17 +99,15 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   const SizedBox(height: 40),
                   // New Password field
                   Text(
-                    'New Password',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.w500,
-                        ),
+                    AppStrings.auth.newPasswordLabel,
+                    style: AppTypography.bodyMediumSemiBold,
                   ),
                   const SizedBox(height: 8),
                   TextFormField(
                     controller: _passwordController,
                     obscureText: !_isPasswordVisible,
                     decoration: InputDecoration(
-                      hintText: 'Enter new password',
+                      hintText: AppStrings.auth.enterNewPasswordPlaceholder,
                       prefixIcon: const Icon(Icons.lock_outline),
                       suffixIcon: IconButton(
                         icon: Icon(
@@ -124,22 +123,22 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                       ),
                       filled: true,
                       fillColor: isDark
-                          ? const Color(0xFF1F2937)
-                          : const Color(0xFFF3F4F6),
+                          ? AppPalette.inputBackgroundDark
+                          : AppPalette.inputBackgroundLight,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
                           color: isDark
-                              ? const Color(0xFF374151)
-                              : const Color(0xFFD1D5DB),
+                              ? AppPalette.inputBorderDark
+                              : AppPalette.inputBorderLight,
                         ),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
                           color: isDark
-                              ? const Color(0xFF374151)
-                              : const Color(0xFFD1D5DB),
+                              ? AppPalette.inputBorderDark
+                              : AppPalette.inputBorderLight,
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
@@ -152,10 +151,10 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter a password';
+                        return AppStrings.auth.passwordRequired;
                       }
                       if (value.length < 6) {
-                        return 'Password must be at least 6 characters';
+                        return AppStrings.auth.passwordMinLength;
                       }
                       return null;
                     },
@@ -163,17 +162,15 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   const SizedBox(height: 16),
                   // Confirm Password field
                   Text(
-                    'Confirm Password',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.w500,
-                        ),
+                    AppStrings.auth.confirmPasswordLabel,
+                    style: AppTypography.bodyMediumSemiBold,
                   ),
                   const SizedBox(height: 8),
                   TextFormField(
                     controller: _confirmPasswordController,
                     obscureText: !_isConfirmPasswordVisible,
                     decoration: InputDecoration(
-                      hintText: 'Confirm new password',
+                      hintText: AppStrings.auth.confirmNewPasswordHint,
                       prefixIcon: const Icon(Icons.lock_reset),
                       suffixIcon: IconButton(
                         icon: Icon(
@@ -189,22 +186,22 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                       ),
                       filled: true,
                       fillColor: isDark
-                          ? const Color(0xFF1F2937)
-                          : const Color(0xFFF3F4F6),
+                          ? AppPalette.inputBackgroundDark
+                          : AppPalette.inputBackgroundLight,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
                           color: isDark
-                              ? const Color(0xFF374151)
-                              : const Color(0xFFD1D5DB),
+                              ? AppPalette.inputBorderDark
+                              : AppPalette.inputBorderLight,
                         ),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
                           color: isDark
-                              ? const Color(0xFF374151)
-                              : const Color(0xFFD1D5DB),
+                              ? AppPalette.inputBorderDark
+                              : AppPalette.inputBorderLight,
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
@@ -217,10 +214,10 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please confirm your password';
+                        return AppStrings.auth.confirmPasswordRequired;
                       }
                       if (value != _passwordController.text) {
-                        return 'Passwords do not match';
+                        return AppStrings.auth.passwordsDoNotMatch;
                       }
                       return null;
                     },
@@ -251,12 +248,9 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                                     valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                                   ),
                                 )
-                              : const Text(
-                                  'Reset Password',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                              : Text(
+                                  AppStrings.auth.resetPasswordButton,
+                                  style: AppTypography.buttonLarge,
                                 ),
                         );
                       },

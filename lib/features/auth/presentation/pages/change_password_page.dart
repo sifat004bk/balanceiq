@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/constants/app_strings.dart';
+import '../../../../core/theme/app_palette.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/theme/app_typography.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
 
@@ -48,9 +51,9 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
         if (state is PasswordChanged) {
           // Show success message
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Password changed successfully!'),
-              backgroundColor: Colors.green,
+            SnackBar(
+              content: Text(AppStrings.auth.passwordChangeSuccess),
+              backgroundColor: AppPalette.successGreen,
             ),
           );
           // Navigate back
@@ -59,14 +62,14 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message),
-              backgroundColor: Colors.red,
+              backgroundColor: AppPalette.errorRed,
             ),
           );
         }
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Change Password'),
+          title: Text(AppStrings.auth.changePasswordTitle),
           backgroundColor: Colors.transparent,
           elevation: 0,
         ),
@@ -80,14 +83,12 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 children: [
                   const SizedBox(height: 24),
                   Text(
-                    'Update Your Password',
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                    AppStrings.auth.updatePasswordTitle,
+                    style: AppTypography.headlineMediumBold,
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    'Please enter your current password and choose a new one.',
+                    AppStrings.auth.updatePasswordHint,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           color: isDark
                               ? AppTheme.textSubtleDark
@@ -97,17 +98,15 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                   const SizedBox(height: 40),
                   // Current Password field
                   Text(
-                    'Current Password',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.w500,
-                        ),
+                    AppStrings.auth.currentPasswordLabel,
+                    style: AppTypography.bodyMediumSemiBold,
                   ),
                   const SizedBox(height: 8),
                   TextFormField(
                     controller: _currentPasswordController,
                     obscureText: !_isCurrentPasswordVisible,
                     decoration: InputDecoration(
-                      hintText: 'Enter current password',
+                      hintText: AppStrings.auth.enterCurrentPasswordHint,
                       prefixIcon: const Icon(Icons.lock_outline),
                       suffixIcon: IconButton(
                         icon: Icon(
@@ -123,22 +122,22 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                       ),
                       filled: true,
                       fillColor: isDark
-                          ? const Color(0xFF1F2937)
-                          : const Color(0xFFF3F4F6),
+                          ? AppPalette.inputBackgroundDark
+                          : AppPalette.inputBackgroundLight,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
                           color: isDark
-                              ? const Color(0xFF374151)
-                              : const Color(0xFFD1D5DB),
+                              ? AppPalette.inputBorderDark
+                              : AppPalette.inputBorderLight,
                         ),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
                           color: isDark
-                              ? const Color(0xFF374151)
-                              : const Color(0xFFD1D5DB),
+                              ? AppPalette.inputBorderDark
+                              : AppPalette.inputBorderLight,
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
@@ -151,7 +150,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your current password';
+                        return AppStrings.auth.currentPasswordRequired;
                       }
                       return null;
                     },
@@ -159,17 +158,15 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                   const SizedBox(height: 16),
                   // New Password field
                   Text(
-                    'New Password',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.w500,
-                        ),
+                    AppStrings.auth.newPasswordLabel,
+                    style: AppTypography.bodyMediumSemiBold,
                   ),
                   const SizedBox(height: 8),
                   TextFormField(
                     controller: _newPasswordController,
                     obscureText: !_isNewPasswordVisible,
                     decoration: InputDecoration(
-                      hintText: 'Enter new password',
+                      hintText: AppStrings.auth.enterNewPasswordPlaceholder,
                       prefixIcon: const Icon(Icons.lock),
                       suffixIcon: IconButton(
                         icon: Icon(
@@ -185,22 +182,22 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                       ),
                       filled: true,
                       fillColor: isDark
-                          ? const Color(0xFF1F2937)
-                          : const Color(0xFFF3F4F6),
+                          ? AppPalette.inputBackgroundDark
+                          : AppPalette.inputBackgroundLight,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
                           color: isDark
-                              ? const Color(0xFF374151)
-                              : const Color(0xFFD1D5DB),
+                              ? AppPalette.inputBorderDark
+                              : AppPalette.inputBorderLight,
                         ),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
                           color: isDark
-                              ? const Color(0xFF374151)
-                              : const Color(0xFFD1D5DB),
+                              ? AppPalette.inputBorderDark
+                              : AppPalette.inputBorderLight,
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
@@ -213,13 +210,13 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter a new password';
+                        return AppStrings.auth.newPasswordRequired;
                       }
                       if (value.length < 6) {
-                        return 'Password must be at least 6 characters';
+                        return AppStrings.auth.passwordMinLength;
                       }
                       if (value == _currentPasswordController.text) {
-                        return 'New password must be different from current';
+                        return AppStrings.auth.passwordMustBeDifferent;
                       }
                       return null;
                     },
@@ -227,17 +224,15 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                   const SizedBox(height: 16),
                   // Confirm Password field
                   Text(
-                    'Confirm New Password',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.w500,
-                        ),
+                    AppStrings.auth.confirmNewPasswordLabel,
+                    style: AppTypography.bodyMediumSemiBold,
                   ),
                   const SizedBox(height: 8),
                   TextFormField(
                     controller: _confirmPasswordController,
                     obscureText: !_isConfirmPasswordVisible,
                     decoration: InputDecoration(
-                      hintText: 'Confirm new password',
+                      hintText: AppStrings.auth.confirmNewPasswordHint,
                       prefixIcon: const Icon(Icons.lock_reset),
                       suffixIcon: IconButton(
                         icon: Icon(
@@ -253,22 +248,22 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                       ),
                       filled: true,
                       fillColor: isDark
-                          ? const Color(0xFF1F2937)
-                          : const Color(0xFFF3F4F6),
+                          ? AppPalette.inputBackgroundDark
+                          : AppPalette.inputBackgroundLight,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
                           color: isDark
-                              ? const Color(0xFF374151)
-                              : const Color(0xFFD1D5DB),
+                              ? AppPalette.inputBorderDark
+                              : AppPalette.inputBorderLight,
                         ),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
                           color: isDark
-                              ? const Color(0xFF374151)
-                              : const Color(0xFFD1D5DB),
+                              ? AppPalette.inputBorderDark
+                              : AppPalette.inputBorderLight,
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
@@ -281,10 +276,10 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please confirm your new password';
+                        return AppStrings.auth.confirmNewPasswordRequired;
                       }
                       if (value != _newPasswordController.text) {
-                        return 'Passwords do not match';
+                        return AppStrings.auth.passwordsDoNotMatch;
                       }
                       return null;
                     },
@@ -315,12 +310,9 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                                     valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                                   ),
                                 )
-                              : const Text(
-                                  'Change Password',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                              : Text(
+                                  AppStrings.auth.changePasswordButton,
+                                  style: AppTypography.buttonLarge,
                                 ),
                         );
                       },

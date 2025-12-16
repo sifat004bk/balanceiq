@@ -238,7 +238,7 @@ class _ChatViewState extends State<ChatView> {
             ? state.message
             : AppStrings.chat.tokenLimitExceededMessage;
         icon = Icons.token_outlined;
-        iconColor = Colors.amber;
+        iconColor = AppPalette.sparkOrange;
         buttonText = AppStrings.chat.upgradePlan;
         onButtonPressed =
             () => Navigator.pushNamed(context, '/subscription-plans');
@@ -247,7 +247,7 @@ class _ChatViewState extends State<ChatView> {
         title = AppStrings.chat.tooManyRequests;
         description = AppStrings.chat.rateLimitMessage;
         icon = Icons.schedule_outlined;
-        iconColor = Colors.blue;
+        iconColor = AppPalette.trustBlue;
         buttonText = AppStrings.common.gotIt;
         onButtonPressed =
             () => context.read<ChatCubit>().loadChatHistory(widget.botId);
@@ -286,7 +286,7 @@ class _ChatViewState extends State<ChatView> {
             Text(
               title,
               style: AppTypography.titleLargeBold.copyWith(
-                color: isDark ? Colors.white : Colors.black87,
+                color: isDark ? AppPalette.neutralWhite : AppPalette.neutralBlack,
               ),
               textAlign: TextAlign.center,
             ),
@@ -303,7 +303,7 @@ class _ChatViewState extends State<ChatView> {
               onPressed: onButtonPressed,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppPalette.trustBlue,
-                foregroundColor: Colors.white,
+                foregroundColor: AppPalette.neutralWhite,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
                 shape: RoundedRectangleBorder(
@@ -422,12 +422,12 @@ class _ChatViewState extends State<ChatView> {
                       height: 40,
                       decoration: BoxDecoration(
                         color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.black54
-                            : Colors.white.withOpacity(0.9),
+                            ? AppPalette.neutralBlack.withValues(alpha: 0.54)
+                            : AppPalette.neutralWhite.withOpacity(0.9),
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
+                            color: AppPalette.neutralBlack.withValues(alpha: 0.1),
                             blurRadius: 8,
                             offset: const Offset(0, 2),
                           ),
@@ -436,8 +436,8 @@ class _ChatViewState extends State<ChatView> {
                       child: Icon(
                         Icons.arrow_back,
                         color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white
-                            : Colors.black87,
+                            ? AppPalette.neutralWhite
+                            : AppPalette.neutralBlack,
                         size: 20,
                       ),
                     ),
@@ -466,7 +466,7 @@ class _ChatViewState extends State<ChatView> {
                           filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
                           child: Container(
                             color:
-                                Colors.black.withOpacity(0.3), // Dim background
+                                AppPalette.neutralBlack.withValues(alpha: 0.3), // Dim background
                           ),
                         ),
                       ),

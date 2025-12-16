@@ -13,6 +13,7 @@ class AppStrings {
   static const auth = _AuthStrings();
   static const onboarding = _OnboardingStrings();
   static const chat = _ChatStrings();
+  static const chatPrompts = _ChatBotPrompts();
   static const dashboard = _DashboardStrings();
   static const transactions = _TransactionsStrings();
   static const subscription = _SubscriptionStrings();
@@ -277,6 +278,27 @@ class _ChatStrings {
       'Near token limit ($remaining remaining)';
   final limitReached = 'Limit reached';
 
+  // GenUI Errors
+  String errorRenderingChart(String error) => 'Error rendering chart: $error';
+  String errorRenderingTable(String error) => 'Error rendering table: $error';
+  String errorRenderingSummary(String error) =>
+      'Error rendering summary card: $error';
+  String errorRenderingActionList(String error) =>
+      'Error rendering action list: $error';
+  String errorRenderingMetric(String error) =>
+      'Error rendering metric card: $error';
+  String errorRenderingProgress(String error) =>
+      'Error rendering progress: $error';
+  String errorRenderingActionButtons(String error) =>
+      'Error rendering action buttons: $error';
+  String errorRenderingStats(String error) => 'Error rendering stats: $error';
+  String errorRenderingInsight(String error) =>
+      'Error rendering insight card: $error';
+  final errorMissingChartType =
+      'Error rendering chart: Missing or invalid chart type';
+  String actionTriggered(String action) => 'Action triggered: $action';
+  final comingSoon = 'Coming soon!';
+
   // Access Control
   final emailVerificationRequired = 'Email Verification Required';
   final emailVerificationMessage =
@@ -296,6 +318,66 @@ class _ChatStrings {
   final tooManyRequests = 'Too Many Requests';
   final rateLimitMessage = 'Please wait a moment before sending more messages.';
   final backToChat = 'Back to Chat';
+}
+
+// ============================================================================
+// CHAT PROMPTS - Suggested Prompts per Bot
+// ============================================================================
+class _ChatBotPrompts {
+  const _ChatBotPrompts();
+
+  // Balance Tracker
+  final trackExpenseLabel = 'Track expense';
+  final trackExpensePrompt = 'I spent 500 taka on groceries';
+  final checkBalanceLabel = 'Check balance';
+  final checkBalancePrompt = 'What is my current balance?';
+  final monthlySummaryLabel = 'Monthly summary';
+  final monthlySummaryPrompt = 'Show me my spending summary for this month';
+  final addIncomeLabel = 'Add income';
+  final addIncomePrompt = 'I received salary of 50,000 taka';
+
+  // Investment Guru
+  final investmentTipsLabel = 'Investment tips';
+  final investmentTipsPrompt =
+      'What are some good investment options for beginners?';
+  final stockAdviceLabel = 'Stock advice';
+  final stockAdvicePrompt = 'Should I invest in stocks or mutual funds?';
+  final portfolioReviewLabel = 'Portfolio review';
+  final portfolioReviewPrompt =
+      'How should I diversify my investment portfolio?';
+  final marketTrendsLabel = 'Market trends';
+  final marketTrendsPrompt = 'What are the current market trends?';
+
+  // Budget Planner
+  final createBudgetLabel = 'Create budget';
+  final createBudgetPrompt = 'Help me create a monthly budget plan';
+  final budgetCategoriesLabel = 'Budget categories';
+  final budgetCategoriesPrompt = 'Show me my spending by category';
+  final saveMoneyLabel = 'Save money';
+  final saveMoneyPrompt = 'How can I save 20% of my income?';
+  final budgetAlertsLabel = 'Budget alerts';
+  final budgetAlertsPrompt = 'Am I overspending in any category?';
+
+  // FinTips
+  final moneyTipsLabel = 'Money tips';
+  final moneyTipsPrompt = 'Give me some practical money management tips';
+  final learnFinanceLabel = 'Learn finance';
+  final learnFinancePrompt = 'Explain the concept of compound interest';
+  final emergencyFundLabel = 'Emergency fund';
+  final emergencyFundPrompt = 'How much should I keep in my emergency fund?';
+  final creditAdviceLabel = 'Credit advice';
+  final creditAdvicePrompt =
+      'What are the best practices for using credit cards?';
+
+  // Default / General
+  final getStartedLabel = 'Get started';
+  final getStartedPrompt = 'How can you help me with my finances?';
+  final learnMoreLabel = 'Learn more';
+  final learnMorePrompt = 'Tell me what you can do';
+
+  // UI Text
+  final howCanIHelp = 'How can I help you today?';
+  final choosePrompt = 'Choose a prompt or type your own question';
 }
 
 // ============================================================================

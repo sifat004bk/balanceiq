@@ -212,9 +212,9 @@ class _MessageBubbleState extends State<MessageBubble>
                       ),
                     ],
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.auto_awesome,
-                    color: Colors.white,
+                    color: AppPalette.neutralWhite,
                     size: 16,
                   ),
                 ),

@@ -1,3 +1,4 @@
+import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import '../../../../../core/constants/gemini_colors.dart';
@@ -27,10 +28,11 @@ class GenUITable extends StatelessWidget {
     final double rowHeight = 48.0;
     final double headingRowHeight = 48.0;
     final double requiredHeight = headingRowHeight + (rows.length * rowHeight);
-    
+
     // Cap height at 400 or use required height if smaller
     // Ensure at least enough for header + 1 row (although isValid check handles empty)
-    final double containerHeight = requiredHeight > 400.0 ? 400.0 : requiredHeight;
+    final double containerHeight =
+        requiredHeight > 400.0 ? 400.0 : requiredHeight;
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 12),
@@ -40,12 +42,14 @@ class GenUITable extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.2 : 0.05),
+            color:
+                AppPalette.neutralBlack.withValues(alpha: isDark ? 0.2 : 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
         ],
-        border: Border.all(color: GeminiColors.divider(context).withOpacity(0.5)),
+        border:
+            Border.all(color: GeminiColors.divider(context).withOpacity(0.5)),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
@@ -59,7 +63,8 @@ class GenUITable extends StatelessWidget {
                 data: Theme.of(context).copyWith(
                   dividerColor: GeminiColors.divider(context).withOpacity(0.5),
                   dataTableTheme: DataTableThemeData(
-                     headingRowColor: WidgetStateProperty.all(Colors.transparent),
+                    headingRowColor:
+                        WidgetStateProperty.all(Colors.transparent),
                   ),
                 ),
                 child: DataTable2(
@@ -80,28 +85,31 @@ class GenUITable extends StatelessWidget {
                       end: Alignment.bottomRight,
                     ),
                   ),
-                  columns: columns.map((col) => DataColumn2(
-                    label: Text(
-                      col.toUpperCase(),
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: GeminiColors.primaryColor(context),
-                        fontSize: 12,
-                        letterSpacing: 0.5,
-                      ),
-                    ),
-                    size: ColumnSize.L, // Let them be flexible
-                  )).toList(),
+                  columns: columns
+                      .map((col) => DataColumn2(
+                            label: Text(
+                              col.toUpperCase(),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: GeminiColors.primaryColor(context),
+                                fontSize: 12,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                            size: ColumnSize.L, // Let them be flexible
+                          ))
+                      .toList(),
                   rows: rows.asMap().entries.map((entry) {
                     final index = entry.key;
                     final rowMap = entry.value;
                     final isEven = index % 2 == 0;
-                    
+
                     return DataRow(
                       color: WidgetStateProperty.all(
                         isEven
                             ? Colors.transparent
-                            : GeminiColors.primaryColor(context).withOpacity(0.02),
+                            : GeminiColors.primaryColor(context)
+                                .withOpacity(0.02),
                       ),
                       cells: columns.map((colName) {
                         final cellValue = rowMap[colName]?.toString() ?? '';

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:balance_iq/core/constants/app_strings.dart';
+import 'package:balance_iq/core/theme/app_palette.dart';
 import '../../../../../core/constants/gemini_colors.dart';
 
 class GenUIActionButtons extends StatelessWidget {
@@ -33,11 +35,10 @@ class GenUIActionButtons extends StatelessWidget {
     String style,
   ) {
     final isPrimary = style == 'primary';
-    final backgroundColor = isPrimary
-        ? GeminiColors.primaryColor(context)
-        : Colors.transparent;
+    final backgroundColor =
+        isPrimary ? GeminiColors.primaryColor(context) : Colors.transparent;
     final foregroundColor = isPrimary
-        ? Colors.white
+        ? AppPalette.neutralWhite
         : GeminiColors.primaryColor(context);
 
     return Material(
@@ -50,7 +51,7 @@ class GenUIActionButtons extends StatelessWidget {
           // Show feedback for button tap
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('$label - Coming soon!'),
+              content: Text('$label - ${AppStrings.chat.comingSoon}'),
               behavior: SnackBarBehavior.floating,
               duration: const Duration(seconds: 2),
               backgroundColor: GeminiColors.primaryColor(context),

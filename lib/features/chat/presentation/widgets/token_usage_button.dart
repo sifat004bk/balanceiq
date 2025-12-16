@@ -1,3 +1,4 @@
+import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -34,11 +35,11 @@ class TokenUsageButton extends StatelessWidget {
         Color progressColor;
         Color backgroundColor;
         if (isLimitReached) {
-          progressColor = Colors.red;
-          backgroundColor = Colors.red.withOpacity(0.15);
+          progressColor = AppPalette.expenseRed;
+          backgroundColor = AppPalette.expenseRed.withOpacity(0.15);
         } else if (isNearLimit) {
-          progressColor = Colors.orange;
-          backgroundColor = Colors.orange.withOpacity(0.15);
+          progressColor = AppPalette.sparkOrange;
+          backgroundColor = AppPalette.sparkOrange.withOpacity(0.15);
         } else {
           progressColor = GeminiColors.primary;
           backgroundColor = GeminiColors.primary.withOpacity(0.15);
@@ -50,12 +51,12 @@ class TokenUsageButton extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
               color: isDark
-                  ? Colors.black54
-                  : Colors.white.withOpacity(0.95),
+                  ? AppPalette.neutralBlack.withValues(alpha: 0.54)
+                  : AppPalette.neutralWhite.withOpacity(0.95),
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: AppPalette.neutralBlack.withValues(alpha: 0.1),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -98,7 +99,7 @@ class TokenUsageButton extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: isDark ? Colors.white : Colors.black87,
+                    color: isDark ? AppPalette.neutralWhite : AppPalette.neutralBlack,
                   ),
                 ),
               ],

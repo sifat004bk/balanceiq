@@ -1,3 +1,4 @@
+import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 
 class GenUIAnimatedWrapper extends StatefulWidget {

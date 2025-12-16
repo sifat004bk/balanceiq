@@ -1,3 +1,5 @@
+import 'package:balance_iq/core/constants/app_strings.dart';
+import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 import '../../../../../core/constants/gemini_colors.dart';
 
@@ -43,7 +45,8 @@ class GenUIActionList extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                backgroundColor: GeminiColors.primaryColor(context).withOpacity(0.1),
+                backgroundColor:
+                    GeminiColors.primaryColor(context).withOpacity(0.1),
                 side: BorderSide(
                   color: GeminiColors.primaryColor(context).withOpacity(0.3),
                 ),
@@ -52,7 +55,9 @@ class GenUIActionList extends StatelessWidget {
                 ),
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Action triggered: ${action['action']}')),
+                    SnackBar(
+                        content: Text(AppStrings.chat.actionTriggered(
+                            action['action']?.toString() ?? ''))),
                   );
                 },
               );

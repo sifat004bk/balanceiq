@@ -94,7 +94,7 @@ class AttachmentModal extends StatelessWidget {
               color: AppPalette.surfaceCardVariantDark, // Slightly lighter than bg
               shape: BoxShape.circle,
             ),
-            child: Icon(icon, color: Colors.white, size: 28),
+            child: Icon(icon, color: AppPalette.neutralWhite, size: 28),
           ),
           const SizedBox(height: 8),
           Text(

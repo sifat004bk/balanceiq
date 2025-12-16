@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:balance_iq/core/constants/app_strings.dart';
+import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:markdown/markdown.dart' as md;
 import '../../../domain/entities/chart_data.dart' as charts;
@@ -38,26 +40,27 @@ class GenUIChartBuilder extends MarkdownElementBuilder {
     try {
       final content = element.textContent;
       final jsonMap = jsonDecode(content);
-      
+
       final graphData = charts.GraphData.fromJson(jsonMap);
       final graphType = charts.GraphType.fromString(jsonMap['type'] as String?);
       final title = jsonMap['title'] as String?;
 
       if (graphType == null) {
-          return const Text('Error rendering chart: Missing or invalid chart type', style: TextStyle(color: Colors.red));
+        return Text(AppStrings.chat.errorMissingChartType,
+            style: TextStyle(color: AppPalette.expenseRed));
       }
 
       return GenUIAnimatedWrapper(
         delay: 100,
         child: GenUIChart(
-            data: graphData, 
-            type: graphType,
-            title: title,
+          data: graphData,
+          type: graphType,
+          title: title,
         ),
       );
     } catch (e) {
-      return Text('Error rendering chart: $e',
-          style: const TextStyle(color: Colors.red));
+      return Text(AppStrings.chat.errorRenderingChart(e.toString()),
+          style: TextStyle(color: AppPalette.expenseRed));
     }
   }
 }
@@ -73,7 +76,7 @@ class GenUITableBuilder extends MarkdownElementBuilder {
     try {
       final content = element.textContent;
       final jsonMap = jsonDecode(content);
-      
+
       // If the JSON is directly the TableData structure
       final tableData = charts.GenUITableData.fromJson(jsonMap);
 
@@ -83,8 +86,8 @@ class GenUITableBuilder extends MarkdownElementBuilder {
       );
     } catch (e) {
       // Fallback for potential legacy format or errors
-      return Text('Error rendering table: $e',
-          style: const TextStyle(color: Colors.red));
+      return Text(AppStrings.chat.errorRenderingTable(e.toString()),
+          style: TextStyle(color: AppPalette.expenseRed));
     }
   }
 }
@@ -105,7 +108,8 @@ class GenUISummaryCardBuilder extends MarkdownElementBuilder {
         child: GenUISummaryCard(data: jsonMap),
       );
     } catch (e) {
-      return Text('Error rendering summary card: $e', style: const TextStyle(color: Colors.red));
+      return Text(AppStrings.chat.errorRenderingSummary(e.toString()),
+          style: TextStyle(color: AppPalette.expenseRed));
     }
   }
 }
@@ -126,7 +130,8 @@ class GenUIActionListBuilder extends MarkdownElementBuilder {
         child: GenUIActionList(data: jsonMap),
       );
     } catch (e) {
-      return Text('Error rendering action list: $e', style: const TextStyle(color: Colors.red));
+      return Text(AppStrings.chat.errorRenderingActionList(e.toString()),
+          style: TextStyle(color: AppPalette.expenseRed));
     }
   }
 }
@@ -147,8 +152,8 @@ class GenUIMetricCardBuilder extends MarkdownElementBuilder {
         child: GenUIMetricCard(data: jsonMap),
       );
     } catch (e) {
-      return Text('Error rendering metric card: $e',
-          style: const TextStyle(color: Colors.red));
+      return Text(AppStrings.chat.errorRenderingMetric(e.toString()),
+          style: TextStyle(color: AppPalette.expenseRed));
     }
   }
 }
@@ -169,8 +174,8 @@ class GenUIProgressBuilder extends MarkdownElementBuilder {
         child: GenUIProgress(data: jsonMap),
       );
     } catch (e) {
-      return Text('Error rendering progress: $e',
-          style: const TextStyle(color: Colors.red));
+      return Text(AppStrings.chat.errorRenderingProgress(e.toString()),
+          style: TextStyle(color: AppPalette.expenseRed));
     }
   }
 }
@@ -191,8 +196,8 @@ class GenUIActionButtonsBuilder extends MarkdownElementBuilder {
         child: GenUIActionButtons(data: jsonMap),
       );
     } catch (e) {
-      return Text('Error rendering action buttons: $e',
-          style: const TextStyle(color: Colors.red));
+      return Text(AppStrings.chat.errorRenderingActionButtons(e.toString()),
+          style: TextStyle(color: AppPalette.expenseRed));
     }
   }
 }
@@ -213,8 +218,8 @@ class GenUIStatsBuilder extends MarkdownElementBuilder {
         child: GenUIStats(data: jsonMap),
       );
     } catch (e) {
-      return Text('Error rendering stats: $e',
-          style: const TextStyle(color: Colors.red));
+      return Text(AppStrings.chat.errorRenderingStats(e.toString()),
+          style: TextStyle(color: AppPalette.expenseRed));
     }
   }
 }
@@ -235,8 +240,8 @@ class GenUIInsightCardBuilder extends MarkdownElementBuilder {
         child: GenUIInsightCard(data: jsonMap),
       );
     } catch (e) {
-      return Text('Error rendering insight card: $e',
-          style: const TextStyle(color: Colors.red));
+      return Text(AppStrings.chat.errorRenderingInsight(e.toString()),
+          style: TextStyle(color: AppPalette.expenseRed));
     }
   }
 }

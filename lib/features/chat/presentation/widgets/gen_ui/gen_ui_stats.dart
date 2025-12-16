@@ -1,3 +1,4 @@
+import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 import '../../../../../core/constants/gemini_colors.dart';
 
@@ -114,7 +115,7 @@ class GenUIStats extends StatelessWidget {
         break;
       case 'down':
         icon = Icons.trending_down;
-        color = Colors.red;
+        color = AppPalette.expenseRed;
         break;
       default:
         icon = Icons.trending_flat;

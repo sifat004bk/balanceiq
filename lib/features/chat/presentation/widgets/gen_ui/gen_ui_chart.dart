@@ -1,3 +1,4 @@
+import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import '../../../../../core/constants/gemini_colors.dart';
@@ -54,8 +55,6 @@ class GenUIChart extends StatelessWidget {
         return _buildBarChart(context);
       case GraphType.line:
         return _buildLineChart(context);
-      default:
-        return Center(child: Text('Unsupported chart type: ${type.value}'));
     }
   }
 
@@ -64,7 +63,6 @@ class GenUIChart extends StatelessWidget {
     // If there are multiple datasets, they could be grouped
     final dataset = data.datasets.first;
     final labels = data.labels;
-    final useGradient = true; 
 
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0.0, end: 1.0),
@@ -115,9 +113,12 @@ class GenUIChart extends StatelessWidget {
                   },
                 ),
               ),
-              leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-              topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-              rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              leftTitles:
+                  const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              topTitles:
+                  const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              rightTitles:
+                  const AxisTitles(sideTitles: SideTitles(showTitles: false)),
             ),
             gridData: FlGridData(
               show: true,
@@ -131,25 +132,22 @@ class GenUIChart extends StatelessWidget {
             ),
             borderData: FlBorderData(show: false),
             barGroups: List.generate(dataset.data.length, (index) {
-                if (index >= labels.length) return null; // Safety check
-                
-                final val = dataset.data[index].toDouble();
-                final animatedValue = val * animationValue;
-                final color = GeminiColors.primaryColor(context);
+              if (index >= labels.length) return null; // Safety check
 
-               return BarChartGroupData(
+              final val = dataset.data[index].toDouble();
+              final animatedValue = val * animationValue;
+              final color = GeminiColors.primaryColor(context);
+
+              return BarChartGroupData(
                 x: index,
                 barRods: [
                   BarChartRodData(
                     toY: animatedValue,
-                    gradient: useGradient
-                        ? LinearGradient(
-                            colors: [color.withOpacity(0.6), color],
-                            begin: Alignment.bottomCenter,
-                            end: Alignment.topCenter,
-                          )
-                        : null,
-                    color: useGradient ? null : color,
+                    gradient: LinearGradient(
+                      colors: [color.withOpacity(0.6), color],
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topCenter,
+                    ),
                     width: 18,
                     borderRadius:
                         const BorderRadius.vertical(top: Radius.circular(6)),
@@ -171,11 +169,11 @@ class GenUIChart extends StatelessWidget {
   }
 
   Widget _buildLineChart(BuildContext context) {
-     final dataset = data.datasets.first;
-     final labels = data.labels;
+    final dataset = data.datasets.first;
+    final labels = data.labels;
 
     final spots = List.generate(dataset.data.length, (index) {
-       return FlSpot(index.toDouble(), dataset.data[index].toDouble());
+      return FlSpot(index.toDouble(), dataset.data[index].toDouble());
     });
 
     final primaryColor = GeminiColors.primaryColor(context);
@@ -197,7 +195,7 @@ class GenUIChart extends StatelessWidget {
             sideTitles: SideTitles(
               showTitles: true,
               getTitlesWidget: (value, meta) {
-               if (value.toInt() >= 0 && value.toInt() < labels.length) {
+                if (value.toInt() >= 0 && value.toInt() < labels.length) {
                   return Padding(
                     padding: const EdgeInsets.only(top: 8.0),
                     child: Text(
@@ -215,9 +213,12 @@ class GenUIChart extends StatelessWidget {
               interval: 1,
             ),
           ),
-          leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          leftTitles:
+              const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          topTitles:
+              const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          rightTitles:
+              const AxisTitles(sideTitles: SideTitles(showTitles: false)),
         ),
         borderData: FlBorderData(show: false),
         lineBarsData: [
@@ -239,7 +240,7 @@ class GenUIChart extends StatelessWidget {
               },
             ),
             belowBarData: BarAreaData(
-              show: true, 
+              show: true,
               gradient: LinearGradient(
                 colors: [
                   primaryColor.withOpacity(0.3),
@@ -274,7 +275,7 @@ class GenUIChart extends StatelessWidget {
   double _getMaxValue() {
     double max = 0;
     for (var dataset in data.datasets) {
-      for(var val in dataset.data) {
+      for (var val in dataset.data) {
         if (val.toDouble() > max) max = val.toDouble();
       }
     }

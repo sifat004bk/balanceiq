@@ -1,3 +1,4 @@
+import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 import '../../../../../core/constants/gemini_colors.dart';
 
@@ -24,7 +25,7 @@ class GenUIProgress extends StatelessWidget {
         border: Border.all(color: GeminiColors.divider(context)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: AppPalette.neutralBlack.withValues(alpha: 0.03),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -118,8 +119,8 @@ class GenUIProgress extends StatelessWidget {
   Color _getProgressColor(double percentage, BuildContext context) {
     if (percentage >= 90) return Colors.green;
     if (percentage >= 50) return GeminiColors.primaryColor(context);
-    if (percentage >= 25) return Colors.orange;
-    return Colors.red;
+    if (percentage >= 25) return AppPalette.sparkOrange;
+    return AppPalette.expenseRed;
   }
 
   String _formatNumber(double number) {

@@ -1,3 +1,4 @@
+import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:balance_iq/core/constants/gemini_colors.dart';
 import 'package:flutter/material.dart';
 
@@ -126,9 +127,9 @@ class _TypingIndicatorState extends State<TypingIndicator>
                 ),
               ],
             ),
-            child: const Icon(
+            child: Icon(
               Icons.auto_awesome,
-              color: Colors.white,
+              color: AppPalette.neutralWhite,
               size: 16,
             ),
           ),
@@ -149,7 +150,8 @@ class _TypingIndicatorState extends State<TypingIndicator>
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(isDark ? 0.3 : 0.08),
+                  color: AppPalette.neutralBlack
+                      .withValues(alpha: isDark ? 0.3 : 0.08),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),

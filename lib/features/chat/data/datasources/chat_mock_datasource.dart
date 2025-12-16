@@ -1,7 +1,6 @@
 import 'package:balance_iq/core/constants/app_constants.dart';
 import 'package:balance_iq/core/mock/mock_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../models/chat_request_models.dart';
 import '../models/chat_history_response_model.dart';
 import '../models/message_model.dart';
 import '../../domain/entities/chart_data.dart';
@@ -27,8 +26,6 @@ class ChatMockDataSource implements ChatRemoteDataSource {
     String? imagePath,
     String? audioPath,
   }) async {
-    print('🤖 [MockDataSource] Sending message to bot: $botId');
-    print('📝 [MockDataSource] Message content: $content');
 
     // Get user ID from SharedPreferences
     final userId = sharedPreferences.getString(AppConstants.keyUserId) ?? '';
@@ -53,7 +50,6 @@ class ChatMockDataSource implements ChatRemoteDataSource {
       hasError: false,
     );
 
-    print('✅ [MockDataSource] Mock response generated');
     return botMessage;
   }
 
@@ -63,8 +59,6 @@ class ChatMockDataSource implements ChatRemoteDataSource {
     required int page,
     int? limit,
   }) async {
-    print('🤖 [MockDataSource] Getting chat history for user: $userId, page: $page');
-
     // Simulate network delay
     await _simulateNetworkDelay();
 
@@ -75,8 +69,11 @@ class ChatMockDataSource implements ChatRemoteDataSource {
         ConversationModel(
           id: 1,
           userMessage: "Show detailed financial report",
-          aiResponse: 'Here is your comprehensive financial report with detailed metrics:',
-          createdAt: DateTime.now().subtract(const Duration(days: 1)).toIso8601String(),
+          aiResponse:
+              'Here is your comprehensive financial report with detailed metrics:',
+          createdAt: DateTime.now()
+              .subtract(const Duration(days: 1))
+              .toIso8601String(),
           feedback: 'LIKE',
           hasTable: true,
           tableData: const GenUITableData(
@@ -135,8 +132,11 @@ class ChatMockDataSource implements ChatRemoteDataSource {
         ConversationModel(
           id: 2,
           userMessage: "Show my portfolio performance trend",
-          aiResponse: 'Here is the performance trend of your investment portfolio over the last 6 months:',
-          createdAt: DateTime.now().subtract(const Duration(days: 2)).toIso8601String(),
+          aiResponse:
+              'Here is the performance trend of your investment portfolio over the last 6 months:',
+          createdAt: DateTime.now()
+              .subtract(const Duration(days: 2))
+              .toIso8601String(),
           feedback: null,
           graphType: GraphType.line,
           graphData: const GraphData(
@@ -156,12 +156,24 @@ class ChatMockDataSource implements ChatRemoteDataSource {
         ConversationModel(
           id: 3,
           userMessage: "Analyze expenses by department",
-          aiResponse: 'Here is the expense breakdown across 8 different departments:',
-          createdAt: DateTime.now().subtract(const Duration(days: 3)).toIso8601String(),
+          aiResponse:
+              'Here is the expense breakdown across 8 different departments:',
+          createdAt: DateTime.now()
+              .subtract(const Duration(days: 3))
+              .toIso8601String(),
           feedback: null,
           graphType: GraphType.bar,
           graphData: const GraphData(
-            labels: ['HR', 'IT', 'Marketing', 'Sales', 'Ops', 'Finance', 'Legal', 'R&D'],
+            labels: [
+              'HR',
+              'IT',
+              'Marketing',
+              'Sales',
+              'Ops',
+              'Finance',
+              'Legal',
+              'R&D'
+            ],
             datasets: [
               ChartDataset(
                 label: 'Expenses (M)',

@@ -17,7 +17,7 @@ class TokenUsageSheet extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1e1f20) : Colors.white,
+        color: isDark ? AppPalette.surfaceModalDark : AppPalette.neutralWhite,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: BlocBuilder<ChatCubit, ChatState>(
@@ -62,7 +62,7 @@ class TokenUsageSheet extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
-                      color: isDark ? Colors.white : Colors.black87,
+                      color: isDark ? AppPalette.neutralWhite : AppPalette.neutralBlack,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -102,7 +102,7 @@ class TokenUsageSheet extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: isDark ? Colors.white : Colors.black87,
+                        color: isDark ? AppPalette.neutralWhite : AppPalette.neutralBlack,
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -146,7 +146,7 @@ class TokenUsageSheet extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF2a2a2e) : const Color(0xFFF8F9FA),
+        color: isDark ? AppPalette.surfaceCardVariantDark : AppPalette.surfaceLight,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: progressColor.withOpacity(0.3),
@@ -180,7 +180,7 @@ class TokenUsageSheet extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
-                        color: isDark ? Colors.white : Colors.black87,
+                        color: isDark ? AppPalette.neutralWhite : AppPalette.neutralBlack,
                       ),
                     ),
                     Text(
@@ -217,7 +217,7 @@ class TokenUsageSheet extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
-                      color: isDark ? Colors.white : Colors.black87,
+                      color: isDark ? AppPalette.neutralWhite : AppPalette.neutralBlack,
                     ),
                   ),
                 ],
@@ -243,7 +243,7 @@ class TokenUsageSheet extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
-                      color: isDark ? Colors.white : Colors.black87,
+                      color: isDark ? AppPalette.neutralWhite : AppPalette.neutralBlack,
                     ),
                   ),
                 ],
@@ -325,7 +325,7 @@ class TokenUsageSheet extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF2a2a2e) : const Color(0xFFF8F9FA),
+        color: isDark ? AppPalette.surfaceCardVariantDark : AppPalette.surfaceLight,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -359,7 +359,7 @@ class TokenUsageSheet extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  color: isDark ? Colors.white : Colors.black87,
+                  color: isDark ? AppPalette.neutralWhite : AppPalette.neutralBlack,
                 ),
               ),
             ],
@@ -376,7 +376,7 @@ class TokenUsageSheet extends StatelessWidget {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF2a2a2e) : const Color(0xFFF8F9FA),
+        color: isDark ? AppPalette.surfaceCardVariantDark : AppPalette.surfaceLight,
         borderRadius: BorderRadius.circular(12),
       ),
       child: ListView.separated(
@@ -439,7 +439,7 @@ class TokenUsageSheet extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: isDark ? Colors.white : Colors.black87,
+                    color: isDark ? AppPalette.neutralWhite : AppPalette.neutralBlack,
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -458,7 +458,7 @@ class TokenUsageSheet extends StatelessWidget {
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
-              color: isDark ? Colors.white : Colors.black87,
+              color: isDark ? AppPalette.neutralWhite : AppPalette.neutralBlack,
             ),
           ),
         ],

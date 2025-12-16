@@ -1,4 +1,5 @@
 import 'package:balance_iq/core/constants/app_constants.dart';
+import 'package:balance_iq/core/constants/app_strings.dart';
 import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 
@@ -19,105 +20,105 @@ class SuggestedPrompts extends StatelessWidget {
         return [
           PromptChip(
             icon: Icons.receipt_long,
-            label: 'Track expense',
-            prompt: 'I spent 500 taka on groceries',
+            label: AppStrings.chatPrompts.trackExpenseLabel,
+            prompt: AppStrings.chatPrompts.trackExpensePrompt,
           ),
           PromptChip(
             icon: Icons.account_balance_wallet,
-            label: 'Check balance',
-            prompt: 'What is my current balance?',
+            label: AppStrings.chatPrompts.checkBalanceLabel,
+            prompt: AppStrings.chatPrompts.checkBalancePrompt,
           ),
           PromptChip(
             icon: Icons.trending_up,
-            label: 'Monthly summary',
-            prompt: 'Show me my spending summary for this month',
+            label: AppStrings.chatPrompts.monthlySummaryLabel,
+            prompt: AppStrings.chatPrompts.monthlySummaryPrompt,
           ),
           PromptChip(
             icon: Icons.savings,
-            label: 'Add income',
-            prompt: 'I received salary of 50,000 taka',
+            label: AppStrings.chatPrompts.addIncomeLabel,
+            prompt: AppStrings.chatPrompts.addIncomePrompt,
           ),
         ];
       case AppConstants.investmentGuruID:
         return [
           PromptChip(
             icon: Icons.show_chart,
-            label: 'Investment tips',
-            prompt: 'What are some good investment options for beginners?',
+            label: AppStrings.chatPrompts.investmentTipsLabel,
+            prompt: AppStrings.chatPrompts.investmentTipsPrompt,
           ),
           PromptChip(
             icon: Icons.account_balance,
-            label: 'Stock advice',
-            prompt: 'Should I invest in stocks or mutual funds?',
+            label: AppStrings.chatPrompts.stockAdviceLabel,
+            prompt: AppStrings.chatPrompts.stockAdvicePrompt,
           ),
           PromptChip(
             icon: Icons.pie_chart,
-            label: 'Portfolio review',
-            prompt: 'How should I diversify my investment portfolio?',
+            label: AppStrings.chatPrompts.portfolioReviewLabel,
+            prompt: AppStrings.chatPrompts.portfolioReviewPrompt,
           ),
           PromptChip(
             icon: Icons.trending_up,
-            label: 'Market trends',
-            prompt: 'What are the current market trends?',
+            label: AppStrings.chatPrompts.marketTrendsLabel,
+            prompt: AppStrings.chatPrompts.marketTrendsPrompt,
           ),
         ];
       case AppConstants.budgetPlannerID:
         return [
           PromptChip(
             icon: Icons.calendar_today,
-            label: 'Create budget',
-            prompt: 'Help me create a monthly budget plan',
+            label: AppStrings.chatPrompts.createBudgetLabel,
+            prompt: AppStrings.chatPrompts.createBudgetPrompt,
           ),
           PromptChip(
             icon: Icons.category,
-            label: 'Budget categories',
-            prompt: 'Show me my spending by category',
+            label: AppStrings.chatPrompts.budgetCategoriesLabel,
+            prompt: AppStrings.chatPrompts.budgetCategoriesPrompt,
           ),
           PromptChip(
             icon: Icons.savings,
-            label: 'Save money',
-            prompt: 'How can I save 20% of my income?',
+            label: AppStrings.chatPrompts.saveMoneyLabel,
+            prompt: AppStrings.chatPrompts.saveMoneyPrompt,
           ),
           PromptChip(
             icon: Icons.warning,
-            label: 'Budget alerts',
-            prompt: 'Am I overspending in any category?',
+            label: AppStrings.chatPrompts.budgetAlertsLabel,
+            prompt: AppStrings.chatPrompts.budgetAlertsPrompt,
           ),
         ];
       case AppConstants.finTipsID:
         return [
           PromptChip(
             icon: Icons.lightbulb,
-            label: 'Money tips',
-            prompt: 'Give me some practical money management tips',
+            label: AppStrings.chatPrompts.moneyTipsLabel,
+            prompt: AppStrings.chatPrompts.moneyTipsPrompt,
           ),
           PromptChip(
             icon: Icons.school,
-            label: 'Learn finance',
-            prompt: 'Explain the concept of compound interest',
+            label: AppStrings.chatPrompts.learnFinanceLabel,
+            prompt: AppStrings.chatPrompts.learnFinancePrompt,
           ),
           PromptChip(
             icon: Icons.security,
-            label: 'Emergency fund',
-            prompt: 'How much should I keep in my emergency fund?',
+            label: AppStrings.chatPrompts.emergencyFundLabel,
+            prompt: AppStrings.chatPrompts.emergencyFundPrompt,
           ),
           PromptChip(
             icon: Icons.credit_card,
-            label: 'Credit advice',
-            prompt: 'What are the best practices for using credit cards?',
+            label: AppStrings.chatPrompts.creditAdviceLabel,
+            prompt: AppStrings.chatPrompts.creditAdvicePrompt,
           ),
         ];
       default:
         return [
           PromptChip(
             icon: Icons.help,
-            label: 'Get started',
-            prompt: 'How can you help me with my finances?',
+            label: AppStrings.chatPrompts.getStartedLabel,
+            prompt: AppStrings.chatPrompts.getStartedPrompt,
           ),
           PromptChip(
             icon: Icons.info,
-            label: 'Learn more',
-            prompt: 'Tell me what you can do',
+            label: AppStrings.chatPrompts.learnMoreLabel,
+            prompt: AppStrings.chatPrompts.learnMorePrompt,
           ),
         ];
     }
@@ -160,10 +161,10 @@ class SuggestedPrompts extends StatelessWidget {
                       ),
                     ],
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.auto_awesome,
                     size: 56,
-                    color: Colors.white,
+                    color: AppPalette.neutralWhite,
                   ),
                 ),
               );
@@ -184,7 +185,7 @@ class SuggestedPrompts extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  'How can I help you today?',
+                  AppStrings.chatPrompts.howCanIHelp,
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                         fontWeight: FontWeight.w600,
                         color: Theme.of(context).brightness == Brightness.dark
@@ -196,7 +197,7 @@ class SuggestedPrompts extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Choose a prompt or type your own question',
+                  AppStrings.chatPrompts.choosePrompt,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: AppPalette.neutralGrey,
                         fontSize: 14,

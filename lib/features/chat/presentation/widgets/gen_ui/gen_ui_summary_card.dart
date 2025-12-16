@@ -1,3 +1,4 @@
+import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 import '../../../../../core/constants/gemini_colors.dart';
 
@@ -15,10 +16,10 @@ class GenUISummaryCard extends StatelessWidget {
     final iconName = data['icon'] as String?;
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     // Determine trend color
     Color trendColor = Colors.green;
-    if (trendColorString == 'red') trendColor = Colors.red;
+    if (trendColorString == 'red') trendColor = AppPalette.expenseRed;
     if (trendColorString == 'grey') trendColor = Colors.grey;
 
     // Resolve Icon
@@ -34,21 +35,24 @@ class GenUISummaryCard extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: isDark
-              ? [const Color(0xFF2A2A2E), const Color(0xFF1E1E20)]
-              : [const Color(0xFFFFFFFF), const Color(0xFFF5F5F7)],
+              ? [AppPalette.surfaceCardVariantDark, AppPalette.surfaceDark]
+              : [AppPalette.neutralWhite, const Color(0xFFF5F5F7)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.3 : 0.05),
+            color:
+                AppPalette.neutralBlack.withValues(alpha: isDark ? 0.3 : 0.05),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
         ],
         border: Border.all(
-          color: isDark ? Colors.white.withOpacity(0.1) : Colors.white,
+          color: isDark
+              ? AppPalette.neutralWhite.withOpacity(0.1)
+              : AppPalette.neutralWhite,
           width: 1,
         ),
       ),
@@ -100,7 +104,9 @@ class GenUISummaryCard extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(
-                    trend.startsWith('+') ? Icons.arrow_upward : Icons.arrow_downward,
+                    trend.startsWith('+')
+                        ? Icons.arrow_upward
+                        : Icons.arrow_downward,
                     size: 14,
                     color: trendColor,
                   ),

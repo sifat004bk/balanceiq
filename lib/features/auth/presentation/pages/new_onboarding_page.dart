@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../../../core/constants/app_strings.dart';
-import '../../../../core/theme/app_palette.dart';
-import '../../../../core/theme/app_theme.dart';
+import 'package:balance_iq/core/theme/app_palette.dart';
+
 import '../../../../core/theme/app_typography.dart';
 
 class NewOnboardingPage extends StatefulWidget {
@@ -44,7 +44,7 @@ class _NewOnboardingPageState extends State<NewOnboardingPage> {
                 children: [
                   Icon(
                     Icons.hub,
-                    color: AppTheme.primaryColor,
+                    color: AppPalette.trustBlue,
                     size: 32,
                   ),
                   const SizedBox(width: 8),
@@ -94,7 +94,7 @@ class _NewOnboardingPageState extends State<NewOnboardingPage> {
                   dotColor: isDark
                       ? AppPalette.indicatorActiveDark
                       : AppPalette.indicatorInactive,
-                  activeDotColor: AppTheme.primaryColor,
+                  activeDotColor: AppPalette.trustBlue,
                   dotHeight: 8,
                   dotWidth: 8,
                   spacing: 12,
@@ -112,8 +112,8 @@ class _NewOnboardingPageState extends State<NewOnboardingPage> {
                     child: ElevatedButton(
                       onPressed: _navigateToSignUp,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppTheme.primaryColor,
-                        foregroundColor: AppTheme.backgroundDark,
+                        backgroundColor: AppPalette.trustBlue,
+                        foregroundColor: AppPalette.surfaceDark,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -134,8 +134,8 @@ class _NewOnboardingPageState extends State<NewOnboardingPage> {
                         AppStrings.onboarding.logInButton,
                         style: AppTypography.buttonMediumSemiBold.copyWith(
                           color: isDark
-                              ? AppTheme.textDarkTheme
-                              : AppTheme.textLightTheme,
+                              ? AppPalette.neutralWhite
+                              : AppPalette.neutralBlack,
                         ),
                       ),
                     ),
@@ -164,7 +164,7 @@ class _NewOnboardingPageState extends State<NewOnboardingPage> {
             width: 192,
             height: 192,
             decoration: BoxDecoration(
-              color: AppTheme.primaryColor.withValues(alpha: 0.2),
+              color: AppPalette.trustBlue.withValues(alpha: 0.2),
               shape: BoxShape.circle,
             ),
             child: Center(
@@ -177,7 +177,7 @@ class _NewOnboardingPageState extends State<NewOnboardingPage> {
                           left: 40,
                           child: Icon(
                             Icons.account_balance_wallet,
-                            color: AppTheme.primaryColor,
+                            color: AppPalette.trustBlue,
                             size: 40,
                           ),
                         ),
@@ -186,7 +186,7 @@ class _NewOnboardingPageState extends State<NewOnboardingPage> {
                           right: 24,
                           child: Icon(
                             Icons.shopping_cart,
-                            color: AppTheme.primaryColor,
+                            color: AppPalette.trustBlue,
                             size: 40,
                           ),
                         ),
@@ -195,7 +195,7 @@ class _NewOnboardingPageState extends State<NewOnboardingPage> {
                           left: 56,
                           child: Icon(
                             Icons.school,
-                            color: AppTheme.primaryColor,
+                            color: AppPalette.trustBlue,
                             size: 40,
                           ),
                         ),
@@ -203,7 +203,7 @@ class _NewOnboardingPageState extends State<NewOnboardingPage> {
                     )
                   : Icon(
                       icon,
-                      color: AppTheme.primaryColor,
+                      color: AppPalette.trustBlue,
                       size: 80,
                     ),
             ),
@@ -219,8 +219,8 @@ class _NewOnboardingPageState extends State<NewOnboardingPage> {
             description,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   color: Theme.of(context).brightness == Brightness.dark
-                      ? AppTheme.textSubtleDark
-                      : AppTheme.textSubtleLight,
+                      ? AppPalette.neutralGrey
+                      : AppPalette.neutralGrey,
                 ),
             textAlign: TextAlign.center,
           ),

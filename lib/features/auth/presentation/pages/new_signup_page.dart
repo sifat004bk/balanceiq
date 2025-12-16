@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_strings.dart';
-import '../../../../core/theme/app_theme.dart';
 import 'package:balance_iq/core/theme/app_palette.dart';
+
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
 
@@ -103,7 +103,7 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: AppTheme.primaryColor,
+                        color: AppPalette.trustBlue,
                         width: 4,
                       ),
                     ),
@@ -111,7 +111,7 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                       child: Text(
                         'IQ',
                         style: TextStyle(
-                          color: AppTheme.primaryColor,
+                          color: AppPalette.trustBlue,
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
                         ),
@@ -131,8 +131,8 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                     'Unlock automation, AI, and more.',
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           color: isDark
-                              ? AppTheme.textSubtleDark
-                              : AppTheme.textSubtleLight,
+                              ? AppPalette.neutralGrey
+                              : AppPalette.neutralGrey,
                         ),
                   ),
                   const SizedBox(height: 32),
@@ -145,7 +145,7 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.w500,
                               color: isDark
-                                  ? AppTheme.textSubtleDark
+                                  ? AppPalette.neutralGrey
                                   : const Color(0xFF374151),
                             ),
                       ),
@@ -182,8 +182,8 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(
-                              color: AppTheme.primaryColor,
+                            borderSide: BorderSide(
+                              color: AppPalette.trustBlue,
                               width: 2,
                             ),
                           ),
@@ -208,7 +208,7 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.w500,
                               color: isDark
-                                  ? AppTheme.textSubtleDark
+                                  ? AppPalette.neutralGrey
                                   : const Color(0xFF374151),
                             ),
                       ),
@@ -246,8 +246,8 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(
-                              color: AppTheme.primaryColor,
+                            borderSide: BorderSide(
+                              color: AppPalette.trustBlue,
                               width: 2,
                             ),
                           ),
@@ -275,7 +275,7 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.w500,
                               color: isDark
-                                  ? AppTheme.textSubtleDark
+                                  ? AppPalette.neutralGrey
                                   : const Color(0xFF374151),
                             ),
                       ),
@@ -313,8 +313,8 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(
-                              color: AppTheme.primaryColor,
+                            borderSide: BorderSide(
+                              color: AppPalette.trustBlue,
                               width: 2,
                             ),
                           ),
@@ -357,7 +357,7 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.w500,
                               color: isDark
-                                  ? AppTheme.textSubtleDark
+                                  ? AppPalette.neutralGrey
                                   : const Color(0xFF374151),
                             ),
                       ),
@@ -395,8 +395,8 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(
-                              color: AppTheme.primaryColor,
+                            borderSide: BorderSide(
+                              color: AppPalette.trustBlue,
                               width: 2,
                             ),
                           ),
@@ -442,9 +442,9 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                         return ElevatedButton(
                           onPressed: isLoading ? null : _handleSignUp,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppTheme.primaryColor,
+                            backgroundColor: AppPalette.trustBlue,
                             foregroundColor: isDark
-                                ? AppTheme.backgroundDark
+                                ? AppPalette.surfaceDark
                                 : const Color(0xFF111827),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
@@ -489,8 +489,8 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                           style:
                               Theme.of(context).textTheme.bodySmall?.copyWith(
                                     color: isDark
-                                        ? AppTheme.textSubtleDark
-                                        : AppTheme.textSubtleLight,
+                                        ? AppPalette.neutralGrey
+                                        : AppPalette.neutralGrey,
                                   ),
                         ),
                       ),
@@ -554,18 +554,18 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                         'Already have an account? ',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               color: isDark
-                                  ? AppTheme.textSubtleDark
-                                  : AppTheme.textSubtleLight,
+                                  ? AppPalette.neutralGrey
+                                  : AppPalette.neutralGrey,
                             ),
                       ),
                       TextButton(
                         onPressed: () {
                           Navigator.pushReplacementNamed(context, '/login');
                         },
-                        child: const Text(
+                        child: Text(
                           'Log In',
                           style: TextStyle(
-                            color: AppTheme.primaryColor,
+                            color: AppPalette.trustBlue,
                             fontWeight: FontWeight.w600,
                           ),
                         ),

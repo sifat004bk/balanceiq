@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import '../../../../core/theme/app_theme.dart';
+import 'package:balance_iq/core/theme/app_palette.dart';
 
 class LoadingPage extends StatefulWidget {
   const LoadingPage({super.key});
@@ -66,13 +66,13 @@ class _LoadingPageState extends State<LoadingPage>
                   width: 96,
                   height: 96,
                   decoration: BoxDecoration(
-                    color: AppTheme.primaryColor.withValues(alpha: 0.2),
+                    color: AppPalette.trustBlue.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(24),
                   ),
                   child: Center(
                     child: Icon(
                       Icons.hub,
-                      color: AppTheme.primaryColor,
+                      color: AppPalette.trustBlue,
                       size: 48,
                     ),
                   ),
@@ -87,8 +87,8 @@ class _LoadingPageState extends State<LoadingPage>
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           fontWeight: FontWeight.w500,
                           color: isDark
-                              ? AppTheme.textDarkTheme
-                              : AppTheme.textLightTheme,
+                              ? AppPalette.neutralWhite
+                              : AppPalette.neutralBlack,
                         ),
                   ),
                   const SizedBox(height: 8),
@@ -96,8 +96,8 @@ class _LoadingPageState extends State<LoadingPage>
                     'Automations are getting ready.',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: isDark
-                              ? AppTheme.textSubtleDark
-                              : AppTheme.textSubtleLight,
+                              ? AppPalette.neutralGrey
+                              : AppPalette.neutralGrey,
                         ),
                   ),
                 ],
@@ -118,7 +118,7 @@ class _LoadingPageState extends State<LoadingPage>
                   widthFactor: _progress,
                   child: Container(
                     decoration: BoxDecoration(
-                      color: AppTheme.primaryColor,
+                      color: AppPalette.trustBlue,
                       borderRadius: BorderRadius.circular(4),
                     ),
                   ),

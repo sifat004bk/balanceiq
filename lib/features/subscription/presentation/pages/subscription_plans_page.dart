@@ -124,7 +124,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
 
           if (state is PlansLoaded) {
             return _buildPlansContent(context, isDark, state.plans,
-                state.subscriptionStatus?.subscription?.plan?.name);
+                state.subscriptionStatus?.subscription?.plan.name);
           }
 
           if (state is SubscriptionError) {
@@ -429,7 +429,9 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                       elevation: 0,
                     ),
                     child: Text(
-                      isCurrentPlan ? AppStrings.subscription.currentPlan : AppStrings.subscription.subscribeButton,
+                      isCurrentPlan
+                          ? AppStrings.subscription.currentPlan
+                          : AppStrings.subscription.subscribeButton,
                       style: AppTypography.buttonMedium,
                     ),
                   ),

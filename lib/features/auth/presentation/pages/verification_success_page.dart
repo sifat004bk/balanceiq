@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
 import '../../../../core/constants/app_strings.dart';
-import '../../../../core/theme/app_theme.dart';
+import 'package:balance_iq/core/theme/app_palette.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
@@ -101,7 +101,7 @@ class _VerificationSuccessPageState extends State<VerificationSuccessPage>
                                 width: 160 * _pulseAnimation.value,
                                 height: 160 * _pulseAnimation.value,
                                 decoration: BoxDecoration(
-                                  color: AppTheme.primaryColor
+                                  color: AppPalette.trustBlue
                                       .withValues(alpha: 0.1),
                                   shape: BoxShape.circle,
                                 ),
@@ -114,7 +114,7 @@ class _VerificationSuccessPageState extends State<VerificationSuccessPage>
                             height: 120,
                             decoration: BoxDecoration(
                               color:
-                                  AppTheme.primaryColor.withValues(alpha: 0.3),
+                                  AppPalette.trustBlue.withValues(alpha: 0.3),
                               shape: BoxShape.circle,
                             ),
                           ),
@@ -122,7 +122,7 @@ class _VerificationSuccessPageState extends State<VerificationSuccessPage>
                           Icon(
                             Icons.task_alt,
                             size: 80,
-                            color: AppTheme.primaryColor,
+                            color: AppPalette.trustBlue,
                           ),
                         ],
                       ),
@@ -142,8 +142,8 @@ class _VerificationSuccessPageState extends State<VerificationSuccessPage>
                         AppStrings.auth.verificationWelcomeMessage,
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                               color: isDark
-                                  ? AppTheme.textSubtleDark
-                                  : AppTheme.textSubtleLight,
+                                  ? AppPalette.neutralGrey
+                                  : AppPalette.neutralGrey,
                             ),
                         textAlign: TextAlign.center,
                       ),
@@ -158,9 +158,9 @@ class _VerificationSuccessPageState extends State<VerificationSuccessPage>
                 child: ElevatedButton(
                   onPressed: _continueToDashboard,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.primaryColor,
+                    backgroundColor: AppPalette.trustBlue,
                     foregroundColor: isDark
-                        ? AppTheme.backgroundDark
+                        ? AppPalette.surfaceDark
                         : const Color(0xFF111827),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(24),

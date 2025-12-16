@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
-import '../../../../core/theme/app_theme.dart';
+import 'package:balance_iq/core/theme/app_palette.dart';
 
 class HomepageLoadingPage extends StatelessWidget {
   const HomepageLoadingPage({super.key});
@@ -20,12 +20,12 @@ class HomepageLoadingPage extends StatelessWidget {
               width: 64,
               height: 64,
               decoration: BoxDecoration(
-                color: AppTheme.primaryColor.withValues(alpha: 0.2),
+                color: AppPalette.trustBlue.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
                 Icons.auto_awesome,
-                color: AppTheme.primaryColor,
+                color: AppPalette.trustBlue,
                 size: 32,
               ),
             ),
@@ -44,8 +44,8 @@ class HomepageLoadingPage extends StatelessWidget {
               'Initializing your dashboard...',
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     color: isDark
-                        ? AppTheme.textSubtleDark
-                        : AppTheme.textSubtleLight,
+                        ? AppPalette.neutralGrey
+                        : AppPalette.neutralGrey,
                   ),
               textAlign: TextAlign.center,
             ),
@@ -68,7 +68,7 @@ class HomepageLoadingPage extends StatelessWidget {
         baseColor: isDark
             ? Colors.white.withValues(alpha: 0.05)
             : Colors.grey.withValues(alpha: 0.1),
-        highlightColor: AppTheme.primaryColor.withValues(alpha: 0.1),
+        highlightColor: AppPalette.trustBlue.withValues(alpha: 0.1),
         period: Duration(milliseconds: 1500 + (index * 250)),
         child: Padding(
           padding: const EdgeInsets.all(16),

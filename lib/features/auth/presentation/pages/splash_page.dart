@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/di/injection_container.dart';
-import '../../../../core/theme/app_theme.dart';
+import 'package:balance_iq/core/theme/app_palette.dart';
 import '../../../home/domain/usecase/get_user_dashbaord.dart';
 
 class SplashPage extends StatefulWidget {
@@ -167,14 +167,14 @@ class _SplashPageState extends State<SplashPage>
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [
-                            AppTheme.primaryColor,
-                            AppTheme.primaryColor.withValues(alpha: 0.7),
+                            AppPalette.trustBlue,
+                            AppPalette.trustBlue.withValues(alpha: 0.7),
                           ],
                         ),
                         borderRadius: BorderRadius.circular(32),
                         boxShadow: [
                           BoxShadow(
-                            color: AppTheme.primaryColor.withValues(alpha: 0.3),
+                            color: AppPalette.trustBlue.withValues(alpha: 0.3),
                             blurRadius: 24,
                             offset: const Offset(0, 8),
                           ),
@@ -195,8 +195,8 @@ class _SplashPageState extends State<SplashPage>
                       style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: isDark
-                                ? AppTheme.textDarkTheme
-                                : AppTheme.textLightTheme,
+                                ? AppPalette.neutralWhite
+                                : AppPalette.neutralBlack,
                             letterSpacing: 1.2,
                           ),
                     ),
@@ -205,8 +205,8 @@ class _SplashPageState extends State<SplashPage>
                       'Smart Finance Management',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: isDark
-                                ? AppTheme.textSubtleDark
-                                : AppTheme.textSubtleLight,
+                                ? AppPalette.neutralGrey
+                                : AppPalette.neutralGrey,
                           ),
                     ),
                     const SizedBox(height: 48),
@@ -217,7 +217,7 @@ class _SplashPageState extends State<SplashPage>
                       child: CircularProgressIndicator(
                         strokeWidth: 3,
                         valueColor: AlwaysStoppedAnimation<Color>(
-                          AppTheme.primaryColor,
+                          AppPalette.trustBlue,
                         ),
                       ),
                     ),

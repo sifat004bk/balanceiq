@@ -1,6 +1,6 @@
 import 'package:balance_iq/core/constants/app_strings.dart';
 import 'package:flutter/material.dart';
-import '../../../../core/theme/app_theme.dart';
+import 'package:balance_iq/core/theme/app_palette.dart';
 import '../../../../core/theme/app_typography.dart';
 import 'dart:async';
 
@@ -45,7 +45,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(AppStrings.auth.emailSent),
-          backgroundColor: AppTheme.primaryColor,
+          backgroundColor: AppPalette.trustBlue,
         ),
       );
       _startCooldown();
@@ -94,7 +94,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                           width: 128,
                           height: 128,
                           decoration: BoxDecoration(
-                            color: AppTheme.primaryColor.withValues(alpha: 0.2),
+                            color: AppPalette.trustBlue.withValues(alpha: 0.2),
                             shape: BoxShape.circle,
                           ),
                         ),
@@ -102,14 +102,14 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                           width: 96,
                           height: 96,
                           decoration: BoxDecoration(
-                            color: AppTheme.primaryColor.withValues(alpha: 0.3),
+                            color: AppPalette.trustBlue.withValues(alpha: 0.3),
                             shape: BoxShape.circle,
                           ),
                         ),
                         Icon(
                           Icons.mark_email_unread,
                           size: 48,
-                          color: AppTheme.primaryColor,
+                          color: AppPalette.trustBlue,
                         ),
                       ],
                     ),
@@ -129,8 +129,8 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                           style:
                               Theme.of(context).textTheme.bodyLarge?.copyWith(
                                     color: isDark
-                                        ? AppTheme.textSubtleDark
-                                        : AppTheme.textSubtleLight,
+                                        ? AppPalette.neutralGrey
+                                        : AppPalette.neutralGrey,
                                   ),
                           children: [
                             TextSpan(
@@ -139,7 +139,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                             TextSpan(
                               text: widget.email,
                               style: AppTypography.bodyLargeBold.copyWith(
-                                color: AppTheme.primaryColor,
+                                color: AppPalette.trustBlue,
                               ),
                             ),
                             TextSpan(
@@ -161,7 +161,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                     child: ElevatedButton(
                       onPressed: _openEmailApp,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppTheme.primaryColor,
+                        backgroundColor: AppPalette.trustBlue,
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(24),
@@ -182,8 +182,8 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                         AppStrings.auth.didntReceive,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               color: isDark
-                                  ? AppTheme.textSubtleDark
-                                  : AppTheme.textSubtleLight,
+                                  ? AppPalette.neutralGrey
+                                  : AppPalette.neutralGrey,
                             ),
                       ),
                       TextButton(
@@ -195,9 +195,9 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                           style: TextStyle(
                             color: _resendCooldown > 0
                                 ? (isDark
-                                    ? AppTheme.textSubtleDark
-                                    : AppTheme.textSubtleLight)
-                                : AppTheme.primaryColor,
+                                    ? AppPalette.neutralGrey
+                                    : AppPalette.neutralGrey)
+                                : AppPalette.trustBlue,
                             fontWeight: FontWeight.bold,
                           ),
                         ),

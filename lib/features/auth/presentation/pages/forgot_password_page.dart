@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_strings.dart';
-import '../../../../core/theme/app_palette.dart';
-import '../../../../core/theme/app_theme.dart';
+import 'package:balance_iq/core/theme/app_palette.dart';
+
 import '../../../../core/theme/app_typography.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
@@ -82,8 +82,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     AppStrings.auth.resetInstructions,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           color: isDark
-                              ? AppTheme.textSubtleDark
-                              : AppTheme.textSubtleLight,
+                              ? AppPalette.neutralGrey
+                              : AppPalette.neutralGrey,
                         ),
                   ),
                   const SizedBox(height: 40),
@@ -121,8 +121,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(
-                          color: AppTheme.primaryColor,
+                        borderSide: BorderSide(
+                          color: AppPalette.trustBlue,
                           width: 2,
                         ),
                       ),
@@ -149,7 +149,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                         return ElevatedButton(
                           onPressed: isLoading ? null : _handleSubmit,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppTheme.primaryColor,
+                            backgroundColor: AppPalette.trustBlue,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
@@ -160,7 +160,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                   height: 20,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.white),
                                   ),
                                 )
                               : Text(
@@ -179,7 +180,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                       child: Text(
                         AppStrings.auth.backToLogin,
                         style: AppTypography.buttonMediumSemiBold.copyWith(
-                          color: AppTheme.primaryColor,
+                          color: AppPalette.trustBlue,
                         ),
                       ),
                     ),

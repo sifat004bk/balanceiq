@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/app_theme.dart';
+import 'package:balance_iq/core/theme/app_palette.dart';
 
 class NetworkErrorPage extends StatelessWidget {
   final VoidCallback? onRetry;
@@ -26,7 +26,7 @@ class NetworkErrorPage extends StatelessWidget {
               Icon(
                 Icons.wifi_off,
                 size: 120,
-                color: AppTheme.primaryColor,
+                color: AppPalette.trustBlue,
               ),
               const SizedBox(height: 32),
               // Title
@@ -45,8 +45,8 @@ class NetworkErrorPage extends StatelessWidget {
                   'Please check your Wi-Fi or mobile data connection. You can also try turning Airplane Mode off and on.',
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         color: isDark
-                            ? AppTheme.textSubtleDark
-                            : AppTheme.textSubtleLight,
+                            ? AppPalette.neutralGrey
+                            : AppPalette.neutralGrey,
                       ),
                   textAlign: TextAlign.center,
                 ),
@@ -63,9 +63,9 @@ class NetworkErrorPage extends StatelessWidget {
                         Navigator.pop(context);
                       },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.primaryColor,
+                    backgroundColor: AppPalette.trustBlue,
                     foregroundColor: isDark
-                        ? AppTheme.backgroundDark
+                        ? AppPalette.surfaceDark
                         : const Color(0xFF111827),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(24),
@@ -92,10 +92,10 @@ class NetworkErrorPage extends StatelessWidget {
                         ),
                       );
                     },
-                child: const Text(
+                child: Text(
                   'Settings',
                   style: TextStyle(
-                    color: AppTheme.primaryColor,
+                    color: AppPalette.trustBlue,
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),

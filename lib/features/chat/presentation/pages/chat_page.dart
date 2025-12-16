@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
+import '../../../../core/constants/app_strings.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/theme/app_typography.dart';
 import '../../../../core/tour/tour.dart';
 import '../cubit/chat_cubit.dart';
 import '../cubit/chat_state.dart';
@@ -78,9 +80,12 @@ class _ChatViewState extends State<ChatView> {
       final size = MediaQuery.of(context).size;
       final padding = MediaQuery.of(context).padding;
       setState(() {
+        // Initialize dynamic width (screen width - 32px padding)
+        _inputWidth = size.width - 32;
+
         // Default to bottom center
         _inputPosition = Offset(
-          (size.width - _inputWidth) / 2, // Center horizontally
+          16.0, // Fixed 16px left padding initially
           size.height - 180 - padding.bottom, // Near bottom
         );
       });
@@ -202,62 +207,59 @@ class _ChatViewState extends State<ChatView> {
 
     switch (state.errorType) {
       case ChatErrorType.emailNotVerified:
-        title = 'Email Verification Required';
-        description =
-            'Please verify your email address to use the chat feature.';
+        title = AppStrings.chat.emailVerificationRequired;
+        description = AppStrings.chat.emailVerificationMessage;
         icon = Icons.email_outlined;
-        iconColor = Colors.orange;
-        buttonText = 'Verify Email';
+        iconColor = AppPalette.warningOrange;
+        buttonText = AppStrings.chat.verifyEmailButton;
         onButtonPressed = () => Navigator.pushNamed(context, '/profile');
         break;
       case ChatErrorType.subscriptionRequired:
-        title = 'Subscription Required';
-        description =
-            'You need an active subscription plan to use the chat feature.';
+        title = AppStrings.chat.subscriptionRequired;
+        description = AppStrings.chat.subscriptionRequiredMessage;
         icon = Icons.card_membership_outlined;
         iconColor = AppPalette.trustBlue;
-        buttonText = 'View Plans';
+        buttonText = AppStrings.chat.viewPlans;
         onButtonPressed =
             () => Navigator.pushNamed(context, '/subscription-plans');
         break;
       case ChatErrorType.subscriptionExpired:
-        title = 'Subscription Expired';
-        description =
-            'Your subscription has expired. Please renew to continue using the chat feature.';
+        title = AppStrings.chat.subscriptionExpired;
+        description = AppStrings.chat.subscriptionExpiredMessage;
         icon = Icons.timer_off_outlined;
-        iconColor = Colors.red;
-        buttonText = 'Renew Subscription';
+        iconColor = AppPalette.expenseRed;
+        buttonText = AppStrings.chat.renewSubscription;
         onButtonPressed =
             () => Navigator.pushNamed(context, '/manage-subscription');
         break;
       case ChatErrorType.tokenLimitExceeded:
-        title = 'Token Limit Exceeded';
+        title = AppStrings.chat.tokenLimitExceeded;
         description = state.message.isNotEmpty
             ? state.message
-            : 'You have reached your daily token limit.';
+            : AppStrings.chat.tokenLimitExceededMessage;
         icon = Icons.token_outlined;
         iconColor = Colors.amber;
-        buttonText = 'Upgrade Plan';
+        buttonText = AppStrings.chat.upgradePlan;
         onButtonPressed =
             () => Navigator.pushNamed(context, '/subscription-plans');
         break;
       case ChatErrorType.rateLimitExceeded:
-        title = 'Too Many Requests';
-        description = 'Please wait a moment before sending more messages.';
+        title = AppStrings.chat.tooManyRequests;
+        description = AppStrings.chat.rateLimitMessage;
         icon = Icons.schedule_outlined;
         iconColor = Colors.blue;
-        buttonText = 'Got it';
+        buttonText = AppStrings.common.gotIt;
         onButtonPressed =
             () => context.read<ChatCubit>().loadChatHistory(widget.botId);
         break;
       default:
-        title = 'Something went wrong';
+        title = AppStrings.errors.somethingWrong;
         description = state.message.isNotEmpty
             ? state.message
-            : 'An error occurred. Please try again.';
+            : AppStrings.errors.tryAgain;
         icon = Icons.error_outline;
-        iconColor = Colors.red;
-        buttonText = 'Retry';
+        iconColor = AppPalette.expenseRed;
+        buttonText = AppStrings.common.retry;
         onButtonPressed =
             () => context.read<ChatCubit>().loadChatHistory(widget.botId);
     }
@@ -283,9 +285,7 @@ class _ChatViewState extends State<ChatView> {
             const SizedBox(height: 24),
             Text(
               title,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+              style: AppTypography.titleLargeBold.copyWith(
                 color: isDark ? Colors.white : Colors.black87,
               ),
               textAlign: TextAlign.center,
@@ -293,8 +293,7 @@ class _ChatViewState extends State<ChatView> {
             const SizedBox(height: 12),
             Text(
               description,
-              style: TextStyle(
-                fontSize: 14,
+              style: AppTypography.bodyMedium.copyWith(
                 color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
               ),
               textAlign: TextAlign.center,
@@ -314,10 +313,7 @@ class _ChatViewState extends State<ChatView> {
               ),
               child: Text(
                 buttonText,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: AppTypography.buttonMedium,
               ),
             ),
             if (state.messages?.isNotEmpty == true) ...[
@@ -328,8 +324,8 @@ class _ChatViewState extends State<ChatView> {
                   context.read<ChatCubit>().loadChatHistory(widget.botId);
                 },
                 child: Text(
-                  'Back to Chat',
-                  style: TextStyle(
+                  AppStrings.chat.backToChat,
+                  style: AppTypography.bodyMedium.copyWith(
                     color: AppPalette.trustBlue,
                     fontWeight: FontWeight.w500,
                   ),

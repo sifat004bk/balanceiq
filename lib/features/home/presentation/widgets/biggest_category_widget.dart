@@ -1,4 +1,5 @@
-import 'package:balance_iq/core/theme/app_theme.dart';
+import 'package:balance_iq/core/constants/app_strings.dart';
+import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 
 class BiggestCategoryWidget extends StatelessWidget {
@@ -15,7 +16,6 @@ class BiggestCategoryWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -30,12 +30,12 @@ class BiggestCategoryWidget extends StatelessWidget {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: AppTheme.primaryColor.withOpacity(0.2),
+              color: AppPalette.trustBlue.withOpacity(0.2),
               shape: BoxShape.circle,
             ),
             child: Icon(
               Icons.category,
-              color: AppTheme.primaryColor,
+              color: AppPalette.trustBlue,
               size: 24,
             ),
           ),
@@ -47,11 +47,9 @@ class BiggestCategoryWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Biggest Category',
+                  AppStrings.dashboard.categories,
                   style: textTheme.bodyMedium?.copyWith(
-                    color: isDark
-                        ? AppTheme.textSubtleDark
-                        : AppTheme.textSubtleLight,
+                    color: AppPalette.neutralGrey,
                   ),
                 ),
                 const SizedBox(height: 4),

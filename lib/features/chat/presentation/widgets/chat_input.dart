@@ -1,6 +1,7 @@
 import 'dart:io';
 
-import 'package:balance_iq/core/constants/gemini_colors.dart';
+import 'package:balance_iq/core/constants/app_strings.dart';
+import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -215,7 +216,9 @@ class _ChatInputState extends State<ChatInput> {
                     Navigator.pop(context);
                     // Placeholder for Files
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Files feature coming soon')),
+                      SnackBar(
+                          content: Text(
+                              '${AppStrings.chat.attachFile} ${AppStrings.common.comingSoon}')),
                     );
                   },
                 ),
@@ -226,7 +229,9 @@ class _ChatInputState extends State<ChatInput> {
                     Navigator.pop(context);
                     // Placeholder for Drive
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Drive feature coming soon')),
+                      SnackBar(
+                          content:
+                              Text('Drive ${AppStrings.common.comingSoon}')),
                     );
                   },
                 ),
@@ -279,7 +284,7 @@ class _ChatInputState extends State<ChatInput> {
         bool isLimitReached = false;
         bool isNearLimit = false;
         int remainingTokens = 0;
-        
+
         if (state is ChatLoaded) {
           isLimitReached = state.isTokenLimitReached;
           isNearLimit = state.currentTokenUsage > (state.dailyTokenLimit * 0.9);
@@ -289,7 +294,8 @@ class _ChatInputState extends State<ChatInput> {
         return Container(
           decoration: BoxDecoration(
             color: const Color(0xFF1e1f20), // Dark grey background
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(32)), // Large rounded top corners
+            borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(32)), // Large rounded top corners
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.2),
@@ -298,7 +304,8 @@ class _ChatInputState extends State<ChatInput> {
               ),
             ],
           ),
-          padding: const EdgeInsets.fromLTRB(20, 20, 20, 16), // Padding inside the modal
+          padding: const EdgeInsets.fromLTRB(
+              20, 20, 20, 16), // Padding inside the modal
           child: SafeArea(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -318,11 +325,15 @@ class _ChatInputState extends State<ChatInput> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.error_outline, color: Colors.red, size: 20),
+                        const Icon(Icons.error_outline,
+                            color: Colors.red, size: 20),
                         const SizedBox(width: 8),
                         const Text(
                           'Daily token limit reached. Chat unavailable.',
-                          style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 13),
+                          style: TextStyle(
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13),
                         ),
                       ],
                     ),
@@ -331,7 +342,8 @@ class _ChatInputState extends State<ChatInput> {
                   Container(
                     width: double.infinity,
                     margin: const EdgeInsets.only(bottom: 12),
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
                       color: Colors.orange.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(12),
@@ -340,11 +352,13 @@ class _ChatInputState extends State<ChatInput> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.warning_amber_rounded, color: Colors.orange, size: 16),
+                        const Icon(Icons.warning_amber_rounded,
+                            color: Colors.orange, size: 16),
                         const SizedBox(width: 8),
                         Text(
                           'Near token limit ($remainingTokens remaining)',
-                          style: const TextStyle(color: Colors.orange, fontSize: 12),
+                          style: const TextStyle(
+                              color: Colors.orange, fontSize: 12),
                         ),
                       ],
                     ),
@@ -360,9 +374,13 @@ class _ChatInputState extends State<ChatInput> {
                     controller: _textController,
                     enabled: !isLimitReached,
                     decoration: InputDecoration(
-                      hintText: isLimitReached ? 'Limit reached' : 'What do you want to write?',
+                      hintText: isLimitReached
+                          ? 'Limit reached'
+                          : 'What do you want to write?',
                       hintStyle: TextStyle(
-                        color: isLimitReached ? Colors.red.withOpacity(0.5) : const Color(0xFFc4c7c5),
+                        color: isLimitReached
+                            ? Colors.red.withOpacity(0.5)
+                            : const Color(0xFFc4c7c5),
                         fontSize: 18,
                       ),
                       border: InputBorder.none,
@@ -389,9 +407,9 @@ class _ChatInputState extends State<ChatInput> {
                     },
                   ),
                 ),
-                
-              const SizedBox(height: 20), // Spacing between text and actions
-                
+
+                const SizedBox(height: 20), // Spacing between text and actions
+
                 // Bottom Actions Row
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -404,20 +422,22 @@ class _ChatInputState extends State<ChatInput> {
                           padding: const EdgeInsets.all(8),
                           child: Icon(
                             Icons.add,
-                            color: isLimitReached ? Colors.grey : const Color(0xFFc4c7c5),
+                            color: isLimitReached
+                                ? Colors.grey
+                                : const Color(0xFFc4c7c5),
                             size: 28,
                           ),
                         ),
                       ),
-                    
-                    if (ChatConfig.showAttachments)
-                      const SizedBox(width: 8),
+
+                    if (ChatConfig.showAttachments) const SizedBox(width: 8),
 
                     // Attachment Pill (if image selected)
                     if (_selectedImagePath != null)
                       Container(
                         margin: const EdgeInsets.only(right: 8),
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 8),
                         decoration: BoxDecoration(
                           color: const Color(0xFF2e406c), // Dark blue
                           borderRadius: BorderRadius.circular(16),
@@ -425,7 +445,8 @@ class _ChatInputState extends State<ChatInput> {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Icon(Icons.image, size: 16, color: Color(0xFFa8c7fa)),
+                            const Icon(Icons.image,
+                                size: 16, color: Color(0xFFa8c7fa)),
                             const SizedBox(width: 8),
                             GestureDetector(
                               onTap: () {
@@ -433,14 +454,15 @@ class _ChatInputState extends State<ChatInput> {
                                   _selectedImagePath = null;
                                 });
                               },
-                              child: const Icon(Icons.close, size: 16, color: Color(0xFFa8c7fa)),
+                              child: const Icon(Icons.close,
+                                  size: 16, color: Color(0xFFa8c7fa)),
                             ),
                           ],
                         ),
                       ),
 
                     const Spacer(),
-                    
+
                     // Mic Icon
                     if (ChatConfig.showAudioRecording)
                       GestureDetector(
@@ -453,28 +475,36 @@ class _ChatInputState extends State<ChatInput> {
                           ),
                           child: Icon(
                             _isRecording ? Icons.stop : Icons.mic,
-                            color: _isRecording ? Colors.red : (isLimitReached ? Colors.grey : const Color(0xFFc4c7c5)),
+                            color: _isRecording
+                                ? Colors.red
+                                : (isLimitReached
+                                    ? Colors.grey
+                                    : const Color(0xFFc4c7c5)),
                             size: 24,
                           ),
                         ),
                       ),
                     if (ChatConfig.showAudioRecording)
                       const SizedBox(width: 12),
-                    
+
                     // Send Icon
                     GestureDetector(
-                      onTap: (_hasContent && !isLimitReached) ? _sendMessage : null,
+                      onTap: (_hasContent && !isLimitReached)
+                          ? _sendMessage
+                          : null,
                       child: Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: (_hasContent && !isLimitReached) ? GeminiColors.primaryColor(context) : const Color(0xFF2a2a2e),
+                          color: (_hasContent && !isLimitReached)
+                              ? GeminiColors.primaryColor(context)
+                              : const Color(0xFF2a2a2e),
                           shape: BoxShape.circle,
                         ),
-                        child: Icon(
-                          Icons.send, 
-                          color: (_hasContent && !isLimitReached) ? Colors.white : const Color(0xFFc4c7c5), 
-                          size: 24
-                        ),
+                        child: Icon(Icons.send,
+                            color: (_hasContent && !isLimitReached)
+                                ? Colors.white
+                                : const Color(0xFFc4c7c5),
+                            size: 24),
                       ),
                     ),
                   ],

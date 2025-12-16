@@ -1,3 +1,4 @@
+import 'package:balance_iq/core/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'dart:async';
@@ -42,7 +43,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
       // Mock resend
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Verification email sent!'),
+          content: Text(AppStrings.auth.emailSent),
           backgroundColor: AppTheme.primaryColor,
         ),
       );
@@ -53,7 +54,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
   void _openEmailApp() {
     // In a real app, you would use url_launcher to open email app
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Opening email app...')),
+      SnackBar(content: Text('${AppStrings.common.loading}...')),
     );
   }
 
@@ -72,7 +73,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text('Verify Email'),
+        title: Text(AppStrings.auth.verifyEmailTitle),
         centerTitle: true,
       ),
       body: SafeArea(
@@ -114,7 +115,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                     const SizedBox(height: 40),
                     // Title
                     Text(
-                      'Check your inbox',
+                      AppStrings.auth.checkInbox,
                       style:
                           Theme.of(context).textTheme.headlineMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
@@ -134,8 +135,8 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                                         : AppTheme.textSubtleLight,
                                   ),
                           children: [
-                            const TextSpan(
-                              text: 'We\'ve sent a verification link to ',
+                            TextSpan(
+                              text: "We've sent a verification link to ",
                             ),
                             TextSpan(
                               text: widget.email,
@@ -144,7 +145,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            const TextSpan(
+                            TextSpan(
                               text: '. Please check your spam folder as well.',
                             ),
                           ],
@@ -169,7 +170,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                           borderRadius: BorderRadius.circular(24),
                         ),
                       ),
-                      child: const Text(
+                      child: Text(
                         'Open Email App',
                         style: TextStyle(
                           fontSize: 16,
@@ -196,7 +197,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                         child: Text(
                           _resendCooldown > 0
                               ? 'Resend in ${_resendCooldown}s'
-                              : 'Resend Email',
+                              : AppStrings.auth.sendVerificationEmail,
                           style: TextStyle(
                             color: _resendCooldown > 0
                                 ? (isDark
@@ -213,8 +214,8 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                   // Mock verify button (for testing)
                   TextButton(
                     onPressed: _mockVerifyAndContinue,
-                    child: const Text(
-                      'Skip Verification (Dev Only)',
+                    child: Text(
+                      AppStrings.auth.skipVerificationDevOnly,
                       style: TextStyle(
                         color: Colors.grey,
                         fontSize: 12,

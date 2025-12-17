@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:balance_iq/core/theme/app_palette.dart';
 
 class HomepageLoadingPage extends StatelessWidget {
   const HomepageLoadingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       body: Padding(
@@ -20,12 +19,12 @@ class HomepageLoadingPage extends StatelessWidget {
               width: 64,
               height: 64,
               decoration: BoxDecoration(
-                color: AppPalette.trustBlue.withValues(alpha: 0.2),
+                color: colorScheme.primary.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
                 Icons.auto_awesome,
-                color: AppPalette.trustBlue,
+                color: colorScheme.primary,
                 size: 32,
               ),
             ),
@@ -35,7 +34,7 @@ class HomepageLoadingPage extends StatelessWidget {
               3,
               (index) => Padding(
                 padding: const EdgeInsets.only(bottom: 24),
-                child: _buildShimmerCard(isDark, index),
+                child: _buildShimmerCard(context, index),
               ),
             ),
             const SizedBox(height: 16),
@@ -43,9 +42,7 @@ class HomepageLoadingPage extends StatelessWidget {
             Text(
               'Initializing your dashboard...',
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: isDark
-                        ? AppPalette.neutralGrey
-                        : AppPalette.neutralGrey,
+                    color: Theme.of(context).hintColor,
                   ),
               textAlign: TextAlign.center,
             ),
@@ -55,20 +52,20 @@ class HomepageLoadingPage extends StatelessWidget {
     );
   }
 
-  Widget _buildShimmerCard(bool isDark, int index) {
+  Widget _buildShimmerCard(BuildContext context, int index) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Container(
       height: 80,
       decoration: BoxDecoration(
-        color: isDark
-            ? AppPalette.neutralWhite.withValues(alpha: 0.1)
-            : AppPalette.neutralWhite.withValues(alpha: 0.05),
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Shimmer.fromColors(
-        baseColor: isDark
-            ? AppPalette.neutralWhite.withValues(alpha: 0.05)
-            : AppPalette.neutralGrey.withValues(alpha: 0.1),
-        highlightColor: AppPalette.trustBlue.withValues(alpha: 0.1),
+        baseColor: Theme.of(context)
+            .colorScheme
+            .surfaceContainerHighest
+            .withOpacity(0.5),
+        highlightColor: colorScheme.primary.withOpacity(0.1),
         period: Duration(milliseconds: 1500 + (index * 250)),
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -79,9 +76,7 @@ class HomepageLoadingPage extends StatelessWidget {
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: isDark
-                      ? AppPalette.neutralWhite.withValues(alpha: 0.1)
-                      : AppPalette.neutralGrey.withValues(alpha: 0.2),
+                  color: colorScheme.surface,
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
@@ -96,9 +91,7 @@ class HomepageLoadingPage extends StatelessWidget {
                       height: 16,
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        color: isDark
-                            ? AppPalette.neutralWhite.withValues(alpha: 0.1)
-                            : AppPalette.neutralGrey.withValues(alpha: 0.2),
+                        color: colorScheme.surface,
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
@@ -107,9 +100,7 @@ class HomepageLoadingPage extends StatelessWidget {
                       height: 12,
                       width: 120,
                       decoration: BoxDecoration(
-                        color: isDark
-                            ? AppPalette.neutralWhite.withValues(alpha: 0.1)
-                            : AppPalette.neutralGrey.withValues(alpha: 0.2),
+                        color: colorScheme.surface,
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),

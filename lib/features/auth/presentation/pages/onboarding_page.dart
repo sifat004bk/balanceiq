@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_assets.dart';
 import '../../../../core/constants/app_strings.dart';
-import 'package:balance_iq/core/theme/app_palette.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
 
@@ -18,7 +17,7 @@ class OnboardingPage extends StatelessWidget {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.message),
-                backgroundColor: AppPalette.errorRed,
+                backgroundColor: Theme.of(context).colorScheme.error,
               ),
             );
           }
@@ -52,7 +51,7 @@ class OnboardingPage extends StatelessWidget {
                   child: Icon(
                     Icons.account_balance_wallet,
                     size: 60,
-                    color: AppPalette.neutralWhite,
+                    color: Theme.of(context).colorScheme.onPrimary,
                   ),
                 ),
                 const SizedBox(height: 32),
@@ -66,7 +65,7 @@ class OnboardingPage extends StatelessWidget {
                 Text(
                   AppStrings.auth.welcomeSubtitle,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: AppPalette.neutralGrey,
+                        color: Theme.of(context).hintColor,
                       ),
                   textAlign: TextAlign.center,
                 ),
@@ -90,11 +89,15 @@ class OnboardingPage extends StatelessWidget {
                       ),
                       label: Text(AppStrings.auth.continueGoogle),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppPalette.neutralWhite,
-                        foregroundColor: Colors.black87,
-                        elevation: 2,
+                        backgroundColor: Theme.of(context).cardColor,
+                        foregroundColor:
+                            Theme.of(context).colorScheme.onSurface,
+                        elevation: 0,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
+                          side: BorderSide(
+                            color: Theme.of(context).dividerColor,
+                          ),
                         ),
                       ),
                     ),

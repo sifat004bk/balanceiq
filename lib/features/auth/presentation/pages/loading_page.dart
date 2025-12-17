@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:balance_iq/core/theme/app_palette.dart';
 
 class LoadingPage extends StatefulWidget {
   const LoadingPage({super.key});
@@ -50,7 +49,7 @@ class _LoadingPageState extends State<LoadingPage>
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       body: Center(
@@ -66,13 +65,13 @@ class _LoadingPageState extends State<LoadingPage>
                   width: 96,
                   height: 96,
                   decoration: BoxDecoration(
-                    color: AppPalette.trustBlue.withValues(alpha: 0.2),
+                    color: colorScheme.primary.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(24),
                   ),
                   child: Center(
                     child: Icon(
                       Icons.hub,
-                      color: AppPalette.trustBlue,
+                      color: colorScheme.primary,
                       size: 48,
                     ),
                   ),
@@ -86,18 +85,14 @@ class _LoadingPageState extends State<LoadingPage>
                     'Loading Dashboard...',
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           fontWeight: FontWeight.w500,
-                          color: isDark
-                              ? AppPalette.neutralWhite
-                              : AppPalette.neutralBlack,
+                          color: colorScheme.onSurface,
                         ),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'Automations are getting ready.',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: isDark
-                              ? AppPalette.neutralGrey
-                              : AppPalette.neutralGrey,
+                          color: Theme.of(context).hintColor,
                         ),
                   ),
                 ],
@@ -108,9 +103,7 @@ class _LoadingPageState extends State<LoadingPage>
                 width: double.infinity,
                 height: 8,
                 decoration: BoxDecoration(
-                  color: isDark
-                      ? AppPalette.inputBackgroundDark
-                      : AppPalette.dividerLight,
+                  color: Theme.of(context).dividerColor.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: FractionallySizedBox(
@@ -118,7 +111,7 @@ class _LoadingPageState extends State<LoadingPage>
                   widthFactor: _progress,
                   child: Container(
                     decoration: BoxDecoration(
-                      color: AppPalette.trustBlue,
+                      color: colorScheme.primary,
                       borderRadius: BorderRadius.circular(4),
                     ),
                   ),

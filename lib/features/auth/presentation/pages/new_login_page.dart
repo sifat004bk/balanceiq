@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_strings.dart';
-import '../../../../core/theme/app_palette.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
 
@@ -55,8 +54,6 @@ class _NewLoginPageState extends State<NewLoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is AuthAuthenticated) {
@@ -68,7 +65,7 @@ class _NewLoginPageState extends State<NewLoginPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message),
-              backgroundColor: AppPalette.errorRed,
+              backgroundColor: Theme.of(context).colorScheme.error,
             ),
           );
         }
@@ -87,12 +84,15 @@ class _NewLoginPageState extends State<NewLoginPage> {
                     width: 64,
                     height: 64,
                     decoration: BoxDecoration(
-                      color: AppPalette.trustBlue.withValues(alpha: 0.2),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withOpacity(0.2),
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Icon(
                       Icons.hub,
-                      color: AppPalette.trustBlue,
+                      color: Theme.of(context).colorScheme.primary,
                       size: 40,
                     ),
                   ),
@@ -108,7 +108,7 @@ class _NewLoginPageState extends State<NewLoginPage> {
                   Text(
                     AppStrings.auth.loginSubtitle,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: AppPalette.neutralGrey,
+                          color: Theme.of(context).hintColor,
                         ),
                   ),
                   const SizedBox(height: 32),
@@ -120,7 +120,7 @@ class _NewLoginPageState extends State<NewLoginPage> {
                         AppStrings.auth.emailLabel,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.w500,
-                              color: AppPalette.neutralGrey,
+                              color: Theme.of(context).hintColor,
                             ),
                       ),
                       const SizedBox(height: 8),
@@ -130,29 +130,24 @@ class _NewLoginPageState extends State<NewLoginPage> {
                         decoration: InputDecoration(
                           hintText: AppStrings.auth.emailHint,
                           filled: true,
-                          fillColor: isDark
-                              ? AppPalette.inputBackgroundDark
-                              : AppPalette.inputBackgroundLight,
+                          fillColor:
+                              Theme.of(context).inputDecorationTheme.fillColor,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
-                              color: isDark
-                                  ? AppPalette.inputBorderDark
-                                  : AppPalette.inputBorderLight,
+                              color: Theme.of(context).dividerColor,
                             ),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
-                              color: isDark
-                                  ? AppPalette.inputBorderDark
-                                  : AppPalette.inputBorderLight,
+                              color: Theme.of(context).dividerColor,
                             ),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
-                              color: AppPalette.trustBlue,
+                              color: Theme.of(context).colorScheme.primary,
                               width: 2,
                             ),
                           ),
@@ -176,7 +171,7 @@ class _NewLoginPageState extends State<NewLoginPage> {
                         AppStrings.auth.passwordLabel,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.w500,
-                              color: AppPalette.neutralGrey,
+                              color: Theme.of(context).hintColor,
                             ),
                       ),
                       const SizedBox(height: 8),
@@ -186,29 +181,24 @@ class _NewLoginPageState extends State<NewLoginPage> {
                         decoration: InputDecoration(
                           hintText: AppStrings.auth.passwordHint,
                           filled: true,
-                          fillColor: isDark
-                              ? AppPalette.inputBackgroundDark
-                              : AppPalette.inputBackgroundLight,
+                          fillColor:
+                              Theme.of(context).inputDecorationTheme.fillColor,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
-                              color: isDark
-                                  ? AppPalette.inputBorderDark
-                                  : AppPalette.inputBorderLight,
+                              color: Theme.of(context).dividerColor,
                             ),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
-                              color: isDark
-                                  ? AppPalette.inputBorderDark
-                                  : AppPalette.inputBorderLight,
+                              color: Theme.of(context).dividerColor,
                             ),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
-                              color: AppPalette.trustBlue,
+                              color: Theme.of(context).colorScheme.primary,
                               width: 2,
                             ),
                           ),
@@ -218,7 +208,7 @@ class _NewLoginPageState extends State<NewLoginPage> {
                               _isPasswordVisible
                                   ? Icons.visibility
                                   : Icons.visibility_off,
-                              color: AppPalette.neutralGrey,
+                              color: Theme.of(context).hintColor,
                             ),
                             onPressed: () {
                               setState(() {
@@ -247,7 +237,7 @@ class _NewLoginPageState extends State<NewLoginPage> {
                       child: Text(
                         AppStrings.auth.forgotPassword,
                         style: TextStyle(
-                          color: AppPalette.trustBlue,
+                          color: Theme.of(context).colorScheme.primary,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -264,8 +254,10 @@ class _NewLoginPageState extends State<NewLoginPage> {
                         return ElevatedButton(
                           onPressed: isLoading ? null : _handleLogin,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppPalette.trustBlue,
-                            foregroundColor: AppPalette.neutralWhite,
+                            backgroundColor:
+                                Theme.of(context).colorScheme.primary,
+                            foregroundColor:
+                                Theme.of(context).colorScheme.onPrimary,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
@@ -277,7 +269,9 @@ class _NewLoginPageState extends State<NewLoginPage> {
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
                                     valueColor: AlwaysStoppedAnimation<Color>(
-                                        AppPalette.neutralWhite),
+                                        Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary),
                                   ),
                                 )
                               : Text(
@@ -297,9 +291,7 @@ class _NewLoginPageState extends State<NewLoginPage> {
                     children: [
                       Expanded(
                         child: Divider(
-                          color: isDark
-                              ? AppPalette.inputBorderDark
-                              : AppPalette.dividerLight,
+                          color: Theme.of(context).dividerColor,
                         ),
                       ),
                       Padding(
@@ -308,15 +300,13 @@ class _NewLoginPageState extends State<NewLoginPage> {
                           'Or continue with',
                           style:
                               Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: AppPalette.neutralGrey,
+                                    color: Theme.of(context).hintColor,
                                   ),
                         ),
                       ),
                       Expanded(
                         child: Divider(
-                          color: isDark
-                              ? AppPalette.inputBorderDark
-                              : AppPalette.dividerLight,
+                          color: Theme.of(context).dividerColor,
                         ),
                       ),
                     ],
@@ -331,9 +321,7 @@ class _NewLoginPageState extends State<NewLoginPage> {
                           style: OutlinedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 12),
                             side: BorderSide(
-                              color: isDark
-                                  ? AppPalette.inputBorderDark
-                                  : AppPalette.inputBorderLight,
+                              color: Theme.of(context).dividerColor,
                             ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
@@ -371,7 +359,7 @@ class _NewLoginPageState extends State<NewLoginPage> {
                       Text(
                         AppStrings.auth.noAccount,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: AppPalette.neutralGrey,
+                              color: Theme.of(context).hintColor,
                             ),
                       ),
                       TextButton(
@@ -381,7 +369,7 @@ class _NewLoginPageState extends State<NewLoginPage> {
                         child: Text(
                           AppStrings.auth.signUpLink,
                           style: TextStyle(
-                            color: AppPalette.trustBlue,
+                            color: Theme.of(context).colorScheme.primary,
                             fontWeight: FontWeight.w600,
                           ),
                         ),

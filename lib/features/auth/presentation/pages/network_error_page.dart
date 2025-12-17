@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:balance_iq/core/theme/app_palette.dart';
 
 class NetworkErrorPage extends StatelessWidget {
   final VoidCallback? onRetry;
@@ -13,7 +12,7 @@ class NetworkErrorPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       body: SafeArea(
@@ -26,7 +25,7 @@ class NetworkErrorPage extends StatelessWidget {
               Icon(
                 Icons.wifi_off,
                 size: 120,
-                color: AppPalette.trustBlue,
+                color: colorScheme.primary,
               ),
               const SizedBox(height: 32),
               // Title
@@ -44,9 +43,7 @@ class NetworkErrorPage extends StatelessWidget {
                 child: Text(
                   'Please check your Wi-Fi or mobile data connection. You can also try turning Airplane Mode off and on.',
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: isDark
-                            ? AppPalette.neutralGrey
-                            : AppPalette.neutralGrey,
+                        color: Theme.of(context).hintColor,
                       ),
                   textAlign: TextAlign.center,
                 ),
@@ -63,10 +60,8 @@ class NetworkErrorPage extends StatelessWidget {
                         Navigator.pop(context);
                       },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppPalette.trustBlue,
-                    foregroundColor: isDark
-                        ? AppPalette.surfaceDark
-                        : AppPalette.neutralBlack,
+                    backgroundColor: colorScheme.primary,
+                    foregroundColor: colorScheme.onPrimary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(24),
                     ),
@@ -95,7 +90,7 @@ class NetworkErrorPage extends StatelessWidget {
                 child: Text(
                   'Settings',
                   style: TextStyle(
-                    color: AppPalette.trustBlue,
+                    color: colorScheme.primary,
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),

@@ -6,7 +6,6 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import '../../../../core/constants/design_constants.dart';
 import '../../../../core/constants/app_strings.dart';
-import '../../../../core/theme/app_palette.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/tour/tour.dart';
 import '../../../subscription/domain/entities/subscription_status.dart';
@@ -219,7 +218,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final colorScheme = Theme.of(context).colorScheme;
 
     return MultiBlocProvider(
@@ -238,7 +236,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(state.message),
-                    backgroundColor: AppPalette.expenseRed,
+                    backgroundColor: Theme.of(context).colorScheme.error,
                     behavior: SnackBarBehavior.floating,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -270,8 +268,6 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ],
         child: Scaffold(
-          backgroundColor:
-              isDark ? AppPalette.surfaceDark : AppPalette.surfaceLight,
           body: BlocBuilder<AuthCubit, AuthState>(
             buildWhen: (previous, current) {
               // Don't rebuild for intermediate verification states
@@ -285,12 +281,12 @@ class _ProfilePageState extends State<ProfilePage> {
             },
             builder: (context, state) {
               if (state is AuthLoading) {
-                return _buildProfileShimmer(isDark);
+                return _buildProfileShimmer();
               }
 
               if (state is AuthAuthenticated) {
                 final user = state.user;
-                return _buildProfileContent(context, user, isDark, colorScheme);
+                return _buildProfileContent(context, user, colorScheme);
               }
 
               return Center(
@@ -306,7 +302,6 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget _buildProfileContent(
     BuildContext context,
     dynamic user,
-    bool isDark,
     ColorScheme colorScheme,
   ) {
     return Stack(
@@ -330,8 +325,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     if (!user.isEmailVerified)
                       Container(
                         key: _emailVerifyKey,
-                        child: _buildEmailVerificationBanner(
-                            context, user, isDark),
+                        child: _buildEmailVerificationBanner(context, user),
                       ),
                     // Profile Header with dynamic subscription badge
                     BlocBuilder<SubscriptionCubit, SubscriptionState>(
@@ -340,7 +334,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         if (subState is SubscriptionStatusLoaded) {
                           status = subState.status;
                         }
-                        return _buildProfileHeader(user, isDark, status);
+                        return _buildProfileHeader(user, status, context);
                       },
                     ),
                     const SizedBox(height: 40),
@@ -350,17 +344,17 @@ class _ProfilePageState extends State<ProfilePage> {
                       child: BlocBuilder<SubscriptionCubit, SubscriptionState>(
                         builder: (context, subState) {
                           if (subState is SubscriptionStatusLoading) {
-                            return _buildSubscriptionCardLoading(isDark);
+                            return _buildSubscriptionCardLoading(context);
                           }
                           if (subState is SubscriptionStatusLoaded) {
                             return _buildSubscriptionCard(
-                                context, isDark, subState.status);
+                                context, subState.status);
                           }
                           if (subState is SubscriptionError) {
                             return _buildSubscriptionCardError(
-                                context, isDark, subState.message);
+                                context, subState.message);
                           }
-                          return _buildSubscriptionCardLoading(isDark);
+                          return _buildSubscriptionCardLoading(context);
                         },
                       ),
                     ),
@@ -370,7 +364,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       context,
                       icon: Icons.person_outline,
                       title: 'Account Details',
-                      isDark: isDark,
                       onTap: () {
                         // TODO: Navigate to account details
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -385,7 +378,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       context,
                       icon: Icons.lock_outline,
                       title: 'Security',
-                      isDark: isDark,
                       onTap: () {
                         Navigator.pushNamed(context, '/change-password');
                       },
@@ -395,7 +387,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       context,
                       icon: Icons.notifications_outlined,
                       title: 'Notifications',
-                      isDark: isDark,
                       onTap: () {
                         // TODO: Navigate to notifications
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -410,7 +401,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       context,
                       icon: Icons.palette_outlined,
                       title: 'Appearance',
-                      isDark: isDark,
                       onTap: () {
                         // TODO: Navigate to appearance settings
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -425,7 +415,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       context,
                       icon: Icons.help_outline,
                       title: 'Help Center',
-                      isDark: isDark,
                       onTap: () {
                         // TODO: Navigate to help center
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -437,7 +426,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     const SizedBox(height: 40),
                     // Log Out Button
-                    _buildLogOutButton(context, isDark),
+                    _buildLogOutButton(context),
                     const SizedBox(height: 32),
                   ],
                 ),
@@ -450,16 +439,13 @@ class _ProfilePageState extends State<ProfilePage> {
           left: 16,
           child: Container(
             decoration: BoxDecoration(
-              color: isDark
-                  ? AppPalette.neutralBlack.withValues(alpha: 0.2)
-                  : AppPalette.neutralWhite.withValues(alpha: 0.5),
+              color: Theme.of(context).cardColor.withOpacity(0.5),
               shape: BoxShape.circle,
             ),
             child: IconButton(
               icon: Icon(
                 Icons.arrow_back,
-                color:
-                    isDark ? AppPalette.neutralWhite : AppPalette.neutralBlack,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
               onPressed: () => Navigator.pop(context),
             ),
@@ -472,23 +458,16 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget _buildEmailVerificationBanner(
     BuildContext context,
     dynamic user,
-    bool isDark,
   ) {
     // Use design system colors
-    final backgroundColor = isDark
-        ? AppPalette.sparkOrange.withOpacity(0.15)
-        : AppPalette.sparkOrange.withOpacity(0.1);
-    final borderColor = isDark
-        ? AppPalette.sparkOrange.withOpacity(0.3)
-        : AppPalette.sparkOrange.withOpacity(0.3);
-    final iconBgColor = isDark
-        ? AppPalette.sparkOrange.withOpacity(0.2)
-        : AppPalette.sparkOrange.withOpacity(0.15);
-    final titleColor =
-        isDark ? AppPalette.neutralWhite : AppPalette.sparkOrange;
-    final subtitleColor = isDark
-        ? AppPalette.neutralWhite.withValues(alpha: 0.7)
-        : AppPalette.sparkOrange;
+    final colorScheme = Theme.of(context).colorScheme;
+    final warningColor = Colors.orange;
+
+    final backgroundColor = warningColor.withOpacity(0.1);
+    final borderColor = warningColor.withOpacity(0.3);
+    final iconBgColor = warningColor.withOpacity(0.15);
+    final titleColor = colorScheme.onSurface;
+    final subtitleColor = colorScheme.onSurface.withOpacity(0.7);
 
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
@@ -496,7 +475,7 @@ class _ProfilePageState extends State<ProfilePage> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('${AppStrings.auth.emailSent} ${state.email}'),
-              backgroundColor: AppPalette.incomeGreen,
+              backgroundColor: Colors.green,
               behavior: SnackBarBehavior.floating,
               shape: RoundedRectangleBorder(
                 borderRadius:
@@ -508,7 +487,7 @@ class _ProfilePageState extends State<ProfilePage> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message),
-              backgroundColor: AppPalette.expenseRed,
+              backgroundColor: Theme.of(context).colorScheme.error,
               behavior: SnackBarBehavior.floating,
               shape: RoundedRectangleBorder(
                 borderRadius:
@@ -546,7 +525,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     child: Icon(
                       Icons.warning_amber_rounded,
-                      color: AppPalette.sparkOrange,
+                      color: warningColor,
                       size: DesignConstants.iconSizeLarge,
                     ),
                   ),
@@ -586,10 +565,9 @@ class _ProfilePageState extends State<ProfilePage> {
                           _handleEmailVerificationClick();
                         },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppPalette.sparkOrange,
-                    foregroundColor: AppPalette.neutralWhite,
-                    disabledBackgroundColor:
-                        AppPalette.sparkOrange.withOpacity(0.5),
+                    backgroundColor: warningColor,
+                    foregroundColor: colorScheme.onInverseSurface,
+                    disabledBackgroundColor: warningColor.withOpacity(0.5),
                     padding:
                         EdgeInsets.symmetric(vertical: DesignConstants.space3),
                     shape: RoundedRectangleBorder(
@@ -604,7 +582,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           width: DesignConstants.loadingIndicatorSmall,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            color: AppPalette.neutralWhite,
+                            color: colorScheme.onInverseSurface,
                           ),
                         )
                       : Text(
@@ -624,13 +602,13 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _buildProfileHeader(
-      dynamic user, bool isDark, SubscriptionStatus? status) {
+      dynamic user, SubscriptionStatus? status, BuildContext context) {
     final hasSubscription = status?.hasActiveSubscription ?? false;
     final planName = status?.subscription?.plan.displayName ?? '';
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Column(
       children: [
-        // Avatar with glow effect
         // Avatar with glow effect
         Stack(
           clipBehavior: Clip.none,
@@ -640,7 +618,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: AppPalette.trustBlue.withOpacity(0.4),
+                    color: colorScheme.primary.withOpacity(0.4),
                     blurRadius: 40,
                     spreadRadius: 10,
                   ),
@@ -652,13 +630,13 @@ class _ProfilePageState extends State<ProfilePage> {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: AppPalette.trustBlue,
+                    color: colorScheme.primary,
                     width: 3,
                   ),
                   gradient: LinearGradient(
                     colors: [
-                      AppPalette.avatarGradientStart,
-                      AppPalette.avatarGradientEnd,
+                      colorScheme.primaryContainer,
+                      colorScheme.secondaryContainer,
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -670,7 +648,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     style: TextStyle(
                       fontSize: 48,
                       fontWeight: FontWeight.bold,
-                      color: AppPalette.neutralBlack,
+                      color: colorScheme.onPrimaryContainer,
                     ),
                   ),
                 ),
@@ -683,14 +661,12 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: Container(
                   padding: const EdgeInsets.all(4),
                   decoration: BoxDecoration(
-                    color: isDark
-                        ? AppPalette.inputBackgroundDark
-                        : AppPalette.neutralWhite,
+                    color: Theme.of(context).canvasColor,
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
                     Icons.verified_rounded,
-                    color: AppPalette.incomeGreen,
+                    color: Colors.green,
                     size: 24,
                   ),
                 ),
@@ -707,8 +683,7 @@ class _ProfilePageState extends State<ProfilePage> {
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color:
-                    isDark ? AppPalette.neutralWhite : AppPalette.neutralBlack,
+                color: colorScheme.onSurface,
               ),
             ),
             const SizedBox(width: 8),
@@ -718,12 +693,12 @@ class _ProfilePageState extends State<ProfilePage> {
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
                   color: hasSubscription
-                      ? AppPalette.trustBlue.withOpacity(0.2)
+                      ? colorScheme.primary.withOpacity(0.2)
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
                     color: hasSubscription
-                        ? AppPalette.trustBlue
+                        ? colorScheme.primary
                         : Colors.transparent,
                     width: 1,
                   ),
@@ -735,7 +710,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       hasSubscription ? Icons.star : null,
                       size: 16,
                       color: hasSubscription
-                          ? AppPalette.trustBlue
+                          ? colorScheme.primary
                           : Colors.transparent,
                     ),
                     const SizedBox(width: 4),
@@ -745,8 +720,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: hasSubscription
-                            ? AppPalette.trustBlue
-                            : AppPalette.neutralGrey,
+                            ? colorScheme.primary
+                            : Theme.of(context).hintColor,
                       ),
                     ),
                   ],
@@ -760,21 +735,22 @@ class _ProfilePageState extends State<ProfilePage> {
           user.email,
           style: TextStyle(
             fontSize: 14,
-            color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+            color: Theme.of(context).hintColor,
           ),
         ),
       ],
     );
   }
 
-  Widget _buildSubscriptionCardLoading(bool isDark) {
+  Widget _buildSubscriptionCardLoading(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: isDark ? AppPalette.surfaceCardDark : AppPalette.neutralWhite,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
+          color: Theme.of(context).dividerColor,
           width: 1,
         ),
       ),
@@ -788,7 +764,7 @@ class _ProfilePageState extends State<ProfilePage> {
               width: 120,
               height: 14,
               decoration: BoxDecoration(
-                color: AppPalette.neutralWhite,
+                color: Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(4),
               ),
             ),
@@ -803,7 +779,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       width: 150,
                       height: 20,
                       decoration: BoxDecoration(
-                        color: AppPalette.neutralWhite,
+                        color: Theme.of(context).colorScheme.surface,
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
@@ -812,7 +788,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       width: 180,
                       height: 14,
                       decoration: BoxDecoration(
-                        color: AppPalette.neutralWhite,
+                        color: Theme.of(context).colorScheme.surface,
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
@@ -822,7 +798,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   width: 80,
                   height: 36,
                   decoration: BoxDecoration(
-                    color: AppPalette.neutralWhite,
+                    color: Theme.of(context).colorScheme.surface,
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
@@ -834,27 +810,27 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildSubscriptionCardError(
-      BuildContext context, bool isDark, String message) {
+  Widget _buildSubscriptionCardError(BuildContext context, String message) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: isDark ? AppPalette.surfaceCardDark : AppPalette.neutralWhite,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
+          color: Theme.of(context).dividerColor,
           width: 1,
         ),
       ),
       child: Column(
         children: [
-          Icon(Icons.error_outline, color: AppPalette.expenseRed, size: 32),
+          Icon(Icons.error_outline,
+              color: Theme.of(context).colorScheme.error, size: 32),
           const SizedBox(height: 8),
           Text(
             'Failed to load subscription',
             style: TextStyle(
-                color:
-                    isDark ? AppPalette.neutralWhite : AppPalette.neutralBlack),
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
           ),
           const SizedBox(height: 8),
           TextButton(
@@ -868,9 +844,9 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _buildSubscriptionCard(
-      BuildContext context, bool isDark, SubscriptionStatus status) {
+      BuildContext context, SubscriptionStatus status) {
     if (!status.hasActiveSubscription) {
-      return _buildNoSubscriptionCard(context, isDark);
+      return _buildNoSubscriptionCard(context);
     }
 
     final subscription = status.subscription!;
@@ -878,15 +854,15 @@ class _ProfilePageState extends State<ProfilePage> {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: isDark ? AppPalette.surfaceCardDark : AppPalette.neutralWhite,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
+          color: Theme.of(context).dividerColor,
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: AppPalette.neutralBlack.withValues(alpha: 0.05),
+            color: Theme.of(context).shadowColor.withOpacity(0.05),
             blurRadius: 10,
             spreadRadius: 0,
             offset: const Offset(0, 4),
@@ -903,7 +879,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 'My Subscription',
                 style: TextStyle(
                   fontSize: 14,
-                  color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                  color: Theme.of(context).hintColor,
                 ),
               ),
               if (subscription.isExpiringSoon)
@@ -911,21 +887,20 @@ class _ProfilePageState extends State<ProfilePage> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: AppPalette.sparkOrange.withValues(alpha: 0.1),
+                    color: Colors.orange.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.warning,
-                          size: 14, color: AppPalette.sparkOrange),
+                      Icon(Icons.warning, size: 14, color: Colors.orange),
                       const SizedBox(width: 4),
                       Text(
                         '${subscription.daysRemaining} days left',
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
-                          color: AppPalette.sparkOrange,
+                          color: Colors.orange,
                         ),
                       ),
                     ],
@@ -946,9 +921,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: isDark
-                            ? AppPalette.neutralWhite
-                            : AppPalette.neutralBlack,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -956,9 +929,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       'Renews on ${subscription.formattedEndDate}',
                       style: TextStyle(
                         fontSize: 14,
-                        color: isDark
-                            ? Colors.grey.shade400
-                            : Colors.grey.shade600,
+                        color: Theme.of(context).hintColor,
                       ),
                     ),
                   ],
@@ -974,8 +945,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppPalette.trustBlue,
-                  foregroundColor: AppPalette.neutralWhite,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   shape: RoundedRectangleBorder(
@@ -998,7 +969,15 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildProfileShimmer(bool isDark) {
+  Widget _buildProfileShimmer() {
+    // Assuming context is available or passing it would be better, but since it's used inside build method of State,
+    // we can use context from State if this was an instance method, but it is.
+    // However, to keep it clean, let's use the context passed in build or access via this.context
+    // But better to not rely on implicit context if we can avoid it or pass it.
+    // The previous call was _buildProfileShimmer().
+    // We can use context property of State.
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Shimmer.fromColors(
       baseColor: isDark ? Colors.grey.shade800 : Colors.grey.shade300,
       highlightColor: isDark ? Colors.grey.shade700 : Colors.grey.shade100,
@@ -1013,7 +992,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 width: 120,
                 height: 120,
                 decoration: BoxDecoration(
-                  color: AppPalette.neutralWhite,
+                  color: Theme.of(context).cardColor,
                   shape: BoxShape.circle,
                 ),
               ),
@@ -1023,7 +1002,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 width: 200,
                 height: 24,
                 decoration: BoxDecoration(
-                  color: AppPalette.neutralWhite,
+                  color: Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(4),
                 ),
               ),
@@ -1033,7 +1012,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 width: 150,
                 height: 14,
                 decoration: BoxDecoration(
-                  color: AppPalette.neutralWhite,
+                  color: Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(4),
                 ),
               ),
@@ -1043,7 +1022,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 height: 120,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: AppPalette.neutralWhite,
+                  color: Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(20),
                 ),
               ),
@@ -1056,7 +1035,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     height: 56,
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: AppPalette.neutralWhite,
+                      color: Theme.of(context).cardColor,
                       borderRadius: BorderRadius.circular(16),
                     ),
                   ),
@@ -1068,19 +1047,19 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildNoSubscriptionCard(BuildContext context, bool isDark) {
+  Widget _buildNoSubscriptionCard(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: isDark ? AppPalette.surfaceCardDark : AppPalette.neutralWhite,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
+          color: Theme.of(context).dividerColor,
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: AppPalette.neutralBlack.withValues(alpha: 0.05),
+            color: Theme.of(context).shadowColor.withOpacity(0.05),
             blurRadius: 10,
             spreadRadius: 0,
             offset: const Offset(0, 4),
@@ -1094,7 +1073,7 @@ class _ProfilePageState extends State<ProfilePage> {
             'My Subscription',
             style: TextStyle(
               fontSize: 14,
-              color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+              color: Theme.of(context).hintColor,
             ),
           ),
           const SizedBox(height: 12),
@@ -1111,9 +1090,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: isDark
-                            ? AppPalette.neutralWhite
-                            : AppPalette.neutralBlack,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -1121,9 +1098,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       'Subscribe to unlock premium features',
                       style: TextStyle(
                         fontSize: 14,
-                        color: isDark
-                            ? Colors.grey.shade400
-                            : Colors.grey.shade600,
+                        color: Theme.of(context).hintColor,
                       ),
                     ),
                   ],
@@ -1139,8 +1114,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppPalette.trustBlue,
-                  foregroundColor: AppPalette.neutralWhite,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   shape: RoundedRectangleBorder(
@@ -1167,7 +1142,6 @@ class _ProfilePageState extends State<ProfilePage> {
     BuildContext context, {
     required IconData icon,
     required String title,
-    required bool isDark,
     required VoidCallback onTap,
   }) {
     return InkWell(
@@ -1176,10 +1150,10 @@ class _ProfilePageState extends State<ProfilePage> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isDark ? AppPalette.surfaceCardDark : AppPalette.neutralWhite,
+          color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
+            color: Theme.of(context).dividerColor,
             width: 1,
           ),
         ),
@@ -1189,12 +1163,12 @@ class _ProfilePageState extends State<ProfilePage> {
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: AppPalette.trustBlue.withOpacity(0.1),
+                color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
                 icon,
-                color: AppPalette.trustBlue,
+                color: Theme.of(context).colorScheme.primary,
                 size: 24,
               ),
             ),
@@ -1205,15 +1179,13 @@ class _ProfilePageState extends State<ProfilePage> {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
-                  color: isDark
-                      ? AppPalette.neutralWhite
-                      : AppPalette.neutralBlack,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
             ),
             Icon(
               Icons.chevron_right,
-              color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,
+              color: Theme.of(context).hintColor,
             ),
           ],
         ),
@@ -1221,7 +1193,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildLogOutButton(BuildContext context, bool isDark) {
+  Widget _buildLogOutButton(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
@@ -1244,7 +1216,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   },
                   child: Text(
                     'Log Out',
-                    style: TextStyle(color: AppPalette.expenseRed),
+                    style:
+                        TextStyle(color: Theme.of(context).colorScheme.error),
                   ),
                 ),
               ],
@@ -1252,10 +1225,8 @@ class _ProfilePageState extends State<ProfilePage> {
           );
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: isDark
-              ? AppPalette.surfaceCardDark
-              : AppPalette.expenseRed.withValues(alpha: 0.1),
-          foregroundColor: AppPalette.expenseRed,
+          backgroundColor: Theme.of(context).cardColor,
+          foregroundColor: Theme.of(context).colorScheme.error,
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
@@ -1268,7 +1239,7 @@ class _ProfilePageState extends State<ProfilePage> {
             Icon(
               Icons.logout,
               size: 20,
-              color: AppPalette.expenseRed,
+              color: Theme.of(context).colorScheme.error,
             ),
             const SizedBox(width: 8),
             Text(
@@ -1276,7 +1247,7 @@ class _ProfilePageState extends State<ProfilePage> {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
-                color: AppPalette.expenseRed,
+                color: Theme.of(context).colorScheme.error,
               ),
             ),
           ],

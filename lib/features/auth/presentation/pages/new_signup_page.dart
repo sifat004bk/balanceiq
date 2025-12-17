@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_strings.dart';
-import 'package:balance_iq/core/theme/app_palette.dart';
 
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
@@ -52,8 +51,6 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is AuthAuthenticated) {
@@ -65,7 +62,7 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
             SnackBar(
               content: Text(
                   '${AppStrings.auth.accountCreated}! ${AppStrings.auth.pleaseLogin}'),
-              backgroundColor: AppPalette.successGreen,
+              backgroundColor: Colors.green,
               duration: const Duration(seconds: 5),
             ),
           );
@@ -81,7 +78,7 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
             SnackBar(
               content: Text(
                   '${AppStrings.auth.accountCreated}! ${AppStrings.auth.pleaseLogin}'),
-              backgroundColor: AppPalette.errorRed,
+              backgroundColor: Theme.of(context).colorScheme.error,
               duration: const Duration(seconds: 4),
             ),
           );
@@ -103,7 +100,7 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: AppPalette.trustBlue,
+                        color: Theme.of(context).colorScheme.primary,
                         width: 4,
                       ),
                     ),
@@ -111,7 +108,7 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                       child: Text(
                         'IQ',
                         style: TextStyle(
-                          color: AppPalette.trustBlue,
+                          color: Theme.of(context).colorScheme.primary,
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
                         ),
@@ -130,9 +127,7 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                   Text(
                     'Unlock automation, AI, and more.',
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: isDark
-                              ? AppPalette.neutralGrey
-                              : AppPalette.neutralGrey,
+                          color: Theme.of(context).hintColor,
                         ),
                   ),
                   const SizedBox(height: 32),
@@ -144,9 +139,7 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                         'Full Name',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.w500,
-                              color: isDark
-                                  ? AppPalette.neutralGrey
-                                  : AppPalette.inputBorderDark,
+                              color: Theme.of(context).hintColor,
                             ),
                       ),
                       const SizedBox(height: 8),
@@ -156,34 +149,27 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                           hintText: 'Enter your full name',
                           prefixIcon: Icon(
                             Icons.person_outline,
-                            color: isDark
-                                ? AppPalette.neutralGrey
-                                : AppPalette.neutralGrey,
+                            color: Theme.of(context).hintColor,
                           ),
                           filled: true,
-                          fillColor: isDark
-                              ? AppPalette.inputBackgroundDark
-                              : AppPalette.inputBackgroundLight,
+                          fillColor:
+                              Theme.of(context).inputDecorationTheme.fillColor,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
-                              color: isDark
-                                  ? AppPalette.inputBorderDark
-                                  : AppPalette.inputBorderLight,
+                              color: Theme.of(context).dividerColor,
                             ),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
-                              color: isDark
-                                  ? AppPalette.inputBorderDark
-                                  : AppPalette.inputBorderLight,
+                              color: Theme.of(context).dividerColor,
                             ),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
-                              color: AppPalette.trustBlue,
+                              color: Theme.of(context).colorScheme.primary,
                               width: 2,
                             ),
                           ),
@@ -207,9 +193,7 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                         'Email',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.w500,
-                              color: isDark
-                                  ? AppPalette.neutralGrey
-                                  : AppPalette.inputBorderDark,
+                              color: Theme.of(context).hintColor,
                             ),
                       ),
                       const SizedBox(height: 8),
@@ -220,34 +204,27 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                           hintText: 'Enter your email address',
                           prefixIcon: Icon(
                             Icons.mail_outline,
-                            color: isDark
-                                ? AppPalette.neutralGrey
-                                : AppPalette.neutralGrey,
+                            color: Theme.of(context).hintColor,
                           ),
                           filled: true,
-                          fillColor: isDark
-                              ? AppPalette.inputBackgroundDark
-                              : AppPalette.inputBackgroundLight,
+                          fillColor:
+                              Theme.of(context).inputDecorationTheme.fillColor,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
-                              color: isDark
-                                  ? AppPalette.inputBorderDark
-                                  : AppPalette.inputBorderLight,
+                              color: Theme.of(context).dividerColor,
                             ),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
-                              color: isDark
-                                  ? AppPalette.inputBorderDark
-                                  : AppPalette.inputBorderLight,
+                              color: Theme.of(context).dividerColor,
                             ),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
-                              color: AppPalette.trustBlue,
+                              color: Theme.of(context).colorScheme.primary,
                               width: 2,
                             ),
                           ),
@@ -274,9 +251,7 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                         'Password',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.w500,
-                              color: isDark
-                                  ? AppPalette.neutralGrey
-                                  : AppPalette.inputBorderDark,
+                              color: Theme.of(context).hintColor,
                             ),
                       ),
                       const SizedBox(height: 8),
@@ -287,34 +262,27 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                           hintText: 'Enter your password',
                           prefixIcon: Icon(
                             Icons.lock_outline,
-                            color: isDark
-                                ? AppPalette.neutralGrey
-                                : AppPalette.neutralGrey,
+                            color: Theme.of(context).hintColor,
                           ),
                           filled: true,
-                          fillColor: isDark
-                              ? AppPalette.inputBackgroundDark
-                              : AppPalette.inputBackgroundLight,
+                          fillColor:
+                              Theme.of(context).inputDecorationTheme.fillColor,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
-                              color: isDark
-                                  ? AppPalette.inputBorderDark
-                                  : AppPalette.inputBorderLight,
+                              color: Theme.of(context).dividerColor,
                             ),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
-                              color: isDark
-                                  ? AppPalette.inputBorderDark
-                                  : AppPalette.inputBorderLight,
+                              color: Theme.of(context).dividerColor,
                             ),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
-                              color: AppPalette.trustBlue,
+                              color: Theme.of(context).colorScheme.primary,
                               width: 2,
                             ),
                           ),
@@ -324,9 +292,7 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                               _isPasswordVisible
                                   ? Icons.visibility
                                   : Icons.visibility_off,
-                              color: isDark
-                                  ? AppPalette.neutralGrey
-                                  : AppPalette.neutralGrey,
+                              color: Theme.of(context).hintColor,
                             ),
                             onPressed: () {
                               setState(() {
@@ -356,9 +322,7 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                         'Confirm Password',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.w500,
-                              color: isDark
-                                  ? AppPalette.neutralGrey
-                                  : AppPalette.inputBorderDark,
+                              color: Theme.of(context).hintColor,
                             ),
                       ),
                       const SizedBox(height: 8),
@@ -369,34 +333,27 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                           hintText: 'Confirm your password',
                           prefixIcon: Icon(
                             Icons.lock_reset,
-                            color: isDark
-                                ? AppPalette.neutralGrey
-                                : AppPalette.neutralGrey,
+                            color: Theme.of(context).hintColor,
                           ),
                           filled: true,
-                          fillColor: isDark
-                              ? AppPalette.inputBackgroundDark
-                              : AppPalette.inputBackgroundLight,
+                          fillColor:
+                              Theme.of(context).inputDecorationTheme.fillColor,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
-                              color: isDark
-                                  ? AppPalette.inputBorderDark
-                                  : AppPalette.inputBorderLight,
+                              color: Theme.of(context).dividerColor,
                             ),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
-                              color: isDark
-                                  ? AppPalette.inputBorderDark
-                                  : AppPalette.inputBorderLight,
+                              color: Theme.of(context).dividerColor,
                             ),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
-                              color: AppPalette.trustBlue,
+                              color: Theme.of(context).colorScheme.primary,
                               width: 2,
                             ),
                           ),
@@ -406,9 +363,7 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                               _isConfirmPasswordVisible
                                   ? Icons.visibility
                                   : Icons.visibility_off,
-                              color: isDark
-                                  ? AppPalette.neutralGrey
-                                  : AppPalette.neutralGrey,
+                              color: Theme.of(context).hintColor,
                             ),
                             onPressed: () {
                               setState(() {
@@ -442,10 +397,10 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                         return ElevatedButton(
                           onPressed: isLoading ? null : _handleSignUp,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppPalette.trustBlue,
-                            foregroundColor: isDark
-                                ? AppPalette.surfaceDark
-                                : AppPalette.neutralBlack,
+                            backgroundColor:
+                                Theme.of(context).colorScheme.primary,
+                            foregroundColor:
+                                Theme.of(context).colorScheme.onPrimary,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
@@ -457,7 +412,9 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
                                     valueColor: AlwaysStoppedAnimation<Color>(
-                                        AppPalette.neutralWhite),
+                                        Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary),
                                   ),
                                 )
                               : const Text(
@@ -477,9 +434,7 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                     children: [
                       Expanded(
                         child: Divider(
-                          color: isDark
-                              ? AppPalette.inputBorderDark
-                              : AppPalette.dividerLight,
+                          color: Theme.of(context).dividerColor,
                         ),
                       ),
                       Padding(
@@ -488,17 +443,13 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                           'Or continue with',
                           style:
                               Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: isDark
-                                        ? AppPalette.neutralGrey
-                                        : AppPalette.neutralGrey,
+                                    color: Theme.of(context).hintColor,
                                   ),
                         ),
                       ),
                       Expanded(
                         child: Divider(
-                          color: isDark
-                              ? AppPalette.inputBorderDark
-                              : AppPalette.dividerLight,
+                          color: Theme.of(context).dividerColor,
                         ),
                       ),
                     ],
@@ -513,9 +464,7 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                           style: OutlinedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 12),
                             side: BorderSide(
-                              color: isDark
-                                  ? AppPalette.inputBorderDark
-                                  : AppPalette.inputBorderLight,
+                              color: Theme.of(context).dividerColor,
                             ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
@@ -553,9 +502,7 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                       Text(
                         'Already have an account? ',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: isDark
-                                  ? AppPalette.neutralGrey
-                                  : AppPalette.neutralGrey,
+                              color: Theme.of(context).hintColor,
                             ),
                       ),
                       TextButton(
@@ -565,7 +512,7 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                         child: Text(
                           'Log In',
                           style: TextStyle(
-                            color: AppPalette.trustBlue,
+                            color: Theme.of(context).colorScheme.primary,
                             fontWeight: FontWeight.w600,
                           ),
                         ),

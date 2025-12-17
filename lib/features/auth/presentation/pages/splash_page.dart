@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/di/injection_container.dart';
-import 'package:balance_iq/core/theme/app_palette.dart';
 import '../../../home/domain/usecase/get_user_dashbaord.dart';
 
 class SplashPage extends StatefulWidget {
@@ -143,11 +142,10 @@ class _SplashPageState extends State<SplashPage>
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      backgroundColor:
-          isDark ? AppPalette.surfaceDark : AppPalette.neutralWhite,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Center(
         child: AnimatedBuilder(
           animation: _animationController,
@@ -168,14 +166,14 @@ class _SplashPageState extends State<SplashPage>
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [
-                            AppPalette.trustBlue,
-                            AppPalette.trustBlue.withValues(alpha: 0.7),
+                            colorScheme.primary,
+                            colorScheme.primary.withOpacity(0.7),
                           ],
                         ),
                         borderRadius: BorderRadius.circular(32),
                         boxShadow: [
                           BoxShadow(
-                            color: AppPalette.trustBlue.withValues(alpha: 0.3),
+                            color: colorScheme.primary.withOpacity(0.3),
                             blurRadius: 24,
                             offset: const Offset(0, 8),
                           ),
@@ -184,7 +182,7 @@ class _SplashPageState extends State<SplashPage>
                       child: Center(
                         child: Icon(
                           Icons.account_balance_wallet_rounded,
-                          color: AppPalette.neutralWhite,
+                          color: colorScheme.onPrimary,
                           size: 56,
                         ),
                       ),
@@ -196,9 +194,7 @@ class _SplashPageState extends State<SplashPage>
                       style:
                           Theme.of(context).textTheme.headlineMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
-                                color: isDark
-                                    ? AppPalette.neutralWhite
-                                    : AppPalette.neutralBlack,
+                                color: colorScheme.onSurface,
                                 letterSpacing: 1.2,
                               ),
                     ),
@@ -206,9 +202,7 @@ class _SplashPageState extends State<SplashPage>
                     Text(
                       'Smart Finance Management',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: isDark
-                                ? AppPalette.neutralGrey
-                                : AppPalette.neutralGrey,
+                            color: Theme.of(context).hintColor,
                           ),
                     ),
                     const SizedBox(height: 48),
@@ -219,7 +213,7 @@ class _SplashPageState extends State<SplashPage>
                       child: CircularProgressIndicator(
                         strokeWidth: 3,
                         valueColor: AlwaysStoppedAnimation<Color>(
-                          AppPalette.trustBlue,
+                          colorScheme.primary,
                         ),
                       ),
                     ),

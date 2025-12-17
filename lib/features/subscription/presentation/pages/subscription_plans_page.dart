@@ -1,8 +1,7 @@
 import 'package:balance_iq/core/constants/app_strings.dart';
-import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/constants/gemini_colors.dart';
+
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/tour/tour.dart';
@@ -35,23 +34,20 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Scaffold(
-      backgroundColor:
-          isDark ? AppPalette.surfaceDark : AppPalette.surfaceLight,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
-            color: isDark ? Colors.white : Colors.black87,
+            color: Theme.of(context).iconTheme.color,
           ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           AppStrings.subscription.choosePlanTitle,
           style: AppTypography.titleXLargeSemiBold.copyWith(
-            color: isDark ? Colors.white : Colors.black87,
+            color: Theme.of(context).textTheme.titleLarge?.color,
           ),
         ),
         backgroundColor: Colors.transparent,
@@ -123,7 +119,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
           }
 
           if (state is PlansLoaded) {
-            return _buildPlansContent(context, isDark, state.plans,
+            return _buildPlansContent(context, state.plans,
                 state.subscriptionStatus?.subscription?.plan.name);
           }
 
@@ -153,8 +149,8 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
     );
   }
 
-  Widget _buildPlansContent(BuildContext context, bool isDark, List<Plan> plans,
-      String? currentPlanName) {
+  Widget _buildPlansContent(
+      BuildContext context, List<Plan> plans, String? currentPlanName) {
     // Sort plans by tier
     final sortedPlans = List<Plan>.from(plans)
       ..sort((a, b) => a.tier.compareTo(b.tier));
@@ -164,13 +160,13 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
       child: Column(
         children: [
           // Monthly/Yearly Toggle
-          _buildBillingToggle(isDark),
+          _buildBillingToggle(context),
           const SizedBox(height: 8),
           // Savings Text
           Text(
             AppStrings.subscription.yearlySavings,
             style: AppTypography.bodyMediumSemiBold.copyWith(
-              color: GeminiColors.primary,
+              color: Theme.of(context).colorScheme.primary,
             ),
           ),
           const SizedBox(height: 32),
@@ -179,7 +175,6 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                 padding: const EdgeInsets.only(bottom: 20),
                 child: _buildPlanCard(
                   context,
-                  isDark: isDark,
                   plan: plan,
                   isCurrentPlan: plan.name == currentPlanName,
                   isPopular: plan.tier == 2, // Pro plan is typically tier 2
@@ -197,7 +192,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                 child: Text(
                   AppStrings.subscription.termsOfService,
                   style: AppTypography.bodyMedium.copyWith(
-                    color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                    color: Theme.of(context).hintColor,
                   ),
                 ),
               ),
@@ -209,7 +204,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                 child: Text(
                   AppStrings.subscription.privacyPolicy,
                   style: AppTypography.bodyMedium.copyWith(
-                    color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                    color: Theme.of(context).hintColor,
                   ),
                 ),
               ),
@@ -220,29 +215,29 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
     );
   }
 
-  Widget _buildBillingToggle(bool isDark) {
+  Widget _buildBillingToggle(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: isDark ? AppPalette.surfaceToggleDark : const Color(0xFFE8ECF0),
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(30),
       ),
       child: Row(
         children: [
           Expanded(
             child: _buildToggleButton(
+              context,
               AppStrings.subscription.monthly,
               _isMonthly,
               () => setState(() => _isMonthly = true),
-              isDark,
             ),
           ),
           Expanded(
             child: _buildToggleButton(
+              context,
               AppStrings.subscription.yearly,
               !_isMonthly,
               () => setState(() => _isMonthly = false),
-              isDark,
             ),
           ),
         ],
@@ -251,10 +246,10 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
   }
 
   Widget _buildToggleButton(
+    BuildContext context,
     String text,
     bool isActive,
     VoidCallback onTap,
-    bool isDark,
   ) {
     return GestureDetector(
       onTap: onTap,
@@ -262,7 +257,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
           color: isActive
-              ? (isDark ? AppPalette.surfaceContainerDark : Colors.white)
+              ? Theme.of(context).colorScheme.surfaceContainer
               : Colors.transparent,
           borderRadius: BorderRadius.circular(30),
           boxShadow: isActive
@@ -280,8 +275,8 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
           textAlign: TextAlign.center,
           style: AppTypography.buttonMedium.copyWith(
             color: isActive
-                ? (isDark ? Colors.white : Colors.black87)
-                : (isDark ? Colors.grey.shade600 : Colors.grey.shade500),
+                ? Theme.of(context).colorScheme.onSurface
+                : Theme.of(context).hintColor,
           ),
         ),
       ),
@@ -290,7 +285,6 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
 
   Widget _buildPlanCard(
     BuildContext context, {
-    required bool isDark,
     required Plan plan,
     required bool isCurrentPlan,
     required bool isPopular,
@@ -300,19 +294,19 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
 
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? AppPalette.surfaceToggleDark : Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
           color: isPopular
-              ? GeminiColors.primary
-              : (isDark ? Colors.grey.shade800 : Colors.grey.shade200),
+              ? Theme.of(context).colorScheme.primary
+              : Theme.of(context).dividerColor,
           width: isPopular ? 2 : 1,
         ),
         boxShadow: [
           BoxShadow(
             color: isPopular
-                ? GeminiColors.primary.withOpacity(0.1)
-                : Colors.black.withOpacity(0.05),
+                ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
+                : Theme.of(context).shadowColor.withOpacity(0.05),
             blurRadius: 20,
             spreadRadius: 0,
             offset: const Offset(0, 4),
@@ -335,7 +329,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                 Text(
                   plan.displayName,
                   style: AppTypography.headlineMediumBold.copyWith(
-                    color: isDark ? Colors.white : Colors.black87,
+                    color: Theme.of(context).textTheme.bodyLarge?.color,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -343,7 +337,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                 Text(
                   plan.description,
                   style: AppTypography.bodyMedium.copyWith(
-                    color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                    color: Theme.of(context).hintColor,
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -354,7 +348,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                     Text(
                       '\$${displayPrice.toStringAsFixed(0)}',
                       style: AppTypography.displayLarge.copyWith(
-                        color: isDark ? Colors.white : Colors.black87,
+                        color: Theme.of(context).textTheme.displayLarge?.color,
                       ),
                     ),
                     const SizedBox(width: 4),
@@ -363,9 +357,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                       child: Text(
                         AppStrings.subscription.perMonth,
                         style: AppTypography.bodyLarge.copyWith(
-                          color: isDark
-                              ? Colors.grey.shade400
-                              : Colors.grey.shade600,
+                          color: Theme.of(context).hintColor,
                         ),
                       ),
                     ),
@@ -379,7 +371,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                         children: [
                           Icon(
                             Icons.check_circle,
-                            color: GeminiColors.primary,
+                            color: Theme.of(context).colorScheme.primary,
                             size: 20,
                           ),
                           const SizedBox(width: 12),
@@ -387,7 +379,10 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                             child: Text(
                               feature.name,
                               style: AppTypography.bodyLarge.copyWith(
-                                color: isDark ? Colors.white : Colors.black87,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.color,
                               ),
                             ),
                           ),
@@ -411,17 +406,15 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                           },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: isCurrentPlan
-                          ? Colors.grey.shade400
+                          ? Theme.of(context).disabledColor
                           : isPopular
-                              ? GeminiColors.primary
-                              : (isDark
-                                  ? AppPalette.surfaceContainerDark
-                                  : Colors.grey.shade200),
+                              ? Theme.of(context).colorScheme.primary
+                              : Theme.of(context).colorScheme.surfaceContainer,
                       foregroundColor: isCurrentPlan
-                          ? Colors.white
+                          ? Theme.of(context).colorScheme.onSurface
                           : isPopular
-                              ? Colors.white
-                              : (isDark ? Colors.white : Colors.black87),
+                              ? Theme.of(context).colorScheme.onPrimary
+                              : Theme.of(context).colorScheme.onSurface,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -448,7 +441,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 decoration: BoxDecoration(
-                  color: GeminiColors.primary,
+                  color: Theme.of(context).colorScheme.primary,
                   borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(24),
                     topRight: Radius.circular(24),
@@ -472,7 +465,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 decoration: BoxDecoration(
-                  color: AppPalette.successGreen,
+                  color: Colors.green,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(

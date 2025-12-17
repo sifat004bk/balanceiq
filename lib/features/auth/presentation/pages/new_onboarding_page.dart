@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../../../core/constants/app_strings.dart';
-import 'package:balance_iq/core/theme/app_palette.dart';
-
-import '../../../../core/theme/app_typography.dart';
 
 class NewOnboardingPage extends StatefulWidget {
   const NewOnboardingPage({super.key});
@@ -31,7 +28,8 @@ class _NewOnboardingPageState extends State<NewOnboardingPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
       body: SafeArea(
@@ -44,13 +42,15 @@ class _NewOnboardingPageState extends State<NewOnboardingPage> {
                 children: [
                   Icon(
                     Icons.hub,
-                    color: AppPalette.trustBlue,
+                    color: colorScheme.primary,
                     size: 32,
                   ),
                   const SizedBox(width: 8),
                   Text(
                     AppStrings.appName,
-                    style: AppTypography.titleLargeBold,
+                    style: textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),
@@ -91,10 +91,8 @@ class _NewOnboardingPageState extends State<NewOnboardingPage> {
                 controller: _pageController,
                 count: 4,
                 effect: WormEffect(
-                  dotColor: isDark
-                      ? AppPalette.indicatorActiveDark
-                      : AppPalette.indicatorInactive,
-                  activeDotColor: AppPalette.trustBlue,
+                  dotColor: colorScheme.onSurface.withOpacity(0.2),
+                  activeDotColor: colorScheme.primary,
                   dotHeight: 8,
                   dotWidth: 8,
                   spacing: 12,
@@ -112,15 +110,19 @@ class _NewOnboardingPageState extends State<NewOnboardingPage> {
                     child: ElevatedButton(
                       onPressed: _navigateToSignUp,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppPalette.trustBlue,
-                        foregroundColor: AppPalette.surfaceDark,
+                        backgroundColor: colorScheme.primary,
+                        foregroundColor: colorScheme.onPrimary,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
                       child: Text(
                         AppStrings.onboarding.getStarted,
-                        style: AppTypography.buttonLarge,
+                        style: textTheme.labelLarge?.copyWith(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: colorScheme.onPrimary,
+                        ),
                       ),
                     ),
                   ),
@@ -131,11 +133,10 @@ class _NewOnboardingPageState extends State<NewOnboardingPage> {
                     child: TextButton(
                       onPressed: _navigateToLogin,
                       child: Text(
-                        AppStrings.onboarding.logInButton,
-                        style: AppTypography.buttonMediumSemiBold.copyWith(
-                          color: isDark
-                              ? AppPalette.neutralWhite
-                              : AppPalette.neutralBlack,
+                        AppStrings.onboarding.loginButton,
+                        style: textTheme.labelLarge?.copyWith(
+                          color: colorScheme.onSurface,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
@@ -164,7 +165,7 @@ class _NewOnboardingPageState extends State<NewOnboardingPage> {
             width: 192,
             height: 192,
             decoration: BoxDecoration(
-              color: AppPalette.trustBlue.withValues(alpha: 0.2),
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
               shape: BoxShape.circle,
             ),
             child: Center(
@@ -177,7 +178,7 @@ class _NewOnboardingPageState extends State<NewOnboardingPage> {
                           left: 40,
                           child: Icon(
                             Icons.account_balance_wallet,
-                            color: AppPalette.trustBlue,
+                            color: Theme.of(context).colorScheme.primary,
                             size: 40,
                           ),
                         ),
@@ -186,7 +187,7 @@ class _NewOnboardingPageState extends State<NewOnboardingPage> {
                           right: 24,
                           child: Icon(
                             Icons.shopping_cart,
-                            color: AppPalette.trustBlue,
+                            color: Theme.of(context).colorScheme.primary,
                             size: 40,
                           ),
                         ),
@@ -195,7 +196,7 @@ class _NewOnboardingPageState extends State<NewOnboardingPage> {
                           left: 56,
                           child: Icon(
                             Icons.school,
-                            color: AppPalette.trustBlue,
+                            color: Theme.of(context).colorScheme.primary,
                             size: 40,
                           ),
                         ),
@@ -203,7 +204,7 @@ class _NewOnboardingPageState extends State<NewOnboardingPage> {
                     )
                   : Icon(
                       icon,
-                      color: AppPalette.trustBlue,
+                      color: Theme.of(context).colorScheme.primary,
                       size: 80,
                     ),
             ),
@@ -211,16 +212,16 @@ class _NewOnboardingPageState extends State<NewOnboardingPage> {
           const SizedBox(height: 48),
           Text(
             title,
-            style: AppTypography.headlineSmallBold,
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
           Text(
             description,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? AppPalette.neutralGrey
-                      : AppPalette.neutralGrey,
+                  color: Theme.of(context).hintColor,
                 ),
             textAlign: TextAlign.center,
           ),

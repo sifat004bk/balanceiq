@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
 import '../../../../core/constants/app_strings.dart';
-import 'package:balance_iq/core/theme/app_palette.dart';
-import '../../../../core/theme/app_typography.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
 import '../../domain/entities/user.dart';
@@ -75,7 +73,8 @@ class _VerificationSuccessPageState extends State<VerificationSuccessPage>
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
       body: SafeArea(
@@ -101,8 +100,7 @@ class _VerificationSuccessPageState extends State<VerificationSuccessPage>
                                 width: 160 * _pulseAnimation.value,
                                 height: 160 * _pulseAnimation.value,
                                 decoration: BoxDecoration(
-                                  color: AppPalette.trustBlue
-                                      .withValues(alpha: 0.1),
+                                  color: colorScheme.primary.withOpacity(0.1),
                                   shape: BoxShape.circle,
                                 ),
                               );
@@ -113,8 +111,7 @@ class _VerificationSuccessPageState extends State<VerificationSuccessPage>
                             width: 120,
                             height: 120,
                             decoration: BoxDecoration(
-                              color:
-                                  AppPalette.trustBlue.withValues(alpha: 0.3),
+                              color: colorScheme.primary.withOpacity(0.3),
                               shape: BoxShape.circle,
                             ),
                           ),
@@ -122,7 +119,7 @@ class _VerificationSuccessPageState extends State<VerificationSuccessPage>
                           Icon(
                             Icons.task_alt,
                             size: 80,
-                            color: AppPalette.trustBlue,
+                            color: colorScheme.primary,
                           ),
                         ],
                       ),
@@ -131,7 +128,9 @@ class _VerificationSuccessPageState extends State<VerificationSuccessPage>
                     // Title
                     Text(
                       AppStrings.auth.verificationSuccessTitle,
-                      style: AppTypography.headlineMediumBold,
+                      style: textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 12),
@@ -140,11 +139,9 @@ class _VerificationSuccessPageState extends State<VerificationSuccessPage>
                       padding: const EdgeInsets.symmetric(horizontal: 32),
                       child: Text(
                         AppStrings.auth.verificationWelcomeMessage,
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              color: isDark
-                                  ? AppPalette.neutralGrey
-                                  : AppPalette.neutralGrey,
-                            ),
+                        style: textTheme.bodyLarge?.copyWith(
+                          color: Theme.of(context).hintColor,
+                        ),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -158,17 +155,18 @@ class _VerificationSuccessPageState extends State<VerificationSuccessPage>
                 child: ElevatedButton(
                   onPressed: _continueToDashboard,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppPalette.trustBlue,
-                    foregroundColor: isDark
-                        ? AppPalette.surfaceDark
-                        : AppPalette.neutralBlack,
+                    backgroundColor: colorScheme.primary,
+                    foregroundColor: colorScheme.onPrimary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(24),
                     ),
                   ),
                   child: Text(
                     AppStrings.auth.continueToDashboard,
-                    style: AppTypography.buttonLarge,
+                    style: textTheme.labelLarge?.copyWith(
+                      color: colorScheme.onPrimary,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),

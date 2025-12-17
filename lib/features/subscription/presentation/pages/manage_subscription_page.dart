@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:balance_iq/core/constants/app_strings.dart';
-import 'package:balance_iq/core/theme/app_palette.dart';
-import '../../../../core/constants/gemini_colors.dart';
+
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../domain/entities/subscription.dart';
@@ -25,24 +24,22 @@ class _ManageSubscriptionView extends StatelessWidget {
   const _ManageSubscriptionView();
 
   @override
+  @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Scaffold(
-      backgroundColor:
-          isDark ? AppPalette.surfaceDark : AppPalette.surfaceLight,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
-            color: isDark ? Colors.white : Colors.black87,
+            color: Theme.of(context).iconTheme.color,
           ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           AppStrings.subscription.manageSubscriptionTitle,
           style: AppTypography.titleXLargeSemiBold.copyWith(
-            color: isDark ? Colors.white : Colors.black87,
+            color: Theme.of(context).textTheme.titleLarge?.color,
           ),
         ),
         backgroundColor: Colors.transparent,
@@ -56,10 +53,10 @@ class _ManageSubscriptionView extends StatelessWidget {
 
           if (state is SubscriptionStatusLoaded) {
             if (!state.status.hasActiveSubscription) {
-              return _buildNoSubscriptionView(context, isDark);
+              return _buildNoSubscriptionView(context);
             }
             return _buildSubscriptionContent(
-                context, isDark, state.status.subscription!);
+                context, state.status.subscription!);
           }
 
           if (state is SubscriptionError) {
@@ -76,9 +73,7 @@ class _ManageSubscriptionView extends StatelessWidget {
                       state.message,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: isDark
-                            ? Colors.grey.shade400
-                            : Colors.grey.shade600,
+                        color: Theme.of(context).hintColor,
                       ),
                     ),
                   ),
@@ -100,7 +95,7 @@ class _ManageSubscriptionView extends StatelessWidget {
     );
   }
 
-  Widget _buildNoSubscriptionView(BuildContext context, bool isDark) {
+  Widget _buildNoSubscriptionView(BuildContext context) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -110,13 +105,13 @@ class _ManageSubscriptionView extends StatelessWidget {
             Icon(
               Icons.card_membership,
               size: 80,
-              color: isDark ? Colors.grey.shade600 : Colors.grey.shade400,
+              color: Theme.of(context).hintColor,
             ),
             const SizedBox(height: 24),
             Text(
               AppStrings.subscription.noActiveSubscription,
               style: AppTypography.headlineMediumBold.copyWith(
-                color: isDark ? Colors.white : Colors.black87,
+                color: Theme.of(context).textTheme.headlineMedium?.color,
               ),
             ),
             const SizedBox(height: 12),
@@ -124,7 +119,7 @@ class _ManageSubscriptionView extends StatelessWidget {
               AppStrings.subscription.subscribeMessage,
               textAlign: TextAlign.center,
               style: AppTypography.bodyLarge.copyWith(
-                color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                color: Theme.of(context).hintColor,
               ),
             ),
             const SizedBox(height: 32),
@@ -139,8 +134,8 @@ class _ManageSubscriptionView extends StatelessWidget {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: GeminiColors.primary,
-                foregroundColor: Colors.white,
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                foregroundColor: Theme.of(context).colorScheme.onPrimary,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                 shape: RoundedRectangleBorder(
@@ -159,20 +154,21 @@ class _ManageSubscriptionView extends StatelessWidget {
   }
 
   Widget _buildSubscriptionContent(
-      BuildContext context, bool isDark, Subscription subscription) {
+      BuildContext context, Subscription subscription) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Current Plan Card
-          _buildCurrentPlanCard(context, isDark, subscription),
+          _buildCurrentPlanCard(context, subscription),
           const SizedBox(height: 32),
 
           // Billing Info
-          _buildSectionTitle(AppStrings.subscription.subscriptionDetails, isDark),
+          _buildSectionTitle(
+              context, AppStrings.subscription.subscriptionDetails),
           const SizedBox(height: 16),
-          _buildSubscriptionDetailsCard(isDark, subscription),
+          _buildSubscriptionDetailsCard(context, subscription),
           const SizedBox(height: 32),
 
           // Settings
@@ -190,21 +186,21 @@ class _ManageSubscriptionView extends StatelessWidget {
   }
 
   Widget _buildCurrentPlanCard(
-      BuildContext context, bool isDark, Subscription subscription) {
+      BuildContext context, Subscription subscription) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            GeminiColors.primary.withOpacity(0.1),
-            GeminiColors.primary.withOpacity(0.05),
+            Theme.of(context).colorScheme.primary.withOpacity(0.1),
+            Theme.of(context).colorScheme.primary.withOpacity(0.05),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: GeminiColors.primary.withOpacity(0.3),
+          color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
           width: 1,
         ),
       ),
@@ -218,8 +214,8 @@ class _ManageSubscriptionView extends StatelessWidget {
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
                   color: subscription.isActive
-                      ? AppPalette.trustBlue
-                      : Colors.grey,
+                      ? Theme.of(context).colorScheme.primary
+                      : Theme.of(context).disabledColor,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Row(
@@ -232,7 +228,9 @@ class _ManageSubscriptionView extends StatelessWidget {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      subscription.isActive ? AppStrings.subscription.activePlan : AppStrings.subscription.inactive,
+                      subscription.isActive
+                          ? AppStrings.subscription.activePlan
+                          : AppStrings.subscription.inactive,
                       style: AppTypography.captionSemiBold.copyWith(
                         color: Colors.white,
                       ),
@@ -246,7 +244,7 @@ class _ManageSubscriptionView extends StatelessWidget {
           Text(
             subscription.plan.displayName,
             style: AppTypography.displayMedium.copyWith(
-              color: isDark ? Colors.white : Colors.black87,
+              color: Theme.of(context).textTheme.displayMedium?.color,
             ),
           ),
           const SizedBox(height: 8),
@@ -256,7 +254,7 @@ class _ManageSubscriptionView extends StatelessWidget {
               Text(
                 subscription.plan.formattedPrice,
                 style: AppTypography.displayLarge.copyWith(
-                  color: GeminiColors.primary,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               ),
               const SizedBox(width: 4),
@@ -265,7 +263,7 @@ class _ManageSubscriptionView extends StatelessWidget {
                 child: Text(
                   '/ ${subscription.plan.billingCycle.toLowerCase()}',
                   style: AppTypography.bodyLarge.copyWith(
-                    color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                    color: Theme.of(context).hintColor,
                   ),
                 ),
               ),
@@ -273,9 +271,10 @@ class _ManageSubscriptionView extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            AppStrings.subscription.nextBillingDate(subscription.formattedEndDate),
+            AppStrings.subscription
+                .nextBillingDate(subscription.formattedEndDate),
             style: AppTypography.bodyMedium.copyWith(
-              color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+              color: Theme.of(context).hintColor,
             ),
           ),
           if (subscription.isExpiringSoon)
@@ -289,12 +288,14 @@ class _ManageSubscriptionView extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.warning, size: 16, color: AppPalette.errorRed),
+                  Icon(Icons.warning,
+                      size: 16, color: Theme.of(context).colorScheme.error),
                   const SizedBox(width: 4),
                   Text(
-                    AppStrings.subscription.expiresIn(subscription.daysRemaining),
+                    AppStrings.subscription
+                        .expiresIn(subscription.daysRemaining),
                     style: AppTypography.captionSemiBold.copyWith(
-                      color: AppPalette.errorRed,
+                      color: Theme.of(context).colorScheme.error,
                     ),
                   ),
                 ],
@@ -314,8 +315,8 @@ class _ManageSubscriptionView extends StatelessWidget {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: GeminiColors.primary,
-                foregroundColor: Colors.white,
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                foregroundColor: Theme.of(context).colorScheme.onPrimary,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -333,46 +334,53 @@ class _ManageSubscriptionView extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionTitle(String title, bool isDark) {
+  Widget _buildSectionTitle(BuildContext context, String title) {
     return Text(
       title,
       style: AppTypography.titleLargeBold.copyWith(
-        color: isDark ? Colors.white : Colors.black87,
+        color: Theme.of(context).textTheme.titleLarge?.color,
       ),
     );
   }
 
-  Widget _buildSubscriptionDetailsCard(bool isDark, Subscription subscription) {
+  Widget _buildSubscriptionDetailsCard(
+      BuildContext context, Subscription subscription) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark ? AppPalette.surfaceToggleDark : Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
+          color: Theme.of(context).dividerColor,
           width: 1,
         ),
       ),
       child: Column(
         children: [
+          _buildDetailRow(AppStrings.subscription.startDate,
+              _formatDate(subscription.startDate), context),
+          Divider(color: Theme.of(context).dividerColor),
+          _buildDetailRow(AppStrings.subscription.endDate,
+              _formatDate(subscription.endDate), context),
+          Divider(color: Theme.of(context).dividerColor),
+          _buildDetailRow(AppStrings.subscription.daysRemaining,
+              '${subscription.daysRemaining} days', context),
+          Divider(color: Theme.of(context).dividerColor),
           _buildDetailRow(
-              AppStrings.subscription.startDate, _formatDate(subscription.startDate), isDark),
-          Divider(color: isDark ? Colors.grey.shade800 : Colors.grey.shade200),
-          _buildDetailRow(
-              AppStrings.subscription.endDate, _formatDate(subscription.endDate), isDark),
-          Divider(color: isDark ? Colors.grey.shade800 : Colors.grey.shade200),
-          _buildDetailRow(
-              AppStrings.subscription.daysRemaining, '${subscription.daysRemaining} days', isDark),
-          Divider(color: isDark ? Colors.grey.shade800 : Colors.grey.shade200),
-          _buildDetailRow(
-              AppStrings.subscription.status, subscription.isActive ? AppStrings.subscription.active : AppStrings.subscription.inactive, isDark,
-              valueColor: subscription.isActive ? AppPalette.successGreen : AppPalette.errorRed),
+              AppStrings.subscription.status,
+              subscription.isActive
+                  ? AppStrings.subscription.active
+                  : AppStrings.subscription.inactive,
+              context,
+              valueColor: subscription.isActive
+                  ? Colors.green
+                  : Theme.of(context).colorScheme.error),
         ],
       ),
     );
   }
 
-  Widget _buildDetailRow(String label, String value, bool isDark,
+  Widget _buildDetailRow(String label, String value, BuildContext context,
       {Color? valueColor}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -382,13 +390,14 @@ class _ManageSubscriptionView extends StatelessWidget {
           Text(
             label,
             style: AppTypography.bodyMedium.copyWith(
-              color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+              color: Theme.of(context).hintColor,
             ),
           ),
           Text(
             value,
             style: AppTypography.bodyMediumSemiBold.copyWith(
-              color: valueColor ?? (isDark ? Colors.white : Colors.black87),
+              color:
+                  valueColor ?? Theme.of(context).textTheme.bodyMedium?.color,
             ),
           ),
         ],
@@ -414,7 +423,7 @@ class _ManageSubscriptionView extends StatelessWidget {
     return '${months[date.month - 1]} ${date.day}, ${date.year}';
   }
 
-  Widget _buildAutoRenewalToggle(bool isDark) {
+  Widget _buildAutoRenewalToggle(BuildContext context) {
     return StatefulBuilder(
       builder: (context, setState) {
         bool autoRenew = true;
@@ -422,10 +431,10 @@ class _ManageSubscriptionView extends StatelessWidget {
         return Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: isDark ? AppPalette.surfaceToggleDark : Colors.white,
+            color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
+              color: Theme.of(context).dividerColor,
               width: 1,
             ),
           ),
@@ -435,12 +444,12 @@ class _ManageSubscriptionView extends StatelessWidget {
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: GeminiColors.primary.withOpacity(0.1),
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   Icons.autorenew,
-                  color: GeminiColors.primary,
+                  color: Theme.of(context).colorScheme.primary,
                   size: 24,
                 ),
               ),
@@ -452,16 +461,14 @@ class _ManageSubscriptionView extends StatelessWidget {
                     Text(
                       AppStrings.subscription.autoRenewal,
                       style: AppTypography.buttonMedium.copyWith(
-                        color: isDark ? Colors.white : Colors.black87,
+                        color: Theme.of(context).textTheme.bodyLarge?.color,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       AppStrings.subscription.autoRenewalDescription,
                       style: AppTypography.bodyMedium.copyWith(
-                        color: isDark
-                            ? Colors.grey.shade400
-                            : Colors.grey.shade600,
+                        color: Theme.of(context).hintColor,
                       ),
                     ),
                   ],
@@ -475,7 +482,7 @@ class _ManageSubscriptionView extends StatelessWidget {
                   });
                   // TODO: Update auto-renewal preference via API
                 },
-                activeColor: GeminiColors.primary,
+                activeColor: Theme.of(context).colorScheme.primary,
               ),
             ],
           ),
@@ -484,7 +491,7 @@ class _ManageSubscriptionView extends StatelessWidget {
     );
   }
 
-  Widget _buildCancelSubscriptionButton(BuildContext context, bool isDark) {
+  Widget _buildCancelSubscriptionButton(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       child: OutlinedButton(
@@ -523,9 +530,9 @@ class _ManageSubscriptionView extends StatelessWidget {
           );
         },
         style: OutlinedButton.styleFrom(
-          foregroundColor: AppPalette.errorRed,
+          foregroundColor: Theme.of(context).colorScheme.error,
           side: BorderSide(
-            color: AppPalette.errorRed,
+            color: Theme.of(context).colorScheme.error,
             width: 1,
           ),
           padding: const EdgeInsets.symmetric(vertical: 16),
@@ -536,7 +543,7 @@ class _ManageSubscriptionView extends StatelessWidget {
         child: Text(
           AppStrings.subscription.cancelButton,
           style: AppTypography.buttonMedium.copyWith(
-            color: AppPalette.errorRed,
+            color: Theme.of(context).colorScheme.error,
           ),
         ),
       ),

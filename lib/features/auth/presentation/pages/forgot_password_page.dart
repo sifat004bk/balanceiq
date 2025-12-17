@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_strings.dart';
-import 'package:balance_iq/core/theme/app_palette.dart';
-
-import '../../../../core/theme/app_typography.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
 
@@ -34,8 +31,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is PasswordResetEmailSent) {
@@ -43,7 +38,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(AppStrings.auth.resetEmailSent(state.email)),
-              backgroundColor: AppPalette.successGreen,
+              backgroundColor: Colors.green,
               duration: const Duration(seconds: 5),
             ),
           );
@@ -53,7 +48,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message),
-              backgroundColor: AppPalette.errorRed,
+              backgroundColor: Theme.of(context).colorScheme.error,
             ),
           );
         }
@@ -63,6 +58,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           title: Text(AppStrings.auth.forgotPasswordTitle),
           backgroundColor: Colors.transparent,
           elevation: 0,
+          iconTheme: IconThemeData(
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
         ),
         body: SafeArea(
           child: SingleChildScrollView(
@@ -75,22 +73,24 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   const SizedBox(height: 24),
                   Text(
                     AppStrings.auth.resetYourPassword,
-                    style: AppTypography.headlineMediumBold,
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
                   const SizedBox(height: 12),
                   Text(
                     AppStrings.auth.resetInstructions,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: isDark
-                              ? AppPalette.neutralGrey
-                              : AppPalette.neutralGrey,
+                          color: Theme.of(context).hintColor,
                         ),
                   ),
                   const SizedBox(height: 40),
                   // Email field
                   Text(
                     AppStrings.auth.emailAddressLabel,
-                    style: AppTypography.bodyMediumSemiBold,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
                   ),
                   const SizedBox(height: 8),
                   TextFormField(
@@ -100,29 +100,24 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                       hintText: AppStrings.auth.enterEmailHint,
                       prefixIcon: const Icon(Icons.email_outlined),
                       filled: true,
-                      fillColor: isDark
-                          ? AppPalette.inputBackgroundDark
-                          : AppPalette.inputBackgroundLight,
+                      fillColor:
+                          Theme.of(context).inputDecorationTheme.fillColor,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
-                          color: isDark
-                              ? AppPalette.inputBorderDark
-                              : AppPalette.inputBorderLight,
+                          color: Theme.of(context).dividerColor,
                         ),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
-                          color: isDark
-                              ? AppPalette.inputBorderDark
-                              : AppPalette.inputBorderLight,
+                          color: Theme.of(context).dividerColor,
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
-                          color: AppPalette.trustBlue,
+                          color: Theme.of(context).colorScheme.primary,
                           width: 2,
                         ),
                       ),
@@ -149,7 +144,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                         return ElevatedButton(
                           onPressed: isLoading ? null : _handleSubmit,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppPalette.trustBlue,
+                            backgroundColor:
+                                Theme.of(context).colorScheme.primary,
+                            foregroundColor:
+                                Theme.of(context).colorScheme.onPrimary,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
@@ -161,12 +159,23 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
                                     valueColor: AlwaysStoppedAnimation<Color>(
-                                        AppPalette.neutralWhite),
+                                        Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary),
                                   ),
                                 )
                               : Text(
                                   AppStrings.auth.sendResetLink,
-                                  style: AppTypography.buttonLarge,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelLarge
+                                      ?.copyWith(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary,
+                                      ),
                                 ),
                         );
                       },
@@ -179,9 +188,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                       onPressed: () => Navigator.of(context).pop(),
                       child: Text(
                         AppStrings.auth.backToLogin,
-                        style: AppTypography.buttonMediumSemiBold.copyWith(
-                          color: AppPalette.trustBlue,
-                        ),
+                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontWeight: FontWeight.w600,
+                            ),
                       ),
                     ),
                   ),

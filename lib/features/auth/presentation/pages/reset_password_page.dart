@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_strings.dart';
-import 'package:balance_iq/core/theme/app_palette.dart';
 
-import '../../../../core/theme/app_typography.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
 
@@ -45,7 +43,8 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
@@ -54,7 +53,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(AppStrings.auth.resetSuccess),
-              backgroundColor: AppPalette.successGreen,
+              backgroundColor: Colors.green,
             ),
           );
           // Navigate to login
@@ -63,7 +62,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message),
-              backgroundColor: AppPalette.errorRed,
+              backgroundColor: colorScheme.error,
             ),
           );
         }
@@ -85,22 +84,24 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   const SizedBox(height: 24),
                   Text(
                     AppStrings.auth.createNewPassword,
-                    style: AppTypography.headlineMediumBold,
+                    style: textTheme.headlineMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 12),
                   Text(
                     AppStrings.auth.enterNewPasswordHint,
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: isDark
-                              ? AppPalette.neutralGrey
-                              : AppPalette.neutralGrey,
-                        ),
+                    style: textTheme.bodyLarge?.copyWith(
+                      color: Theme.of(context).hintColor,
+                    ),
                   ),
                   const SizedBox(height: 40),
                   // New Password field
                   Text(
                     AppStrings.auth.newPasswordLabel,
-                    style: AppTypography.bodyMediumSemiBold,
+                    style: textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   TextFormField(
@@ -122,29 +123,23 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                         },
                       ),
                       filled: true,
-                      fillColor: isDark
-                          ? AppPalette.inputBackgroundDark
-                          : AppPalette.inputBackgroundLight,
+                      fillColor: Theme.of(context).cardColor,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
-                          color: isDark
-                              ? AppPalette.inputBorderDark
-                              : AppPalette.inputBorderLight,
+                          color: Theme.of(context).dividerColor,
                         ),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
-                          color: isDark
-                              ? AppPalette.inputBorderDark
-                              : AppPalette.inputBorderLight,
+                          color: Theme.of(context).dividerColor,
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
-                          color: AppPalette.trustBlue,
+                          color: colorScheme.primary,
                           width: 2,
                         ),
                       ),
@@ -163,7 +158,9 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   // Confirm Password field
                   Text(
                     AppStrings.auth.confirmPasswordLabel,
-                    style: AppTypography.bodyMediumSemiBold,
+                    style: textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   TextFormField(
@@ -186,29 +183,23 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                         },
                       ),
                       filled: true,
-                      fillColor: isDark
-                          ? AppPalette.inputBackgroundDark
-                          : AppPalette.inputBackgroundLight,
+                      fillColor: Theme.of(context).cardColor,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
-                          color: isDark
-                              ? AppPalette.inputBorderDark
-                              : AppPalette.inputBorderLight,
+                          color: Theme.of(context).dividerColor,
                         ),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
-                          color: isDark
-                              ? AppPalette.inputBorderDark
-                              : AppPalette.inputBorderLight,
+                          color: Theme.of(context).dividerColor,
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
-                          color: AppPalette.trustBlue,
+                          color: colorScheme.primary,
                           width: 2,
                         ),
                       ),
@@ -235,7 +226,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                         return ElevatedButton(
                           onPressed: isLoading ? null : _handleSubmit,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppPalette.trustBlue,
+                            backgroundColor: colorScheme.primary,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
@@ -247,12 +238,15 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
                                     valueColor: AlwaysStoppedAnimation<Color>(
-                                        AppPalette.neutralWhite),
+                                        colorScheme.onPrimary),
                                   ),
                                 )
                               : Text(
                                   AppStrings.auth.resetPasswordButton,
-                                  style: AppTypography.buttonLarge,
+                                  style: textTheme.labelLarge?.copyWith(
+                                    color: colorScheme.onPrimary,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                         );
                       },

@@ -1,6 +1,10 @@
 /// Centralized Strings for BalanceIQ
 /// Organized by Feature with Common Section
 ///
+/// Updated: 2025-12-17
+/// Changes: Applied UX research recommendations, added Bangladesh market support,
+/// fixed terminology inconsistencies, improved error messages, added accessibility strings
+///
 /// Usage: AppStrings.common.buttonSave, AppStrings.auth.welcomeTitle, etc.
 class AppStrings {
   const AppStrings._();
@@ -18,6 +22,9 @@ class AppStrings {
   static const transactions = _TransactionsStrings();
   static const subscription = _SubscriptionStrings();
   static const profile = _ProfileStrings();
+  static const accounts = _AccountStrings();
+  static const accessibility = _AccessibilityStrings();
+  static const sync = _SyncStrings();
   static const errors = _ErrorStrings();
 }
 
@@ -44,16 +51,20 @@ class _CommonStrings {
   final viewAll = 'View All';
   final learnMore = 'Learn More';
   final getStarted = 'Get Started';
-  final gotIt = 'Got it';
+  final gotIt = 'Got It';
+  final okay = 'Okay';
+  final understand = 'I Understand';
 
   // Status
-  final loading = 'Loading...';
+  final loading = 'Loading';
+  final loadingContent = 'Loading content, please wait';
   final success = 'Success';
   final error = 'Error';
   final warning = 'Warning';
   final info = 'Info';
-  final processing = 'Processing...';
-  final pleaseWait = 'Please wait...';
+  final processing = 'Processing';
+  final processingRequest = 'Processing your request';
+  final pleaseWait = 'Please wait';
 
   // Validation
   final required = 'Required';
@@ -65,10 +76,10 @@ class _CommonStrings {
 
   // Feedback
   final copied = 'Copied to clipboard';
-  final saved = 'Saved successfully';
-  final deleted = 'Deleted successfully';
-  final updated = 'Updated successfully';
-  final failed = 'Operation failed';
+  final savedSuccessfully = 'Saved successfully!';
+  final deletedSuccessfully = 'Deleted successfully!';
+  final updatedSuccessfully = 'Updated successfully!';
+  final operationFailed = 'Unable to complete action. Please try again.';
 
   // Time
   final today = 'Today';
@@ -78,8 +89,15 @@ class _CommonStrings {
   final thisYear = 'This Year';
   final custom = 'Custom';
 
+  // Currency
+  final currencySymbol = '৳';
+  final currencyCode = 'BDT';
+  final currencyName = 'Bangladeshi Taka';
+  final takaShort = 'Tk';
+
   // Misc
   final noData = 'No data available';
+  final noDataYet = 'No data available yet. Start tracking to see insights!';
   final comingSoon = 'Coming Soon';
   final selectTextMode = 'Select text mode';
 }
@@ -94,8 +112,11 @@ class _AuthStrings {
   final welcomeTitle = 'BalanceIQ';
   final welcomeSubtitle = 'Your AI-powered personal finance assistant';
   final continueGoogle = 'Continue with Google';
+  final continueApple = 'Continue with Apple';
   final termsPrivacy =
       'By continuing, you agree to our Terms of Service\nand Privacy Policy';
+  final termsLink = 'View Terms of Service';
+  final privacyLink = 'View Privacy Policy';
 
   // Login
   final loginTitle = 'Welcome Back';
@@ -105,9 +126,9 @@ class _AuthStrings {
   final passwordLabel = 'Password';
   final passwordHint = 'Enter your password';
   final forgotPassword = 'Forgot Password?';
-  final loginButton = 'Log In';
+  final loginButton = 'Login';
   final noAccount = "Don't have an account?";
-  final signUpLink = 'Sign Up';
+  final signupLink = 'Sign Up';
 
   // Signup
   final signupTitle = 'Create Account';
@@ -118,21 +139,23 @@ class _AuthStrings {
   final confirmPasswordHint = 'Re-enter your password';
   final signupButton = 'Sign Up';
   final haveAccount = 'Already have an account?';
-  final loginLink = 'Log In';
+  final loginLink = 'Login';
 
   // Password Management
   final forgotPasswordTitle = 'Forgot Password';
   final forgotPasswordSubtitle = 'Enter your email to reset password';
   final resetYourPassword = 'Reset Your Password';
   final resetInstructions =
-      'Enter your email address and we\'ll send you instructions to reset your password.';
+      'Enter your email address and we\'ll send you instructions to reset your password. The link will expire in 24 hours.';
   final emailAddressLabel = 'Email Address';
   final enterEmailHint = 'Enter your email';
   final emailRequired = 'Please enter your email';
   final emailInvalid = 'Please enter a valid email';
   final sendResetLink = 'Send Reset Link';
-  final resetLinkSent = 'Reset link sent to your email';
-  String resetEmailSent(String email) => 'Password reset email sent to $email';
+  final resetLinkSent =
+      'Password reset link sent! Check your email (and spam folder) for instructions.';
+  String resetEmailSent(String email) =>
+      'Password reset email sent to $email. Please check your inbox and spam folder.';
   final backToLogin = 'Back to Login';
   final resetPasswordTitle = 'Reset Password';
   final resetPasswordSubtitle = 'Enter your new password';
@@ -141,13 +164,15 @@ class _AuthStrings {
   final newPasswordLabel = 'New Password';
   final enterNewPasswordPlaceholder = 'Enter new password';
   final passwordRequired = 'Please enter a password';
-  final passwordMinLength = 'Password must be at least 6 characters';
+  final passwordMinLength = 'Password must be at least 8 characters';
+  final passwordStrengthHint =
+      'Use at least 8 characters with uppercase, lowercase, and numbers';
   final confirmPasswordRequired = 'Please confirm your password';
   final confirmNewPasswordRequired = 'Please confirm your new password';
   final passwordsDoNotMatch = 'Passwords do not match';
   final confirmNewPasswordHint = 'Confirm new password';
   final resetPasswordButton = 'Reset Password';
-  final resetSuccess = 'Password reset successful! Please login.';
+  final resetSuccess = 'Password reset successful! You can now login.';
   final changePasswordTitle = 'Change Password';
   final updatePasswordTitle = 'Update Your Password';
   final updatePasswordHint =
@@ -156,10 +181,10 @@ class _AuthStrings {
   final enterCurrentPasswordHint = 'Enter current password';
   final currentPasswordRequired = 'Please enter your current password';
   final newPasswordRequired = 'Please enter a new password';
-  final passwordMustBeDifferent = 'New password must be different from current';
+  final passwordMustBeDifferent =
+      'New password must be different from current password';
   final confirmNewPasswordLabel = 'Confirm New Password';
   final changePasswordButton = 'Change Password';
-  final passwordChanged = 'Password changed successfully';
   final passwordChangeSuccess = 'Password changed successfully!';
 
   // Email Verification
@@ -176,23 +201,34 @@ class _AuthStrings {
       'Your email has been successfully verified';
   final verificationSuccessTitle = 'Verification Successful!';
   final verificationWelcomeMessage =
-      'Welcome, User! Your account is now active and ready to go.';
+      'Welcome! Your account is now active and ready to go.';
   final skipVerificationDevOnly = 'Skip Verification (Dev Only)';
-  final accountCreated = 'Account created';
+  final accountCreated = 'Account created successfully!';
   final pleaseLogin = 'Please login to continue';
   final openEmailApp = 'Open Email App';
   final didntReceive = "Didn't receive it? ";
   String resendIn(int seconds) => 'Resend in ${seconds}s';
   final continueToDashboard = 'Continue to Dashboard';
 
+  // Session Management
+  final sessionExpired = 'Session Expired';
+  final sessionExpiredMessage =
+      'For your security, please login again to continue.';
+  final emailAlreadyInUse =
+      'This email is already registered. Try logging in instead.';
+
   // Loading & Errors
-  final signingIn = 'Signing in...';
-  final signingUp = 'Creating account...';
-  final sendingEmail = 'Sending email...';
+  final signingIn = 'Signing in';
+  final signingUp = 'Creating account';
+  final sendingEmail = 'Sending email';
   final networkError = 'Network Error';
   final networkErrorMessage = 'Please check your internet connection';
-  final authError = 'Authentication failed';
+  final authError = 'Unable to sign in. Please check your email and password.';
   final tryAgain = 'Try Again';
+
+  // Security
+  final dataSecurityNotice = 'Your financial data is encrypted and secure';
+  final biometricOptional = 'Add fingerprint or face unlock (optional)';
 }
 
 // ============================================================================
@@ -202,22 +238,22 @@ class _OnboardingStrings {
   const _OnboardingStrings();
 
   // Slides
-  final slide1Title = 'Welcome to Your All-in-One BalanceIQ';
+  final slide1Title = 'Welcome to BalanceIQ';
   final slide1Description =
-      'Centralize your digital life and automate tasks with ease.';
-  final slide2Title = 'Powered by n8n Automation';
+      'Your AI-powered personal finance assistant for smart money management';
+  final slide2Title = 'Track Every Taka';
   final slide2Description =
-      'Connect your favorite apps and create powerful workflows without any code.';
+      'Easily track expenses, income, and manage your cash, bank, and mobile money';
   final slide3Title = 'Chat with Your AI Assistant';
   final slide3Description =
-      'Get answers, generate content, and control your automations with a simple chat.';
-  final slide4Title = 'Manage Your Work & Life';
+      'Get answers, track expenses, and receive personalized financial advice through conversation';
+  final slide4Title = 'Reach Your Financial Goals';
   final slide4Description =
-      'Handle your finances, e-commerce, and social media all in one place.';
+      'Set budgets, track progress, and achieve your savings goals faster';
 
   // Actions
   final getStarted = 'Get Started';
-  final logInButton = 'Log In';
+  final loginButton = 'Login';
 }
 
 // ============================================================================
@@ -249,8 +285,8 @@ class _ChatStrings {
 
   // Feedback
   final feedbackThanks = 'Thanks for the feedback!';
-  final regenerating = 'Regenerating response...';
-  final thinking = 'Thinking...';
+  final regenerating = 'Regenerating response';
+  final thinking = 'Thinking';
 
   // Actions
   final changeActionType = 'Change Action Type';
@@ -271,12 +307,18 @@ class _ChatStrings {
   // Errors & Messages
   String imagePickFailed(String error) => 'Failed to pick image: $error';
   String photoFailed(String error) => 'Failed to take photo: $error';
-  final micPermissionDenied = 'Microphone permission denied';
+  final micPermissionDenied =
+      'Microphone permission denied. Enable it in Settings to use voice input.';
+  final cameraPermissionDenied =
+      'Camera permission denied. Enable it in Settings to take photos.';
+  final storagePermissionDenied =
+      'Storage permission denied. Enable it in Settings to attach files.';
   final sentMedia = 'Sent media';
-  final tokenLimitReached = 'Daily token limit reached. Chat unavailable.';
-  String nearTokenLimit(int remaining) =>
-      'Near token limit ($remaining remaining)';
-  final limitReached = 'Limit reached';
+  final messageLimitReached =
+      'Daily message limit reached. Resets at midnight or upgrade your plan.';
+  String nearMessageLimit(int remaining) =>
+      'You have $remaining messages remaining today';
+  final limitReached = 'Limit Reached';
 
   // GenUI Errors
   String errorRenderingChart(String error) => 'Error rendering chart: $error';
@@ -299,6 +341,16 @@ class _ChatStrings {
   String actionTriggered(String action) => 'Action triggered: $action';
   final comingSoon = 'Coming soon!';
 
+  // Bot Status
+  final botNotResponding =
+      'AI assistant is not responding. Please try again in a moment.';
+  final messageQueuedOffline = 'Message queued. Will send when online.';
+  final voiceRecordingFailed =
+      'Voice recording failed. Check microphone permission.';
+  final imageUploadFailed =
+      'Image upload failed. Try a smaller file (max 10MB).';
+  final chatHistoryCleared = 'Chat history cleared';
+
   // Access Control
   final emailVerificationRequired = 'Email Verification Required';
   final emailVerificationMessage =
@@ -312,8 +364,9 @@ class _ChatStrings {
   final subscriptionExpiredMessage =
       'Your subscription has expired. Please renew to continue using the chat feature.';
   final renewSubscription = 'Renew Subscription';
-  final tokenLimitExceeded = 'Token Limit Exceeded';
-  final tokenLimitExceededMessage = 'You have reached your daily token limit.';
+  final messageLimitExceeded = 'Message Limit Exceeded';
+  final messageLimitExceededMessage =
+      'You have reached your daily message limit. Resets at midnight.';
   final upgradePlan = 'Upgrade Plan';
   final tooManyRequests = 'Too Many Requests';
   final rateLimitMessage = 'Please wait a moment before sending more messages.';
@@ -393,10 +446,12 @@ class _DashboardStrings {
   final goodEvening = 'Good Evening';
 
   // Balance Card
-  final walletBalance = 'Wallet Balance';
+  final yourBalance = 'Your Balance';
   final netBalance = 'Net Balance';
   final totalIncome = 'Total Income';
   final totalExpense = 'Total Expense';
+  final totalIncomeThisMonth = 'Total Income (This Month)';
+  final totalExpenseThisMonth = 'Total Expense (This Month)';
   final income = 'Income';
   final expense = 'Expense';
 
@@ -411,7 +466,9 @@ class _DashboardStrings {
   final categoryBreakdown = 'Category Breakdown';
   final recentTransactions = 'Recent Transactions';
   final expenseRatio = 'Expense Ratio';
+  final expenseRatioHelp = 'Percentage of your income spent this month';
   final savingsRate = 'Savings Rate';
+  final savingsRateHelp = 'Percentage of your income saved this month';
 
   // Ratios
   final incomeExpenseRatio = 'Income/Expense Ratio';
@@ -425,13 +482,13 @@ class _DashboardStrings {
   // Empty States
   final noTransactions = 'No transactions yet';
   final noTransactionsMessage =
-      'Start tracking your finances by adding transactions';
+      'Start tracking your finances by chatting with your AI assistant or adding transactions manually';
   final noDataForPeriod = 'No data for this period';
 
   // Welcome Page
   final welcomeToApp = 'Welcome to BalanceIQ';
   final welcomeSubtitle =
-      'Start tracking your finances and\\ntake control of your money';
+      'Start tracking your finances and\ntake control of your money';
   final trackExpenses = 'Track Expenses';
   final trackExpensesDesc = 'Monitor your spending in real-time';
   final smartInsights = 'Smart Insights';
@@ -440,7 +497,7 @@ class _DashboardStrings {
   final reachGoalsDesc = 'Save smarter with personalized plans';
 
   // Error Page
-  final errorTitle = 'Oops! Something went wrong';
+  final errorTitle = 'Something went wrong';
   final commonIssues = 'Common issues:';
   final checkInternet = 'Check your internet connection';
   final serverDown = 'Server might be temporarily down';
@@ -496,8 +553,14 @@ class _TransactionsStrings {
   final categoryHealthcare = 'Healthcare';
   final categoryEducation = 'Education';
   final categorySalary = 'Salary';
+  final categoryFreelance = 'Freelance Income';
+  final categoryRemittance = 'Remittance';
+  final categoryBusiness = 'Business Income';
   final categoryInvestment = 'Investment';
   final categoryGift = 'Gift';
+  final categoryMobileRecharge = 'Mobile Recharge';
+  final categoryInternetBill = 'Internet Bill';
+  final categoryRent = 'Rent';
   final categoryOther = 'Other';
 
   // Actions
@@ -506,13 +569,30 @@ class _TransactionsStrings {
   final deleteConfirmTitle = 'Delete Transaction';
   final deleteConfirmMessage =
       'Are you sure you want to delete this transaction? This action cannot be undone.';
-  final deleting = 'Deleting transaction...';
+  final deleting = 'Deleting transaction';
   final noDescription = 'No description';
 
+  // Transaction Confirmations
+  final largeTransactionTitle = 'Large Amount';
+  String largeTransactionConfirm(String amount) =>
+      'This is a large amount ($amount). Please confirm this transaction.';
+  final duplicateWarning = 'Possible Duplicate';
+  final duplicateMessage =
+      'This looks similar to a recent transaction. Add anyway?';
+  final addAnyway = 'Add Anyway';
+  final futureTransactionWarning = 'Future Date';
+  final futureTransactionMessage = 'This transaction is dated in the future';
+  final categoryNotSelected = 'Please select a category';
+  final invalidDate = 'Please select a valid date';
+  final invalidAmount = 'Please enter a valid amount';
+
   // Status
-  final transactionAdded = 'Transaction added';
-  final transactionUpdated = 'Transaction updated';
-  final transactionDeleted = 'Transaction deleted';
+  final transactionAdded = 'Transaction added successfully!';
+  final transactionUpdated = 'Transaction updated successfully!';
+  final transactionDeleted = 'Transaction deleted successfully!';
+  String expenseRecorded(String amount, String category) =>
+      '$amount expense recorded in $category';
+  String incomeAdded(String amount) => '$amount income added to your balance';
 }
 
 // ============================================================================
@@ -572,7 +652,7 @@ class _SubscriptionStrings {
   final autoRenewal = 'Auto-renewal';
   final autoRenewalDescription = 'Automatically renew subscription';
   final cancelConfirmation =
-      'Are you sure you want to cancel your subscription? You will lose access to all premium features at the end of your current billing period.';
+      'Are you sure you want to cancel your subscription? You will lose access to premium features at the end of your current billing period.';
   final cancelButton = 'Cancel Subscription';
   final planDetails = 'Plan Details';
   final renewsOn = 'Renews on';
@@ -581,6 +661,27 @@ class _SubscriptionStrings {
   final managePlan = 'Manage Plan';
   final cancelSubscription = 'Cancel Subscription';
   final renewSubscription = 'Renew Subscription';
+
+  // Plan Changes
+  final downgradePlanTitle = 'Downgrade Plan';
+  String downgradePlanConfirm(String features) =>
+      'Downgrading will disable: $features. Continue?';
+  final upgradePlanTitle = 'Upgrade Plan';
+  final upgradePlanMessage = 'Unlock more features with a higher plan';
+
+  // Payment
+  final paymentFailed = 'Payment Failed';
+  final paymentFailedMessage =
+      'Payment could not be processed. Please update your payment method and try again.';
+  final updatePaymentMethod = 'Update Payment Method';
+  final subscriptionPaused = 'Subscription Paused';
+  final subscriptionPausedMessage =
+      'Your subscription is paused. Renew to access premium features.';
+
+  // Trial
+  final trialEnding = 'Trial Ending Soon';
+  String trialEndingMessage(int days) =>
+      'Your trial ends in $days days. Subscribe to continue enjoying premium features.';
 
   // Status
   final active = 'Active';
@@ -591,8 +692,8 @@ class _SubscriptionStrings {
   // Messages
   final noActivePlan = 'No Active Plan';
   final subscriptionSuccess = 'Subscription successful!';
-  final subscriptionFailed = 'Subscription failed';
-  final cancellationSuccess = 'Subscription cancelled';
+  final subscriptionFailed = 'Subscription failed. Please try again.';
+  final cancellationSuccess = 'Subscription cancelled successfully';
 }
 
 // ============================================================================
@@ -619,10 +720,14 @@ class _ProfileStrings {
   final privacyPolicy = 'Privacy Policy';
 
   // Actions
-  final logOut = 'Log Out';
-  final logOutConfirm = 'Are you sure you want to log out?';
+  final logOut = 'Logout';
+  final logOutConfirm = 'Are you sure you want to logout?';
   final deleteAccount = 'Delete Account';
-  final deleteAccountConfirm = 'Are you sure? This action cannot be undone.';
+  final deleteAccountTitle = 'Delete Account Permanently?';
+  final deleteAccountWarning =
+      'All your financial data, transactions, and account history will be permanently deleted. This action cannot be undone.';
+  final deleteAccountButton = 'Delete My Account';
+  final deleteAccountSuccess = 'Account deleted. We\'re sorry to see you go.';
 
   // Account Details
   final name = 'Name';
@@ -638,6 +743,7 @@ class _ProfileStrings {
   final lightMode = 'Light Mode';
   final darkMode = 'Dark Mode';
   final systemDefault = 'System Default';
+  final themeChanged = 'Theme changed successfully';
 
   // Notifications
   final pushNotifications = 'Push Notifications';
@@ -645,6 +751,140 @@ class _ProfileStrings {
   final transactionAlerts = 'Transaction Alerts';
   final budgetAlerts = 'Budget Alerts';
   final weeklyReports = 'Weekly Reports';
+  final notificationSettingsSaved = 'Notification preferences saved';
+
+  // Profile Updates
+  final profileUpdated = 'Profile updated successfully!';
+  final emailVerified = 'Email verified successfully!';
+  final languageChanged = 'Language changed successfully';
+}
+
+// ============================================================================
+// ACCOUNT STRINGS - Account Types (Bangladesh-specific)
+// ============================================================================
+class _AccountStrings {
+  const _AccountStrings();
+
+  // Account Types
+  final accountType = 'Account Type';
+  final accountTypeCash = 'Cash';
+  final accountTypeMobileBanking = 'Mobile Banking';
+  final accountTypeBank = 'Bank Account';
+  final accountTypeCard = 'Debit/Credit Card';
+
+  // Mobile Banking (Bangladesh)
+  final mobileBanking = 'Mobile Banking';
+  final bKash = 'bKash';
+  final nagad = 'Nagad';
+  final rocket = 'Rocket';
+  final upay = 'Upay';
+  final mobileBankingNumber = 'Mobile Banking Number';
+  final mobileBankingBalance = 'Mobile Banking Balance';
+  final mobileMoneyTransfer = 'Mobile Money Transfer';
+  final cashInOut = 'Cash In/Out';
+
+  // Account Management
+  final cashInHand = 'Cash in Hand';
+  final bankBalance = 'Bank Balance';
+  final totalBalance = 'Total Balance';
+  final addAccount = 'Add Account';
+  final editAccount = 'Edit Account';
+  final deleteAccount = 'Delete Account';
+  final accountName = 'Account Name';
+  final accountBalance = 'Account Balance';
+  final setAsDefault = 'Set as Default';
+  final defaultAccount = 'Default Account';
+
+  // Payment Methods
+  final paymentMethod = 'Payment Method';
+  final paymentCash = 'Cash';
+  final paymentMobileBanking = 'Mobile Banking';
+  final paymentBankTransfer = 'Bank Transfer';
+  final paymentCard = 'Debit/Credit Card';
+}
+
+// ============================================================================
+// ACCESSIBILITY STRINGS - Screen Reader & Accessibility Labels
+// ============================================================================
+class _AccessibilityStrings {
+  const _AccessibilityStrings();
+
+  // Button Labels
+  final sendMessageButton = 'Send message';
+  final copyToClipboard = 'Copy message to clipboard';
+  final attachFileButton = 'Attach file or image';
+  final voiceInputButton = 'Record voice message';
+  final passwordVisibilityToggle = 'Toggle password visibility';
+  final showPassword = 'Show password';
+  final hidePassword = 'Hide password';
+  final refreshData = 'Pull down to refresh data';
+  final viewAllTransactions = 'View all transactions';
+  final retryLoadingData = 'Retry loading data';
+
+  // Content Descriptions
+  final balanceCardDescription = 'Your current balance and financial summary';
+  final spendingChartDescription = 'Spending trend chart for selected period';
+  final categoryChartDescription = 'Spending breakdown by category';
+  final profileImageLabel = 'Profile picture. Tap to change.';
+  final botAvatarLabel = 'AI assistant avatar';
+  final transactionItemDescription = 'Transaction item. Tap to view details.';
+
+  // Status Announcements
+  final loadingContentAnnouncement = 'Loading content, please wait';
+  final processingRequestAnnouncement = 'Processing your request';
+  final dataLoadedAnnouncement = 'Data loaded successfully';
+  final errorOccurredAnnouncement = 'An error occurred';
+  final transactionAddedAnnouncement = 'Transaction added successfully';
+  final messagesentAnnouncement = 'Message sent';
+}
+
+// ============================================================================
+// SYNC STRINGS - Synchronization & Offline Mode
+// ============================================================================
+class _SyncStrings {
+  const _SyncStrings();
+
+  // Sync Status
+  final syncing = 'Syncing';
+  final syncingData = 'Syncing your data';
+  final syncComplete = 'All changes synced successfully';
+  final syncFailed =
+      'Some changes couldn\'t sync. Will retry automatically when online.';
+  final lastSynced = 'Last synced';
+  final neverSynced = 'Not yet synced';
+  String lastSyncedAt(String time) => 'Last synced $time ago';
+
+  // Offline Mode
+  final offline = 'Offline';
+  final offlineMode = 'You\'re offline. Changes will sync when connected.';
+  final offlineMessage =
+      'No internet connection. You can continue working, and your changes will sync automatically when you\'re back online.';
+  final cachedData = 'Showing saved data. Pull down to refresh.';
+  final workingOffline = 'Working offline';
+
+  // Sync Actions
+  final syncNow = 'Sync Now';
+  final syncPending = 'Sync pending';
+  String changesPending(int count) => '$count changes pending sync';
+  final retrySync = 'Retry Sync';
+  final syncSettings = 'Sync Settings';
+  final autoSync = 'Auto-sync';
+  final autoSyncDescription = 'Automatically sync when connected to internet';
+  final syncOnWifiOnly = 'Sync on Wi-Fi only';
+
+  // Data Download
+  final downloadingData = 'Downloading data';
+  final downloadComplete = 'Download complete';
+  final downloadFailed = 'Download failed. Check your connection.';
+
+  // Export/Import
+  final exportingData = 'Exporting data';
+  final exportSuccess = 'Data exported successfully';
+  final exportFailed = 'Export failed. Please try again.';
+  final importingData = 'Importing data';
+  final importSuccess = 'Data imported successfully';
+  final importFailed = 'Import failed. Check file format.';
+  final noDataToExport = 'No data available to export';
 }
 
 // ============================================================================
@@ -655,10 +895,14 @@ class _ErrorStrings {
 
   // Network Errors
   final networkError = 'Network Error';
-  final noInternet = 'No internet connection';
-  final serverError = 'Server error occurred';
-  final timeoutError = 'Request timed out';
-  final connectionFailed = 'Connection failed';
+  final noInternet =
+      'No internet connection. Connect to Wi-Fi or mobile data to continue.';
+  final serverError =
+      'Server error occurred. Our team has been notified. Please try again later.';
+  final timeoutError =
+      'Connection took too long. Please check your internet and try again.';
+  final connectionFailed =
+      'Couldn\'t connect to server. Check your internet connection and try again.';
 
   // Validation Errors
   final invalidInput = 'Invalid input';
@@ -669,29 +913,52 @@ class _ErrorStrings {
   final amountTooSmall = 'Amount must be greater than 0';
 
   // Auth Errors
-  final authFailed = 'Authentication failed';
+  final authFailed = 'Unable to sign in. Please check your email and password.';
   final invalidCredentials = 'Invalid email or password';
-  final emailAlreadyExists = 'Email already exists';
-  final weakPassword = 'Password is too weak';
-  final accountNotFound = 'Account not found';
-  final emailNotVerified = 'Email not verified';
+  final emailAlreadyExists = 'This email is already registered';
+  final weakPassword =
+      'Password is too weak. Use at least 8 characters with uppercase, lowercase, and numbers.';
+  final accountNotFound =
+      'Account not found. Please check your email or sign up.';
+  final emailNotVerified =
+      'Email not verified. Please check your inbox for verification link.';
 
   // Data Errors
-  final loadFailed = 'Failed to load data';
-  final saveFailed = 'Failed to save';
-  final deleteFailed = 'Failed to delete';
-  final updateFailed = 'Failed to update';
+  final loadFailed =
+      'Couldn\'t load data. Pull down to refresh or check your connection.';
+  final saveFailed =
+      'Couldn\'t save changes. Check your internet connection and try again.';
+  final deleteFailed = 'Couldn\'t delete. Please try again.';
+  final updateFailed =
+      'Couldn\'t update. Check your connection and try again.';
+
+  // Storage Errors
+  final storageNearFull =
+      'Storage almost full. Consider archiving old transactions.';
+  final storageFull =
+      'Storage full. Please delete some data or upgrade your plan.';
+
+  // Limit Errors
+  final transactionLimitReached =
+      'Free plan limit: 50 transactions per month. Upgrade for unlimited.';
+  final exportLimitReached =
+      'Export limit reached. Upgrade for unlimited exports.';
+  final featureNotAvailable =
+      'This feature is not available on your current plan.';
 
   // Generic
-  final somethingWentWrong = 'Something went wrong';
-  final somethingWrong = 'Something went wrong';
-  final tryAgain = 'An error occurred. Please try again.';
-  final tryAgainLater = 'Please try again later';
-  final contactSupport = 'Contact support if the problem persists';
+  final somethingWentWrong =
+      'We couldn\'t complete that action. Please try again.';
+  final genericError = 'An error occurred. Please try again.';
+  final tryAgainLater =
+      'Something went wrong. Please try again in a few moments.';
+  final contactSupport =
+      'If the problem persists, please contact our support team.';
 
   // Recovery Actions
   final retry = 'Retry';
   final goBack = 'Go Back';
   final goHome = 'Go to Home';
   final refresh = 'Refresh';
+  final cancel = 'Cancel';
 }

@@ -62,9 +62,9 @@ class _CommonStrings {
   final error = 'Error';
   final warning = 'Warning';
   final info = 'Info';
-  final processing = 'Processing';
+  final processing = 'Processing...';
   final processingRequest = 'Processing your request';
-  final pleaseWait = 'Please wait';
+  final pleaseWait = 'Please wait...';
 
   // Validation
   final required = 'Required';
@@ -317,7 +317,7 @@ class _ChatStrings {
   final messageLimitReached =
       'Daily message limit reached. Resets at midnight or upgrade your plan.';
   String nearMessageLimit(int remaining) =>
-      'You have $remaining messages remaining today';
+      'You have $remaining messages tokens today';
   final limitReached = 'Limit Reached';
 
   // GenUI Errors

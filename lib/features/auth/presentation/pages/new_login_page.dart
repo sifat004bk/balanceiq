@@ -367,7 +367,7 @@ class _NewLoginPageState extends State<NewLoginPage> {
                           Navigator.pushReplacementNamed(context, '/signup');
                         },
                         child: Text(
-                          AppStrings.auth.signUpLink,
+                          AppStrings.auth.signupLink,
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.primary,
                             fontWeight: FontWeight.w600,

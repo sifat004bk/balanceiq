@@ -463,7 +463,7 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                                 color: AppPalette.neutralWhite, size: 18),
                             const SizedBox(width: 8),
                             Text(
-                              AppStrings.chat.tokenLimitReached,
+                              AppStrings.chat.messageLimitReached,
                               style: AppTypography.captionError.copyWith(
                                 color: AppPalette.neutralWhite,
                               ),
@@ -495,7 +495,7 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              AppStrings.chat.nearTokenLimit(remainingTokens),
+                              AppStrings.chat.nearMessageLimit(remainingTokens),
                               style: AppTypography.captionWarning.copyWith(
                                 color: AppPalette.neutralWhite,
                               ),

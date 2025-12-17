@@ -233,10 +233,10 @@ class _ChatViewState extends State<ChatView> {
             () => Navigator.pushNamed(context, '/manage-subscription');
         break;
       case ChatErrorType.tokenLimitExceeded:
-        title = AppStrings.chat.tokenLimitExceeded;
+        title = AppStrings.chat.messageLimitExceeded;
         description = state.message.isNotEmpty
             ? state.message
-            : AppStrings.chat.tokenLimitExceededMessage;
+            : AppStrings.chat.messageLimitExceededMessage;
         icon = Icons.token_outlined;
         iconColor = AppPalette.sparkOrange;
         buttonText = AppStrings.chat.upgradePlan;
@@ -253,10 +253,10 @@ class _ChatViewState extends State<ChatView> {
             () => context.read<ChatCubit>().loadChatHistory(widget.botId);
         break;
       default:
-        title = AppStrings.errors.somethingWrong;
+        title = AppStrings.errors.somethingWentWrong;
         description = state.message.isNotEmpty
             ? state.message
-            : AppStrings.errors.tryAgain;
+            : AppStrings.errors.tryAgainLater;
         icon = Icons.error_outline;
         iconColor = AppPalette.expenseRed;
         buttonText = AppStrings.common.retry;

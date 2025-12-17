@@ -41,7 +41,7 @@ class BalanceCard extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  AppStrings.dashboard.walletBalance,
+                  AppStrings.dashboard.netBalance,
                   style: textTheme.bodySmall?.copyWith(
                     fontWeight: FontWeight.w500,
                     letterSpacing: 0.5,

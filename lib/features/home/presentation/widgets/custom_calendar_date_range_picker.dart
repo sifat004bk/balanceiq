@@ -1,5 +1,5 @@
 import 'dart:ui';
-import 'package:balance_iq/core/theme/app_theme.dart';
+
 import 'package:balance_iq/features/home/presentation/widgets/calendar_month_view.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -91,29 +91,13 @@ class _CustomCalendarDateRangePickerState
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Dialog(
       backgroundColor: Colors.transparent,
       insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       child: Container(
         decoration: BoxDecoration(
-          gradient: isDark
-              ? LinearGradient(
-                  colors: [
-                    AppTheme.surfaceDark,
-                    AppTheme.backgroundDark,
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                )
-              : LinearGradient(
-                  colors: [
-                    AppTheme.surfaceLight,
-                    AppTheme.backgroundLight,
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
+          color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(32),
           border: Border.all(
             color: isDark
@@ -144,7 +128,7 @@ class _CustomCalendarDateRangePickerState
                   // Header with month navigation
                   _buildHeader(context, isDark),
                   const SizedBox(height: 24),
-                  
+
                   // Calendar month view
                   CalendarMonthView(
                     displayedMonth: _displayedMonth,
@@ -155,9 +139,9 @@ class _CustomCalendarDateRangePickerState
                     minDate: widget.minDate,
                     maxDate: widget.maxDate,
                   ),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Footer with range preview and actions
                   _buildFooter(context, isDark),
                 ],
@@ -180,7 +164,7 @@ class _CustomCalendarDateRangePickerState
           _previousMonth,
           isDark,
         ),
-        
+
         // Month/Year display
         Text(
           DateFormat('MMMM yyyy').format(_displayedMonth),
@@ -190,7 +174,7 @@ class _CustomCalendarDateRangePickerState
                 letterSpacing: -0.3,
               ),
         ),
-        
+
         // Next month button
         _buildNavigationButton(
           context,
@@ -214,14 +198,11 @@ class _CustomCalendarDateRangePickerState
       child: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          gradient: isDark
-              ? AppTheme.primaryGradientDark
-              : AppTheme.primaryGradientLight,
+          color: Theme.of(context).primaryColor,
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: (isDark ? AppTheme.primaryDark : AppTheme.primaryLight)
-                  .withOpacity(0.3),
+              color: Theme.of(context).primaryColor.withOpacity(0.3),
               blurRadius: 8,
               spreadRadius: 1,
             ),
@@ -238,7 +219,7 @@ class _CustomCalendarDateRangePickerState
 
   Widget _buildFooter(BuildContext context, bool isDark) {
     final hasValidRange = _startDate != null && _endDate != null;
-    
+
     return Column(
       children: [
         // Range preview
@@ -246,9 +227,7 @@ class _CustomCalendarDateRangePickerState
           Container(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
             decoration: BoxDecoration(
-              color: isDark
-                  ? AppTheme.primaryContainerDark.withOpacity(0.3)
-                  : AppTheme.primaryContainerLight.withOpacity(0.3),
+              color: Theme.of(context).primaryColor.withOpacity(0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
@@ -265,9 +244,7 @@ class _CustomCalendarDateRangePickerState
                   child: Icon(
                     Icons.arrow_forward_rounded,
                     size: 16,
-                    color: isDark
-                        ? AppTheme.textDarkTheme
-                        : AppTheme.textLightTheme,
+                    color: Theme.of(context).iconTheme.color?.withOpacity(0.5),
                   ),
                 ),
                 Text(
@@ -281,7 +258,7 @@ class _CustomCalendarDateRangePickerState
           ),
           const SizedBox(height: 16),
         ],
-        
+
         // Action buttons
         Row(
           children: [
@@ -292,9 +269,7 @@ class _CustomCalendarDateRangePickerState
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   side: BorderSide(
-                    color: isDark
-                        ? AppTheme.textSubtleDark
-                        : AppTheme.textSubtleLight,
+                    color: Theme.of(context).dividerColor,
                   ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
@@ -309,29 +284,31 @@ class _CustomCalendarDateRangePickerState
               ),
             ),
             const SizedBox(width: 12),
-            
+
             // Select button
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
                   gradient: hasValidRange
-                      ? (isDark
-                          ? AppTheme.accentGradientDark
-                          : AppTheme.primaryGradientLight)
+                      ? LinearGradient(
+                          colors: [
+                            Theme.of(context).primaryColor,
+                            Theme.of(context)
+                                .colorScheme
+                                .primary
+                                .withOpacity(0.8),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        )
                       : null,
-                  color: hasValidRange
-                      ? null
-                      : (isDark
-                          ? AppTheme.textSubtleDark.withOpacity(0.3)
-                          : AppTheme.textSubtleLight.withOpacity(0.3)),
+                  color: hasValidRange ? null : Theme.of(context).disabledColor,
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: hasValidRange
                       ? [
                           BoxShadow(
-                            color: (isDark
-                                    ? AppTheme.primaryDark
-                                    : AppTheme.primaryLight)
-                                .withOpacity(0.4),
+                            color:
+                                Theme.of(context).primaryColor.withOpacity(0.4),
                             blurRadius: 12,
                             offset: const Offset(0, 4),
                           ),
@@ -352,10 +329,8 @@ class _CustomCalendarDateRangePickerState
                     'Select Range',
                     style: TextStyle(
                       color: hasValidRange
-                          ? Colors.white
-                          : (isDark
-                              ? AppTheme.textSubtleDark
-                              : AppTheme.textSubtleLight),
+                          ? Theme.of(context).colorScheme.onPrimary
+                          : Theme.of(context).disabledColor,
                       fontWeight: FontWeight.w700,
                       fontSize: 16,
                     ),

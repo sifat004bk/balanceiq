@@ -251,15 +251,14 @@ class _NewLoginPageState extends State<NewLoginPage> {
                         return ElevatedButton(
                           onPressed: isLoading ? null : _handleLogin,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                Theme.of(context).colorScheme.primary,
-                            foregroundColor:
-                                Theme.of(context).colorScheme.onPrimary,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            padding: EdgeInsets.zero
-                          ),
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.primary,
+                              foregroundColor:
+                                  Theme.of(context).colorScheme.onPrimary,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              padding: EdgeInsets.zero),
                           child: isLoading
                               ? SizedBox(
                                   width: 20,
@@ -279,7 +278,8 @@ class _NewLoginPageState extends State<NewLoginPage> {
                                       .bodyMedium
                                       ?.copyWith(
                                         fontWeight: FontWeight.w800,
-                                        color: AppPalette.neutralWhite,
+                                        color:
+                                            AppPalette.white.withOpacity(0.9),
                                       ),
                                 ),
                         );

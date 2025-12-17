@@ -1,6 +1,4 @@
 import 'package:balance_iq/core/constants/app_strings.dart';
-import 'package:balance_iq/core/theme/app_palette.dart';
-import 'package:balance_iq/core/theme/app_theme.dart';
 import 'package:balance_iq/features/home/domain/entities/transaction.dart';
 import 'package:balance_iq/features/home/presentation/cubit/transactions_cubit.dart';
 import 'package:balance_iq/features/home/presentation/cubit/transactions_state.dart';
@@ -39,7 +37,7 @@ class TransactionHistoryWidget extends StatelessWidget {
                 child: Text(
                   AppStrings.common.viewAll,
                   style: TextStyle(
-                    color: AppTheme.primaryColor,
+                    color: Theme.of(context).primaryColor,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -122,8 +120,8 @@ class TransactionHistoryWidget extends StatelessWidget {
       child: InkWell(
         onTap: () => _showTransactionDetail(context, transaction),
         borderRadius: BorderRadius.circular(12),
-        splashColor: AppTheme.primaryColor.withValues(alpha: 0.1),
-        highlightColor: AppTheme.primaryColor.withValues(alpha: 0.05),
+        splashColor: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+        highlightColor: Theme.of(context).primaryColor.withValues(alpha: 0.05),
         child: Ink(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
@@ -149,13 +147,21 @@ class TransactionHistoryWidget extends StatelessWidget {
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   color: isIncome
-                      ? AppPalette.incomeGreen.withValues(alpha: 0.1)
-                      : AppPalette.expenseRed.withValues(alpha: 0.1),
+                      ? Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withValues(alpha: 0.1)
+                      : Theme.of(context)
+                          .colorScheme
+                          .error
+                          .withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(
                   isIncome ? Icons.arrow_downward : Icons.arrow_upward,
-                  color: isIncome ? AppPalette.incomeGreen : AppPalette.expenseRed,
+                  color: isIncome
+                      ? Theme.of(context).colorScheme.primary
+                      : Theme.of(context).colorScheme.error,
                   size: 20,
                 ),
               ),
@@ -194,7 +200,9 @@ class TransactionHistoryWidget extends StatelessWidget {
                     '${isIncome ? '+' : '-'} ${transaction.formattedAmount}',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.bold,
-                      color: isIncome ? AppPalette.incomeGreen : AppPalette.expenseRed,
+                          color: isIncome
+                              ? Theme.of(context).colorScheme.primary
+                              : Theme.of(context).colorScheme.error,
                         ),
                   ),
                   const SizedBox(width: 4),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../../../core/constants/gemini_colors.dart';
 
 class GenUIInsightCard extends StatelessWidget {
   final Map<String, dynamic> data;
@@ -160,7 +159,7 @@ class GenUIInsightCard extends StatelessWidget {
       case 'info':
         return Theme.of(context).colorScheme.primary;
       default:
-        return GeminiColors.primaryColor(context);
+        return Theme.of(context).colorScheme.primary;
     }
   }
 

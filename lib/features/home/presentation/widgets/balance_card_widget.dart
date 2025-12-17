@@ -108,9 +108,7 @@ class BalanceCard extends StatelessWidget {
     required bool isIncome,
   }) {
     final textTheme = Theme.of(context).textTheme;
-    final iconColor = isIncome
-        ? AppPalette.incomeGreen
-        : AppPalette.expenseRed;
+    final iconColor = isIncome ? AppPalette.income : AppPalette.expense;
 
     return ThemedGlass.container(
       context: context,

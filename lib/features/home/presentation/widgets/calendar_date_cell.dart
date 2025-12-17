@@ -1,4 +1,3 @@
-import 'package:balance_iq/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 enum DateCellType {
@@ -29,7 +28,7 @@ class CalendarDateCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return GestureDetector(
       onTap: isDisabled ? null : onTap,
       child: TweenAnimationBuilder<double>(
@@ -44,17 +43,17 @@ class CalendarDateCell extends StatelessWidget {
         child: Container(
           margin: const EdgeInsets.all(2),
           decoration: BoxDecoration(
-            gradient: _getBackgroundGradient(isDark),
-            color: _getBackgroundColor(isDark),
+            gradient: _getBackgroundGradient(context, isDark),
+            color: _getBackgroundColor(context, isDark),
             borderRadius: _getBorderRadius(),
-            border: _getBorder(isDark),
-            boxShadow: _getBoxShadow(isDark),
+            border: _getBorder(context, isDark),
+            boxShadow: _getBoxShadow(context, isDark),
           ),
           child: Center(
             child: Text(
               day.toString(),
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: _getTextColor(isDark),
+                    color: _getTextColor(context, isDark),
                     fontWeight: _getFontWeight(),
                     fontSize: 15,
                   ),
@@ -65,21 +64,26 @@ class CalendarDateCell extends StatelessWidget {
     );
   }
 
-  Gradient? _getBackgroundGradient(bool isDark) {
+  Gradient? _getBackgroundGradient(BuildContext context, bool isDark) {
     if (isDisabled) return null;
-    
+
     switch (cellType) {
       case DateCellType.startDate:
       case DateCellType.endDate:
-        return isDark
-            ? AppTheme.accentGradientDark
-            : AppTheme.primaryGradientLight;
+        return LinearGradient(
+          colors: [
+            Theme.of(context).primaryColor,
+            Theme.of(context).colorScheme.primary.withOpacity(0.8),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        );
       default:
         return null;
     }
   }
 
-  Color? _getBackgroundColor(bool isDark) {
+  Color? _getBackgroundColor(BuildContext context, bool isDark) {
     if (!isCurrentMonth || isDisabled) {
       return Colors.transparent;
     }
@@ -89,9 +93,7 @@ class CalendarDateCell extends StatelessWidget {
       case DateCellType.endDate:
         return null; // Uses gradient
       case DateCellType.inRange:
-        return isDark
-            ? AppTheme.primaryContainerDark.withOpacity(0.3)
-            : AppTheme.primaryContainerLight.withOpacity(0.3);
+        return Theme.of(context).primaryColor.withOpacity(0.1);
       case DateCellType.today:
         return Colors.transparent;
       default:
@@ -122,63 +124,60 @@ class CalendarDateCell extends StatelessWidget {
     }
   }
 
-  Border? _getBorder(bool isDark) {
+  Border? _getBorder(BuildContext context, bool isDark) {
     if (cellType == DateCellType.today && isCurrentMonth) {
       return Border.all(
-        color: isDark ? AppTheme.primaryDark : AppTheme.primaryLight,
+        color: Theme.of(context).primaryColor,
         width: 2,
       );
     }
     return null;
   }
 
-  List<BoxShadow>? _getBoxShadow(bool isDark) {
+  List<BoxShadow>? _getBoxShadow(BuildContext context, bool isDark) {
     if (cellType == DateCellType.startDate ||
         cellType == DateCellType.endDate) {
       return [
         BoxShadow(
-          color: (isDark ? AppTheme.primaryDark : AppTheme.primaryLight)
-              .withOpacity(0.3),
+          color: Theme.of(context).primaryColor.withOpacity(0.3),
           blurRadius: 8,
           spreadRadius: 1,
         ),
       ];
     }
-    
+
     if (cellType == DateCellType.today && isDark) {
       return [
         BoxShadow(
-          color: AppTheme.primaryDark.withOpacity(0.2),
+          color: Theme.of(context).primaryColor.withOpacity(0.2),
           blurRadius: 6,
           spreadRadius: 0,
         ),
       ];
     }
-    
+
     return null;
   }
 
-  Color _getTextColor(bool isDark) {
+  Color _getTextColor(BuildContext context, bool isDark) {
     if (!isCurrentMonth) {
-      return isDark
-          ? AppTheme.textSubtleDark.withOpacity(0.3)
-          : AppTheme.textSubtleLight.withOpacity(0.3);
+      return Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.3) ??
+          Colors.grey;
     }
 
     if (isDisabled) {
-      return isDark
-          ? AppTheme.textSubtleDark.withOpacity(0.5)
-          : AppTheme.textSubtleLight.withOpacity(0.5);
+      return Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.5) ??
+          Colors.grey;
     }
 
     switch (cellType) {
       case DateCellType.startDate:
       case DateCellType.endDate:
-        return Colors.white;
+        return Theme.of(context).colorScheme.onPrimary;
       case DateCellType.today:
-        return isDark ? AppTheme.primaryDark : AppTheme.primaryLight;
+        return Theme.of(context).primaryColor;
       default:
-        return isDark ? AppTheme.textDarkTheme : AppTheme.textLightTheme;
+        return Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black;
     }
   }
 

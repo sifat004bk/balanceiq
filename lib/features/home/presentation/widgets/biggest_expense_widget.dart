@@ -39,7 +39,7 @@ class BiggestExpenseWidget extends StatelessWidget {
             ),
             child: Icon(
               Icons.arrow_upward,
-              color: AppPalette.expenseRed,
+              color: AppPalette.expense,
               size: 24,
             ),
           ),
@@ -73,7 +73,7 @@ class BiggestExpenseWidget extends StatelessWidget {
             style: textTheme.titleMedium?.copyWith(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: AppPalette.expenseRed,
+              color: AppPalette.expense.withOpacity(0.1),
             ),
           ),
         ],

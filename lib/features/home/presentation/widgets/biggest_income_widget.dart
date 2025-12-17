@@ -36,9 +36,9 @@ class BiggestIncomeWidget extends StatelessWidget {
               color: Colors.green.withValues(alpha: 0.2),
               shape: BoxShape.circle,
             ),
-            child:  Icon(
+            child: Icon(
               Icons.arrow_downward,
-              color: AppPalette.incomeGreen,
+              color: AppPalette.income,
               size: 24,
             ),
           ),
@@ -72,7 +72,7 @@ class BiggestIncomeWidget extends StatelessWidget {
             style: textTheme.titleMedium?.copyWith(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: AppPalette.incomeGreen,
+              color: AppPalette.income.withOpacity(0.1),
             ),
           ),
         ],

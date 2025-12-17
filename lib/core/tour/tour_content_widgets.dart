@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:balance_iq/core/constants/gemini_colors.dart';
 
 /// Custom content widget for tour tooltips.
 /// Provides consistent styling for all tour step tooltips.
@@ -26,6 +25,7 @@ class TourTooltipContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryColor = Theme.of(context).colorScheme.primary;
 
     return Container(
       constraints: const BoxConstraints(maxWidth: 300),
@@ -35,13 +35,13 @@ class TourTooltipContent extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: GeminiColors.primary.withOpacity(0.2),
+            color: primaryColor.withOpacity(0.2),
             blurRadius: 20,
             spreadRadius: 2,
           ),
         ],
         border: Border.all(
-          color: GeminiColors.primary.withOpacity(0.3),
+          color: primaryColor.withOpacity(0.3),
           width: 1.5,
         ),
       ),
@@ -54,12 +54,12 @@ class TourTooltipContent extends StatelessWidget {
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: GeminiColors.primary.withOpacity(0.15),
+                color: primaryColor.withOpacity(0.15),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
                 icon,
-                color: GeminiColors.primary,
+                color: primaryColor,
                 size: 24,
               ),
             ),
@@ -93,7 +93,9 @@ class TourTooltipContent extends StatelessWidget {
                     child: Text(
                       'Skip Tour',
                       style: TextStyle(
-                        color: isDark ? Colors.grey.shade500 : Colors.grey.shade600,
+                        color: isDark
+                            ? Colors.grey.shade500
+                            : Colors.grey.shade600,
                         fontSize: 14,
                       ),
                     ),
@@ -104,7 +106,7 @@ class TourTooltipContent extends StatelessWidget {
                   ElevatedButton(
                     onPressed: onButtonPressed,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: GeminiColors.primary,
+                      backgroundColor: primaryColor,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(
                         horizontal: 20,
@@ -146,6 +148,7 @@ class ChatInputTourTooltip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryColor = Theme.of(context).colorScheme.primary;
 
     return Container(
       constraints: const BoxConstraints(maxWidth: 320),
@@ -155,13 +158,13 @@ class ChatInputTourTooltip extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: GeminiColors.primary.withOpacity(0.2),
+            color: primaryColor.withOpacity(0.2),
             blurRadius: 20,
             spreadRadius: 2,
           ),
         ],
         border: Border.all(
-          color: GeminiColors.primary.withOpacity(0.3),
+          color: primaryColor.withOpacity(0.3),
           width: 1.5,
         ),
       ),
@@ -177,8 +180,8 @@ class ChatInputTourTooltip extends StatelessWidget {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      GeminiColors.primary,
-                      GeminiColors.primary.withOpacity(0.7),
+                      primaryColor,
+                      primaryColor.withOpacity(0.7),
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -209,7 +212,9 @@ class ChatInputTourTooltip extends StatelessWidget {
                       'Just type naturally!',
                       style: TextStyle(
                         fontSize: 12,
-                        color: isDark ? Colors.grey.shade500 : Colors.grey.shade600,
+                        color: isDark
+                            ? Colors.grey.shade500
+                            : Colors.grey.shade600,
                       ),
                     ),
                   ],
@@ -227,9 +232,7 @@ class ChatInputTourTooltip extends StatelessWidget {
                   : Colors.grey.shade100,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: isDark
-                    ? Colors.grey.shade800
-                    : Colors.grey.shade300,
+                color: isDark ? Colors.grey.shade800 : Colors.grey.shade300,
               ),
             ),
             child: Column(
@@ -248,7 +251,7 @@ class ChatInputTourTooltip extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
-                    color: GeminiColors.primary,
+                    color: primaryColor,
                     fontStyle: FontStyle.italic,
                   ),
                 ),
@@ -280,7 +283,7 @@ class ChatInputTourTooltip extends StatelessWidget {
               ElevatedButton(
                 onPressed: onDismiss,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: GeminiColors.primary,
+                  backgroundColor: primaryColor,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 24,

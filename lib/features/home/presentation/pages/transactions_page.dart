@@ -1,6 +1,6 @@
 import 'package:balance_iq/core/constants/app_strings.dart';
 import 'package:balance_iq/core/di/injection_container.dart';
-import 'package:balance_iq/core/theme/app_theme.dart';
+
 import 'package:balance_iq/features/home/domain/entities/transaction.dart';
 import 'package:balance_iq/features/home/presentation/cubit/transactions_cubit.dart';
 import 'package:balance_iq/features/home/presentation/cubit/transactions_state.dart';
@@ -148,9 +148,11 @@ class _TransactionsViewState extends State<TransactionsView> {
                           deleteIcon: const Icon(Icons.close, size: 18),
                           onDeleted: _clearCategoryFilter,
                           backgroundColor:
-                              AppTheme.primaryColor.withOpacity(0.1),
-                          side: BorderSide(color: AppTheme.primaryColor),
-                          labelStyle: TextStyle(color: AppTheme.primaryColor),
+                              Theme.of(context).primaryColor.withOpacity(0.1),
+                          side:
+                              BorderSide(color: Theme.of(context).primaryColor),
+                          labelStyle:
+                              TextStyle(color: Theme.of(context).primaryColor),
                         )
                             .animate()
                             .fadeIn(delay: 100.ms, duration: 300.ms)
@@ -339,8 +341,8 @@ class _TransactionsViewState extends State<TransactionsView> {
       child: InkWell(
         onTap: () => _showTransactionDetail(transaction),
         borderRadius: BorderRadius.circular(16),
-        splashColor: AppTheme.primaryColor.withValues(alpha: 0.1),
-        highlightColor: AppTheme.primaryColor.withValues(alpha: 0.05),
+        splashColor: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+        highlightColor: Theme.of(context).primaryColor.withValues(alpha: 0.05),
         child: Ink(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(

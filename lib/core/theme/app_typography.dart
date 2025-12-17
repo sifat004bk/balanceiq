@@ -41,14 +41,14 @@ class AppTypography {
   static TextStyle get detail => textTheme.bodySmall!.copyWith(
         fontSize: 13,
         fontWeight: FontWeight.w500, // Medium for readability at small sizes
-        color: AppPalette.neutralGrey,
+        color: AppPalette.textSecondaryLight,
         letterSpacing: 0.1,
         height: 1.4,
       );
 
   /// Link: For clickable text
   static TextStyle get link => body.copyWith(
-        color: AppPalette.trustBlue,
+        color: AppPalette.primaryLight,
         fontWeight: FontWeight.w600,
       );
 
@@ -202,7 +202,7 @@ class AppTypography {
   /// Caption Subtle: For secondary captions (12px)
   static TextStyle get captionSubtle => textTheme.bodySmall!.copyWith(
         fontSize: 12,
-        color: AppPalette.neutralGrey,
+        color: AppPalette.textSecondaryLight,
         letterSpacing: 0.1,
         height: 1.4,
       );
@@ -219,14 +219,14 @@ class AppTypography {
   static TextStyle get captionError => textTheme.bodySmall!.copyWith(
         fontSize: 13,
         fontWeight: FontWeight.bold,
-        color: AppPalette.expenseRed,
+        color: AppPalette.expense,
         letterSpacing: 0.1,
       );
 
   /// Caption Warning: For warning messages (12px, orange)
   static TextStyle get captionWarning => textTheme.bodySmall!.copyWith(
         fontSize: 12,
-        color: AppPalette.warningOrange,
+        color: AppPalette.secondaryLight,
         letterSpacing: 0.1,
       );
 

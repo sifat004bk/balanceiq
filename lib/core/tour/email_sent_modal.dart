@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:balance_iq/core/constants/gemini_colors.dart';
+import 'package:balance_iq/core/theme/app_palette.dart';
 
 /// Modal dialog shown after verification email is sent.
 /// Provides option to open mail app and instructions to return.
@@ -30,6 +30,7 @@ class EmailSentModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryColor = Theme.of(context).colorScheme.primary;
 
     return Dialog(
       backgroundColor: Colors.transparent,
@@ -41,15 +42,13 @@ class EmailSentModal extends StatelessWidget {
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: GeminiColors.primary.withOpacity(0.15),
+              color: primaryColor.withOpacity(0.15),
               blurRadius: 30,
               spreadRadius: 5,
             ),
           ],
           border: Border.all(
-            color: isDark
-                ? Colors.grey.shade800
-                : Colors.grey.shade200,
+            color: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
             width: 1,
           ),
         ),
@@ -63,24 +62,24 @@ class EmailSentModal extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    GeminiColors.incomeGreen.withOpacity(0.2),
-                    GeminiColors.incomeGreen.withOpacity(0.1),
+                    AppPalette.success.withOpacity(0.2),
+                    AppPalette.success.withOpacity(0.1),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
                 shape: BoxShape.circle,
               ),
-              child: Icon(
+              child: const Icon(
                 Icons.mark_email_read_rounded,
                 size: 40,
-                color: GeminiColors.incomeGreen,
+                color: AppPalette.success,
               ),
             )
                 .animate(onPlay: (controller) => controller.repeat())
                 .shimmer(
                   duration: 2.seconds,
-                  color: GeminiColors.incomeGreen.withOpacity(0.3),
+                  color: AppPalette.success.withOpacity(0.3),
                 )
                 .animate()
                 .scale(
@@ -115,12 +114,8 @@ class EmailSentModal extends StatelessWidget {
                 height: 1.5,
               ),
               textAlign: TextAlign.center,
-            )
-                .animate()
-                .fadeIn(delay: 300.ms, duration: 400.ms),
+            ).animate().fadeIn(delay: 300.ms, duration: 400.ms),
             const SizedBox(height: 28),
-
-            // Removed Open Mail App button as per user request
 
             // Instruction text
             Container(
@@ -131,9 +126,7 @@ class EmailSentModal extends StatelessWidget {
                     : Colors.grey.shade100,
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
-                  color: isDark
-                      ? Colors.grey.shade800
-                      : Colors.grey.shade300,
+                  color: isDark ? Colors.grey.shade800 : Colors.grey.shade300,
                 ),
               ),
               child: Row(
@@ -149,16 +142,16 @@ class EmailSentModal extends StatelessWidget {
                       'Come back here after verifying',
                       style: TextStyle(
                         fontSize: 13,
-                        color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                        color: isDark
+                            ? Colors.grey.shade400
+                            : Colors.grey.shade600,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),
                 ],
               ),
-            )
-                .animate()
-                .fadeIn(delay: 500.ms, duration: 400.ms),
+            ).animate().fadeIn(delay: 500.ms, duration: 400.ms),
             const SizedBox(height: 20),
 
             // Continue button
@@ -167,13 +160,13 @@ class EmailSentModal extends StatelessWidget {
               child: OutlinedButton(
                 onPressed: onContinue,
                 style: OutlinedButton.styleFrom(
-                  foregroundColor: GeminiColors.primary,
+                  foregroundColor: primaryColor,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(14),
                   ),
                   side: BorderSide(
-                    color: GeminiColors.primary.withOpacity(0.5),
+                    color: primaryColor.withOpacity(0.5),
                     width: 1.5,
                   ),
                 ),
@@ -185,21 +178,19 @@ class EmailSentModal extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
-                        color: GeminiColors.primary,
+                        color: primaryColor,
                       ),
                     ),
                     const SizedBox(width: 8),
                     Icon(
                       Icons.arrow_forward_rounded,
                       size: 18,
-                      color: GeminiColors.primary,
+                      color: primaryColor,
                     ),
                   ],
                 ),
               ),
-            )
-                .animate()
-                .fadeIn(delay: 600.ms, duration: 400.ms),
+            ).animate().fadeIn(delay: 600.ms, duration: 400.ms),
           ],
         ),
       )

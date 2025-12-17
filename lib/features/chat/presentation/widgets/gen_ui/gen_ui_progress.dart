@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../../../core/constants/gemini_colors.dart';
 
 class GenUIProgress extends StatelessWidget {
   final Map<String, dynamic> data;
@@ -14,6 +13,7 @@ class GenUIProgress extends StatelessWidget {
     final percentage = (current / target * 100).clamp(0.0, 100.0).toDouble();
     final label = data['label'] as String?;
     final showValue = data['showValue'] as bool? ?? true;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
@@ -21,7 +21,7 @@ class GenUIProgress extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: GeminiColors.divider(context)),
+        border: Border.all(color: Theme.of(context).dividerColor),
         boxShadow: [
           BoxShadow(
             color: Theme.of(context).shadowColor.withOpacity(0.03),
@@ -64,8 +64,7 @@ class GenUIProgress extends StatelessWidget {
                 child: LinearProgressIndicator(
                   value: value,
                   minHeight: 12,
-                  backgroundColor:
-                      GeminiColors.primaryColor(context).withOpacity(0.1),
+                  backgroundColor: colorScheme.primary.withOpacity(0.1),
                   valueColor: AlwaysStoppedAnimation<Color>(
                     _getProgressColor(percentage, context),
                   ),
@@ -117,7 +116,7 @@ class GenUIProgress extends StatelessWidget {
 
   Color _getProgressColor(double percentage, BuildContext context) {
     if (percentage >= 90) return Colors.green;
-    if (percentage >= 50) return GeminiColors.primaryColor(context);
+    if (percentage >= 50) return Theme.of(context).colorScheme.primary;
     if (percentage >= 25) return Theme.of(context).colorScheme.secondary;
     return Theme.of(context).colorScheme.error;
   }

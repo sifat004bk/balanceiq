@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:balance_iq/core/constants/gemini_colors.dart';
 import 'product_tour_cubit.dart';
 import 'product_tour_state.dart';
 
@@ -34,7 +33,8 @@ class TourOverlay extends StatelessWidget {
       case TourStep.dashboardProfileIcon:
         return _TourCard(
           title: 'Welcome to BalanceIQ! 👋',
-          description: 'Tap on the profile icon in the top-left corner to set up your account.',
+          description:
+              'Tap on the profile icon in the top-left corner to set up your account.',
           arrowPosition: ArrowPosition.topLeft,
           buttonText: 'Got it!',
           onButtonPressed: () {
@@ -47,7 +47,8 @@ class TourOverlay extends StatelessWidget {
       case TourStep.profileEmailVerify:
         return _TourCard(
           title: 'Verify Your Email ✉️',
-          description: 'Tap the "Verify Email" button to receive a verification link. This helps secure your account.',
+          description:
+              'Tap the "Verify Email" button to receive a verification link. This helps secure your account.',
           arrowPosition: ArrowPosition.top,
           buttonText: 'Next',
           onButtonPressed: () {
@@ -62,7 +63,8 @@ class TourOverlay extends StatelessWidget {
       case TourStep.profileSubscription:
         return _TourCard(
           title: 'Choose Your Plan 💳',
-          description: 'Select a subscription plan to unlock all features. Start with the free plan!',
+          description:
+              'Select a subscription plan to unlock all features. Start with the free plan!',
           arrowPosition: ArrowPosition.center,
           buttonText: 'Got it!',
           onButtonPressed: () {
@@ -74,7 +76,8 @@ class TourOverlay extends StatelessWidget {
       case TourStep.chatInputHint:
         return _TourCard(
           title: 'Start Tracking! 💰',
-          description: 'Type your first income or expense here.\n\nExample: "Got my salary 76k on December 1st"',
+          description:
+              'Type your first income or expense here.\n\nExample: "Got my salary 76k on December 1st"',
           arrowPosition: ArrowPosition.bottom,
           buttonText: 'Let\'s Go!',
           onButtonPressed: () {
@@ -112,6 +115,9 @@ class _TourCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Material(
       color: Colors.black.withOpacity(0.7),
       child: SafeArea(
@@ -121,15 +127,18 @@ class _TourCard extends StatelessWidget {
   }
 
   Widget _buildPositionedCard(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     final card = Container(
       margin: const EdgeInsets.symmetric(horizontal: 24),
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: GeminiColors.surface(context),
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: GeminiColors.primaryColor(context).withOpacity(0.3),
+            color: colorScheme.primary.withOpacity(0.3),
             blurRadius: 20,
             spreadRadius: 5,
           ),
@@ -144,7 +153,7 @@ class _TourCard extends StatelessWidget {
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
-              color: Theme.of(context).textTheme.bodyLarge?.color,
+              color: textTheme.bodyLarge?.color,
             ),
           ),
           const SizedBox(height: 12),
@@ -152,7 +161,7 @@ class _TourCard extends StatelessWidget {
             description,
             style: TextStyle(
               fontSize: 16,
-              color: GeminiColors.textSecondary(context),
+              color: Theme.of(context).hintColor,
               height: 1.5,
             ),
           ),
@@ -165,7 +174,7 @@ class _TourCard extends StatelessWidget {
                   child: Text(
                     'Skip Tour',
                     style: TextStyle(
-                      color: GeminiColors.textSecondary(context),
+                      color: Theme.of(context).hintColor,
                     ),
                   ),
                 ),
@@ -173,9 +182,10 @@ class _TourCard extends StatelessWidget {
               ElevatedButton(
                 onPressed: onButtonPressed,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: GeminiColors.primaryColor(context),
+                  backgroundColor: colorScheme.primary,
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -225,19 +235,21 @@ class _TourCard extends StatelessWidget {
           children: [
             card,
             const SizedBox(height: 8),
-            Center(child: _buildArrow(context, direction: _ArrowDirection.down)),
+            Center(
+                child: _buildArrow(context, direction: _ArrowDirection.down)),
             const SizedBox(height: 100),
           ],
         );
     }
   }
 
-  Widget _buildArrow(BuildContext context, {required _ArrowDirection direction}) {
+  Widget _buildArrow(BuildContext context,
+      {required _ArrowDirection direction}) {
     return Icon(
       direction == _ArrowDirection.up
           ? Icons.arrow_upward_rounded
           : Icons.arrow_downward_rounded,
-      color: GeminiColors.primaryColor(context),
+      color: Theme.of(context).colorScheme.primary,
       size: 40,
     );
   }

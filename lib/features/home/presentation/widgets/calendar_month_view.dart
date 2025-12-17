@@ -1,4 +1,3 @@
-import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:balance_iq/features/home/presentation/widgets/calendar_date_cell.dart';
 import 'package:flutter/material.dart';
 
@@ -45,7 +44,7 @@ class CalendarMonthView extends StatelessWidget {
             child: Text(
               day,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: AppPalette.neutralGrey,
+                    color: Theme.of(context).hintColor,
                     fontWeight: FontWeight.w700,
                     fontSize: 12,
                     letterSpacing: 0.5,

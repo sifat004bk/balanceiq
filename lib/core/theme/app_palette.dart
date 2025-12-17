@@ -24,6 +24,22 @@ class AppPalette {
   static final Color surfaceDark =
       const Color(0xFF000000); // #000000 (True Black)
 
+  // --- Option 1: Midnight Slate ---
+  static final Color slate950 = const Color(0xFF020617); // Background
+  static final Color slate900 = const Color(0xFF0F172A); // Surface
+  static final Color indigo500 = const Color(0xFF6366F1); // Primary
+  static final Color sky400 = const Color(0xFF38BDF8); // Secondary
+  static final Color slate100 = const Color(0xFFF1F5F9); // Text
+
+  // --- Option 4: Nebula Glass ---
+  static final Color deepSpace = const Color(0xFF0B0418); // Background
+  static final Color glassPlum = const Color(0xFF1E1B2E); // Surface
+  static final Color flux = const Color(0xFF2D2A42); // Surface Highlight
+  static final Color fuchsia = const Color(0xFFD946EF); // Primary
+  static final Color cyan = const Color(0xFF06B6D4); // Secondary
+  static final Color mist = const Color(0xFFE2E8F0); // Text Primary
+  static final Color periwinkle = const Color(0xFF94A3B8); // Text Secondary
+
   // --- Neutrals ---
 
   /// Primary Text (Light) / Secondary Text (Dark) basis

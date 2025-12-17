@@ -27,7 +27,7 @@ class ChatInputButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         decoration: BoxDecoration(
           color: isDark
-              ? const Color(0xFF1A1C23)  // Solid dark background
+              ? Theme.of(context).colorScheme.primary
               : Theme.of(context).colorScheme.surface,
           border: Border.all(
             color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
@@ -36,7 +36,7 @@ class ChatInputButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(30),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF10B981).withOpacity(0.1),
+              color: Theme.of(context).colorScheme.shadow.withOpacity(0.1),
               blurRadius: 20,
               offset: const Offset(0, 4),
             ),
@@ -65,7 +65,7 @@ class ChatInputButton extends StatelessWidget {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFF10B981).withOpacity(0.4),
+                    color: Theme.of(context).colorScheme.shadow.withOpacity(0.4),
                     blurRadius: 12,
                     offset: const Offset(0, 2),
                   ),

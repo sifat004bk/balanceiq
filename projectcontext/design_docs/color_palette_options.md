@@ -1,117 +1,146 @@
-# Color Palette Options for BalanceIQ Dark Mode
+# Complete Theme Design Concepts for BalanceIQ (2025/2026)
+
+This document outlines 5 fully realized theme concepts. Each concept includes a comprehensive color palette, typography system, and component styling guide.
 
 > [!NOTE]
-> This document proposes 5 distinct color palette directions for the Dark Mode of BalanceIQ. The goal is to move away from the current combination to something that feels more "Premium", "Modern", and "Aesthetic".
-
-## Current State Analysis
-- **Background**: True Black (`#000000`)
-- **Primary**: Trust Blue (`#2E5CFF`)
-- **Accent**: Spark Orange (`#FF6F00`)
-- **Verdict**: The current "True Black" can feel too stark and harsh on the eyes for data-heavy apps. The "Trust Blue" is safe but generic.
+> All themes assume **Manrope** as the primary font family but with adjusted weights and scaling per theme.
 
 ---
 
-## Option 1: "Midnight Slate" (The Modern Professional)
-**Concept**: Inspired by modern developer tools (Linear, Vercel, Tailwind), this theme uses deep blue-greys instead of pure black. It feels softer, more sophisticated, and reduces eye strain while maintaining a "dark" mode vibe.
+## 1. Midnight Slate (The Modern Standard)
+**Vibe**: Professional, Clean, Developer-tool aesthetic (Linear, Vercel).
+**Best For**: Users who want a modern, fatigue-free interface that feels "tech-savvy" but serious.
 
-### Palette
-| Role | Color Name | Hex Code | Visual |
+### 🎨 Color Palette
+| Token | Color Name | Hex | Usage |
 | :--- | :--- | :--- | :--- |
-| **Background** | `Slate 950` | `#020617` | Use as Scaffold background |
-| **Surface** | `Slate 900` | `#0F172A` | Use for Cards/Sheets |
-| **Primary** | `Indigo 500` | `#6366F1` | Vibrant, trustworthy but modern |
-| **Secondary** | `Sky 400` | `#38BDF8` | Accents and gradients |
-| **Text** | `Slate 100` | `#F1F5F9` | High legibility white-grey |
+| **Background** | `Slate 950` | `#020617` | App Scaffold |
+| **Surface** | `Slate 900` | `#0F172A` | Cards, Inputs, Sheets |
+| **Surface Highlight**| `Slate 800` | `#1E293B` | Hover states, Borders |
+| **Primary** | `Indigo 500` | `#6366F1` | Main Actions, Active States |
+| **Secondary** | `Sky 400` | `#38BDF8` | Accents, Charts, Gradients |
+| **Destructive** | `Rose 500` | `#F43F5E` | Errors, Delete |
+| **Success** | `Emerald 500`| `#10B981` | Success states, Positive Balance |
 
-### Why it works for BalanceIQ
-- **Professionalism**: Slate tones convey stability and precision (finance).
-- **Depth**: Using multiple shades of slate allows for better hierarchy (depth) than flat black.
-- **Aesthetic**: Extremely popular in 2024-2025 SaaS design.
+### ✒️ Typography & Text Colors
+| Token | Hex | Config |
+| :--- | :--- | :--- |
+| **Text Primary** | `#F8FAFC` (Slate 50) | Weight: 600 for headers, 500 for body |
+| **Text Secondary** | `#94A3B8` (Slate 400)| Weight: 400 |
+| **Text Tertiary** | `#64748B` (Slate 500)| Weight: 400 |
+
+### 🧩 Component Styles
+- **Border Radius**: `12px` (Medium rounded) - Strikes a balance between serious and friendly.
+- **Borders**: Thin, subtle borders (`1px solid #1E293B`) on all cards to define edges without heavy shadows.
+- **Shadows**: Very soft, diffuse shadows (`0 4px 6px -1px rgba(0, 0, 0, 0.1)`).
 
 ---
 
-## Option 2: "OLED Neon Growth" (High Contrast Finance)
-**Concept**: Embraces True Black for maximum battery saving and contrast, but pairs it with a vibrant "Growth Green" instead of blue. This mimics terminal/hacker aesthetics but polished for consumer use (like Cash App or Robinhood).
+## 2. OLED Neon Growth (The Trader)
+**Vibe**: High Contrast, Financial, Cyberpunk, Data-first (Robinhood, Cash App).
+**Best For**: Users who care about data clarity, battery life, and a "terminal" feel.
 
-### Palette
-| Role | Color Name | Hex Code | Visual |
+### 🎨 Color Palette
+| Token | Color Name | Hex | Usage |
 | :--- | :--- | :--- | :--- |
-| **Background** | `True Black` | `#000000` | OLED Deep Black |
-| **Surface** | `Dark Grey` | `#121212` | Standard Material Dark Surface |
-| **Primary** | `Neon Mint` | `#00E676` | (Existing `incomeGreen` but brighter) |
-| **Secondary** | `Electric Purple`| `#651FFF` | For AI/Bot accents |
-| **Text** | `Pure White` | `#FFFFFF` | Maximum Contrast |
+| **Background** | `True Black` | `#000000` | App Scaffold (OLED Friendly) |
+| **Surface** | `Dark Grey` | `#121212` | Cards, Inputs |
+| **Surface Highlight**| `Graphite` | `#1E1E1E` | Secondary Surface |
+| **Primary** | `Neon Mint` | `#00E676` | Primary Actions, Positive Growth |
+| **Secondary** | `Electric Purple`| `#651FFF` | AI Features, Secondary Actions |
+| **Destructive** | `Neon Red` | `#FF1744` | Negative Balance, Errors |
+| **Warning** | `Cyber Yellow`| `#FFEA00` | Alerts |
 
-### Why it works for BalanceIQ
-- **Finance First**: Green is the universal color of money/growth.
-- **Vibrancy**: The neon green pops incredible well against true black.
-- **Focus**: High contrast forces focus on the numbers.
+### ✒️ Typography & Text Colors
+| Token | Hex | Config |
+| :--- | :--- | :--- |
+| **Text Primary** | `#FFFFFF` (Pure White) | Weight: 700 for numbers, 500 for text |
+| **Text Secondary** | `#B0B0B0` (Light Grey)| Weight: 400 |
+| **Text Tertiary** | `#757575` (Dark Grey) | Weight: 400 |
+
+### 🧩 Component Styles
+- **Border Radius**: `4px` or `8px` (Sharp/Small) - Technical, precise look.
+- **Borders**: No borders on cards, relying on high contrast between `#000000` and `#121212`.
+- **Shadows**: None (Flat design) or sharp hard shadows.
 
 ---
 
-## Option 3: "Royal Obsidian" (Luxury & Wealth)
-**Concept**: A theme that feels like a premium credit card (Amex Black, Chase Sapphire). Uses warm dark greys and gold/amber accents.
+## 3. Royal Obsidian (The Premium Card)
+**Vibe**: Luxury, Exclusive, Wealth, Warmth (Amex Black, Cred).
+**Best For**: Users who treat finance as a lifestyle; premium experience.
 
-### Palette
-| Role | Color Name | Hex Code | Visual |
+### 🎨 Color Palette
+| Token | Color Name | Hex | Usage |
 | :--- | :--- | :--- | :--- |
-| **Background** | `Obsidian` | `#1C1C1E` | Warm Dark Grey |
-| **Surface** | `Charcoal` | `#2C2C2E` | Slightly lighter warm grey |
-| **Primary** | `Gold` | `#FFD700` | Luxury accent |
-| **Secondary** | `Bronze` | `#CD7F32` | Secondary actions |
-| **Text** | `Off White` | `#E5E5E7` | Soft white |
+| **Background** | `Obsidian` | `#100C08` | Very warm, almost brown-black |
+| **Surface** | `Charcoal` | `#1C1917` | Cards with minimal contrast |
+| **Surface Highlight**| `Tungsten` | `#292524` | Inputs, Active states |
+| **Primary** | `Gold Leaf` | `#D4AF37` | Luxury accents, CTA |
+| **Secondary** | `Bronze` | `#CD7F32` | Secondary data points |
+| **Tertiary** | `Silk` | `#E7E5E4` | Soft white highlights |
 
-### Why it works for BalanceIQ
-- **Psychology**: Makes the user feel wealthy and exclusive.
-- **Warmth**: The warm greys are welcoming, unlike the cold blue/black.
-- **Differentiation**: Stands out from the sea of blue finance apps.
+### ✒️ Typography & Text Colors
+| Token | Hex | Config |
+| :--- | :--- | :--- |
+| **Text Primary** | `#E7E5E4` (Warm White)| Font: **Playfair Display** (Headings) + Manrope (Body) |
+| **Text Secondary** | `#A8A29E` (Warm Grey)| Weight: 300 (Light) |
+
+### 🧩 Component Styles
+- **Border Radius**: `24px` (Highly rounded) - Soft, organic, premium feel.
+- **Borders**: Gradient borders (Gold to Transparent) using custom painters.
+- **Effects**: Subtle "Noise" texture overlay on backgrounds for tactile feel.
 
 ---
 
-## Option 4: "Nebula Glass" (AI & Futuristic)
-**Concept**: Since "BalanceIQ" uses Gemini AI, this theme leans into the "AI" aesthetic. Deep purple/violet backgrounds with heavy usage of glassmorphism and gradients.
+## 4. Nebula Glass (The AI Futurist)
+**Vibe**: Futuristic, Transparency, Depth, Glowing (Gemini, Siri 2.0).
+**Best For**: Emphasizing the "IQ" and AI capabilities of BalanceIQ.
 
-### Palette
-| Role | Color Name | Hex Code | Visual |
+### 🎨 Color Palette
+| Token | Color Name | Hex | Usage |
 | :--- | :--- | :--- | :--- |
-| **Background** | `Deep Space` | `#0B0418` | Very dark purple-black |
-| **Surface** | `Glass Plum` | `#1E1B2E` | Purple-tinted dark grey |
-| **Primary** | `Fuchsia` | `#D946EF` | Vibrant AI pink/purple |
-| **Secondary** | `Cyan` | `#06B6D4` | Tech/Data accent |
-| **Text** | `Mist` | `#E2E8F0` | Cool white |
+| **Background** | `Deep Space` | `#0B0418` | Dark Violet-Black |
+| **Surface** | `Glass Plum` | `#1E1B2E` | Base layer for glass cards |
+| **Glass Layer** | `Flux` | `rgba(255, 255, 255, 0.05)` | Glassmorphism overlays |
+| **Primary** | `Fuchsia` | `#D946EF` | AI Triggers, Primary Buttons |
+| **Secondary** | `Cyan` | `#06B6D4` | Data visualizations |
+| **Glow** | `Violet` | `#8B5CF6` | Background glow effects |
 
-### Why it works for BalanceIQ
-- **Branding**: Aligns perfectly with the "IQ" / AI aspect.
-- **Modernity**: Feels cutting edge, "2026" ready.
-- **Glassmorphism**: Works best with these deep rich colors.
+### ✒️ Typography & Text Colors
+| Token | Hex | Config |
+| :--- | :--- | :--- |
+| **Text Primary** | `#E2E8F0` (Cool White) | Weight: 400 (Clean) |
+| **Text Secondary** | `#94A3B8` (Blue Grey) | Weight: 300 |
+| **Text Gradient**| `Fuchsia->Cyan` | Used for "BalanceIQ" headers and AI text |
+
+### 🧩 Component Styles
+- **Border Radius**: `20px` (Soft modern).
+- **Glassmorphism**: Backdrop blur (`10px`) + white borders with low opacity (`0.1`).
+- **Gradients**: Heavy use of mesh gradients in backgrounds.
 
 ---
 
-## Option 5: "Nordic Frost" (Clean & Minimal)
-**Concept**: A dark mode that isn't black, but rather a deep, cool desaturated blue (Nordic/Arctic theme). Very calming, clean, and minimalist.
+## 5. Nordic Frost (The Minimalist)
+**Vibe**: Calm, Serene, Focused, Arctic (Things 3, Notion Dark).
+**Best For**: Anxiety-free finance management.
 
-### Palette
-| Role | Color Name | Hex Code | Visual |
+### 🎨 Color Palette
+| Token | Color Name | Hex | Usage |
 | :--- | :--- | :--- | :--- |
-| **Background** | `Nordic Navy` | `#18202F` | Deep Desaturated Navy |
-| **Surface** | `Frost Blue` | `#222D3E` | Lighter Navy |
-| **Primary** | `Glacier Blue` | `#6EE7B7` | Soft Teal/Mint or `#93C5FD` (Soft Blue) |
-| **Secondary** | `Aurora` | `#A78BFA` | Soft Purple |
-| **Text** | `Snow` | `#F8FAFC` | Bright White |
+| **Background** | `Nordic Navy` | `#18202F` | Deep desaturated blue |
+| **Surface** | `Frost Blue` | `#222D3E` | Lighter navy surface |
+| **Surface Highlight**| `Glacier` | `#2D3B52` | Inputs, Hover |
+| **Primary** | `Arctic Teal` | `#5EEAD4` | Fresh, calming primary |
+| **Secondary** | `Soft Indigo` | `#818CF8` | Secondary accents |
+| **Text Primary** | `#F0F9FF` | Very cool white |
 
-### Why it works for BalanceIQ
-- **Calm**: Money management can be stressful; this palette is calming.
-- **Readability**: Excellent contrast without the harshness of black.
-- **Unique**: Very distinct look, feels like a high-end productivity tool.
+### ✒️ Typography & Text Colors
+| Token | Hex | Config |
+| :--- | :--- | :--- |
+| **Text Primary** | `#F0F9FF` | Weight: 500 |
+| **Text Secondary** | `#94A3B8` | Weight: 400 |
 
----
-
-## Recommendation
-For **BalanceIQ**, I recommend **Option 1 (Midnight Slate)** or **Option 4 (Nebula Glass)**.
-
-- **Option 1** is the safest "Premium" upgrade. It looks professional and trustworthy.
-- **Option 4** is the boldest choice if you want to emphasize the AI capabilities.
-
-**Next Steps**:
-1. Select a preferred direction.
-2. I can create a mockup or apply the changes to `AppPalette` and `AppTheme`.
+### 🧩 Component Styles
+- **Border Radius**: `16px` (Standard Rounded).
+- **Design**: "Flat 2.0" - No shadows, but subtle color differences to show depth.
+- **Layout**: Spacious padding (`24px` standard) to promote calmness.

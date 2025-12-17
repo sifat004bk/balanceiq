@@ -1,5 +1,4 @@
 import 'dart:ui';
-import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:balance_iq/core/constants/app_strings.dart';
 import 'package:balance_iq/core/widgets/glass_presets.dart';
 import 'package:flutter/material.dart';
@@ -21,8 +20,6 @@ class BalanceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
@@ -33,8 +30,7 @@ class BalanceCard extends StatelessWidget {
             decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(
-                  color: (isDark ? AppPalette.trustBlue : AppPalette.trustBlue)
-                      .withOpacity(0.1),
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                   blurRadius: 24,
                   spreadRadius: 8,
                 ),
@@ -45,7 +41,6 @@ class BalanceCard extends StatelessWidget {
                 Text(
                   AppStrings.dashboard.walletBalance,
                   style: textTheme.bodySmall?.copyWith(
-                    color: AppPalette.textSubtle,
                     fontWeight: FontWeight.w500,
                     letterSpacing: 0.5,
                   ),
@@ -53,10 +48,10 @@ class BalanceCard extends StatelessWidget {
                 const SizedBox(height: 8),
                 ShaderMask(
                   shaderCallback: (bounds) {
-                    return (isDark
-                            ? AppPalette.primaryGradient
-                            : AppPalette.primaryGradient)
-                        .createShader(bounds);
+                    return LinearGradient(colors: [
+                      Theme.of(context).colorScheme.primary,
+                      Theme.of(context).colorScheme.secondary,
+                    ]).createShader(bounds);
                   },
                   child: Text(
                     '\$${_formatCurrency(netBalance)}',
@@ -65,7 +60,7 @@ class BalanceCard extends StatelessWidget {
                       fontWeight: FontWeight.w900,
                       height: 1.2,
                       letterSpacing: -1.0,
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                 ),
@@ -111,11 +106,10 @@ class BalanceCard extends StatelessWidget {
     required bool isIncome,
   }) {
     final textTheme = Theme.of(context).textTheme;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     final iconColor = isIncome
-        ? (isDark ? AppPalette.incomeGreen : AppPalette.incomeGreen)
-        : (isDark ? AppPalette.expenseRed : AppPalette.expenseRed);
+        ? Colors
+            .green // Keeping semantic colors for Income/Expense as they are domain-specific
+        : Theme.of(context).colorScheme.error;
 
     return ThemedGlass.container(
       context: context,
@@ -149,7 +143,7 @@ class BalanceCard extends StatelessWidget {
                 ),
                 child: Icon(
                   icon,
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.onPrimary,
                   size: 14,
                 ),
               ),

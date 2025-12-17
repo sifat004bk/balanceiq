@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'package:balance_iq/core/constants/app_strings.dart';
-import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:balance_iq/features/home/presentation/pages/transactions_page.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +18,6 @@ class CategoryBreakdownWidget extends StatelessWidget {
     }
 
     final textTheme = Theme.of(context).textTheme;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final sortedCategories = categories.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
@@ -52,15 +50,17 @@ class CategoryBreakdownWidget extends StatelessWidget {
                   vertical: 7,
                 ),
                 decoration: BoxDecoration(
-                  gradient: isDark
-                      ? AppPalette.primaryGradient
-                      : AppPalette.primaryGradient,
+                  gradient: LinearGradient(colors: [
+                    Theme.of(context).colorScheme.primary,
+                    Theme.of(context).colorScheme.secondary,
+                  ]),
                   borderRadius: BorderRadius.circular(50),
                   boxShadow: [
                     BoxShadow(
-                      color:
-                          (isDark ? AppPalette.trustBlue : AppPalette.trustBlue)
-                              .withOpacity(0.3),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withOpacity(0.3),
                       blurRadius: 8,
                       spreadRadius: 1,
                     ),
@@ -69,7 +69,6 @@ class CategoryBreakdownWidget extends StatelessWidget {
                 child: Text(
                   '${sortedCategories.length}',
                   style: textTheme.labelMedium?.copyWith(
-                    color: Colors.white,
                     fontWeight: FontWeight.w800,
                     fontSize: 13,
                   ),
@@ -138,31 +137,29 @@ class CategoryBreakdownWidget extends StatelessWidget {
         gradient: isDark
             ? LinearGradient(
                 colors: [
-                  AppPalette.surfaceDark.withOpacity(0.6),
-                  AppPalette.surfaceDark.withOpacity(0.3),
+                  Theme.of(context).cardColor.withOpacity(0.6),
+                  Theme.of(context).cardColor.withOpacity(0.3),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               )
             : LinearGradient(
                 colors: [
-                  AppPalette.surfaceLight,
-                  AppPalette.surfaceLight.withOpacity(0.5),
+                  Theme.of(context).cardColor,
+                  Theme.of(context).cardColor.withOpacity(0.5),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: isDark
-              ? Colors.white.withOpacity(0.1)
-              : Colors.black.withOpacity(0.05),
+          color: Theme.of(context).dividerColor.withOpacity(0.1),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
             color: isDark
-                ? Colors.black.withOpacity(0.3)
+                ? Theme.of(context).shadowColor.withOpacity(0.3)
                 : accentColor.withOpacity(0.08),
             offset: const Offset(0, 4),
             blurRadius: 12,
@@ -233,7 +230,6 @@ class CategoryBreakdownWidget extends StatelessWidget {
                     Text(
                       categoryName,
                       style: textTheme.bodySmall?.copyWith(
-                        color: AppPalette.neutralGrey,
                         fontWeight: FontWeight.w600,
                         fontSize: 12,
                         letterSpacing: 0.2,

@@ -1,5 +1,4 @@
 import 'package:balance_iq/core/constants/app_strings.dart';
-import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 
 /// Minimalist Neumorphism Style - Clean and Modern
@@ -63,13 +62,13 @@ class AccountsBreakdownWidget extends StatelessWidget {
                   vertical: 8,
                 ),
                 decoration: BoxDecoration(
-                  color: AppPalette.trustBlue.withOpacity(0.1),
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
                   '${sortedAccounts.length}',
                   style: textTheme.titleMedium?.copyWith(
-                    color: AppPalette.trustBlue,
+                    color: Theme.of(context).colorScheme.primary,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -119,7 +118,7 @@ class AccountsBreakdownWidget extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final isNegative = balance < 0;
 
-    final accentColor = _getAccentColor(accountName, index);
+    final accentColor = _getAccentColor(context, accountName, index);
     final accountIcon = _getAccountIcon(accountName);
 
     return Container(
@@ -139,8 +138,8 @@ class AccountsBreakdownWidget extends StatelessWidget {
           // Neumorphism effect
           BoxShadow(
             color: isDark
-                ? Colors.black.withOpacity(0.3)
-                : Colors.black.withOpacity(0.05),
+                ? Theme.of(context).shadowColor.withOpacity(0.3)
+                : Theme.of(context).shadowColor.withOpacity(0.05),
             offset: const Offset(4, 4),
             blurRadius: 8,
             spreadRadius: 0,
@@ -210,7 +209,7 @@ class AccountsBreakdownWidget extends StatelessWidget {
                 Text(
                   accountName,
                   style: textTheme.bodySmall?.copyWith(
-                    color: AppPalette.neutralGrey,
+                    color: Theme.of(context).hintColor,
                     fontSize: 18,
                     fontWeight: FontWeight.w500,
                   ),
@@ -253,25 +252,25 @@ class AccountsBreakdownWidget extends StatelessWidget {
     );
   }
 
-  Color _getAccentColor(String accountName, int index) {
+  Color _getAccentColor(BuildContext context, String accountName, int index) {
     final lowerName = accountName.toLowerCase();
 
     if (lowerName.contains('cash') || lowerName.contains('wallet')) {
-      return const Color(0xFF10B981); // Green
+      return Theme.of(context).colorScheme.primary;
     } else if (lowerName.contains('bank') || lowerName.contains('saving')) {
-      return const Color(0xFF3B82F6); // Blue
+      return Theme.of(context).colorScheme.secondary;
     } else if (lowerName.contains('credit') || lowerName.contains('card')) {
-      return const Color(0xFF8B5CF6); // Purple
+      return Theme.of(context).colorScheme.tertiary;
     } else if (lowerName.contains('invest') || lowerName.contains('stock')) {
-      return const Color(0xFFF97316); // Orange
+      return Theme.of(context).colorScheme.error;
     }
 
     // Fallback colors
     final colors = [
-      const Color(0xFF6366F1), // Indigo
-      const Color(0xFFEC4899), // Pink
-      const Color(0xFF14B8A6), // Teal
-      const Color(0xFFF59E0B), // Amber
+      Theme.of(context).colorScheme.primary,
+      Theme.of(context).colorScheme.secondary,
+      Theme.of(context).colorScheme.tertiary,
+      Theme.of(context).colorScheme.inversePrimary,
     ];
 
     return colors[index % colors.length];

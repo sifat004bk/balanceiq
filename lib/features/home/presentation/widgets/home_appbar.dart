@@ -1,4 +1,3 @@
-import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:balance_iq/core/widgets/glass_presets.dart';
 import 'package:balance_iq/core/theme/theme_cubit.dart';
 import 'package:balance_iq/core/theme/theme_state.dart';
@@ -75,19 +74,13 @@ class HomeAppbar extends StatelessWidget {
             height: 40,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              gradient: isDark
-                  ? LinearGradient(colors: [
-                      AppPalette.trustBlue,
-                      AppPalette.trustBlue.withOpacity(0.8)
-                    ])
-                  : LinearGradient(colors: [
-                      AppPalette.trustBlue,
-                      AppPalette.trustBlue.withOpacity(0.8)
-                    ]),
+              gradient: LinearGradient(colors: [
+                Theme.of(context).colorScheme.primary,
+                Theme.of(context).colorScheme.primary.withOpacity(0.8)
+              ]),
               boxShadow: [
                 BoxShadow(
-                  color: (isDark ? AppPalette.trustBlue : AppPalette.trustBlue)
-                      .withOpacity(0.3),
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
                   blurRadius: 8,
                   spreadRadius: 1,
                 ),
@@ -103,8 +96,9 @@ class HomeAppbar extends StatelessWidget {
                   ? Icon(
                       Icons.person_rounded,
                       size: 20,
-                      color:
-                          isDark ? AppPalette.trustBlue : AppPalette.trustBlue,
+                      color: isDark
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).colorScheme.primary,
                     )
                   : ClipOval(
                       child: Image.network(
@@ -115,8 +109,8 @@ class HomeAppbar extends StatelessWidget {
                             Icons.person_rounded,
                             size: 20,
                             color: isDark
-                                ? AppPalette.trustBlue
-                                : AppPalette.trustBlue,
+                                ? Theme.of(context).colorScheme.primary
+                                : Theme.of(context).colorScheme.primary,
                           );
                         },
                       ),
@@ -148,7 +142,7 @@ class HomeAppbar extends StatelessWidget {
                   child: Icon(
                     isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
                     size: 20,
-                    color: isDark ? AppPalette.trustBlue : AppPalette.trustBlue,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
               ),

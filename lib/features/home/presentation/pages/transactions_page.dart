@@ -9,6 +9,7 @@ import 'package:balance_iq/features/home/presentation/widgets/transactions_shimm
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:balance_iq/features/home/presentation/widgets/date_selector_bottom_sheet.dart';
 import 'package:intl/intl.dart';
 
 class TransactionsPage extends StatelessWidget {
@@ -76,34 +77,21 @@ class _TransactionsViewState extends State<TransactionsView> {
     _onFilterChanged();
   }
 
-  Future<void> _selectDateRange() async {
-    final picked = await showDateRangePicker(
+  void _selectDateRange() {
+    showModalBottomSheet(
       context: context,
-      firstDate: DateTime(2020),
-      lastDate: DateTime.now().add(const Duration(days: 365)),
-      initialDateRange: _startDate != null && _endDate != null
-          ? DateTimeRange(start: _startDate!, end: _endDate!)
-          : null,
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: Theme.of(context).colorScheme.copyWith(
-                  primary: AppTheme.primaryColor,
-                  onPrimary: Colors.white,
-                ),
-          ),
-          child: child!,
-        );
-      },
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => DateSelectorBottomSheet(
+        onDateSelected: (start, end) {
+          setState(() {
+            _startDate = start;
+            _endDate = end;
+          });
+          _onFilterChanged();
+        },
+      ),
     );
-
-    if (picked != null) {
-      setState(() {
-        _startDate = picked.start;
-        _endDate = picked.end;
-      });
-      _onFilterChanged();
-    }
   }
 
   @override

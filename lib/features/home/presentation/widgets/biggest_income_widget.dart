@@ -51,9 +51,7 @@ class BiggestIncomeWidget extends StatelessWidget {
               children: [
                 Text(
                   AppStrings.dashboard.biggestIncome,
-                  style: textTheme.bodyMedium?.copyWith(
-                    color: AppPalette.neutralGrey,
-                  ),
+                  style: textTheme.bodyMedium,
                 ),
                 const SizedBox(height: 4),
                 Text(

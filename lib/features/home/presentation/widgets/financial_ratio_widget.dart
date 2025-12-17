@@ -1,5 +1,4 @@
 import 'package:balance_iq/core/constants/app_strings.dart';
-import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 
 class FinancialRatiosWidget extends StatelessWidget {
@@ -33,7 +32,8 @@ class FinancialRatiosWidget extends StatelessWidget {
             context,
             title: AppStrings.dashboard.savingsRate,
             value: savingsRate,
-            backgroundColor: AppPalette.trustBlue.withOpacity(0.4),
+            backgroundColor:
+                Theme.of(context).colorScheme.primary.withOpacity(0.4),
             textColor: colorScheme.onSurface,
           ),
         ),
@@ -49,7 +49,6 @@ class FinancialRatiosWidget extends StatelessWidget {
     required Color textColor,
   }) {
     final textTheme = Theme.of(context).textTheme;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -63,7 +62,7 @@ class FinancialRatiosWidget extends StatelessWidget {
           Text(
             title,
             style: textTheme.bodySmall?.copyWith(
-              color: isDark ? Colors.grey.shade300 : Colors.grey.shade500,
+              color: Theme.of(context).hintColor,
             ),
           ),
           const SizedBox(height: 8),

@@ -1,6 +1,4 @@
-import 'dart:ui';
 import 'package:balance_iq/core/constants/app_strings.dart';
-import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:balance_iq/features/home/presentation/widgets/custom_calendar_date_range_picker.dart';
 import 'package:flutter/material.dart';
 
@@ -23,33 +21,20 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-
     return Container(
       padding: const EdgeInsets.only(top: 12, bottom: 32, left: 20, right: 20),
       decoration: BoxDecoration(
-        gradient: isDark
-            ? LinearGradient(
-                colors: [
-                  AppPalette.surfaceDark,
-                  AppPalette.surfaceDark,
-                ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              )
-            : LinearGradient(
-                colors: [
-                  AppPalette.surfaceLight,
-                  AppPalette.surfaceLight,
-                ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
+        gradient: LinearGradient(
+          colors: [
+            Theme.of(context).cardColor,
+            Theme.of(context).cardColor,
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
         borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
         border: Border.all(
-          color: isDark
-              ? Colors.white.withOpacity(0.1)
-              : Colors.black.withOpacity(0.05),
+          color: Theme.of(context).dividerColor.withOpacity(0.1),
           width: 1,
         ),
       ),
@@ -64,11 +49,15 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
               width: 48,
               height: 5,
               decoration: BoxDecoration(
-                gradient: AppPalette.primaryGradient,
+                gradient: LinearGradient(colors: [
+                  Theme.of(context).colorScheme.primary,
+                  Theme.of(context).colorScheme.secondary,
+                ]),
                 borderRadius: BorderRadius.circular(3),
                 boxShadow: [
                   BoxShadow(
-                    color: AppPalette.trustBlue.withOpacity(0.3),
+                    color:
+                        Theme.of(context).colorScheme.primary.withOpacity(0.3),
                     blurRadius: 8,
                     spreadRadius: 1,
                   ),
@@ -84,14 +73,12 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
               fontWeight: FontWeight.w800,
               fontSize: 28,
               letterSpacing: -0.5,
-              shadows: isDark
-                  ? [
-                      Shadow(
-                        color: AppPalette.trustBlue.withOpacity(0.3),
-                        blurRadius: 12,
-                      ),
-                    ]
-                  : null,
+              shadows: [
+                Shadow(
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                  blurRadius: 12,
+                ),
+              ],
             ),
             textAlign: TextAlign.center,
           ),
@@ -163,7 +150,7 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
               gradient: LinearGradient(
                 colors: [
                   Colors.transparent,
-                  AppPalette.trustBlue.withOpacity(0.3),
+                  Theme.of(context).colorScheme.primary.withOpacity(0.3),
                   Colors.transparent,
                 ],
               ),
@@ -194,28 +181,17 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
               decoration: BoxDecoration(
-                gradient: isDark
-                    ? LinearGradient(
-                        colors: [
-                          AppPalette.surfaceCardDark.withOpacity(0.5),
-                          AppPalette.surfaceCardDark.withOpacity(0.3),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      )
-                    : LinearGradient(
-                        colors: [
-                          AppPalette.surfaceLight,
-                          AppPalette.surfaceLight.withOpacity(0.7),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
+                gradient: LinearGradient(
+                  colors: [
+                    Theme.of(context).cardColor.withOpacity(0.5),
+                    Theme.of(context).cardColor.withOpacity(0.3),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: isDark
-                      ? Colors.white.withOpacity(0.1)
-                      : Colors.black.withOpacity(0.05),
+                  color: Theme.of(context).dividerColor.withOpacity(0.1),
                   width: 1,
                 ),
               ),
@@ -224,11 +200,17 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      gradient: AppPalette.primaryGradient,
+                      gradient: LinearGradient(colors: [
+                        Theme.of(context).colorScheme.primary,
+                        Theme.of(context).colorScheme.secondary,
+                      ]),
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: AppPalette.trustBlue.withOpacity(0.3),
+                          color: Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withOpacity(0.3),
                           blurRadius: 8,
                           spreadRadius: 1,
                         ),
@@ -252,7 +234,7 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
                   ),
                   Icon(
                     Icons.chevron_right_rounded,
-                    color: AppPalette.neutralGrey,
+                    color: Theme.of(context).hintColor,
                   ),
                 ],
               ),
@@ -269,7 +251,6 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
     required String presetKey,
     required VoidCallback onTap,
   }) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final isSelected = _selectedPreset == presetKey;
 
     return TweenAnimationBuilder<double>(
@@ -292,25 +273,27 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
           decoration: BoxDecoration(
-            gradient: isSelected ? AppPalette.primaryGradient : null,
-            color: isSelected
-                ? null
-                : (isDark
-                    ? AppPalette.surfaceCardDark.withOpacity(0.5)
-                    : AppPalette.surfaceLight),
+            gradient: isSelected
+                ? LinearGradient(colors: [
+                    Theme.of(context).colorScheme.primary,
+                    Theme.of(context).colorScheme.secondary,
+                  ])
+                : null,
+            color: isSelected ? null : Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(50),
             border: Border.all(
               color: isSelected
-                  ? AppPalette.trustBlue
-                  : (isDark
-                      ? Colors.white.withOpacity(0.1)
-                      : Colors.black.withOpacity(0.08)),
+                  ? Theme.of(context).colorScheme.primary
+                  : Theme.of(context).dividerColor.withOpacity(0.1),
               width: isSelected ? 2 : 1,
             ),
             boxShadow: isSelected
                 ? [
                     BoxShadow(
-                      color: AppPalette.trustBlue.withOpacity(0.3),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withOpacity(0.3),
                       blurRadius: 12,
                       spreadRadius: 2,
                     ),
@@ -322,7 +305,9 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.w700,
                   letterSpacing: 0.3,
-                  color: isSelected ? Colors.white : AppPalette.neutralGrey,
+                  color: isSelected
+                      ? Theme.of(context).colorScheme.onPrimary
+                      : Theme.of(context).hintColor,
                 ),
           ),
         ),

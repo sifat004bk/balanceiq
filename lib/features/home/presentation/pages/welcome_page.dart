@@ -1,5 +1,5 @@
 import 'package:balance_iq/core/constants/app_strings.dart';
-import 'package:balance_iq/core/theme/app_palette.dart';
+
 import 'package:flutter/material.dart';
 
 class WelcomePage extends StatelessWidget {
@@ -43,7 +43,7 @@ class WelcomePage extends StatelessWidget {
                     color: colorScheme.surface.withOpacity(0.1),
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: AppPalette.trustBlue,
+                      color: Theme.of(context).colorScheme.primary,
                       width: 2,
                     ),
                   ),
@@ -81,7 +81,10 @@ class WelcomePage extends StatelessWidget {
                       width: 200,
                       height: 200,
                       decoration: BoxDecoration(
-                        color: AppPalette.trustBlue.withOpacity(0.1),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withOpacity(0.1),
                         shape: BoxShape.circle,
                       ),
                       child: Center(
@@ -89,13 +92,16 @@ class WelcomePage extends StatelessWidget {
                           width: 140,
                           height: 140,
                           decoration: BoxDecoration(
-                            color: AppPalette.trustBlue.withOpacity(0.2),
+                            color: Theme.of(context)
+                                .colorScheme
+                                .primary
+                                .withOpacity(0.2),
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
                             Icons.account_balance_wallet_outlined,
                             size: 80,
-                            color: AppPalette.trustBlue,
+                            color: Theme.of(context).colorScheme.primary,
                           ),
                         ),
                       ),
@@ -115,7 +121,7 @@ class WelcomePage extends StatelessWidget {
                     Text(
                       AppStrings.dashboard.welcomeSubtitle,
                       style: textTheme.bodyLarge?.copyWith(
-                        color: AppPalette.neutralGrey,
+                        color: Theme.of(context).hintColor,
                         height: 1.5,
                       ),
                       textAlign: TextAlign.center,
@@ -152,10 +158,15 @@ class WelcomePage extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: onGetStarted,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: AppPalette.trustBlue,
-                          foregroundColor: AppPalette.neutralWhite,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.primary,
+                          foregroundColor:
+                              Theme.of(context).colorScheme.onPrimary,
                           elevation: 8,
-                          shadowColor: AppPalette.trustBlue.withOpacity(0.3),
+                          shadowColor: Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withOpacity(0.3),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                           ),
@@ -165,7 +176,7 @@ class WelcomePage extends StatelessWidget {
                           style: textTheme.titleMedium?.copyWith(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: AppPalette.neutralWhite,
+                            color: Theme.of(context).colorScheme.onPrimary,
                           ),
                         ),
                       ),
@@ -194,12 +205,12 @@ class WelcomePage extends StatelessWidget {
           width: 56,
           height: 56,
           decoration: BoxDecoration(
-            color: AppPalette.trustBlue.withOpacity(0.1),
+            color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
             borderRadius: BorderRadius.circular(16),
           ),
           child: Icon(
             icon,
-            color: AppPalette.trustBlue,
+            color: Theme.of(context).colorScheme.primary,
             size: 28,
           ),
         ),
@@ -218,7 +229,7 @@ class WelcomePage extends StatelessWidget {
               Text(
                 description,
                 style: textTheme.bodyMedium?.copyWith(
-                  color: AppPalette.neutralGrey,
+                  color: Theme.of(context).hintColor,
                 ),
               ),
             ],

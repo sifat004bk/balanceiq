@@ -1,5 +1,4 @@
 import 'package:balance_iq/core/constants/app_strings.dart';
-import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:balance_iq/features/home/domain/entities/transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -128,11 +127,11 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.red.withValues(alpha: 0.1),
+                color: Theme.of(context).colorScheme.error.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child:
-                  const Icon(Icons.delete_outline, color: Colors.red, size: 24),
+              child: Icon(Icons.delete_outline,
+                  color: Theme.of(context).colorScheme.error, size: 24),
             ),
             const SizedBox(width: 12),
             Text(AppStrings.transactions.deleteTransaction),
@@ -166,8 +165,8 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
               });
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
+              backgroundColor: Theme.of(context).colorScheme.error,
+              foregroundColor: Theme.of(context).colorScheme.onError,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8)),
             ),
@@ -188,8 +187,8 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: Theme.of(context).colorScheme.copyWith(
-                  primary: AppPalette.trustBlue,
-                  onPrimary: Colors.white,
+                  primary: Theme.of(context).colorScheme.primary,
+                  onPrimary: Theme.of(context).colorScheme.onPrimary,
                 ),
           ),
           child: child!,
@@ -210,7 +209,7 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
 
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+        color: Theme.of(context).scaffoldBackgroundColor,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: _isDeleting
@@ -244,7 +243,7 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
                       width: 40,
                       height: 4,
                       decoration: BoxDecoration(
-                        color: isDark ? Colors.white24 : Colors.grey[300],
+                        color: Theme.of(context).dividerColor,
                         borderRadius: BorderRadius.circular(2),
                       ),
                     ),
@@ -298,9 +297,7 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
                                       .textTheme
                                       .bodySmall
                                       ?.copyWith(
-                                        color: isDark
-                                            ? Colors.white54
-                                            : Colors.grey[600],
+                                        color: Theme.of(context).hintColor,
                                       ),
                                 ),
                               ],
@@ -318,11 +315,13 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
                             onPressed: _toggleEditMode,
                             icon: Icon(
                               _isEditMode ? Icons.close : Icons.edit_outlined,
-                              color: AppPalette.trustBlue,
+                              color: Theme.of(context).colorScheme.primary,
                             ),
                             style: IconButton.styleFrom(
-                              backgroundColor:
-                                  AppPalette.trustBlue.withValues(alpha: 0.1),
+                              backgroundColor: Theme.of(context)
+                                  .colorScheme
+                                  .primary
+                                  .withOpacity(0.1),
                             ),
                           ).animate().fadeIn(delay: 200.ms, duration: 300.ms),
                         ],
@@ -349,8 +348,10 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
                               icon: const Icon(Icons.delete_outline, size: 20),
                               label: Text(AppStrings.common.delete),
                               style: OutlinedButton.styleFrom(
-                                foregroundColor: Colors.red,
-                                side: const BorderSide(color: Colors.red),
+                                foregroundColor:
+                                    Theme.of(context).colorScheme.error,
+                                side: BorderSide(
+                                    color: Theme.of(context).colorScheme.error),
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 14),
                                 shape: RoundedRectangleBorder(
@@ -379,8 +380,10 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
                                   ? AppStrings.common.saveChanges
                                   : AppStrings.common.edit),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: AppPalette.trustBlue,
-                                foregroundColor: Colors.white,
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.primary,
+                                foregroundColor:
+                                    Theme.of(context).colorScheme.onPrimary,
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 14),
                                 shape: RoundedRectangleBorder(
@@ -504,8 +507,6 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
     required int delay,
     bool isLast = false,
   }) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16),
       decoration: BoxDecoration(
@@ -513,7 +514,7 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
             ? null
             : Border(
                 bottom: BorderSide(
-                  color: isDark ? Colors.white10 : Colors.grey[200]!,
+                  color: Theme.of(context).dividerColor,
                 ),
               ),
       ),
@@ -522,12 +523,12 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: AppPalette.trustBlue.withValues(alpha: 0.1),
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(
               icon,
-              color: AppPalette.trustBlue,
+              color: Theme.of(context).colorScheme.primary,
               size: 20,
             ),
           ),
@@ -539,7 +540,7 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
                 Text(
                   label,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: isDark ? Colors.white54 : Colors.grey[600],
+                        color: Theme.of(context).hintColor,
                       ),
                 ),
                 const SizedBox(height: 4),
@@ -692,16 +693,14 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                 decoration: BoxDecoration(
-                  color: isDark
-                      ? Colors.white.withValues(alpha: 0.05)
-                      : Colors.grey[100],
+                  color: Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
                   children: [
                     Icon(
                       Icons.calendar_today_outlined,
-                      color: AppPalette.trustBlue,
+                      color: Theme.of(context).colorScheme.primary,
                       size: 20,
                     ),
                     const SizedBox(width: 12),
@@ -712,7 +711,7 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
                     const Spacer(),
                     Icon(
                       Icons.chevron_right,
-                      color: isDark ? Colors.white54 : Colors.grey[600],
+                      color: Theme.of(context).hintColor,
                     ),
                   ],
                 ),
@@ -737,7 +736,7 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
           label,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 fontWeight: FontWeight.w600,
-                color: AppPalette.trustBlue,
+                color: Theme.of(context).colorScheme.primary,
               ),
         ),
         const SizedBox(height: 8),
@@ -748,7 +747,6 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
 
   Widget _buildTypeChip(String type, String label, IconData icon, Color color) {
     final isSelected = _selectedType == type;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return InkWell(
       onTap: () => setState(() => _selectedType = type),
@@ -758,10 +756,8 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
           color: isSelected
-              ? color.withValues(alpha: 0.15)
-              : (isDark
-                  ? Colors.white.withValues(alpha: 0.05)
-                  : Colors.grey[100]),
+              ? color.withOpacity(0.15)
+              : Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected ? color : Colors.transparent,
@@ -773,18 +769,14 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
           children: [
             Icon(
               icon,
-              color: isSelected
-                  ? color
-                  : (isDark ? Colors.white54 : Colors.grey[600]),
+              color: isSelected ? color : Theme.of(context).hintColor,
               size: 20,
             ),
             const SizedBox(width: 8),
             Text(
               label,
               style: TextStyle(
-                color: isSelected
-                    ? color
-                    : (isDark ? Colors.white54 : Colors.grey[600]),
+                color: isSelected ? color : Theme.of(context).hintColor,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
             ),

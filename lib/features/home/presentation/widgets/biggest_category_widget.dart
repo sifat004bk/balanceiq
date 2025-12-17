@@ -1,5 +1,4 @@
 import 'package:balance_iq/core/constants/app_strings.dart';
-import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 
 class BiggestCategoryWidget extends StatelessWidget {
@@ -30,12 +29,12 @@ class BiggestCategoryWidget extends StatelessWidget {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: AppPalette.trustBlue.withOpacity(0.2),
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
               shape: BoxShape.circle,
             ),
             child: Icon(
               Icons.category,
-              color: AppPalette.trustBlue,
+              color: Theme.of(context).colorScheme.primary,
               size: 24,
             ),
           ),
@@ -48,9 +47,7 @@ class BiggestCategoryWidget extends StatelessWidget {
               children: [
                 Text(
                   AppStrings.dashboard.categories,
-                  style: textTheme.bodyMedium?.copyWith(
-                    color: AppPalette.neutralGrey,
-                  ),
+                  style: textTheme.bodyMedium,
                 ),
                 const SizedBox(height: 4),
                 Text(

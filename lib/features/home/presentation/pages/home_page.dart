@@ -1,6 +1,5 @@
 import 'package:balance_iq/core/constants/app_strings.dart';
 import 'package:balance_iq/core/di/injection_container.dart';
-import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:balance_iq/core/tour/tour.dart';
 import 'package:balance_iq/features/auth/data/datasources/auth_local_datasource.dart';
 import 'package:balance_iq/features/home/presentation/cubit/dashboard_state.dart';
@@ -365,11 +364,8 @@ class _DashboardViewState extends State<DashboardView> {
                 children: [
                   RefreshIndicator(
                     onRefresh: _refreshDashboard,
-                    color: AppPalette.trustBlue,
-                    backgroundColor:
-                        Theme.of(context).brightness == Brightness.dark
-                            ? AppPalette.surfaceDark
-                            : AppPalette.surfaceLight,
+                    color: Theme.of(context).colorScheme.primary,
+                    backgroundColor: Theme.of(context).canvasColor,
                     child: CustomScrollView(
                       physics: const AlwaysScrollableScrollPhysics(),
                       slivers: [

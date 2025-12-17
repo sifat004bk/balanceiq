@@ -1,5 +1,4 @@
 import 'package:balance_iq/core/constants/app_strings.dart';
-import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 import '../../../chat/presentation/pages/chat_page.dart';
 
@@ -31,34 +30,22 @@ class FloatingChatButton extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         decoration: BoxDecoration(
-          gradient: isDark
-              ? LinearGradient(
-                  colors: [
-                    AppPalette.surfaceDark,
-                    AppPalette.surfaceDark.withOpacity(0.8),
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                )
-              : LinearGradient(
-                  colors: [
-                    AppPalette.surfaceLight,
-                    AppPalette.surfaceLight.withOpacity(0.5),
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
+          gradient: LinearGradient(
+            colors: [
+              Theme.of(context).cardColor,
+              Theme.of(context).cardColor.withOpacity(0.8),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
           borderRadius: BorderRadius.circular(30),
           border: Border.all(
-            color: isDark
-                ? AppPalette.trustBlue.withOpacity(0.3)
-                : AppPalette.trustBlue.withOpacity(0.2),
+            color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
             width: 1.5,
           ),
           boxShadow: [
             BoxShadow(
-              color: (isDark ? AppPalette.trustBlue : AppPalette.trustBlue)
-                  .withOpacity(0.15),
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.15),
               blurRadius: 20,
               offset: const Offset(0, 4),
               spreadRadius: 2,
@@ -78,11 +65,15 @@ class FloatingChatButton extends StatelessWidget {
               width: 36,
               height: 36,
               decoration: BoxDecoration(
-                gradient: AppPalette.primaryGradient,
+                gradient: LinearGradient(colors: [
+                  Theme.of(context).colorScheme.primary,
+                  Theme.of(context).colorScheme.secondary,
+                ]),
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: AppPalette.trustBlue.withOpacity(0.3),
+                    color:
+                        Theme.of(context).colorScheme.primary.withOpacity(0.3),
                     blurRadius: 8,
                     spreadRadius: 1,
                   ),
@@ -101,7 +92,7 @@ class FloatingChatButton extends StatelessWidget {
               child: Text(
                 AppStrings.chat.inputPlaceholder,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AppPalette.neutralGrey,
+                      color: Theme.of(context).hintColor,
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
                       letterSpacing: 0.2,
@@ -116,11 +107,15 @@ class FloatingChatButton extends StatelessWidget {
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                gradient: AppPalette.primaryGradient,
+                gradient: LinearGradient(colors: [
+                  Theme.of(context).colorScheme.primary,
+                  Theme.of(context).colorScheme.secondary,
+                ]),
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: AppPalette.trustBlue.withOpacity(0.4),
+                    color:
+                        Theme.of(context).colorScheme.primary.withOpacity(0.4),
                     blurRadius: 12,
                     offset: const Offset(0, 3),
                     spreadRadius: 1,

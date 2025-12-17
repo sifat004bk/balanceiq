@@ -1,5 +1,5 @@
 import 'package:balance_iq/core/constants/app_strings.dart';
-import 'package:balance_iq/core/theme/app_palette.dart';
+
 import 'package:flutter/material.dart';
 
 class Error404Page extends StatelessWidget {
@@ -111,7 +111,7 @@ class Error404Page extends StatelessWidget {
                 child: Text(
                   errorMessage,
                   style: textTheme.bodyMedium?.copyWith(
-                    color: AppPalette.neutralGrey,
+                    color: Theme.of(context).hintColor,
                     height: 1.5,
                   ),
                   textAlign: TextAlign.center,
@@ -123,10 +123,12 @@ class Error404Page extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: AppPalette.trustBlue.withOpacity(0.05),
+                  color:
+                      Theme.of(context).colorScheme.primary.withOpacity(0.05),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: AppPalette.trustBlue.withOpacity(0.2),
+                    color:
+                        Theme.of(context).colorScheme.primary.withOpacity(0.2),
                   ),
                 ),
                 child: Column(
@@ -136,7 +138,7 @@ class Error404Page extends StatelessWidget {
                       children: [
                         Icon(
                           Icons.info_outline,
-                          color: AppPalette.trustBlue,
+                          color: Theme.of(context).colorScheme.primary,
                           size: 20,
                         ),
                         const SizedBox(width: 8),
@@ -176,14 +178,15 @@ class Error404Page extends StatelessWidget {
                     style: textTheme.titleMedium?.copyWith(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: AppPalette.neutralWhite,
+                      color: Theme.of(context).colorScheme.onPrimary,
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppPalette.trustBlue,
-                    foregroundColor: AppPalette.neutralWhite,
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    foregroundColor: Theme.of(context).colorScheme.onPrimary,
                     elevation: 8,
-                    shadowColor: AppPalette.trustBlue.withOpacity(0.3),
+                    shadowColor:
+                        Theme.of(context).colorScheme.primary.withOpacity(0.3),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
@@ -201,7 +204,7 @@ class Error404Page extends StatelessWidget {
                 child: Text(
                   AppStrings.dashboard.backToLoginPage,
                   style: textTheme.titleMedium?.copyWith(
-                    color: AppPalette.trustBlue,
+                    color: Theme.of(context).colorScheme.primary,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -224,7 +227,7 @@ class Error404Page extends StatelessWidget {
             width: 6,
             height: 6,
             decoration: BoxDecoration(
-              color: AppPalette.trustBlue,
+              color: Theme.of(context).colorScheme.primary,
               shape: BoxShape.circle,
             ),
           ),
@@ -233,7 +236,7 @@ class Error404Page extends StatelessWidget {
             child: Text(
               text,
               style: textTheme.bodyMedium?.copyWith(
-                color: AppPalette.neutralGrey,
+                color: Theme.of(context).hintColor,
               ),
             ),
           ),

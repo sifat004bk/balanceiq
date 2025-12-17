@@ -18,7 +18,8 @@ class AppTheme {
       colorScheme: ColorScheme.light(
         primary: AppPalette.trustBlue,
         onPrimary: AppPalette.neutralWhite,
-        secondary: AppPalette.sparkOrange, // Accent
+        secondary: AppPalette.sparkOrange,
+        // Accent
         onSecondary: AppPalette.neutralWhite,
         surface: AppPalette.surfaceLight,
         onSurface: AppPalette.neutralBlack,
@@ -27,15 +28,17 @@ class AppTheme {
       ),
 
       // Typography
-      fontFamily:
-          'Manrope', // Sourced from GoogleFonts in Typography class, but set here for default.
+      fontFamily: 'Manrope',
+      // Sourced from GoogleFonts in Typography class, but set here for default.
       textTheme: AppTypography.textTheme.copyWith(
         displayLarge:
             AppTypography.hero.copyWith(color: AppPalette.neutralBlack),
         titleLarge:
             AppTypography.heading.copyWith(color: AppPalette.neutralBlack),
-        bodyLarge: AppTypography.body.copyWith(color: AppPalette.neutralBlack),
+        bodyLarge: AppTypography.body.copyWith(color: AppPalette.neutralWhite),
         bodySmall: AppTypography.detail,
+        bodyMedium: AppTypography.detail,
+        headlineSmall: AppTypography.detail,
       ),
 
       // App Bar
@@ -50,7 +53,8 @@ class AppTheme {
       // Input Decoration (Flat-Glass Base)
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: AppPalette.neutralGrey.withOpacity(0.05), // Extremely subtle
+        fillColor: AppPalette.neutralGrey.withOpacity(0.05),
+        // Extremely subtle
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(24),
           borderSide: BorderSide(
@@ -91,17 +95,18 @@ class AppTheme {
       brightness: Brightness.dark,
 
       // Core Palette
-      primaryColor: AppPalette.trustBlue,
-      scaffoldBackgroundColor: AppPalette.surfaceDark, // True Black
+      primaryColor: AppPalette.fuchsia,
+      scaffoldBackgroundColor: AppPalette.deepSpace,
+      // Nebula Glass
 
       // Color Scheme
       colorScheme: ColorScheme.dark(
-        primary: AppPalette.trustBlue,
+        primary: AppPalette.fuchsia,
         onPrimary: AppPalette.neutralWhite,
-        secondary: AppPalette.sparkOrange,
+        secondary: AppPalette.cyan,
         onSecondary: AppPalette.neutralWhite,
-        surface: AppPalette.surfaceCardDark, // Slightly lighter for cards
-        onSurface: AppPalette.neutralWhite,
+        surface: AppPalette.glassPlum,
+        onSurface: AppPalette.mist,
         error: AppPalette.expenseRed,
         onError: AppPalette.neutralWhite,
       ),
@@ -109,18 +114,26 @@ class AppTheme {
       // Typography
       fontFamily: 'Manrope',
       textTheme: AppTypography.textTheme.copyWith(
-        displayLarge:
-            AppTypography.hero.copyWith(color: AppPalette.neutralWhite),
-        titleLarge:
-            AppTypography.heading.copyWith(color: AppPalette.neutralWhite),
-        bodyLarge: AppTypography.body.copyWith(color: AppPalette.neutralWhite),
-        bodySmall: AppTypography.detail.copyWith(color: AppPalette.neutralGrey),
+        displayLarge: AppTypography.hero.copyWith(color: AppPalette.mist),
+        titleLarge: AppTypography.heading.copyWith(color: AppPalette.mist),
+        bodyLarge: AppTypography.body.copyWith(color: AppPalette.mist),
+        bodyMedium: AppTypography.body.copyWith(color: AppPalette.mist),
+        bodySmall: AppTypography.detail.copyWith(color: AppPalette.periwinkle),
+        headlineSmall:
+            AppTypography.heading.copyWith(color: AppPalette.neutralGrey),
+        headlineLarge:
+            AppTypography.heading.copyWith(color: AppPalette.neutralGrey),
+        headlineMedium:
+            AppTypography.heading.copyWith(color: AppPalette.neutralGrey),
+        titleMedium: AppTypography.body.copyWith(color: AppPalette.neutralGrey),
+        titleSmall:
+            AppTypography.detail.copyWith(color: AppPalette.neutralGrey),
       ),
 
       // App Bar
       appBarTheme: AppBarTheme(
-        backgroundColor: AppPalette.surfaceDark,
-        foregroundColor: AppPalette.neutralWhite,
+        backgroundColor: AppPalette.deepSpace,
+        foregroundColor: AppPalette.mist,
         elevation: 0,
         centerTitle: true,
         systemOverlayStyle: SystemUiOverlayStyle.light,
@@ -129,7 +142,7 @@ class AppTheme {
       // Input Decoration (Dark Glass)
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: AppPalette.surfaceCardDark,
+        fillColor: AppPalette.glassPlum,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(24),
           borderSide: BorderSide(
@@ -143,7 +156,7 @@ class AppTheme {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(24),
           borderSide: BorderSide(
-              color: AppPalette.trustBlue.withOpacity(0.5), width: 0.5),
+              color: AppPalette.fuchsia.withOpacity(0.5), width: 0.5),
         ),
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -152,7 +165,7 @@ class AppTheme {
       // Buttons
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppPalette.trustBlue,
+          backgroundColor: AppPalette.fuchsia,
           foregroundColor: AppPalette.neutralWhite,
           elevation: 0,
           shape:

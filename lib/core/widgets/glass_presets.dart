@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 
 /// Preset configurations for glassmorphism effects
@@ -53,7 +52,7 @@ enum GlassPreset {
 class ThemedGlass {
   const ThemedGlass._();
 
-  /// Create a theme-aware glass container
+  /// Create a theme-aware glass-style container (optimized - no blur)
   static Widget container({
     required BuildContext context,
     required Widget child,
@@ -64,40 +63,30 @@ class ThemedGlass {
   }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
+    // Use simple semi-transparent container instead of expensive BackdropFilter blur
     return Container(
       margin: margin,
-      child: ClipRRect(
+      padding: padding,
+      decoration: BoxDecoration(
+        color: (isDark ? Colors.black : Colors.white)
+            .withOpacity(preset.opacity(isDark)),
         borderRadius: BorderRadius.circular(borderRadius),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(
-            sigmaX: preset.blur(isDark),
-            sigmaY: preset.blur(isDark),
-          ),
-          child: Container(
-            padding: padding,
-            decoration: BoxDecoration(
-              color: (isDark ? Colors.black : Colors.white)
-                  .withOpacity(preset.opacity(isDark)),
-              borderRadius: BorderRadius.circular(borderRadius),
-              border: Border.all(
-                color: isDark
-                    ? Colors.white.withOpacity(0.1)
-                    : Colors.black.withOpacity(0.05),
-                width: 1.0,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: (isDark ? Colors.black : Colors.grey)
-                      .withOpacity(isDark ? 0.3 : 0.1),
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: child,
-          ),
+        border: Border.all(
+          color: isDark
+              ? Colors.white.withOpacity(0.1)
+              : Colors.black.withOpacity(0.05),
+          width: 1.0,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: (isDark ? Colors.black : Colors.grey)
+                .withOpacity(isDark ? 0.2 : 0.08),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
+      child: child,
     );
   }
 }

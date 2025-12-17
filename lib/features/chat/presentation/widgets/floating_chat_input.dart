@@ -375,63 +375,11 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
           width: widget.width,
           constraints: const BoxConstraints(
               maxWidth: double.infinity), // Allow full width
-          // No decoration here
           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Collapse Button (Tiny) - Optional, maybe just tap outside?
-              // Let's add a small handle or minimize button
-              // Centered Drag Handle
-              Align(
-                alignment: Alignment.center,
-                child: GestureDetector(
-                  onTap: _toggleCollapse,
-                  onPanUpdate: (details) {
-                    // Normalize delta to handle resizing from center or edges
-                    // User said "dragging left or right... width should increase or decrease"
-                    // If we expand symmetrically, 1px drag = 2px width change?
-                    // Or simple: Right drag = increase, Left = Shrink?
-                    // Let's assume standard resize behavior: Drag Right = Expand, Left = Shrink?
-                    // But it's centered. This is ambiguous.
-                    // "dragging left or right ... width should increase or decrease"
-                    // Let's implement: Drag Right (+) -> Increase width. Drag Left (-) -> Decrease width.
-                    if (widget.onWidthChanged != null) {
-                      widget.onWidthChanged!(details.delta.dx);
-                    }
-                  },
-                  onVerticalDragEnd: (details) {
-                    if (details.primaryVelocity! > 300) {
-                      _toggleCollapse();
-                    }
-                  },
-                  behavior: HitTestBehavior.translucent,
-                  child: Container(
-                    margin:
-                        const EdgeInsets.only(top: 8), // Removed bottom margin
-                    padding: const EdgeInsets.only(
-                        top: 8,
-                        left: 8,
-                        right: 8,
-                        bottom: 2), // Reduced bottom padding
-                    width: 60,
-                    alignment: Alignment.center,
-                    child: Container(
-                      width: 32,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: isDark
-                            ? Theme.of(context).hintColor.withOpacity(0.6)
-                            : Theme.of(context).dividerColor,
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
-              // Content Wrapper
               Padding(
                 padding: const EdgeInsets.only(left: 12, right: 12, bottom: 12),
                 child: Column(
@@ -572,56 +520,28 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                         ),
                       ),
 
-                    // Main Input Container (Enhanced Floating Pill - 2025)
-                    AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
-                      curve: Curves.easeOutCubic,
-                      transform: Matrix4.identity()
-                        ..scale(_focusNode.hasFocus ? 1.1 : 1.0),
-                      transformAlignment: Alignment.center,
+                    // Main Input Container - Clean, simple design
+                    Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 12,
+                        horizontal: 16,
+                        vertical: 10,
                       ),
                       decoration: BoxDecoration(
-                        // Glassmorphic background
-                        color: isDark
-                            ? Theme.of(context)
-                                .cardColor
-                                .withOpacity(_focusNode.hasFocus ? 1.0 : 0.95)
-                            : Theme.of(context)
-                                .cardColor
-                                .withOpacity(_focusNode.hasFocus ? 1.0 : 0.95),
-                        borderRadius: BorderRadius.circular(28),
+                        color: Theme.of(context).cardColor,
+                        borderRadius: BorderRadius.circular(24),
                         border: Border.all(
                           color: _focusNode.hasFocus
-                              ? primaryColor
-                                  .withOpacity(0.8) // Stronger glow on focus
-                              : (_hasContent
-                                  ? primaryColor.withOpacity(0.6)
-                                  : (isDark
-                                      ? primaryColor.withOpacity(0.2)
-                                      : primaryColor.withOpacity(0.15))),
-                          width: _focusNode.hasFocus
-                              ? 2.5
-                              : (_hasContent ? 2.0 : 1.5),
+                              ? primaryColor.withOpacity(0.5)
+                              : (isDark
+                                  ? primaryColor.withOpacity(0.15)
+                                  : primaryColor.withOpacity(0.1)),
+                          width: _focusNode.hasFocus ? 1.5 : 1.0,
                         ),
                         boxShadow: [
-                          // Spotlight Glow
-                          if (_focusNode.hasFocus)
-                            BoxShadow(
-                              color: primaryColor.withOpacity(0.5),
-                              blurRadius: 16,
-                              spreadRadius: 4,
-                              offset: const Offset(0, 4),
-                            ),
-                          // Primary shadow
                           BoxShadow(
-                            color: _hasContent
-                                ? primaryColor.withOpacity(0.35)
-                                : primaryColor.withOpacity(0.15),
-                            blurRadius: _hasContent ? 10 : 5,
-                            offset: const Offset(0, 4),
+                            color: Theme.of(context).shadowColor.withOpacity(0.08),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
                           ),
                         ],
                       ),

@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
@@ -58,36 +57,14 @@ class _ChatViewState extends State<ChatView> {
   bool _chatTourShown = false;
   final GlobalKey _chatInputKey = GlobalKey();
 
-  // Chat input dimensions
-  double _inputWidth = 350.0;
-  bool _isCollapsed = false;
-  bool _isInputFocused = false;
-
-  // Offset for the floating chat input position (top, left)
-  Offset _inputPosition = const Offset(20, 500);
-
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
 
-    // Check if we should show tour and init position after frame is built
+    // Check if we should show tour after frame is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _checkAndShowChatTour();
-
-      // Set initial position to bottom center
-      final size = MediaQuery.of(context).size;
-      final padding = MediaQuery.of(context).padding;
-      setState(() {
-        // Initialize dynamic width (screen width - 32px padding)
-        _inputWidth = size.width - 32;
-
-        // Default to bottom center
-        _inputPosition = Offset(
-          16.0, // Fixed 16px left padding initially
-          size.height - 180 - padding.bottom, // Near bottom
-        );
-      });
     });
   }
 
@@ -338,11 +315,7 @@ class _ChatViewState extends State<ChatView> {
 
   @override
   Widget build(BuildContext context) {
-    // Used for bounds checking
-    final mediaQuery = MediaQuery.of(context);
-    final screenSize = mediaQuery.size;
-    final padding = mediaQuery.padding;
-    final keyboardHeight = mediaQuery.viewInsets.bottom;
+    final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
 
     return BlocListener<ProductTourCubit, ProductTourState>(
         listener: (context, tourState) {
@@ -357,12 +330,49 @@ class _ChatViewState extends State<ChatView> {
         },
         child: Scaffold(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          resizeToAvoidBottomInset: false, // We handle keyboard manually
+          resizeToAvoidBottomInset: true,
           body: SafeArea(
-            child: Stack(
+            child: Column(
               children: [
-                // Layer 1: Message List
-                Positioned.fill(
+                // Top bar with back button and usage button
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Back button
+                      GestureDetector(
+                        onTap: () => Navigator.of(context).pop(),
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).cardColor,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color:
+                                    Theme.of(context).shadowColor.withOpacity(0.1),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Icon(
+                            Icons.arrow_back,
+                            color: Theme.of(context).iconTheme.color,
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                      // Usage button
+                      const MessageUsageButton(),
+                    ],
+                  ),
+                ),
+
+                // Message List (Expanded to fill available space)
+                Expanded(
                   child: BlocConsumer<ChatCubit, ChatState>(
                     listener: (context, state) {
                       if (state is ChatLoaded && state.messages.isNotEmpty) {
@@ -397,9 +407,7 @@ class _ChatViewState extends State<ChatView> {
                           hasMore: state.hasMore,
                           isLoadingMore: state.isLoadingMore,
                           scrollController: _scrollController,
-                          // Add padding at bottom to avoid floating widget overlap
-                          padding:
-                              EdgeInsets.only(bottom: 120 + keyboardHeight),
+                          padding: const EdgeInsets.only(bottom: 8),
                         );
                       } else if (state is ChatError) {
                         return _buildErrorWidget(context, state);
@@ -409,181 +417,30 @@ class _ChatViewState extends State<ChatView> {
                   ),
                 ),
 
-                // Layer 2: Floating Back Button
-                Positioned(
-                  top: 8,
-                  left: 8,
-                  child: GestureDetector(
-                    onTap: () => Navigator.of(context).pop(),
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).cardColor,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color:
-                                Theme.of(context).shadowColor.withOpacity(0.1),
-                            blurRadius: 8,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: Icon(
-                        Icons.arrow_back,
-                        color: Theme.of(context).iconTheme.color,
-                        size: 20,
-                      ),
-                    ),
+                // Fixed Chat Input at bottom
+                Container(
+                  key: _chatInputKey,
+                  padding: EdgeInsets.only(
+                    left: 16,
+                    right: 16,
+                    top: 8,
+                    bottom: keyboardHeight > 0 ? 8 : 16,
                   ),
-                ),
-
-                // Layer 2.5: Floating Token Usage Button (Top Right)
-                const Positioned(
-                  top: 8,
-                  right: 8,
-                  child: MessageUsageButton(),
-                ),
-
-                // Layer 2.5: Backend Blur (Spotlight Mode)
-                if (_isInputFocused)
-                  Positioned.fill(
-                    child: GestureDetector(
-                      onTap: () {
-                        // Dismiss focus when tapping background
-                        FocusScope.of(context).unfocus();
-                      },
-                      child: AnimatedOpacity(
-                        duration: const Duration(milliseconds: 200),
-                        opacity: _isInputFocused ? 0.7 : 0.0,
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                          child: Container(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .scrim
-                                .withOpacity(0.3), // Dim background
-                          ),
-                        ),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Theme.of(context).shadowColor.withOpacity(0.05),
+                        blurRadius: 10,
+                        offset: const Offset(0, -2),
                       ),
-                    ),
+                    ],
                   ),
-
-                // Layer 3: Floating Draggable Input - Free Movement
-                Positioned(
-                  left: _inputPosition.dx,
-                  top: () {
-                    // Calculate clamping for keyboard
-                    // If keyboard is open, ensure top is not below (screenHeight - keyboardHeight - widgetHeight)
-                    // We estimate widgetHeight as 100 or use dynamic if available
-                    final renderBox = _chatInputKey.currentContext
-                        ?.findRenderObject() as RenderBox?;
-                    final widgetHeight = renderBox?.size.height ?? 120.0;
-
-                    // Since Positioned is inside SafeArea, we must subtract padding.top from screen coordinates
-                    final maxVisibleTop = screenSize.height -
-                        widgetHeight -
-                        keyboardHeight -
-                        padding.top -
-                        20;
-
-                    // Use minimum of current position and max visible top
-                    // This pushes the widget up when keyboard appears, and lets it come back down
-                    // when keyboard closes (since we don't modify _inputPosition state)
-                    return _inputPosition.dy.clamp(50.0, maxVisibleTop);
-                  }(),
-                  child: GestureDetector(
-                    onPanUpdate: (details) {
-                      setState(() {
-                        // Update position based on drag delta
-                        double newLeft = _inputPosition.dx + details.delta.dx;
-                        double newTop = _inputPosition.dy + details.delta.dy;
-
-                        // Get actual widget size if available
-                        final renderBox = _chatInputKey.currentContext
-                            ?.findRenderObject() as RenderBox?;
-                        final widgetSize =
-                            renderBox?.size ?? const Size(350, 100);
-
-                        // Clamp to screen boundaries (SafeArea)
-                        // Keep fully on screen:
-                        final minLeft = 0.0;
-                        final maxLeft = screenSize.width - widgetSize.width;
-
-                        final minTop = padding.top + 10; // Below status bar
-                        final maxTop = screenSize.height -
-                            widgetSize.height -
-                            keyboardHeight -
-                            10;
-
-                        // Edge-based auto-collapse logic
-                        // If near top or bottom edge, narrow the width until collapse
-                        if (newTop <= minTop + 50 || newTop >= maxTop - 50) {
-                          // Shrink width
-                          if (_inputWidth > 100) {
-                            _inputWidth -= 5;
-                            // Recenter slightly
-                            newLeft += 2.5;
-                          } else if (!_isCollapsed) {
-                            // Collapse if too small
-                            _isCollapsed = true;
-                          }
-                        } else {
-                          // Expand back if moving away from edges and was auto-shrunk (optional, or manual expand?)
-                          // User asked: "scrolling ... to the top or botom ... gradually decrease the width and finally collapse"
-                          // This implies if we move back to center it might NOT auto-expand?
-                          // But usually users expect recovery.
-                          // For now, let's keep it manual expand or just let them resize.
-                        }
-
-                        _inputPosition = Offset(
-                          newLeft.clamp(minLeft, maxLeft),
-                          newTop.clamp(minTop, maxTop),
-                        );
-                      });
-                    },
-                    child: Container(
-                      key: _chatInputKey,
-                      child: FloatingChatInput(
-                        botId: widget.botId,
-                        botColor: AppTheme.getBotColor(widget.botId),
-                        width: _inputWidth,
-                        isCollapsed: _isCollapsed,
-                        onFocusChanged: (hasFocus) {
-                          setState(() {
-                            _isInputFocused = hasFocus;
-                          });
-                        },
-                        onToggleCollapse: () {
-                          setState(() {
-                            _isCollapsed = !_isCollapsed;
-                            if (!_isCollapsed) {
-                              // Reset width on expand if it was shrunk
-                              if (_inputWidth < 300) _inputWidth = 350.0;
-                            }
-                          });
-                        },
-                        onWidthChanged: (dx) {
-                          setState(() {
-                            // Symmetric resize: grow/shrink on both sides to keep center aligned with handle
-                            // If dx > 0 (drag right), grow
-                            // If dx < 0 (drag left), shrink
-
-                            double newWidth = _inputWidth + (dx * 2);
-                            double newLeft = _inputPosition.dx - dx;
-
-                            // Clamp width
-                            if (newWidth >= 250 &&
-                                newWidth <= screenSize.width - 20) {
-                              _inputWidth = newWidth;
-                              _inputPosition =
-                                  Offset(newLeft, _inputPosition.dy);
-                            }
-                          });
-                        },
-                      ),
-                    ),
+                  child: FloatingChatInput(
+                    botId: widget.botId,
+                    botColor: AppTheme.getBotColor(widget.botId),
+                    width: MediaQuery.of(context).size.width - 32,
+                    isCollapsed: false,
                   ),
                 ),
               ],

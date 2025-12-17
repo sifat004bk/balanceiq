@@ -1,4 +1,4 @@
-/// Centralized Strings for BalanceIQ
+/// Centralized Strings for Donfin AI
 /// Organized by Feature with Common Section
 ///
 /// Updated: 2025-12-17
@@ -10,7 +10,7 @@ class AppStrings {
   const AppStrings._();
 
   // App-level constants
-  static const appName = 'BalanceIQ';
+  static const appName = 'Donfin AI';
 
   // Feature sections
   static const common = _CommonStrings();
@@ -109,7 +109,7 @@ class _AuthStrings {
   const _AuthStrings();
 
   // Onboarding
-  final welcomeTitle = 'BalanceIQ';
+  final welcomeTitle = 'Donfin AI';
   final welcomeSubtitle = 'Your AI-powered personal finance assistant';
   final continueGoogle = 'Continue with Google';
   final continueApple = 'Continue with Apple';
@@ -132,7 +132,7 @@ class _AuthStrings {
 
   // Signup
   final signupTitle = 'Create Account';
-  final signupSubtitle = 'Join BalanceIQ today';
+  final signupSubtitle = 'Join Donfin AI today';
   final nameLabel = 'Full Name';
   final nameHint = 'Enter your name';
   final confirmPasswordLabel = 'Confirm Password';
@@ -238,7 +238,7 @@ class _OnboardingStrings {
   const _OnboardingStrings();
 
   // Slides
-  final slide1Title = 'Welcome to BalanceIQ';
+  final slide1Title = 'Welcome to Donfin AI';
   final slide1Description =
       'Your AI-powered personal finance assistant for smart money management';
   final slide2Title = 'Track Every Taka';
@@ -486,7 +486,7 @@ class _DashboardStrings {
   final noDataForPeriod = 'No data for this period';
 
   // Welcome Page
-  final welcomeToApp = 'Welcome to BalanceIQ';
+  final welcomeToApp = 'Welcome to Donfin AI';
   final welcomeSubtitle =
       'Start tracking your finances and\ntake control of your money';
   final trackExpenses = 'Track Expenses';

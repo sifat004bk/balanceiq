@@ -130,7 +130,7 @@ class _SplashPageState extends State<SplashPage>
 
   void _navigateToOnboarding() {
     if (mounted) {
-      Navigator.pushReplacementNamed(context, '/onboarding');
+      Navigator.pushReplacementNamed(context, '/interactive-onboarding');
     }
   }
 
@@ -190,7 +190,7 @@ class _SplashPageState extends State<SplashPage>
                     const SizedBox(height: 32),
                     // App name
                     Text(
-                      'BalanceIQ',
+                      'Donfin AI',
                       style:
                           Theme.of(context).textTheme.headlineMedium?.copyWith(
                                 fontWeight: FontWeight.bold,

@@ -2,7 +2,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AppConstants {
   // App Info
-  static const String appName = 'BalanceIQ';
+  static const String appName = 'Donfin AI';
   static const String appVersion = '1.0.0';
 
   // Bot Types

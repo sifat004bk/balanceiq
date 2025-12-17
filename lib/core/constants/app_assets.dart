@@ -1,4 +1,4 @@
-/// Centralized Assets for BalanceIQ.
+/// Centralized Assets for Donfin AI.
 class AppAssets {
   const AppAssets._();
 

@@ -19,6 +19,7 @@ import 'features/auth/presentation/pages/new_login_page.dart';
 import 'features/auth/presentation/pages/splash_page.dart';
 import 'features/auth/presentation/pages/new_onboarding_page.dart';
 import 'features/auth/presentation/pages/new_signup_page.dart';
+import 'features/auth/presentation/pages/interactive_onboarding/interactive_onboarding_page.dart';
 import 'features/auth/presentation/pages/profile_page.dart';
 import 'features/auth/presentation/pages/reset_password_page.dart';
 import 'features/auth/presentation/pages/verification_success_page.dart';
@@ -75,7 +76,7 @@ class MyApp extends StatelessWidget {
 
           return MaterialApp(
             navigatorKey: navigatorKey,
-            title: 'BalanceIQ',
+            title: 'Donfin AI',
             debugShowCheckedModeBanner: false,
             theme: AppTheme.lightTheme(),
             darkTheme: AppTheme.darkTheme(),
@@ -83,6 +84,8 @@ class MyApp extends StatelessWidget {
             home: const SplashPage(),
             routes: {
               '/onboarding': (context) => const NewOnboardingPage(),
+              '/interactive-onboarding': (context) =>
+                  const InteractiveOnboardingPage(),
               '/login': (context) => const NewLoginPage(),
               '/signup': (context) => const NewSignUpPage(),
               '/verification-success': (context) =>
@@ -137,7 +140,7 @@ class AuthWrapper extends StatelessWidget {
         } else if (state is AuthAuthenticated) {
           return const HomePage();
         } else {
-          return const NewOnboardingPage();
+          return const InteractiveOnboardingPage();
         }
       },
     );

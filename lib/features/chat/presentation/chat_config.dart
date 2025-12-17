@@ -20,5 +20,5 @@ class ChatConfig {
 
   /// Text to display at the bottom of the chat (disclaimer)
   /// Set to null to hide
-  static const String? bottomDisclaimerText = "BalanceIQ can make mistake.";
+  static const String? bottomDisclaimerText = "Donfin AI can make mistake.";
 }

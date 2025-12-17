@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Design Constants for BalanceIQ (2025 Design System)
+/// Design Constants for Donfin AI (2025 Design System)
 /// Spacing, Typography, Elevation, and Animation constants
 /// Last Updated: 2025-12-15
 

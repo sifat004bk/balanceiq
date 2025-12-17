@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../constants/design_constants.dart';
 
-/// Centralized Snackbar Utility for BalanceIQ
+/// Centralized Snackbar Utility for Donfin AI
 ///
 /// Provides consistent snackbar implementations across the app with:
 /// - Success, Error, Info, and Warning types

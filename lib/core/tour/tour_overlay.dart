@@ -32,7 +32,7 @@ class TourOverlay extends StatelessWidget {
     switch (step) {
       case TourStep.dashboardProfileIcon:
         return _TourCard(
-          title: 'Welcome to BalanceIQ! 👋',
+          title: 'Welcome to Donfin AI! 👋',
           description:
               'Tap on the profile icon in the top-left corner to set up your account.',
           arrowPosition: ArrowPosition.topLeft,

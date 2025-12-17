@@ -21,7 +21,7 @@ class FloatingChatButton extends StatelessWidget {
           MaterialPageRoute(
             builder: (context) => const ChatPage(
               botId: "nai kichu",
-              botName: 'BalanceIQ',
+              botName: 'Donfin AI',
             ),
           ),
         );

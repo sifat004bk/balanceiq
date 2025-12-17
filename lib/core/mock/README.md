@@ -1,6 +1,6 @@
 # Mock Data Environment
 
-This directory contains mock implementations for testing the BalanceIQ app without requiring real API calls.
+This directory contains mock implementations for testing the Donfin AI app without requiring real API calls.
 
 ## Purpose
 

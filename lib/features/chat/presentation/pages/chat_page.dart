@@ -1,4 +1,3 @@
-import 'package:balance_iq/core/theme/app_palette.dart';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -195,8 +194,6 @@ class _ChatViewState extends State<ChatView> {
   }
 
   Widget _buildErrorWidget(BuildContext context, ChatError state) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     // Determine error details based on error type
     String title;
     String description;
@@ -204,13 +201,14 @@ class _ChatViewState extends State<ChatView> {
     Color iconColor;
     String buttonText;
     VoidCallback onButtonPressed;
+    final colorScheme = Theme.of(context).colorScheme;
 
     switch (state.errorType) {
       case ChatErrorType.emailNotVerified:
         title = AppStrings.chat.emailVerificationRequired;
         description = AppStrings.chat.emailVerificationMessage;
         icon = Icons.email_outlined;
-        iconColor = AppPalette.warningOrange;
+        iconColor = Theme.of(context).colorScheme.tertiary;
         buttonText = AppStrings.chat.verifyEmailButton;
         onButtonPressed = () => Navigator.pushNamed(context, '/profile');
         break;
@@ -218,7 +216,7 @@ class _ChatViewState extends State<ChatView> {
         title = AppStrings.chat.subscriptionRequired;
         description = AppStrings.chat.subscriptionRequiredMessage;
         icon = Icons.card_membership_outlined;
-        iconColor = AppPalette.trustBlue;
+        iconColor = colorScheme.primary;
         buttonText = AppStrings.chat.viewPlans;
         onButtonPressed =
             () => Navigator.pushNamed(context, '/subscription-plans');
@@ -227,7 +225,7 @@ class _ChatViewState extends State<ChatView> {
         title = AppStrings.chat.subscriptionExpired;
         description = AppStrings.chat.subscriptionExpiredMessage;
         icon = Icons.timer_off_outlined;
-        iconColor = AppPalette.expenseRed;
+        iconColor = colorScheme.error;
         buttonText = AppStrings.chat.renewSubscription;
         onButtonPressed =
             () => Navigator.pushNamed(context, '/manage-subscription');
@@ -238,7 +236,7 @@ class _ChatViewState extends State<ChatView> {
             ? state.message
             : AppStrings.chat.messageLimitExceededMessage;
         icon = Icons.token_outlined;
-        iconColor = AppPalette.sparkOrange;
+        iconColor = Theme.of(context).colorScheme.secondary;
         buttonText = AppStrings.chat.upgradePlan;
         onButtonPressed =
             () => Navigator.pushNamed(context, '/subscription-plans');
@@ -247,7 +245,7 @@ class _ChatViewState extends State<ChatView> {
         title = AppStrings.chat.tooManyRequests;
         description = AppStrings.chat.rateLimitMessage;
         icon = Icons.schedule_outlined;
-        iconColor = AppPalette.trustBlue;
+        iconColor = colorScheme.primary;
         buttonText = AppStrings.common.gotIt;
         onButtonPressed =
             () => context.read<ChatCubit>().loadChatHistory(widget.botId);
@@ -258,7 +256,7 @@ class _ChatViewState extends State<ChatView> {
             ? state.message
             : AppStrings.errors.tryAgainLater;
         icon = Icons.error_outline;
-        iconColor = AppPalette.expenseRed;
+        iconColor = colorScheme.error;
         buttonText = AppStrings.common.retry;
         onButtonPressed =
             () => context.read<ChatCubit>().loadChatHistory(widget.botId);
@@ -286,7 +284,7 @@ class _ChatViewState extends State<ChatView> {
             Text(
               title,
               style: AppTypography.titleLargeBold.copyWith(
-                color: isDark ? AppPalette.neutralWhite : AppPalette.neutralBlack,
+                color: colorScheme.onSurface,
               ),
               textAlign: TextAlign.center,
             ),
@@ -294,7 +292,7 @@ class _ChatViewState extends State<ChatView> {
             Text(
               description,
               style: AppTypography.bodyMedium.copyWith(
-                color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                color: Theme.of(context).hintColor,
               ),
               textAlign: TextAlign.center,
             ),
@@ -302,8 +300,8 @@ class _ChatViewState extends State<ChatView> {
             ElevatedButton(
               onPressed: onButtonPressed,
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppPalette.trustBlue,
-                foregroundColor: AppPalette.neutralWhite,
+                backgroundColor: colorScheme.primary,
+                foregroundColor: colorScheme.onPrimary,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
                 shape: RoundedRectangleBorder(
@@ -326,7 +324,7 @@ class _ChatViewState extends State<ChatView> {
                 child: Text(
                   AppStrings.chat.backToChat,
                   style: AppTypography.bodyMedium.copyWith(
-                    color: AppPalette.trustBlue,
+                    color: colorScheme.primary,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -421,13 +419,12 @@ class _ChatViewState extends State<ChatView> {
                       width: 40,
                       height: 40,
                       decoration: BoxDecoration(
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? AppPalette.neutralBlack.withValues(alpha: 0.54)
-                            : AppPalette.neutralWhite.withOpacity(0.9),
+                        color: Theme.of(context).cardColor,
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: AppPalette.neutralBlack.withValues(alpha: 0.1),
+                            color:
+                                Theme.of(context).shadowColor.withOpacity(0.1),
                             blurRadius: 8,
                             offset: const Offset(0, 2),
                           ),
@@ -435,9 +432,7 @@ class _ChatViewState extends State<ChatView> {
                       ),
                       child: Icon(
                         Icons.arrow_back,
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? AppPalette.neutralWhite
-                            : AppPalette.neutralBlack,
+                        color: Theme.of(context).iconTheme.color,
                         size: 20,
                       ),
                     ),
@@ -465,8 +460,10 @@ class _ChatViewState extends State<ChatView> {
                         child: BackdropFilter(
                           filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
                           child: Container(
-                            color:
-                                AppPalette.neutralBlack.withValues(alpha: 0.3), // Dim background
+                            color: Theme.of(context)
+                                .colorScheme
+                                .scrim
+                                .withOpacity(0.3), // Dim background
                           ),
                         ),
                       ),

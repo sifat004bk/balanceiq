@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_strings.dart';
+import '../../../../core/utils/snackbar_utils.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
 
@@ -35,22 +36,15 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       listener: (context, state) {
         if (state is PasswordResetEmailSent) {
           // Show success message
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(AppStrings.auth.resetEmailSent(state.email)),
-              backgroundColor: Colors.green,
-              duration: const Duration(seconds: 5),
-            ),
+          SnackbarUtils.showSuccess(
+            context,
+            AppStrings.auth.resetEmailSent(state.email),
+            duration: const Duration(seconds: 5),
           );
           // Navigate back to login
           Navigator.of(context).pop();
         } else if (state is AuthError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: Theme.of(context).colorScheme.error,
-            ),
-          );
+          SnackbarUtils.showError(context, state.message);
         }
       },
       child: Scaffold(

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:balance_iq/core/constants/app_strings.dart';
-import 'package:balance_iq/core/theme/app_palette.dart';
-import '../../../../../core/constants/gemini_colors.dart';
+import 'package:balance_iq/core/utils/snackbar_utils.dart';
 
 class GenUIActionButtons extends StatelessWidget {
   final Map<String, dynamic> data;
@@ -36,26 +35,23 @@ class GenUIActionButtons extends StatelessWidget {
   ) {
     final isPrimary = style == 'primary';
     final backgroundColor =
-        isPrimary ? GeminiColors.primaryColor(context) : Colors.transparent;
+        isPrimary ? Theme.of(context).colorScheme.primary : Colors.transparent;
     final foregroundColor = isPrimary
-        ? AppPalette.neutralWhite
-        : GeminiColors.primaryColor(context);
+        ? Theme.of(context).colorScheme.onPrimary
+        : Theme.of(context).colorScheme.primary;
 
     return Material(
       color: backgroundColor,
       borderRadius: BorderRadius.circular(12),
       elevation: isPrimary ? 2 : 0,
-      shadowColor: GeminiColors.primaryColor(context).withOpacity(0.3),
+      shadowColor: Theme.of(context).colorScheme.primary.withOpacity(0.3),
       child: InkWell(
         onTap: () {
           // Show feedback for button tap
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('$label - ${AppStrings.chat.comingSoon}'),
-              behavior: SnackBarBehavior.floating,
-              duration: const Duration(seconds: 2),
-              backgroundColor: GeminiColors.primaryColor(context),
-            ),
+          SnackbarUtils.showInfo(
+            context,
+            '$label - ${AppStrings.chat.comingSoon}',
+            duration: const Duration(seconds: 2),
           );
         },
         borderRadius: BorderRadius.circular(12),
@@ -66,7 +62,7 @@ class GenUIActionButtons extends StatelessWidget {
             border: isPrimary
                 ? null
                 : Border.all(
-                    color: GeminiColors.primaryColor(context),
+                    color: Theme.of(context).colorScheme.primary,
                     width: 1.5,
                   ),
           ),

@@ -1,5 +1,5 @@
-import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:balance_iq/core/constants/app_strings.dart';
+import 'package:balance_iq/core/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/services.dart';
@@ -128,7 +128,7 @@ class _MessageBubbleState extends State<MessageBubble>
                           style:
                               Theme.of(context).textTheme.bodySmall?.copyWith(
                                     fontSize: 10,
-                                    color: AppPalette.neutralGrey,
+                                    color: Theme.of(context).hintColor,
                                   ),
                         ),
                       ),
@@ -147,7 +147,7 @@ class _MessageBubbleState extends State<MessageBubble>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: AppPalette.trustBlue,
+        color: Theme.of(context).colorScheme.primary,
         borderRadius: const BorderRadius.all(
           Radius.circular(24),
         ),
@@ -158,7 +158,7 @@ class _MessageBubbleState extends State<MessageBubble>
           Text(
             widget.message.content,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: AppPalette.neutralWhite,
+                  color: Theme.of(context).colorScheme.onPrimary,
                   fontSize: 16,
                   height: 1.4,
                 ),
@@ -178,7 +178,8 @@ class _MessageBubbleState extends State<MessageBubble>
 
   /// AI message with glassmorphism and modern design (2025 redesign)
   Widget _buildAiMessage(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return Container(
       constraints: const BoxConstraints(maxWidth: 500),
@@ -214,7 +215,7 @@ class _MessageBubbleState extends State<MessageBubble>
                   ),
                   child: Icon(
                     Icons.auto_awesome,
-                    color: AppPalette.neutralWhite,
+                    color: Colors.white,
                     size: 16,
                   ),
                 ),
@@ -223,7 +224,7 @@ class _MessageBubbleState extends State<MessageBubble>
                   widget.botName,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         fontWeight: FontWeight.w600,
-                        color: AppPalette.neutralGrey,
+                        color: Theme.of(context).hintColor,
                         fontSize: 13,
                       ),
                 ),
@@ -248,106 +249,78 @@ class _MessageBubbleState extends State<MessageBubble>
                 'ui:insight': GenUIInsightCardBuilder(),
               },
               styleSheet: MarkdownStyleSheet(
-                p: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: isDark
-                          ? AppPalette.neutralWhite
-                          : AppPalette.neutralBlack,
-                      fontSize: 16,
-                      height: 1.5,
-                    ),
-                h1: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      color: isDark
-                          ? AppPalette.neutralWhite
-                          : AppPalette.neutralBlack,
-                      fontWeight: FontWeight.bold,
-                    ),
-                h2: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      color: isDark
-                          ? AppPalette.neutralWhite
-                          : AppPalette.neutralBlack,
-                      fontWeight: FontWeight.bold,
-                    ),
-                h3: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: isDark
-                          ? AppPalette.neutralWhite
-                          : AppPalette.neutralBlack,
-                      fontWeight: FontWeight.w600,
-                    ),
-                h4: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: isDark
-                          ? AppPalette.neutralWhite
-                          : AppPalette.neutralBlack,
-                      fontWeight: FontWeight.w600,
-                    ),
-                h5: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      color: isDark
-                          ? AppPalette.neutralWhite
-                          : AppPalette.neutralBlack,
-                      fontWeight: FontWeight.w600,
-                    ),
-                h6: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: isDark
-                          ? AppPalette.neutralWhite
-                          : AppPalette.neutralBlack,
-                      fontWeight: FontWeight.w600,
-                    ),
-                code: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontFamily: 'Google Sans Mono',
-                      backgroundColor: isDark
-                          ? AppPalette.surfaceCardDark
-                          : AppPalette.neutralGrey.withOpacity(0.1),
-                      color: isDark
-                          ? AppPalette.neutralWhite
-                          : AppPalette.neutralBlack,
-                      fontSize: 13,
-                    ),
+                p: textTheme.bodyMedium?.copyWith(
+                  color: colorScheme.onSurface,
+                  fontSize: 16,
+                  height: 1.5,
+                ),
+                h1: textTheme.headlineMedium?.copyWith(
+                  color: colorScheme.onSurface,
+                  fontWeight: FontWeight.bold,
+                ),
+                h2: textTheme.headlineSmall?.copyWith(
+                  color: colorScheme.onSurface,
+                  fontWeight: FontWeight.bold,
+                ),
+                h3: textTheme.titleLarge?.copyWith(
+                  color: colorScheme.onSurface,
+                  fontWeight: FontWeight.w600,
+                ),
+                h4: textTheme.titleMedium?.copyWith(
+                  color: colorScheme.onSurface,
+                  fontWeight: FontWeight.w600,
+                ),
+                h5: textTheme.titleSmall?.copyWith(
+                  color: colorScheme.onSurface,
+                  fontWeight: FontWeight.w600,
+                ),
+                h6: textTheme.bodyLarge?.copyWith(
+                  color: colorScheme.onSurface,
+                  fontWeight: FontWeight.w600,
+                ),
+                code: textTheme.bodyMedium?.copyWith(
+                  fontFamily: 'Google Sans Mono',
+                  backgroundColor: colorScheme.surfaceContainerHighest,
+                  color: colorScheme.onSurfaceVariant,
+                  fontSize: 13,
+                ),
                 codeblockDecoration: BoxDecoration(
-                  color: isDark
-                      ? AppPalette.surfaceCardDark
-                      : AppPalette.neutralGrey.withOpacity(0.1),
+                  color: colorScheme.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                blockquote: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AppPalette.neutralGrey,
-                      fontStyle: FontStyle.italic,
-                    ),
+                blockquote: textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).hintColor,
+                  fontStyle: FontStyle.italic,
+                ),
                 blockquoteDecoration: BoxDecoration(
                   color: Colors.transparent,
                   border: Border(
                     left: BorderSide(
-                      color: AppPalette.trustBlue,
+                      color: colorScheme.primary,
                       width: 4,
                     ),
                   ),
                 ),
-                listBullet: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: isDark
-                          ? AppPalette.neutralWhite
-                          : AppPalette.neutralBlack,
-                    ),
-                tableBody: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: isDark
-                          ? AppPalette.neutralWhite
-                          : AppPalette.neutralBlack,
-                    ),
-                tableHead: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: isDark
-                          ? AppPalette.neutralWhite
-                          : AppPalette.neutralBlack,
-                    ),
-                a: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AppPalette.trustBlue,
-                      decoration: TextDecoration.underline,
-                    ),
+                listBullet: textTheme.bodyMedium?.copyWith(
+                  color: colorScheme.onSurface,
+                ),
+                tableBody: textTheme.bodyMedium?.copyWith(
+                  color: colorScheme.onSurface,
+                ),
+                tableHead: textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: colorScheme.onSurface,
+                ),
+                a: textTheme.bodyMedium?.copyWith(
+                  color: colorScheme.primary,
+                  decoration: TextDecoration.underline,
+                ),
                 em: const TextStyle(fontStyle: FontStyle.italic),
                 strong: const TextStyle(fontWeight: FontWeight.bold),
                 horizontalRuleDecoration: BoxDecoration(
                   border: Border(
                     top: BorderSide(
-                      color: isDark
-                          ? AppPalette.surfaceCardDark
-                          : AppPalette.neutralGrey.withOpacity(0.1),
+                      color: colorScheme.surfaceContainerHighest,
                       width: 1,
                     ),
                   ),
@@ -380,14 +353,10 @@ class _MessageBubbleState extends State<MessageBubble>
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
-                color: isDark
-                    ? AppPalette.surfaceCardDark
-                    : AppPalette.neutralGrey.withOpacity(0.1),
+                color: Theme.of(context).cardColor,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: isDark
-                      ? AppPalette.surfaceCardDark
-                      : AppPalette.neutralGrey.withOpacity(0.1),
+                  color: Theme.of(context).dividerColor,
                 ),
               ),
               child: Row(
@@ -396,7 +365,7 @@ class _MessageBubbleState extends State<MessageBubble>
                   Text(
                     _formatActionType(widget.message.actionType!),
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppPalette.neutralGrey,
+                          color: Theme.of(context).hintColor,
                           fontStyle: FontStyle.italic,
                         ),
                   ),
@@ -408,10 +377,10 @@ class _MessageBubbleState extends State<MessageBubble>
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(
-                          color: AppPalette.trustBlue.withOpacity(0.1),
+                          color: colorScheme.primary.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
-                            color: AppPalette.trustBlue,
+                            color: colorScheme.primary,
                             width: 1,
                           ),
                         ),
@@ -419,7 +388,7 @@ class _MessageBubbleState extends State<MessageBubble>
                           AppStrings.chat.change,
                           style:
                               Theme.of(context).textTheme.labelSmall?.copyWith(
-                                    color: AppPalette.trustBlue,
+                                    color: colorScheme.primary,
                                     fontWeight: FontWeight.bold,
                                   ),
                         ),
@@ -443,11 +412,8 @@ class _MessageBubbleState extends State<MessageBubble>
                       ? Icons.thumb_up
                       : Icons.thumb_up_outlined,
                   color: widget.message.feedback == 'LIKE'
-                      ? AppPalette.trustBlue
-                      : (isDark
-                              ? AppPalette.neutralWhite
-                              : AppPalette.neutralBlack)
-                          .withOpacity(0.6),
+                      ? colorScheme.primary
+                      : colorScheme.onSurface.withOpacity(0.6),
                   onPressed: () {
                     final newFeedback = widget.message.feedback == 'LIKE'
                         ? FeedbackType.none
@@ -458,9 +424,7 @@ class _MessageBubbleState extends State<MessageBubble>
                         .submitMessageFeedback(widget.message.id, newFeedback);
 
                     if (newFeedback == FeedbackType.like) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(AppStrings.chat.feedbackThanks)),
-                      );
+                      SnackbarUtils.showInfo(context, AppStrings.chat.feedbackThanks);
                     }
                   },
                 ),
@@ -471,11 +435,8 @@ class _MessageBubbleState extends State<MessageBubble>
                       ? Icons.thumb_down
                       : Icons.thumb_down_outlined,
                   color: widget.message.feedback == 'DISLIKE'
-                      ? AppPalette.expenseRed
-                      : (isDark
-                              ? AppPalette.neutralWhite
-                              : AppPalette.neutralBlack)
-                          .withOpacity(0.6),
+                      ? colorScheme.error
+                      : colorScheme.onSurface.withOpacity(0.6),
                   onPressed: () {
                     final newFeedback = widget.message.feedback == 'DISLIKE'
                         ? FeedbackType.none
@@ -486,9 +447,7 @@ class _MessageBubbleState extends State<MessageBubble>
                         .submitMessageFeedback(widget.message.id, newFeedback);
 
                     if (newFeedback == FeedbackType.dislike) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(AppStrings.chat.feedbackThanks)),
-                      );
+                      SnackbarUtils.showInfo(context, AppStrings.chat.feedbackThanks);
                     }
                   },
                 ),
@@ -500,14 +459,9 @@ class _MessageBubbleState extends State<MessageBubble>
                 _buildActionButton(
                   context,
                   icon: Icons.select_all,
-                  color: (isDark
-                          ? AppPalette.neutralWhite
-                          : AppPalette.neutralBlack)
-                      .withOpacity(0.6),
+                  color: colorScheme.onSurface.withOpacity(0.6),
                   onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(AppStrings.common.selectTextMode)),
-                    );
+                    SnackbarUtils.showInfo(context, AppStrings.common.selectTextMode);
                   },
                 ),
                 const SizedBox(width: 4),
@@ -517,16 +471,11 @@ class _MessageBubbleState extends State<MessageBubble>
                 _buildActionButton(
                   context,
                   icon: Icons.content_copy,
-                  color: (isDark
-                          ? AppPalette.neutralWhite
-                          : AppPalette.neutralBlack)
-                      .withOpacity(0.6),
+                  color: colorScheme.onSurface.withOpacity(0.6),
                   onPressed: () {
                     Clipboard.setData(
                         ClipboardData(text: widget.message.content));
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(AppStrings.common.copied)),
-                    );
+                    SnackbarUtils.showInfo(context, AppStrings.common.copied);
                   },
                 ),
                 const SizedBox(width: 4),
@@ -537,14 +486,9 @@ class _MessageBubbleState extends State<MessageBubble>
                 _buildActionButton(
                   context,
                   icon: Icons.refresh,
-                  color: (isDark
-                          ? AppPalette.neutralWhite
-                          : AppPalette.neutralBlack)
-                      .withOpacity(0.6),
+                  color: colorScheme.onSurface.withOpacity(0.6),
                   onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(AppStrings.chat.regenerating)),
-                    );
+                    SnackbarUtils.showInfo(context, AppStrings.chat.regenerating);
                   },
                 ),
               // Disclaimer
@@ -556,7 +500,7 @@ class _MessageBubbleState extends State<MessageBubble>
                       Text(
                         ChatConfig.bottomDisclaimerText!,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: AppPalette.neutralGrey,
+                              color: Theme.of(context).hintColor,
                               fontSize: 12,
                             ),
                         textAlign: TextAlign.right,
@@ -582,26 +526,21 @@ class _MessageBubbleState extends State<MessageBubble>
   }
 
   Widget _buildImage(String imageUrl) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     if (imageUrl.startsWith('http')) {
       return CachedNetworkImage(
         imageUrl: imageUrl,
         fit: BoxFit.cover,
         placeholder: (context, url) => Container(
           height: 200,
-          color: isDark
-              ? AppPalette.surfaceCardDark
-              : AppPalette.neutralGrey.withOpacity(0.1),
+          color: Theme.of(context).scaffoldBackgroundColor,
           child: const Center(child: CircularProgressIndicator()),
         ),
         errorWidget: (context, url, error) => Container(
           height: 200,
-          color: isDark
-              ? AppPalette.surfaceCardDark
-              : AppPalette.neutralGrey.withOpacity(0.1),
+          color: Theme.of(context).scaffoldBackgroundColor,
           child: Icon(
             Icons.error,
-            color: AppPalette.neutralGrey,
+            color: Theme.of(context).hintColor,
           ),
         ),
       );
@@ -612,12 +551,10 @@ class _MessageBubbleState extends State<MessageBubble>
         fit: BoxFit.cover,
         errorBuilder: (context, error, stackTrace) => Container(
           height: 200,
-          color: isDark
-              ? AppPalette.surfaceCardDark
-              : AppPalette.neutralGrey.withOpacity(0.1),
+          color: Theme.of(context).scaffoldBackgroundColor,
           child: Icon(
             Icons.error,
-            color: AppPalette.neutralGrey,
+            color: Theme.of(context).hintColor,
           ),
         ),
       );
@@ -649,15 +586,13 @@ class _MessageBubbleState extends State<MessageBubble>
   }
 
   void _showActionTypeOptions(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     // Capture the cubit from the current context (where the provider is available)
     // before showing the bottom sheet (which pushes a new route without the provider)
     final chatCubit = context.read<ChatCubit>();
 
     showModalBottomSheet(
       context: context,
-      backgroundColor:
-          isDark ? AppPalette.surfaceDark : AppPalette.surfaceLight,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -676,8 +611,7 @@ class _MessageBubbleState extends State<MessageBubble>
                 ),
                 const SizedBox(height: 16),
                 ListTile(
-                  leading:
-                      Icon(Icons.arrow_downward, color: AppPalette.incomeGreen),
+                  leading: Icon(Icons.arrow_downward, color: Colors.green),
                   title: Text(AppStrings.dashboard.income),
                   onTap: () {
                     Navigator.pop(context);
@@ -685,8 +619,7 @@ class _MessageBubbleState extends State<MessageBubble>
                   },
                 ),
                 ListTile(
-                  leading:
-                      Icon(Icons.arrow_upward, color: AppPalette.expenseRed),
+                  leading: Icon(Icons.arrow_upward, color: Colors.red),
                   title: Text(AppStrings.dashboard.expense),
                   onTap: () {
                     Navigator.pop(context);

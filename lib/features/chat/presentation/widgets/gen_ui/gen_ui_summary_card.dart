@@ -1,6 +1,4 @@
-import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:flutter/material.dart';
-import '../../../../../core/constants/gemini_colors.dart';
 
 class GenUISummaryCard extends StatelessWidget {
   final Map<String, dynamic> data;
@@ -15,11 +13,10 @@ class GenUISummaryCard extends StatelessWidget {
     final trendColorString = data['trendColor'] as String?;
     final iconName = data['icon'] as String?;
 
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     // Determine trend color
     Color trendColor = Colors.green;
-    if (trendColorString == 'red') trendColor = AppPalette.expenseRed;
+    if (trendColorString == 'red')
+      trendColor = Theme.of(context).colorScheme.error;
     if (trendColorString == 'grey') trendColor = Colors.grey;
 
     // Resolve Icon
@@ -33,26 +30,17 @@ class GenUISummaryCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 12),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: isDark
-              ? [AppPalette.surfaceCardVariantDark, AppPalette.surfaceDark]
-              : [AppPalette.neutralWhite, const Color(0xFFF5F5F7)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color:
-                AppPalette.neutralBlack.withValues(alpha: isDark ? 0.3 : 0.05),
+            color: Theme.of(context).shadowColor.withOpacity(0.05),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
         ],
         border: Border.all(
-          color: isDark
-              ? AppPalette.neutralWhite.withOpacity(0.1)
-              : AppPalette.neutralWhite,
+          color: Theme.of(context).dividerColor,
           width: 1,
         ),
       ),
@@ -61,12 +49,12 @@ class GenUISummaryCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: GeminiColors.primaryColor(context).withOpacity(0.15),
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.15),
               shape: BoxShape.circle,
             ),
             child: Icon(
               icon,
-              color: GeminiColors.primaryColor(context),
+              color: Theme.of(context).colorScheme.primary,
               size: 28,
             ),
           ),
@@ -78,7 +66,7 @@ class GenUISummaryCard extends StatelessWidget {
                 Text(
                   title ?? 'Summary',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: GeminiColors.textSecondary(context),
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                         fontWeight: FontWeight.w500,
                       ),
                 ),
@@ -87,7 +75,7 @@ class GenUISummaryCard extends StatelessWidget {
                   value ?? '',
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: GeminiColors.aiMessageText(context),
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                 ),
               ],

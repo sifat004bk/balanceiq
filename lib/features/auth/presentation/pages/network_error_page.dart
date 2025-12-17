@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/utils/snackbar_utils.dart';
 
 class NetworkErrorPage extends StatelessWidget {
   final VoidCallback? onRetry;
@@ -81,11 +82,7 @@ class NetworkErrorPage extends StatelessWidget {
                 onPressed: onSettings ??
                     () {
                       // Default action - you could open app settings
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Opening settings...'),
-                        ),
-                      );
+                      SnackbarUtils.showInfo(context, 'Opening settings...');
                     },
                 child: Text(
                   'Settings',

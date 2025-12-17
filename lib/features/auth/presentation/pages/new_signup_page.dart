@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_strings.dart';
+import '../../../../core/utils/snackbar_utils.dart';
 
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
@@ -58,13 +59,10 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
           Navigator.of(context).pushReplacementNamed('/home');
         } else if (state is SignupSuccess) {
           // Show success message and navigate to email verification
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                  '${AppStrings.auth.accountCreated}! ${AppStrings.auth.pleaseLogin}'),
-              backgroundColor: Colors.green,
-              duration: const Duration(seconds: 5),
-            ),
+          SnackbarUtils.showSuccess(
+            context,
+            '${AppStrings.auth.accountCreated}! ${AppStrings.auth.pleaseLogin}',
+            duration: const Duration(seconds: 5),
           );
           // Navigate to login page
           Navigator.pushReplacementNamed(
@@ -74,13 +72,10 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
           );
         } else if (state is AuthError) {
           // Show error message
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                  '${AppStrings.auth.accountCreated}! ${AppStrings.auth.pleaseLogin}'),
-              backgroundColor: Theme.of(context).colorScheme.error,
-              duration: const Duration(seconds: 4),
-            ),
+          SnackbarUtils.showError(
+            context,
+            state.message,
+            duration: const Duration(seconds: 4),
           );
         }
       },
@@ -404,6 +399,7 @@ class _NewSignUpPageState extends State<NewSignUpPage> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
+                            padding: EdgeInsets.zero
                           ),
                           child: isLoading
                               ? SizedBox(

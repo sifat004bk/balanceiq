@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/constants/app_constants.dart';
-import '../../../../core/theme/app_palette.dart';
 import '../../domain/entities/token_usage.dart';
 import '../cubit/chat_cubit.dart';
 import '../cubit/chat_state.dart';
@@ -13,11 +12,10 @@ class TokenUsageSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? AppPalette.surfaceModalDark : AppPalette.neutralWhite,
+        color: Theme.of(context).bottomSheetTheme.backgroundColor ??
+            Theme.of(context).cardColor,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: BlocBuilder<ChatCubit, ChatState>(
@@ -49,7 +47,7 @@ class TokenUsageSheet extends StatelessWidget {
                       width: 40,
                       height: 4,
                       decoration: BoxDecoration(
-                        color: isDark ? Colors.grey[600] : Colors.grey[300],
+                        color: Theme.of(context).dividerColor,
                         borderRadius: BorderRadius.circular(2),
                       ),
                     ),
@@ -62,7 +60,7 @@ class TokenUsageSheet extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
-                      color: isDark ? AppPalette.neutralWhite : AppPalette.neutralBlack,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -70,7 +68,7 @@ class TokenUsageSheet extends StatelessWidget {
                     'Your usage resets every 12 hours',
                     style: TextStyle(
                       fontSize: 14,
-                      color: isDark ? Colors.grey[400] : Colors.grey[600],
+                      color: Theme.of(context).hintColor,
                     ),
                   ),
                   const SizedBox(height: 24),
@@ -82,7 +80,6 @@ class TokenUsageSheet extends StatelessWidget {
                     limit: limit,
                     percentage: percentage,
                     remainingTokens: remainingTokens,
-                    isDark: isDark,
                   ),
                   const SizedBox(height: 24),
 
@@ -91,7 +88,6 @@ class TokenUsageSheet extends StatelessWidget {
                     context,
                     currentUsage: currentUsage,
                     totalUsage: tokenUsage?.totalUsage ?? 0,
-                    isDark: isDark,
                   ),
                   const SizedBox(height: 24),
 
@@ -102,14 +98,13 @@ class TokenUsageSheet extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: isDark ? AppPalette.neutralWhite : AppPalette.neutralBlack,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                     const SizedBox(height: 12),
                     _buildActivityList(
                       context,
                       history: tokenUsage.history,
-                      isDark: isDark,
                     ),
                   ],
 
@@ -129,24 +124,24 @@ class TokenUsageSheet extends StatelessWidget {
     required int limit,
     required double percentage,
     required int remainingTokens,
-    required bool isDark,
   }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final isNearLimit = percentage > 0.9;
     final isLimitReached = percentage >= 1.0;
 
     Color progressColor;
     if (isLimitReached) {
-      progressColor = AppPalette.expenseRed;
+      progressColor = Theme.of(context).colorScheme.error;
     } else if (isNearLimit) {
-      progressColor = AppPalette.sparkOrange;
+      progressColor = Theme.of(context).colorScheme.secondary;
     } else {
-      progressColor = AppPalette.trustBlue;
+      progressColor = Theme.of(context).colorScheme.primary;
     }
 
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: isDark ? AppPalette.surfaceCardVariantDark : AppPalette.surfaceLight,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: progressColor.withOpacity(0.3),
@@ -180,14 +175,14 @@ class TokenUsageSheet extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
-                        color: isDark ? AppPalette.neutralWhite : AppPalette.neutralBlack,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                     Text(
                       'used',
                       style: TextStyle(
                         fontSize: 12,
-                        color: isDark ? Colors.grey[400] : Colors.grey[600],
+                        color: Theme.of(context).hintColor,
                       ),
                     ),
                   ],
@@ -208,7 +203,7 @@ class TokenUsageSheet extends StatelessWidget {
                     'Used',
                     style: TextStyle(
                       fontSize: 12,
-                      color: isDark ? Colors.grey[400] : Colors.grey[600],
+                      color: Theme.of(context).hintColor,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -217,7 +212,7 @@ class TokenUsageSheet extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
-                      color: isDark ? AppPalette.neutralWhite : AppPalette.neutralBlack,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                 ],
@@ -243,7 +238,7 @@ class TokenUsageSheet extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
-                      color: isDark ? AppPalette.neutralWhite : AppPalette.neutralBlack,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                 ],
@@ -285,7 +280,6 @@ class TokenUsageSheet extends StatelessWidget {
     BuildContext context, {
     required int currentUsage,
     required int totalUsage,
-    required bool isDark,
   }) {
     return Row(
       children: [
@@ -295,8 +289,7 @@ class TokenUsageSheet extends StatelessWidget {
             title: 'Today',
             value: _formatTokenCount(currentUsage),
             icon: Icons.today_outlined,
-            color: AppPalette.trustBlue,
-            isDark: isDark,
+            color: Theme.of(context).colorScheme.primary,
           ),
         ),
         const SizedBox(width: 12),
@@ -307,7 +300,6 @@ class TokenUsageSheet extends StatelessWidget {
             value: _formatTokenCount(totalUsage),
             icon: Icons.analytics_outlined,
             color: Colors.purple,
-            isDark: isDark,
           ),
         ),
       ],
@@ -320,12 +312,11 @@ class TokenUsageSheet extends StatelessWidget {
     required String value,
     required IconData icon,
     required Color color,
-    required bool isDark,
   }) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark ? AppPalette.surfaceCardVariantDark : AppPalette.surfaceLight,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -350,7 +341,7 @@ class TokenUsageSheet extends StatelessWidget {
                 title,
                 style: TextStyle(
                   fontSize: 12,
-                  color: isDark ? Colors.grey[400] : Colors.grey[600],
+                  color: Theme.of(context).hintColor,
                 ),
               ),
               const SizedBox(height: 2),
@@ -359,7 +350,7 @@ class TokenUsageSheet extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  color: isDark ? AppPalette.neutralWhite : AppPalette.neutralBlack,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
             ],
@@ -372,11 +363,10 @@ class TokenUsageSheet extends StatelessWidget {
   Widget _buildActivityList(
     BuildContext context, {
     required List<TokenUsageHistoryItem> history,
-    required bool isDark,
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? AppPalette.surfaceCardVariantDark : AppPalette.surfaceLight,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
       ),
       child: ListView.separated(
@@ -385,14 +375,13 @@ class TokenUsageSheet extends StatelessWidget {
         itemCount: history.length > 5 ? 5 : history.length,
         separatorBuilder: (context, index) => Divider(
           height: 1,
-          color: isDark ? Colors.grey[700] : Colors.grey[300],
+          color: Theme.of(context).dividerColor,
         ),
         itemBuilder: (context, index) {
           final item = history[index];
           return _buildActivityItem(
             context,
             item: item,
-            isDark: isDark,
           );
         },
       ),
@@ -402,7 +391,6 @@ class TokenUsageSheet extends StatelessWidget {
   Widget _buildActivityItem(
     BuildContext context, {
     required TokenUsageHistoryItem item,
-    required bool isDark,
   }) {
     // Format action name for display
     final actionDisplay = _formatActionName(item.action);
@@ -420,12 +408,12 @@ class TokenUsageSheet extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: AppPalette.trustBlue.withOpacity(0.15),
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.15),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
               _getActionIcon(item.action),
-              color: AppPalette.trustBlue,
+              color: Theme.of(context).colorScheme.primary,
               size: 18,
             ),
           ),
@@ -439,7 +427,7 @@ class TokenUsageSheet extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: isDark ? AppPalette.neutralWhite : AppPalette.neutralBlack,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -447,7 +435,7 @@ class TokenUsageSheet extends StatelessWidget {
                   '$dateString at $timeString',
                   style: TextStyle(
                     fontSize: 12,
-                    color: isDark ? Colors.grey[400] : Colors.grey[600],
+                    color: Theme.of(context).hintColor,
                   ),
                 ),
               ],
@@ -458,7 +446,7 @@ class TokenUsageSheet extends StatelessWidget {
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
-              color: isDark ? AppPalette.neutralWhite : AppPalette.neutralBlack,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
         ],

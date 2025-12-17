@@ -1,4 +1,3 @@
-import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 import '../../domain/entities/message.dart';
 import '../../../../core/constants/app_constants.dart';
@@ -52,7 +51,7 @@ class MessageList extends StatelessWidget {
               child: Text(
                 _getWelcomeMessage(botId),
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: Colors.grey[600],
+                      color: Theme.of(context).hintColor,
                     ),
                 textAlign: TextAlign.center,
               ),
@@ -79,17 +78,17 @@ class MessageList extends StatelessWidget {
               (context, index) {
                 if (isSending) {
                   if (index == 0) {
-                     return _buildTypingIndicator(context);
+                    return _buildTypingIndicator(context);
                   }
                   // Adjust index for typing indicator
                   final messageIndex = index - 1;
                   if (messageIndex < messages.length) {
                     final message = messages[messageIndex];
                     final isUser = message.sender == AppConstants.senderUser;
-                    // When sending, the first message (index 0) is typing indicator, 
+                    // When sending, the first message (index 0) is typing indicator,
                     // so index 1 (messageIndex 0) is the last message.
                     final isLastMessage = messageIndex == 0;
-                    
+
                     return MessageBubble(
                       message: message,
                       isUser: isUser,
@@ -118,7 +117,9 @@ class MessageList extends StatelessWidget {
                 }
                 return null;
               },
-              childCount: isSending ? messages.length + 1 : messages.length, // +1 for Typing indicator
+              childCount: isSending
+                  ? messages.length + 1
+                  : messages.length, // +1 for Typing indicator
             ),
           ),
         ),

@@ -1,5 +1,3 @@
-import 'package:balance_iq/core/theme/app_palette.dart';
-import 'package:balance_iq/core/constants/gemini_colors.dart';
 import 'package:flutter/material.dart';
 
 /// Gemini-style typing indicator with three animated dots
@@ -96,8 +94,7 @@ class _TypingIndicatorState extends State<TypingIndicator>
 
   @override
   Widget build(BuildContext context) {
-    final color = widget.dotColor ?? GeminiColors.primaryLight;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final color = widget.dotColor ?? Theme.of(context).colorScheme.primary;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -112,8 +109,8 @@ class _TypingIndicatorState extends State<TypingIndicator>
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  GeminiColors.primaryLight,
-                  GeminiColors.primaryLight.withOpacity(0.8),
+                  Theme.of(context).colorScheme.primary,
+                  Theme.of(context).colorScheme.primary.withOpacity(0.8),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -121,7 +118,7 @@ class _TypingIndicatorState extends State<TypingIndicator>
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: GeminiColors.primaryLight.withOpacity(0.3),
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -129,7 +126,7 @@ class _TypingIndicatorState extends State<TypingIndicator>
             ),
             child: Icon(
               Icons.auto_awesome,
-              color: AppPalette.neutralWhite,
+              color: Theme.of(context).colorScheme.onPrimary,
               size: 16,
             ),
           ),
@@ -138,20 +135,17 @@ class _TypingIndicatorState extends State<TypingIndicator>
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
             decoration: BoxDecoration(
-              color: isDark
-                  ? GeminiColors.glassFrostDark.withOpacity(0.6)
-                  : GeminiColors.glassFrostLight.withOpacity(0.8),
+              color: Theme.of(context).cardColor.withOpacity(0.8),
               borderRadius: const BorderRadius.all(
                 Radius.circular(20),
               ),
               border: Border.all(
-                color: GeminiColors.glassBorder(context).withOpacity(0.5),
+                color: Theme.of(context).dividerColor.withOpacity(0.5),
                 width: 1,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: AppPalette.neutralBlack
-                      .withValues(alpha: isDark ? 0.3 : 0.08),
+                  color: Theme.of(context).shadowColor.withOpacity(0.1),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),

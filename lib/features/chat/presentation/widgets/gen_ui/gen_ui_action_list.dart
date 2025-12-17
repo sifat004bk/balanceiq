@@ -1,7 +1,6 @@
 import 'package:balance_iq/core/constants/app_strings.dart';
-import 'package:balance_iq/core/theme/app_palette.dart';
+import 'package:balance_iq/core/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
-import '../../../../../core/constants/gemini_colors.dart';
 
 class GenUIActionList extends StatelessWidget {
   final Map<String, dynamic> data;
@@ -23,7 +22,7 @@ class GenUIActionList extends StatelessWidget {
               title,
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: GeminiColors.textSecondary(context),
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
             ),
             const SizedBox(height: 12),
@@ -36,28 +35,28 @@ class GenUIActionList extends StatelessWidget {
                 avatar: Icon(
                   _getIconForAction(action['action']),
                   size: 16,
-                  color: GeminiColors.primaryColor(context),
+                  color: Theme.of(context).colorScheme.primary,
                 ),
                 label: Text(
                   action['label'] ?? '',
                   style: TextStyle(
-                    color: GeminiColors.primaryColor(context),
+                    color: Theme.of(context).colorScheme.primary,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 backgroundColor:
-                    GeminiColors.primaryColor(context).withOpacity(0.1),
+                    Theme.of(context).colorScheme.primary.withOpacity(0.1),
                 side: BorderSide(
-                  color: GeminiColors.primaryColor(context).withOpacity(0.3),
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
                 ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
                 onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                        content: Text(AppStrings.chat.actionTriggered(
-                            action['action']?.toString() ?? ''))),
+                  SnackbarUtils.showInfo(
+                    context,
+                    AppStrings.chat.actionTriggered(
+                        action['action']?.toString() ?? ''),
                   );
                 },
               );

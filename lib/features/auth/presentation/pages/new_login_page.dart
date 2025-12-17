@@ -1,6 +1,8 @@
+import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_strings.dart';
+import '../../../../core/utils/snackbar_utils.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
 
@@ -62,12 +64,7 @@ class _NewLoginPageState extends State<NewLoginPage> {
           Navigator.of(context).pushReplacementNamed('/home');
         } else if (state is AuthError) {
           // Show error message
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: Theme.of(context).colorScheme.error,
-            ),
-          );
+          SnackbarUtils.showError(context, state.message);
         }
       },
       child: Scaffold(
@@ -261,6 +258,7 @@ class _NewLoginPageState extends State<NewLoginPage> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
+                            padding: EdgeInsets.zero
                           ),
                           child: isLoading
                               ? SizedBox(
@@ -276,10 +274,13 @@ class _NewLoginPageState extends State<NewLoginPage> {
                                 )
                               : Text(
                                   AppStrings.auth.loginButton,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.w800,
+                                        color: AppPalette.neutralWhite,
+                                      ),
                                 ),
                         );
                       },

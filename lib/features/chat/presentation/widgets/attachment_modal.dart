@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_strings.dart';
-import '../../../../core/theme/app_palette.dart';
 import '../../../../core/theme/app_typography.dart';
 
 class AttachmentModal extends StatelessWidget {
@@ -21,7 +20,7 @@ class AttachmentModal extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppPalette.surfaceModalDark,
+        color: Theme.of(context).cardColor,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
       ),
       child: SafeArea(
@@ -34,7 +33,7 @@ class AttachmentModal extends StatelessWidget {
               width: 32,
               height: 4,
               decoration: BoxDecoration(
-                color: AppPalette.neutralGrey.withOpacity(0.6),
+                color: Theme.of(context).dividerColor,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -91,16 +90,17 @@ class AttachmentModal extends StatelessWidget {
             width: 64,
             height: 64,
             decoration: BoxDecoration(
-              color: AppPalette.surfaceCardVariantDark, // Slightly lighter than bg
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,
               shape: BoxShape.circle,
             ),
-            child: Icon(icon, color: AppPalette.neutralWhite, size: 28),
+            child: Icon(icon,
+                color: Theme.of(context).colorScheme.onSurface, size: 28),
           ),
           const SizedBox(height: 8),
           Text(
             label,
             style: AppTypography.captionMedium.copyWith(
-              color: AppPalette.textSubtleLight,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
         ],

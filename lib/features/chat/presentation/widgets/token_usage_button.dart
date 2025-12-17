@@ -1,9 +1,8 @@
-import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/constants/app_constants.dart';
-import '../../../../core/constants/gemini_colors.dart';
+
 import '../cubit/chat_cubit.dart';
 import '../cubit/chat_state.dart';
 import 'token_usage_sheet.dart';
@@ -15,8 +14,6 @@ class TokenUsageButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return BlocBuilder<ChatCubit, ChatState>(
       builder: (context, state) {
         int currentUsage = 0;
@@ -27,7 +24,8 @@ class TokenUsageButton extends StatelessWidget {
           limit = state.dailyTokenLimit;
         }
 
-        final percentage = limit > 0 ? (currentUsage / limit).clamp(0.0, 1.0) : 0.0;
+        final percentage =
+            limit > 0 ? (currentUsage / limit).clamp(0.0, 1.0) : 0.0;
         final isNearLimit = percentage > 0.9;
         final isLimitReached = percentage >= 1.0;
 
@@ -35,14 +33,17 @@ class TokenUsageButton extends StatelessWidget {
         Color progressColor;
         Color backgroundColor;
         if (isLimitReached) {
-          progressColor = AppPalette.expenseRed;
-          backgroundColor = AppPalette.expenseRed.withOpacity(0.15);
+          progressColor = Theme.of(context).colorScheme.error;
+          backgroundColor =
+              Theme.of(context).colorScheme.error.withOpacity(0.15);
         } else if (isNearLimit) {
-          progressColor = AppPalette.sparkOrange;
-          backgroundColor = AppPalette.sparkOrange.withOpacity(0.15);
+          progressColor = Theme.of(context).colorScheme.secondary;
+          backgroundColor =
+              Theme.of(context).colorScheme.secondary.withOpacity(0.15);
         } else {
-          progressColor = GeminiColors.primary;
-          backgroundColor = GeminiColors.primary.withOpacity(0.15);
+          progressColor = Theme.of(context).colorScheme.primary;
+          backgroundColor =
+              Theme.of(context).colorScheme.primary.withOpacity(0.15);
         }
 
         return GestureDetector(
@@ -50,13 +51,11 @@ class TokenUsageButton extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
-              color: isDark
-                  ? AppPalette.neutralBlack.withValues(alpha: 0.54)
-                  : AppPalette.neutralWhite.withOpacity(0.95),
+              color: Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: AppPalette.neutralBlack.withValues(alpha: 0.1),
+                  color: Theme.of(context).shadowColor.withOpacity(0.1),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -80,7 +79,8 @@ class TokenUsageButton extends StatelessWidget {
                         value: percentage,
                         strokeWidth: 3,
                         backgroundColor: backgroundColor,
-                        valueColor: AlwaysStoppedAnimation<Color>(progressColor),
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(progressColor),
                       ),
                       Icon(
                         isLimitReached
@@ -99,7 +99,7 @@ class TokenUsageButton extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: isDark ? AppPalette.neutralWhite : AppPalette.neutralBlack,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
               ],

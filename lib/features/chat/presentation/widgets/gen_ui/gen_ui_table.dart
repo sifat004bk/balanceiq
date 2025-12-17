@@ -1,7 +1,5 @@
-import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
-import '../../../../../core/constants/gemini_colors.dart';
 import '../../../domain/entities/chart_data.dart';
 
 class GenUITable extends StatelessWidget {
@@ -18,7 +16,6 @@ class GenUITable extends StatelessWidget {
 
     final columns = data.columnNames;
     final rows = data.rows;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     // Calculate a rough minimum width based on column count to ensure horizontal scrolling
     // 10 cols * ~100px = 1000px.
@@ -42,14 +39,13 @@ class GenUITable extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color:
-                AppPalette.neutralBlack.withValues(alpha: isDark ? 0.2 : 0.05),
+            color: Theme.of(context).shadowColor.withOpacity(0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
         ],
         border:
-            Border.all(color: GeminiColors.divider(context).withOpacity(0.5)),
+            Border.all(color: Theme.of(context).dividerColor.withOpacity(0.5)),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
@@ -61,7 +57,7 @@ class GenUITable extends StatelessWidget {
                 // Override DataTable theme to match our custom gradient look if possible,
                 // or just use the available properties of DataTable2
                 data: Theme.of(context).copyWith(
-                  dividerColor: GeminiColors.divider(context).withOpacity(0.5),
+                  dividerColor: Theme.of(context).dividerColor.withOpacity(0.5),
                   dataTableTheme: DataTableThemeData(
                     headingRowColor:
                         WidgetStateProperty.all(Colors.transparent),
@@ -78,8 +74,8 @@ class GenUITable extends StatelessWidget {
                   headingRowDecoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        GeminiColors.primaryColor(context).withOpacity(0.15),
-                        GeminiColors.primaryColor(context).withOpacity(0.05),
+                        Theme.of(context).colorScheme.primary.withOpacity(0.15),
+                        Theme.of(context).colorScheme.primary.withOpacity(0.05),
                       ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
@@ -91,7 +87,7 @@ class GenUITable extends StatelessWidget {
                               col.toUpperCase(),
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: GeminiColors.primaryColor(context),
+                                color: Theme.of(context).colorScheme.primary,
                                 fontSize: 12,
                                 letterSpacing: 0.5,
                               ),
@@ -108,7 +104,9 @@ class GenUITable extends StatelessWidget {
                       color: WidgetStateProperty.all(
                         isEven
                             ? Colors.transparent
-                            : GeminiColors.primaryColor(context)
+                            : Theme.of(context)
+                                .colorScheme
+                                .primary
                                 .withOpacity(0.02),
                       ),
                       cells: columns.map((colName) {
@@ -117,7 +115,7 @@ class GenUITable extends StatelessWidget {
                           Text(
                             cellValue,
                             style: TextStyle(
-                              color: GeminiColors.aiMessageText(context),
+                              color: Theme.of(context).colorScheme.onSurface,
                               fontSize: 13,
                             ),
                             maxLines: 1,

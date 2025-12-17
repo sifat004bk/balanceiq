@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_strings.dart';
+import '../../../../core/utils/snackbar_utils.dart';
 
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
@@ -50,21 +51,11 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
       listener: (context, state) {
         if (state is PasswordResetSuccess) {
           // Show success message
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(AppStrings.auth.resetSuccess),
-              backgroundColor: Colors.green,
-            ),
-          );
+          SnackbarUtils.showSuccess(context, AppStrings.auth.resetSuccess);
           // Navigate to login
           Navigator.of(context).pushReplacementNamed('/login');
         } else if (state is AuthError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: colorScheme.error,
-            ),
-          );
+          SnackbarUtils.showError(context, state.message);
         }
       },
       child: Scaffold(

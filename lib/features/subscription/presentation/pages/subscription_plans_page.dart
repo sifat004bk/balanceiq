@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/tour/tour.dart';
+import '../../../../core/utils/snackbar_utils.dart';
 import '../../../chat/presentation/pages/chat_page.dart';
 import '../../domain/entities/plan.dart';
 import '../cubit/subscription_cubit.dart';
@@ -56,16 +57,9 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
       body: BlocConsumer<SubscriptionCubit, SubscriptionState>(
         listener: (context, state) {
           if (state is SubscriptionCreated) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                    '${AppStrings.subscription.subscriptionSuccess} ${state.subscription.plan.displayName}!'),
-                backgroundColor: Colors.green,
-                behavior: SnackBarBehavior.floating,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
+            SnackbarUtils.showSuccess(
+              context,
+              '${AppStrings.subscription.subscriptionSuccess} ${state.subscription.plan.displayName}!',
             );
 
             // Check if tour is active at subscription step
@@ -86,16 +80,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
               Navigator.pop(context, true);
             }
           } else if (state is SubscriptionError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: Colors.red,
-                behavior: SnackBarBehavior.floating,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-            );
+            SnackbarUtils.showError(context, state.message);
             // Reload plans after error
             context.read<SubscriptionCubit>().loadPlansAndStatus();
           }

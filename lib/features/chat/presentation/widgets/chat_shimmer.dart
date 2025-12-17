@@ -1,4 +1,3 @@
-import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 

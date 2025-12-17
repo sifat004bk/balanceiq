@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_strings.dart';
+import '../../../../core/utils/snackbar_utils.dart';
 
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
@@ -49,21 +50,11 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
       listener: (context, state) {
         if (state is PasswordChanged) {
           // Show success message
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(AppStrings.auth.passwordChangeSuccess),
-              backgroundColor: Colors.green,
-            ),
-          );
+          SnackbarUtils.showSuccess(context, AppStrings.auth.passwordChangeSuccess);
           // Navigate back
           Navigator.of(context).pop();
         } else if (state is AuthError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: Theme.of(context).colorScheme.error,
-            ),
-          );
+          SnackbarUtils.showError(context, state.message);
         }
       },
       child: Scaffold(

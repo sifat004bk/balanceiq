@@ -1,4 +1,5 @@
 import 'package:balance_iq/core/constants/app_strings.dart';
+import 'package:balance_iq/core/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
 
 import 'dart:async';
@@ -41,21 +42,14 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
   void _resendEmail() {
     if (_resendCooldown == 0) {
       // Mock resend
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppStrings.auth.emailSent),
-          backgroundColor: Theme.of(context).colorScheme.primary,
-        ),
-      );
+      SnackbarUtils.showInfo(context, AppStrings.auth.emailSent);
       _startCooldown();
     }
   }
 
   void _openEmailApp() {
     // In a real app, you would use url_launcher to open email app
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('${AppStrings.common.loading}...')),
-    );
+    SnackbarUtils.showInfo(context, '${AppStrings.common.loading}...');
   }
 
   void _mockVerifyAndContinue() {

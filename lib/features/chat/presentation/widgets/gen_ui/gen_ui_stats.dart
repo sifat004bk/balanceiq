@@ -1,6 +1,4 @@
-import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:flutter/material.dart';
-import '../../../../../core/constants/gemini_colors.dart';
 
 class GenUIStats extends StatelessWidget {
   final Map<String, dynamic> data;
@@ -41,7 +39,7 @@ class GenUIStats extends StatelessWidget {
 
     final cardColor = colorHex != null
         ? _parseColor(colorHex)
-        : GeminiColors.primaryColor(context);
+        : Theme.of(context).colorScheme.primary;
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -73,7 +71,7 @@ class GenUIStats extends StatelessWidget {
                   color: cardColor,
                   size: 24,
                 ),
-              if (trend != null) _buildTrendIcon(trend),
+              if (trend != null) _buildTrendIcon(context, trend),
             ],
           ),
           const SizedBox(height: 12),
@@ -104,7 +102,7 @@ class GenUIStats extends StatelessWidget {
     );
   }
 
-  Widget _buildTrendIcon(String trend) {
+  Widget _buildTrendIcon(BuildContext context, String trend) {
     IconData icon;
     Color color;
 
@@ -115,7 +113,7 @@ class GenUIStats extends StatelessWidget {
         break;
       case 'down':
         icon = Icons.trending_down;
-        color = AppPalette.expenseRed;
+        color = Theme.of(context).colorScheme.error;
         break;
       default:
         icon = Icons.trending_flat;

@@ -1,4 +1,3 @@
-import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 import '../../../../../core/constants/gemini_colors.dart';
 
@@ -13,7 +12,8 @@ class GenUIInsightCard extends StatelessWidget {
     final description = data['description'] as String?;
     final icon = data['icon'] as String?;
     final items = data['items'] as List?;
-    final type = data['type'] as String? ?? 'default'; // default, success, warning, error, info
+    final type = data['type'] as String? ??
+        'default'; // default, success, warning, error, info
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
@@ -154,11 +154,11 @@ class GenUIInsightCard extends StatelessWidget {
       case 'success':
         return Colors.green;
       case 'warning':
-        return AppPalette.sparkOrange;
+        return Theme.of(context).colorScheme.secondary;
       case 'error':
-        return AppPalette.expenseRed;
+        return Theme.of(context).colorScheme.error;
       case 'info':
-        return AppPalette.trustBlue;
+        return Theme.of(context).colorScheme.primary;
       default:
         return GeminiColors.primaryColor(context);
     }

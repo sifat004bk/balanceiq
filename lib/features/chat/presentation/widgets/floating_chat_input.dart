@@ -8,8 +8,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:record/record.dart';
 
 import '../../../../core/constants/app_strings.dart';
-import '../../../../core/theme/app_palette.dart';
 import '../../../../core/theme/app_typography.dart';
+import '../../../../core/utils/snackbar_utils.dart';
 import '../cubit/chat_cubit.dart';
 import '../cubit/chat_state.dart';
 import '../chat_config.dart';
@@ -103,7 +103,10 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: AppPalette.neutralWhite.withOpacity(0.6 * (1 - value)),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withOpacity(0.6 * (1 - value)),
                   width: 2,
                 ),
               ),
@@ -111,7 +114,7 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
             // Stop icon
             Icon(
               Icons.stop_rounded,
-              color: AppPalette.neutralWhite,
+              color: Theme.of(context).colorScheme.onSurface,
               size: 20,
             ),
           ],
@@ -227,12 +230,7 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
   }
 
   void _showError(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: AppPalette.expenseRed,
-      ),
-    );
+    SnackbarUtils.showError(context, message);
   }
 
   void _showAttachmentOptions() {
@@ -240,8 +238,7 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
 
     showModalBottomSheet(
       context: context,
-      backgroundColor:
-          isDark ? AppPalette.surfaceModalDark : AppPalette.neutralWhite,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
@@ -256,8 +253,8 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                 height: 4,
                 decoration: BoxDecoration(
                   color: isDark
-                      ? AppPalette.neutralGrey.withOpacity(0.6)
-                      : Colors.grey[300],
+                      ? Theme.of(context).hintColor.withOpacity(0.6)
+                      : Theme.of(context).dividerColor,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -295,7 +292,6 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
     required String label,
     required VoidCallback onTap,
   }) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final primaryColor = Theme.of(context).colorScheme.primary;
 
     return GestureDetector(
@@ -307,9 +303,7 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
             width: 64,
             height: 64,
             decoration: BoxDecoration(
-              color: isDark
-                  ? AppPalette.surfaceCardVariantDark
-                  : AppPalette.inputBackgroundLight,
+              color: Theme.of(context).cardColor,
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -322,8 +316,7 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
           Text(
             label,
             style: AppTypography.captionMedium.copyWith(
-              color:
-                  isDark ? AppPalette.textSubtleLight : AppPalette.neutralGrey,
+              color: Theme.of(context).hintColor,
             ),
           ),
         ],
@@ -342,7 +335,7 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
-              color: AppPalette.neutralBlack.withValues(alpha: 0.2),
+              color: Theme.of(context).shadowColor.withOpacity(0.2),
               blurRadius: 8,
               offset: const Offset(0, 4),
             ),
@@ -350,7 +343,7 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
         ),
         child: Icon(
           Icons.chat_bubble_outline,
-          color: AppPalette.neutralWhite,
+          color: Theme.of(context).colorScheme.onPrimary,
         ),
       ),
     );
@@ -429,8 +422,8 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                       height: 4,
                       decoration: BoxDecoration(
                         color: isDark
-                            ? AppPalette.neutralGrey.withOpacity(0.6)
-                            : Colors.grey[400],
+                            ? Theme.of(context).hintColor.withOpacity(0.6)
+                            : Theme.of(context).dividerColor,
                         borderRadius: BorderRadius.circular(2),
                       ),
                     ),
@@ -451,21 +444,26 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                         margin: const EdgeInsets.only(bottom: 12),
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: AppPalette.expenseRed.withOpacity(
-                              0.9), // Higher opacity for legibility
+                          color: Theme.of(context)
+                              .colorScheme
+                              .error
+                              .withOpacity(
+                                  0.9), // Higher opacity for legibility
                           borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: AppPalette.expenseRed),
+                          border: Border.all(
+                              color: Theme.of(context).colorScheme.error),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(Icons.error_outline,
-                                color: AppPalette.neutralWhite, size: 18),
+                                color: Theme.of(context).colorScheme.onError,
+                                size: 18),
                             const SizedBox(width: 8),
                             Text(
                               AppStrings.chat.messageLimitReached,
                               style: AppTypography.captionError.copyWith(
-                                color: AppPalette.neutralWhite,
+                                color: Theme.of(context).colorScheme.onError,
                               ),
                             ),
                           ],
@@ -480,24 +478,28 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                           vertical: 8,
                         ),
                         decoration: BoxDecoration(
-                          color: AppPalette.warningOrange
-                              .withOpacity(0.9), // Higher opacity
+                          color: Theme.of(context)
+                              .colorScheme
+                              .secondary
+                              .withOpacity(0.9),
                           borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: AppPalette.warningOrange),
+                          border: Border.all(
+                              color: Theme.of(context).colorScheme.secondary),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(
                               Icons.warning_amber_rounded,
-                              color: AppPalette.neutralWhite,
+                              color: Theme.of(context).colorScheme.secondary,
                               size: 16,
                             ),
                             const SizedBox(width: 8),
                             Text(
                               AppStrings.chat.nearMessageLimit(remainingTokens),
                               style: AppTypography.captionWarning.copyWith(
-                                color: AppPalette.neutralWhite,
+                                color:
+                                    Theme.of(context).colorScheme.onSecondary,
                               ),
                             ),
                           ],
@@ -511,8 +513,8 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
                           color: isDark
-                              ? AppPalette.surfaceModalDark
-                              : AppPalette.surfaceLight,
+                              ? Theme.of(context).cardColor
+                              : Theme.of(context).cardColor,
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
                             color: isDark
@@ -521,8 +523,9 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: AppPalette.neutralBlack
-                                  .withValues(alpha: 0.1),
+                              color: Theme.of(context)
+                                  .shadowColor
+                                  .withOpacity(0.1),
                               blurRadius: 10,
                               offset: const Offset(0, 5),
                             ),
@@ -545,8 +548,8 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                                 'Image selected',
                                 style: TextStyle(
                                   color: isDark
-                                      ? AppPalette.neutralGrey
-                                      : AppPalette.neutralGrey,
+                                      ? Theme.of(context).hintColor
+                                      : Theme.of(context).hintColor,
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -556,8 +559,8 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                               icon: Icon(
                                 Icons.close,
                                 color: isDark
-                                    ? AppPalette.neutralWhite
-                                    : Colors.black,
+                                    ? Theme.of(context).hintColor
+                                    : Theme.of(context).hintColor,
                               ),
                               onPressed: () {
                                 setState(() {
@@ -583,9 +586,11 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                       decoration: BoxDecoration(
                         // Glassmorphic background
                         color: isDark
-                            ? AppPalette.surfaceModalDark
+                            ? Theme.of(context)
+                                .cardColor
                                 .withOpacity(_focusNode.hasFocus ? 1.0 : 0.95)
-                            : AppPalette.neutralWhite
+                            : Theme.of(context)
+                                .cardColor
                                 .withOpacity(_focusNode.hasFocus ? 1.0 : 0.95),
                         borderRadius: BorderRadius.circular(28),
                         border: Border.all(
@@ -663,10 +668,10 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                                     : AppStrings.chat.inputPlaceholderGeneral,
                                 hintStyle: AppTypography.inputLarge.copyWith(
                                   color: isLimitReached
-                                      ? AppPalette.neutralGrey
+                                      ? Theme.of(context).hintColor
                                       : (isDark
-                                          ? AppPalette.textSubtleLight
-                                          : AppPalette.neutralGrey),
+                                          ? Theme.of(context).hintColor
+                                          : Theme.of(context).hintColor),
                                   fontWeight: FontWeight.w500,
                                 ),
                                 border: InputBorder.none,
@@ -686,8 +691,12 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                                 color: isLimitReached
                                     ? Colors.grey
                                     : (isDark
-                                        ? AppPalette.neutralWhite
-                                        : Colors.black),
+                                        ? Theme.of(context)
+                                            .colorScheme
+                                            .onSurface
+                                        : Theme.of(context)
+                                            .colorScheme
+                                            .onSurface),
                               ),
                             ),
                           ),
@@ -708,8 +717,12 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                                     gradient: _isRecording
                                         ? LinearGradient(
                                             colors: [
-                                              AppPalette.expenseRed,
-                                              AppPalette.expenseRed
+                                              Theme.of(context)
+                                                  .colorScheme
+                                                  .error,
+                                              Theme.of(context)
+                                                  .colorScheme
+                                                  .error
                                             ],
                                             begin: Alignment.topLeft,
                                             end: Alignment.bottomRight,
@@ -718,19 +731,23 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                                     color: _isRecording
                                         ? null
                                         : (isDark
-                                            ? AppPalette.surfaceCardVariantDark
-                                            : AppPalette.dividerLight),
+                                            ? Theme.of(context).canvasColor
+                                            : Theme.of(context).dividerColor),
                                     shape: BoxShape.circle,
                                     boxShadow: _isRecording
                                         ? [
                                             BoxShadow(
-                                              color: AppPalette.expenseRed
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .error
                                                   .withOpacity(0.4),
                                               blurRadius: 16,
                                               offset: const Offset(0, 4),
                                             ),
                                             BoxShadow(
-                                              color: AppPalette.expenseRed
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .error
                                                   .withOpacity(0.2),
                                               blurRadius: 8,
                                               spreadRadius: 2,
@@ -780,8 +797,8 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                                   color: (_hasContent && !isLimitReached)
                                       ? null
                                       : (isDark
-                                          ? AppPalette.surfaceCardVariantDark
-                                          : AppPalette.dividerLight),
+                                          ? Theme.of(context).canvasColor
+                                          : Theme.of(context).dividerColor),
                                   shape: BoxShape.circle,
                                   boxShadow: (_hasContent && !isLimitReached)
                                       ? [
@@ -803,10 +820,8 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                                 child: Icon(
                                   Icons.arrow_upward_rounded,
                                   color: (_hasContent && !isLimitReached)
-                                      ? AppPalette.neutralWhite
-                                      : (isDark
-                                          ? AppPalette.neutralGrey
-                                          : AppPalette.neutralGrey),
+                                      ? Theme.of(context).colorScheme.onPrimary
+                                      : Theme.of(context).hintColor,
                                   size: 24,
                                 ),
                               ),

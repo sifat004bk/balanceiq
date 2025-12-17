@@ -8,6 +8,7 @@ import '../../../../core/constants/design_constants.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/tour/tour.dart';
+import '../../../../core/utils/snackbar_utils.dart';
 import '../../../subscription/domain/entities/subscription_status.dart';
 import '../../../subscription/presentation/cubit/subscription_cubit.dart';
 import '../../../subscription/presentation/cubit/subscription_state.dart';
@@ -233,16 +234,7 @@ class _ProfilePageState extends State<ProfilePage> {
               if (state is AuthUnauthenticated) {
                 Navigator.of(context).pushReplacementNamed('/login');
               } else if (state is AuthError) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(state.message),
-                    backgroundColor: Theme.of(context).colorScheme.error,
-                    behavior: SnackBarBehavior.floating,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                );
+                SnackbarUtils.showError(context, state.message);
               }
             },
           ),
@@ -366,11 +358,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       title: 'Account Details',
                       onTap: () {
                         // TODO: Navigate to account details
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content: Text(
-                                  '${AppStrings.profile.accountDetails} ${AppStrings.common.comingSoon}')),
-                        );
+                        SnackbarUtils.showComingSoon(context, AppStrings.profile.accountDetails);
                       },
                     ),
                     const SizedBox(height: 12),
@@ -389,11 +377,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       title: 'Notifications',
                       onTap: () {
                         // TODO: Navigate to notifications
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content: Text(
-                                  '${AppStrings.profile.notifications} ${AppStrings.common.comingSoon}')),
-                        );
+                        SnackbarUtils.showComingSoon(context, AppStrings.profile.notifications);
                       },
                     ),
                     const SizedBox(height: 12),
@@ -403,11 +387,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       title: 'Appearance',
                       onTap: () {
                         // TODO: Navigate to appearance settings
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content: Text(
-                                  '${AppStrings.profile.appearance} ${AppStrings.common.comingSoon}')),
-                        );
+                        SnackbarUtils.showComingSoon(context, AppStrings.profile.appearance);
                       },
                     ),
                     const SizedBox(height: 12),
@@ -417,11 +397,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       title: 'Help Center',
                       onTap: () {
                         // TODO: Navigate to help center
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content: Text(
-                                  '${AppStrings.profile.helpCenter} ${AppStrings.common.comingSoon}')),
-                        );
+                        SnackbarUtils.showComingSoon(context, AppStrings.profile.helpCenter);
                       },
                     ),
                     const SizedBox(height: 40),
@@ -472,29 +448,9 @@ class _ProfilePageState extends State<ProfilePage> {
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is VerificationEmailSent) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('${AppStrings.auth.emailSent} ${state.email}'),
-              backgroundColor: Colors.green,
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.circular(DesignConstants.radiusMedium),
-              ),
-            ),
-          );
+          SnackbarUtils.showSuccess(context, '${AppStrings.auth.emailSent} ${state.email}');
         } else if (state is VerificationEmailError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: Theme.of(context).colorScheme.error,
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.circular(DesignConstants.radiusMedium),
-              ),
-            ),
-          );
+          SnackbarUtils.showError(context, state.message);
         }
       },
       builder: (context, state) {

@@ -4,6 +4,7 @@ import 'package:balance_iq/core/constants/app_strings.dart';
 
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/theme/app_typography.dart';
+import '../../../../core/utils/snackbar_utils.dart';
 import '../../domain/entities/subscription.dart';
 import '../cubit/subscription_cubit.dart';
 import '../cubit/subscription_state.dart';
@@ -513,12 +514,7 @@ class _ManageSubscriptionView extends StatelessWidget {
                   onPressed: () {
                     Navigator.pop(context);
                     // TODO: Implement cancel subscription API call
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                            '${AppStrings.subscription.cancelSubscription} ${AppStrings.common.comingSoon}'),
-                      ),
-                    );
+                    SnackbarUtils.showComingSoon(context, AppStrings.subscription.cancelSubscription);
                   },
                   child: const Text(
                     'Cancel Subscription',

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:balance_iq/core/constants/app_strings.dart';
-import 'package:balance_iq/core/theme/app_palette.dart';
+
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:markdown/markdown.dart' as md;
 import '../../../domain/entities/chart_data.dart' as charts;
@@ -47,7 +47,7 @@ class GenUIChartBuilder extends MarkdownElementBuilder {
 
       if (graphType == null) {
         return Text(AppStrings.chat.errorMissingChartType,
-            style: TextStyle(color: AppPalette.expenseRed));
+            style: TextStyle(color: Theme.of(context).colorScheme.error));
       }
 
       return GenUIAnimatedWrapper(
@@ -60,7 +60,7 @@ class GenUIChartBuilder extends MarkdownElementBuilder {
       );
     } catch (e) {
       return Text(AppStrings.chat.errorRenderingChart(e.toString()),
-          style: TextStyle(color: AppPalette.expenseRed));
+          style: TextStyle(color: Theme.of(context).colorScheme.error));
     }
   }
 }
@@ -87,7 +87,7 @@ class GenUITableBuilder extends MarkdownElementBuilder {
     } catch (e) {
       // Fallback for potential legacy format or errors
       return Text(AppStrings.chat.errorRenderingTable(e.toString()),
-          style: TextStyle(color: AppPalette.expenseRed));
+          style: TextStyle(color: Theme.of(context).colorScheme.error));
     }
   }
 }
@@ -109,7 +109,7 @@ class GenUISummaryCardBuilder extends MarkdownElementBuilder {
       );
     } catch (e) {
       return Text(AppStrings.chat.errorRenderingSummary(e.toString()),
-          style: TextStyle(color: AppPalette.expenseRed));
+          style: TextStyle(color: Theme.of(context).colorScheme.error));
     }
   }
 }
@@ -131,7 +131,7 @@ class GenUIActionListBuilder extends MarkdownElementBuilder {
       );
     } catch (e) {
       return Text(AppStrings.chat.errorRenderingActionList(e.toString()),
-          style: TextStyle(color: AppPalette.expenseRed));
+          style: TextStyle(color: Theme.of(context).colorScheme.error));
     }
   }
 }
@@ -153,7 +153,7 @@ class GenUIMetricCardBuilder extends MarkdownElementBuilder {
       );
     } catch (e) {
       return Text(AppStrings.chat.errorRenderingMetric(e.toString()),
-          style: TextStyle(color: AppPalette.expenseRed));
+          style: TextStyle(color: Theme.of(context).colorScheme.error));
     }
   }
 }
@@ -175,7 +175,7 @@ class GenUIProgressBuilder extends MarkdownElementBuilder {
       );
     } catch (e) {
       return Text(AppStrings.chat.errorRenderingProgress(e.toString()),
-          style: TextStyle(color: AppPalette.expenseRed));
+          style: TextStyle(color: Theme.of(context).colorScheme.error));
     }
   }
 }
@@ -197,7 +197,7 @@ class GenUIActionButtonsBuilder extends MarkdownElementBuilder {
       );
     } catch (e) {
       return Text(AppStrings.chat.errorRenderingActionButtons(e.toString()),
-          style: TextStyle(color: AppPalette.expenseRed));
+          style: TextStyle(color: Theme.of(context).colorScheme.error));
     }
   }
 }
@@ -219,7 +219,7 @@ class GenUIStatsBuilder extends MarkdownElementBuilder {
       );
     } catch (e) {
       return Text(AppStrings.chat.errorRenderingStats(e.toString()),
-          style: TextStyle(color: AppPalette.expenseRed));
+          style: TextStyle(color: Theme.of(context).colorScheme.error));
     }
   }
 }
@@ -241,7 +241,7 @@ class GenUIInsightCardBuilder extends MarkdownElementBuilder {
       );
     } catch (e) {
       return Text(AppStrings.chat.errorRenderingInsight(e.toString()),
-          style: TextStyle(color: AppPalette.expenseRed));
+          style: TextStyle(color: Theme.of(context).colorScheme.error));
     }
   }
 }

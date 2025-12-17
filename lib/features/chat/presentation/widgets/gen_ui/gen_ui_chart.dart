@@ -1,7 +1,5 @@
-import 'package:balance_iq/core/theme/app_palette.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import '../../../../../core/constants/gemini_colors.dart';
+import 'package:fl_chart/fl_chart.dart';
 import '../../../domain/entities/chart_data.dart';
 
 class GenUIChart extends StatelessWidget {
@@ -26,7 +24,7 @@ class GenUIChart extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: GeminiColors.divider(context)),
+        border: Border.all(color: Theme.of(context).dividerColor),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -83,7 +81,7 @@ class GenUIChart extends StatelessWidget {
                   return BarTooltipItem(
                     rod.toY.toString(),
                     TextStyle(
-                      color: GeminiColors.aiMessageText(context),
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontWeight: FontWeight.bold,
                     ),
                   );
@@ -103,7 +101,8 @@ class GenUIChart extends StatelessWidget {
                           labels[value.toInt()],
                           style: TextStyle(
                             fontSize: 10,
-                            color: GeminiColors.textSecondary(context),
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -125,7 +124,7 @@ class GenUIChart extends StatelessWidget {
               drawVerticalLine: false,
               horizontalInterval: _getMaxValue() / 4,
               getDrawingHorizontalLine: (value) => FlLine(
-                color: GeminiColors.divider(context).withOpacity(0.5),
+                color: Theme.of(context).dividerColor.withOpacity(0.5),
                 strokeWidth: 1,
                 dashArray: [5, 5],
               ),
@@ -136,7 +135,7 @@ class GenUIChart extends StatelessWidget {
 
               final val = dataset.data[index].toDouble();
               final animatedValue = val * animationValue;
-              final color = GeminiColors.primaryColor(context);
+              final color = Theme.of(context).colorScheme.primary;
 
               return BarChartGroupData(
                 x: index,
@@ -154,7 +153,7 @@ class GenUIChart extends StatelessWidget {
                     backDrawRodData: BackgroundBarChartRodData(
                       show: true,
                       toY: _getMaxValue() * 1.2,
-                      color: GeminiColors.divider(context).withOpacity(0.2),
+                      color: Theme.of(context).dividerColor.withOpacity(0.2),
                     ),
                   ),
                 ],
@@ -176,7 +175,7 @@ class GenUIChart extends StatelessWidget {
       return FlSpot(index.toDouble(), dataset.data[index].toDouble());
     });
 
-    final primaryColor = GeminiColors.primaryColor(context);
+    final primaryColor = Theme.of(context).colorScheme.primary;
 
     return LineChart(
       LineChartData(
@@ -185,7 +184,7 @@ class GenUIChart extends StatelessWidget {
           drawVerticalLine: false,
           horizontalInterval: _getMaxValue() / 4,
           getDrawingHorizontalLine: (value) => FlLine(
-            color: GeminiColors.divider(context).withOpacity(0.5),
+            color: Theme.of(context).dividerColor.withOpacity(0.5),
             strokeWidth: 1,
             dashArray: [5, 5],
           ),
@@ -202,7 +201,7 @@ class GenUIChart extends StatelessWidget {
                       labels[value.toInt()],
                       style: TextStyle(
                         fontSize: 10,
-                        color: GeminiColors.textSecondary(context),
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -260,7 +259,7 @@ class GenUIChart extends StatelessWidget {
                 return LineTooltipItem(
                   spot.y.toString(),
                   TextStyle(
-                    color: GeminiColors.aiMessageText(context),
+                    color: Theme.of(context).colorScheme.onSurface,
                     fontWeight: FontWeight.bold,
                   ),
                 );

@@ -3,6 +3,8 @@ import 'package:balance_iq/core/constants/app_strings.dart';
 import 'package:balance_iq/core/widgets/glass_presets.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/theme/app_palette.dart';
+
 class BalanceCard extends StatelessWidget {
   final double netBalance;
   final double totalIncome;
@@ -107,9 +109,8 @@ class BalanceCard extends StatelessWidget {
   }) {
     final textTheme = Theme.of(context).textTheme;
     final iconColor = isIncome
-        ? Colors
-            .green // Keeping semantic colors for Income/Expense as they are domain-specific
-        : Theme.of(context).colorScheme.error;
+        ? AppPalette.incomeGreen
+        : AppPalette.expenseRed;
 
     return ThemedGlass.container(
       context: context,

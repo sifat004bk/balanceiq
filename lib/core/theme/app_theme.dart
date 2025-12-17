@@ -95,13 +95,13 @@ class AppTheme {
       brightness: Brightness.dark,
 
       // Core Palette
-      primaryColor: AppPalette.fuchsia,
+      primaryColor: AppPalette.cyan,
       scaffoldBackgroundColor: AppPalette.deepSpace,
       // Nebula Glass
 
       // Color Scheme
       colorScheme: ColorScheme.dark(
-        primary: AppPalette.fuchsia,
+        primary: AppPalette.cyan,
         onPrimary: AppPalette.neutralWhite,
         secondary: AppPalette.cyan,
         onSecondary: AppPalette.neutralWhite,

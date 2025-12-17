@@ -14,10 +14,10 @@ class AppPalette {
   static final Color sparkOrange = const Color(0xFFFF6F00); // #FF6F00
 
   /// Income Green: Growth, Success.
-  static final Color incomeGreen = const Color(0xFF00C853); // #00C853
+  static final Color incomeGreen = cyan; // #00C853
 
   /// Expense Red: Errors, Debt.
-  static final Color expenseRed = const Color(0xFFD32F2F); // #D32F2F
+  static final Color expenseRed = fuchsia; // #D32F2F
 
   /// Surfaces (Light/Dark)
   static final Color surfaceLight = const Color(0xFFFAFBFC); // #FAFBFC

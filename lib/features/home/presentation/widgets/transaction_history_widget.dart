@@ -1,4 +1,5 @@
 import 'package:balance_iq/core/constants/app_strings.dart';
+import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:balance_iq/core/theme/app_theme.dart';
 import 'package:balance_iq/features/home/domain/entities/transaction.dart';
 import 'package:balance_iq/features/home/presentation/cubit/transactions_cubit.dart';
@@ -148,13 +149,13 @@ class TransactionHistoryWidget extends StatelessWidget {
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   color: isIncome
-                      ? Colors.green.withValues(alpha: 0.1)
-                      : Colors.red.withValues(alpha: 0.1),
+                      ? AppPalette.incomeGreen.withValues(alpha: 0.1)
+                      : AppPalette.expenseRed.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(
                   isIncome ? Icons.arrow_downward : Icons.arrow_upward,
-                  color: isIncome ? Colors.green : Colors.red,
+                  color: isIncome ? AppPalette.incomeGreen : AppPalette.expenseRed,
                   size: 20,
                 ),
               ),
@@ -193,7 +194,7 @@ class TransactionHistoryWidget extends StatelessWidget {
                     '${isIncome ? '+' : '-'} ${transaction.formattedAmount}',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: isIncome ? Colors.green : Colors.red,
+                      color: isIncome ? AppPalette.incomeGreen : AppPalette.expenseRed,
                         ),
                   ),
                   const SizedBox(width: 4),

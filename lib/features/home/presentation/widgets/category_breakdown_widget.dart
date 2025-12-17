@@ -1,5 +1,8 @@
 import 'dart:ui';
+
 import 'package:balance_iq/core/constants/app_strings.dart';
+import 'package:balance_iq/core/currency/currency_cubit.dart';
+import 'package:balance_iq/core/di/injection_container.dart';
 import 'package:balance_iq/features/home/presentation/pages/transactions_page.dart';
 import 'package:flutter/material.dart';
 
@@ -239,7 +242,7 @@ class CategoryBreakdownWidget extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'BDT ${amount.abs().toStringAsFixed(0)}',
+                      sl<CurrencyCubit>().formatAmount(amount.abs()),
                       style: textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w800,
                         fontSize: 16,

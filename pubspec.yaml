@@ -81,6 +81,7 @@ dependencies:
   tutorial_coach_mark: ^1.2.11
   url_launcher: ^6.2.5
   flutter_animate: ^4.5.2
+  currency_picker: ^2.0.21
 
 dev_dependencies:
   flutter_test:

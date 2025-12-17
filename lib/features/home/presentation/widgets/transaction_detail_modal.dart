@@ -1,4 +1,6 @@
 import 'package:balance_iq/core/constants/app_strings.dart';
+import 'package:balance_iq/core/currency/currency_cubit.dart';
+import 'package:balance_iq/core/di/injection_container.dart';
 import 'package:balance_iq/features/home/domain/entities/transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -458,7 +460,7 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '${isIncome ? '+' : '-'} ${transaction.formattedAmount}',
+                  sl<CurrencyCubit>().formatAmountWithSign(transaction.amount, isIncome: isIncome),
                   style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: isIncome ? Colors.green : Colors.red,
@@ -599,7 +601,7 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
               decoration: InputDecoration(
-                prefixText: '৳ ',
+                prefixText: '${sl<CurrencyCubit>().symbol} ',
                 prefixStyle: TextStyle(
                   color: _selectedType == 'INCOME' ? Colors.green : Colors.red,
                   fontWeight: FontWeight.bold,

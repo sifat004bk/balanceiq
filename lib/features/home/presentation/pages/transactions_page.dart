@@ -1,4 +1,5 @@
 import 'package:balance_iq/core/constants/app_strings.dart';
+import 'package:balance_iq/core/currency/currency_cubit.dart';
 import 'package:balance_iq/core/di/injection_container.dart';
 
 import 'package:balance_iq/features/home/domain/entities/transaction.dart';
@@ -411,7 +412,7 @@ class _TransactionsViewState extends State<TransactionsView> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        '${isIncome ? '+' : '-'} ${transaction.formattedAmount}',
+                        sl<CurrencyCubit>().formatAmountWithSign(transaction.amount, isIncome: isIncome),
                         style:
                             Theme.of(context).textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.bold,

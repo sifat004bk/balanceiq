@@ -1,4 +1,5 @@
 import 'package:balance_iq/core/constants/app_strings.dart';
+import 'package:balance_iq/core/currency/currency_cubit.dart';
 import 'package:balance_iq/core/di/injection_container.dart';
 import 'package:balance_iq/core/tour/tour.dart';
 import 'package:balance_iq/features/auth/data/datasources/auth_local_datasource.dart';
@@ -301,7 +302,11 @@ class _DashboardViewState extends State<DashboardView> {
       },
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        body: BlocConsumer<DashboardCubit, DashboardState>(
+        body: BlocBuilder<CurrencyCubit, CurrencyState>(
+          bloc: sl<CurrencyCubit>(),
+          builder: (context, currencyState) {
+            // This BlocBuilder ensures widgets rebuild when currency changes
+            return BlocConsumer<DashboardCubit, DashboardState>(
           listener: (context, state) {
             if (state is DashboardLoaded && !_tourCheckDone) {
               _tourCheckDone = true;
@@ -589,7 +594,9 @@ class _DashboardViewState extends State<DashboardView> {
 
             return const SizedBox.shrink();
           },
-        ),
+        );  // End BlocConsumer
+          },
+        ),  // End BlocBuilder for CurrencyCubit
       ),
     );
   }

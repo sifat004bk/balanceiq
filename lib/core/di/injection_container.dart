@@ -73,6 +73,7 @@ import '../network/logging_interceptor.dart';
 import '../network/auth_interceptor.dart';
 import '../theme/theme_cubit.dart';
 import '../tour/tour.dart';
+import '../currency/currency_cubit.dart';
 
 final sl = GetIt.instance;
 
@@ -120,6 +121,9 @@ Future<void> init() async {
 
   //! Core - Theme
   sl.registerFactory(() => ThemeCubit(sl()));
+
+  //! Core - Currency
+  sl.registerLazySingleton(() => CurrencyCubit());
 
   //! Core - Product Tour
   sl.registerLazySingleton(

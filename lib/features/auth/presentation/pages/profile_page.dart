@@ -1,4 +1,5 @@
 import 'package:balance_iq/core/tour/tour_content_widgets.dart';
+import 'package:currency_picker/currency_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
@@ -6,6 +7,7 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import '../../../../core/constants/design_constants.dart';
 import '../../../../core/constants/app_strings.dart';
+import '../../../../core/currency/currency_cubit.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/tour/tour.dart';
 import '../../../../core/utils/snackbar_utils.dart';
@@ -388,6 +390,55 @@ class _ProfilePageState extends State<ProfilePage> {
                       onTap: () {
                         // TODO: Navigate to appearance settings
                         SnackbarUtils.showComingSoon(context, AppStrings.profile.appearance);
+                      },
+                    ),
+                    const SizedBox(height: 12),
+                    // Currency Selector
+                    BlocBuilder<CurrencyCubit, CurrencyState>(
+                      bloc: sl<CurrencyCubit>(),
+                      builder: (context, currencyState) {
+                        return _buildMenuItem(
+                          context,
+                          icon: Icons.currency_exchange_outlined,
+                          title: AppStrings.profile.currency,
+                          subtitle: '${currencyState.currencySymbol} ${currencyState.currencyName}',
+                          onTap: () {
+                            showCurrencyPicker(
+                              context: context,
+                              theme: CurrencyPickerThemeData(
+                                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                                titleTextStyle: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 18,
+                                  color: Theme.of(context).colorScheme.onSurface,
+                                ),
+                                subtitleTextStyle: TextStyle(
+                                  fontSize: 14,
+                                  color: Theme.of(context).hintColor,
+                                ),
+                                flagSize: 28,
+                                inputDecoration: InputDecoration(
+                                  hintText: 'Search currency',
+                                  prefixIcon: const Icon(Icons.search),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                              ),
+                              showFlag: true,
+                              showCurrencyName: true,
+                              showCurrencyCode: true,
+                              onSelect: (Currency currency) {
+                                sl<CurrencyCubit>().setCurrency(currency);
+                                SnackbarUtils.showSuccess(
+                                  context,
+                                  'Currency changed to ${currency.symbol} ${currency.name}',
+                                );
+                              },
+                              favorite: ['BDT', 'USD', 'EUR', 'GBP', 'INR'],
+                            );
+                          },
+                        );
                       },
                     ),
                     const SizedBox(height: 12),
@@ -1099,6 +1150,7 @@ class _ProfilePageState extends State<ProfilePage> {
     required IconData icon,
     required String title,
     required VoidCallback onTap,
+    String? subtitle,
   }) {
     return InkWell(
       onTap: onTap,
@@ -1130,13 +1182,28 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             const SizedBox(width: 16),
             Expanded(
-              child: Text(
-                title,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
+                  ),
+                  if (subtitle != null) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      subtitle,
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Theme.of(context).hintColor,
+                      ),
+                    ),
+                  ],
+                ],
               ),
             ),
             Icon(

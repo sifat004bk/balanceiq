@@ -1,5 +1,6 @@
-import 'dart:ui';
 import 'package:balance_iq/core/constants/app_strings.dart';
+import 'package:balance_iq/core/currency/currency_cubit.dart';
+import 'package:balance_iq/core/di/injection_container.dart';
 import 'package:balance_iq/core/widgets/glass_presets.dart';
 import 'package:flutter/material.dart';
 
@@ -22,6 +23,8 @@ class BalanceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final currencyCubit = sl<CurrencyCubit>();
+    
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
@@ -56,7 +59,7 @@ class BalanceCard extends StatelessWidget {
                     ]).createShader(bounds);
                   },
                   child: Text(
-                    '\$${_formatCurrency(netBalance)}',
+                    currencyCubit.formatCompact(netBalance),
                     style: textTheme.displayLarge?.copyWith(
                       fontSize: 48,
                       fontWeight: FontWeight.w900,
@@ -77,6 +80,7 @@ class BalanceCard extends StatelessWidget {
               Expanded(
                 child: _buildIncomeExpenseCard(
                   context,
+                  currencyCubit: currencyCubit,
                   icon: Icons.arrow_downward_rounded,
                   label: AppStrings.dashboard.totalIncome,
                   amount: totalIncome,
@@ -87,6 +91,7 @@ class BalanceCard extends StatelessWidget {
               Expanded(
                 child: _buildIncomeExpenseCard(
                   context,
+                  currencyCubit: currencyCubit,
                   icon: Icons.arrow_upward_rounded,
                   label: AppStrings.dashboard.totalExpense,
                   amount: totalExpense,
@@ -102,6 +107,7 @@ class BalanceCard extends StatelessWidget {
 
   Widget _buildIncomeExpenseCard(
     BuildContext context, {
+    required CurrencyCubit currencyCubit,
     required IconData icon,
     required String label,
     required double amount,
@@ -158,7 +164,7 @@ class BalanceCard extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            '\$${_formatCurrency(amount)}',
+            currencyCubit.formatCompact(amount),
             style: textTheme.titleLarge?.copyWith(
               fontSize: 22,
               fontWeight: FontWeight.w800,
@@ -168,14 +174,5 @@ class BalanceCard extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  String _formatCurrency(double amount) {
-    if (amount >= 1000000) {
-      return '${(amount / 1000000).toStringAsFixed(2)}M';
-    } else if (amount >= 1000) {
-      return '${(amount / 1000).toStringAsFixed(2)}K';
-    }
-    return amount.toStringAsFixed(2);
   }
 }

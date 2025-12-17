@@ -1,4 +1,6 @@
 import 'package:balance_iq/core/constants/app_strings.dart';
+import 'package:balance_iq/core/currency/currency_cubit.dart';
+import 'package:balance_iq/core/di/injection_container.dart';
 import 'package:balance_iq/features/home/domain/entities/dashbaord_summary.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -130,9 +132,10 @@ class SpendingTrendChart extends StatelessWidget {
                       vertical: 8,
                     ),
                     getTooltipItems: (touchedSpots) {
+                      final currencyCubit = sl<CurrencyCubit>();
                       return touchedSpots.map((spot) {
                         return LineTooltipItem(
-                          'Day ${spot.x.toInt()}\n\$${spot.y.toStringAsFixed(2)}',
+                          'Day ${spot.x.toInt()}\n${currencyCubit.formatAmount(spot.y)}',
                           TextStyle(
                             color: Theme.of(context).colorScheme.onPrimary,
                             fontWeight: FontWeight.bold,

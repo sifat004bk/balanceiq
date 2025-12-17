@@ -14,7 +14,7 @@ import '../widgets/chat_shimmer.dart';
 import '../widgets/floating_chat_input.dart';
 import '../widgets/message_list.dart';
 import '../widgets/suggested_prompts.dart';
-import '../widgets/token_usage_button.dart';
+import '../widgets/message_usage_button.dart';
 
 class ChatPage extends StatelessWidget {
   final String botId;
@@ -230,7 +230,7 @@ class _ChatViewState extends State<ChatView> {
         onButtonPressed =
             () => Navigator.pushNamed(context, '/manage-subscription');
         break;
-      case ChatErrorType.tokenLimitExceeded:
+      case ChatErrorType.messageLimitExceeded:
         title = AppStrings.chat.messageLimitExceeded;
         description = state.message.isNotEmpty
             ? state.message
@@ -443,7 +443,7 @@ class _ChatViewState extends State<ChatView> {
                 const Positioned(
                   top: 8,
                   right: 8,
-                  child: TokenUsageButton(),
+                  child: MessageUsageButton(),
                 ),
 
                 // Layer 2.5: Backend Blur (Spotlight Mode)

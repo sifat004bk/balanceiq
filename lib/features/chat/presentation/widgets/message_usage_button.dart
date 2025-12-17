@@ -5,28 +5,29 @@ import '../../../../core/constants/app_constants.dart';
 
 import '../cubit/chat_cubit.dart';
 import '../cubit/chat_state.dart';
-import 'token_usage_sheet.dart';
+import 'message_usage_sheet.dart';
 
-/// Floating button that displays current token usage
+/// Floating button that displays current message usage
+/// Shows "X/Y" format (e.g., "3/10" for 3 messages used of 10 daily limit)
 /// Positioned in the top right corner of the chat page
-class TokenUsageButton extends StatelessWidget {
-  const TokenUsageButton({super.key});
+class MessageUsageButton extends StatelessWidget {
+  const MessageUsageButton({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ChatCubit, ChatState>(
       builder: (context, state) {
-        int currentUsage = 0;
-        int limit = AppConstants.tokenLimitPer12Hours;
+        int messagesUsed = 0;
+        int limit = AppConstants.dailyMessageLimit;
 
         if (state is ChatLoaded) {
-          currentUsage = state.currentTokenUsage;
-          limit = state.dailyTokenLimit;
+          messagesUsed = state.messagesUsedToday;
+          limit = state.dailyMessageLimit;
         }
 
         final percentage =
-            limit > 0 ? (currentUsage / limit).clamp(0.0, 1.0) : 0.0;
-        final isNearLimit = percentage > 0.9;
+            limit > 0 ? (messagesUsed / limit).clamp(0.0, 1.0) : 0.0;
+        final isNearLimit = percentage > 0.8;
         final isLimitReached = percentage >= 1.0;
 
         // Determine colors based on usage
@@ -47,7 +48,7 @@ class TokenUsageButton extends StatelessWidget {
         }
 
         return GestureDetector(
-          onTap: () => _showTokenUsageSheet(context),
+          onTap: () => _showMessageUsageSheet(context),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
@@ -85,7 +86,7 @@ class TokenUsageButton extends StatelessWidget {
                       Icon(
                         isLimitReached
                             ? Icons.warning_rounded
-                            : Icons.token_outlined,
+                            : Icons.chat_bubble_outline,
                         size: 12,
                         color: progressColor,
                       ),
@@ -93,9 +94,9 @@ class TokenUsageButton extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 8),
-                // Token count text
+                // Message count text (e.g., "3/10")
                 Text(
-                  _formatTokenCount(currentUsage),
+                  '$messagesUsed/$limit',
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
@@ -110,26 +111,14 @@ class TokenUsageButton extends StatelessWidget {
     );
   }
 
-  /// Formats token count for display (e.g., 1.5K, 35K)
-  String _formatTokenCount(int count) {
-    if (count >= 1000) {
-      final kValue = count / 1000;
-      if (kValue == kValue.truncateToDouble()) {
-        return '${kValue.toInt()}K';
-      }
-      return '${kValue.toStringAsFixed(1)}K';
-    }
-    return count.toString();
-  }
-
-  void _showTokenUsageSheet(BuildContext context) {
+  void _showMessageUsageSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       builder: (sheetContext) => BlocProvider.value(
         value: context.read<ChatCubit>(),
-        child: const TokenUsageSheet(),
+        child: const MessageUsageSheet(),
       ),
     );
   }

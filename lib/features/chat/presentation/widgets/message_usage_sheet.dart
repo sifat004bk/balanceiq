@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/constants/app_constants.dart';
-import '../../domain/entities/token_usage.dart';
+import '../../domain/entities/message_usage.dart';
 import '../cubit/chat_cubit.dart';
 import '../cubit/chat_state.dart';
 
-/// Bottom sheet displaying detailed token usage information
-class TokenUsageSheet extends StatelessWidget {
-  const TokenUsageSheet({super.key});
+/// Bottom sheet displaying detailed message usage information
+class MessageUsageSheet extends StatelessWidget {
+  const MessageUsageSheet({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,19 +20,19 @@ class TokenUsageSheet extends StatelessWidget {
       ),
       child: BlocBuilder<ChatCubit, ChatState>(
         builder: (context, state) {
-          int currentUsage = 0;
-          int limit = AppConstants.tokenLimitPer12Hours;
-          TokenUsage? tokenUsage;
+          int messagesUsed = 0;
+          int limit = AppConstants.dailyMessageLimit;
+          MessageUsage? messageUsage;
 
           if (state is ChatLoaded) {
-            currentUsage = state.currentTokenUsage;
-            limit = state.dailyTokenLimit;
-            tokenUsage = state.tokenUsage;
+            messagesUsed = state.messagesUsedToday;
+            limit = state.dailyMessageLimit;
+            messageUsage = state.messageUsage;
           }
 
           final percentage =
-              limit > 0 ? (currentUsage / limit).clamp(0.0, 1.0) : 0.0;
-          final remainingTokens = (limit - currentUsage).clamp(0, limit);
+              limit > 0 ? (messagesUsed / limit).clamp(0.0, 1.0) : 0.0;
+          final remainingMessages = (limit - messagesUsed).clamp(0, limit);
 
           return SingleChildScrollView(
             child: Padding(
@@ -56,7 +56,7 @@ class TokenUsageSheet extends StatelessWidget {
 
                   // Title
                   Text(
-                    'Token Usage',
+                    'Message Usage',
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -65,7 +65,9 @@ class TokenUsageSheet extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Your usage resets every 12 hours',
+                    messageUsage != null
+                        ? 'Resets on ${messageUsage.formattedResetDateTime}'
+                        : 'Your usage resets daily at midnight UTC',
                     style: TextStyle(
                       fontSize: 14,
                       color: Theme.of(context).hintColor,
@@ -76,39 +78,21 @@ class TokenUsageSheet extends StatelessWidget {
                   // Usage Progress Card
                   _buildUsageProgressCard(
                     context,
-                    currentUsage: currentUsage,
+                    messagesUsed: messagesUsed,
                     limit: limit,
                     percentage: percentage,
-                    remainingTokens: remainingTokens,
+                    remainingMessages: remainingMessages,
                   ),
                   const SizedBox(height: 24),
 
                   // Stats Row
                   _buildStatsRow(
                     context,
-                    currentUsage: currentUsage,
-                    totalUsage: tokenUsage?.totalUsage ?? 0,
+                    messagesUsed: messagesUsed,
+                    limit: limit,
+                    messageUsage: messageUsage,
                   ),
                   const SizedBox(height: 24),
-
-                  // Recent Activity
-                  if (tokenUsage != null && tokenUsage.history.isNotEmpty) ...[
-                    Text(
-                      'Recent Activity',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    _buildActivityList(
-                      context,
-                      history: tokenUsage.history,
-                    ),
-                  ],
-
-                  const SizedBox(height: 16),
                 ],
               ),
             ),
@@ -120,13 +104,13 @@ class TokenUsageSheet extends StatelessWidget {
 
   Widget _buildUsageProgressCard(
     BuildContext context, {
-    required int currentUsage,
+    required int messagesUsed,
     required int limit,
     required double percentage,
-    required int remainingTokens,
+    required int remainingMessages,
   }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final isNearLimit = percentage > 0.9;
+    final isNearLimit = percentage > 0.8;
     final isLimitReached = percentage >= 1.0;
 
     Color progressColor;
@@ -171,15 +155,15 @@ class TokenUsageSheet extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      '${(percentage * 100).toInt()}%',
+                      '$messagesUsed/$limit',
                       style: TextStyle(
-                        fontSize: 28,
+                        fontSize: 24,
                         fontWeight: FontWeight.bold,
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                     Text(
-                      'used',
+                      'messages',
                       style: TextStyle(
                         fontSize: 12,
                         color: Theme.of(context).hintColor,
@@ -208,7 +192,7 @@ class TokenUsageSheet extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    _formatTokenCount(currentUsage),
+                    '$messagesUsed',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -234,7 +218,7 @@ class TokenUsageSheet extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    _formatTokenCount(limit),
+                    '$limit',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -260,7 +244,7 @@ class TokenUsageSheet extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    _formatTokenCount(remainingTokens),
+                    '$remainingMessages',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -278,17 +262,21 @@ class TokenUsageSheet extends StatelessWidget {
 
   Widget _buildStatsRow(
     BuildContext context, {
-    required int currentUsage,
-    required int totalUsage,
+    required int messagesUsed,
+    required int limit,
+    required MessageUsage? messageUsage,
   }) {
+    final usagePercentage = messageUsage?.usagePercentage ??
+        (limit > 0 ? (messagesUsed / limit * 100) : 0.0);
+
     return Row(
       children: [
         Expanded(
           child: _buildStatCard(
             context,
-            title: 'Today',
-            value: _formatTokenCount(currentUsage),
-            icon: Icons.today_outlined,
+            title: 'Used Today',
+            value: '$messagesUsed',
+            icon: Icons.chat_bubble_outline,
             color: Theme.of(context).colorScheme.primary,
           ),
         ),
@@ -296,9 +284,9 @@ class TokenUsageSheet extends StatelessWidget {
         Expanded(
           child: _buildStatCard(
             context,
-            title: 'Total',
-            value: _formatTokenCount(totalUsage),
-            icon: Icons.analytics_outlined,
+            title: 'Usage',
+            value: '${usagePercentage.toStringAsFixed(0)}%',
+            icon: Icons.pie_chart_outline,
             color: Colors.purple,
           ),
         ),
@@ -362,7 +350,7 @@ class TokenUsageSheet extends StatelessWidget {
 
   Widget _buildActivityList(
     BuildContext context, {
-    required List<TokenUsageHistoryItem> history,
+    required List<RecentMessageItem> recentMessages,
   }) {
     return Container(
       decoration: BoxDecoration(
@@ -372,13 +360,13 @@ class TokenUsageSheet extends StatelessWidget {
       child: ListView.separated(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        itemCount: history.length > 5 ? 5 : history.length,
+        itemCount: recentMessages.length > 5 ? 5 : recentMessages.length,
         separatorBuilder: (context, index) => Divider(
           height: 1,
           color: Theme.of(context).dividerColor,
         ),
         itemBuilder: (context, index) {
-          final item = history[index];
+          final item = recentMessages[index];
           return _buildActivityItem(
             context,
             item: item,
@@ -390,10 +378,10 @@ class TokenUsageSheet extends StatelessWidget {
 
   Widget _buildActivityItem(
     BuildContext context, {
-    required TokenUsageHistoryItem item,
+    required RecentMessageItem item,
   }) {
     // Format action name for display
-    final actionDisplay = _formatActionName(item.action);
+    final actionDisplay = item.formattedActionType;
 
     // Format timestamp to local time
     final localTime = item.timestamp;
@@ -412,7 +400,7 @@ class TokenUsageSheet extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
-              _getActionIcon(item.action),
+              _getActionIcon(item.actionType),
               color: Theme.of(context).colorScheme.primary,
               size: 18,
             ),
@@ -441,55 +429,34 @@ class TokenUsageSheet extends StatelessWidget {
               ],
             ),
           ),
-          Text(
-            '+${_formatTokenCount(item.amount)}',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
+          // Show message icon instead of token count
+          Icon(
+            Icons.check_circle_outline,
+            color: Theme.of(context).colorScheme.primary,
+            size: 18,
           ),
         ],
       ),
     );
   }
 
-  String _formatTokenCount(int count) {
-    if (count >= 1000000) {
-      final mValue = count / 1000000;
-      return '${mValue.toStringAsFixed(1)}M';
-    } else if (count >= 1000) {
-      final kValue = count / 1000;
-      if (kValue == kValue.truncateToDouble()) {
-        return '${kValue.toInt()}K';
-      }
-      return '${kValue.toStringAsFixed(1)}K';
-    }
-    return count.toString();
-  }
-
-  String _formatActionName(String action) {
-    // Convert snake_case or SCREAMING_SNAKE_CASE to Title Case
-    return action
-        .toLowerCase()
-        .split('_')
-        .map((word) =>
-            word.isEmpty ? '' : '${word[0].toUpperCase()}${word.substring(1)}')
-        .join(' ');
-  }
-
   IconData _getActionIcon(String action) {
     final actionLower = action.toLowerCase();
-    if (actionLower.contains('income')) {
+    if (actionLower.contains('income') ||
+        actionLower.contains('record_income')) {
       return Icons.trending_up_rounded;
-    } else if (actionLower.contains('expense')) {
+    } else if (actionLower.contains('expense') ||
+        actionLower.contains('record_expense')) {
       return Icons.trending_down_rounded;
+    } else if (actionLower.contains('search') ||
+        actionLower.contains('transaction')) {
+      return Icons.search_rounded;
     } else if (actionLower.contains('chat') ||
-        actionLower.contains('message')) {
+        actionLower.contains('general')) {
       return Icons.chat_bubble_outline_rounded;
     } else if (actionLower.contains('log')) {
       return Icons.receipt_long_outlined;
     }
-    return Icons.token_outlined;
+    return Icons.chat_bubble_outline;
   }
 }

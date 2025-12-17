@@ -59,10 +59,6 @@ class AppConstants {
   static const int maxImageSize = 10 * 1024 * 1024; // 10 MB
   static const int maxAudioSize = 25 * 1024 * 1024; // 25 MB
 
-  // Feature Limits
-  static const int dailyTokenLimit = 5000;
-
-  // Token Usage Limits (per 12 hours)
-  static const int tokenLimitPer12Hours = 35000;
-  static const Duration tokenLimitResetPeriod = Duration(hours: 12);
+  // Message Usage Limits (per day, resets at 00:00 UTC)
+  static const int dailyMessageLimit = 10;
 }

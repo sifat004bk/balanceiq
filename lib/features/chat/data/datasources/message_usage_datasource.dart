@@ -1,24 +1,24 @@
 import 'package:balance_iq/core/constants/api_endpoints.dart';
-import 'package:balance_iq/features/chat/data/models/token_usage_model.dart';
+import 'package:balance_iq/features/chat/data/models/message_usage_model.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// Token usage API data source
-/// Endpoint: GET /api/finance-guru/v1/token-usage
+/// Message usage API data source
+/// Endpoint: GET /api/finance-guru/v1/usage
 /// Auth: Bearer token
-abstract class TokenUsageDataSource {
-  Future<TokenUsageModel> getTokenUsage();
+abstract class MessageUsageDataSource {
+  Future<MessageUsageModel> getMessageUsage();
 }
 
-/// Implementation of token usage data source
-class TokenUsageDataSourceImpl implements TokenUsageDataSource {
+/// Implementation of message usage data source
+class MessageUsageDataSourceImpl implements MessageUsageDataSource {
   final Dio dio;
   final SharedPreferences sharedPreferences;
 
-  TokenUsageDataSourceImpl(this.dio, this.sharedPreferences);
+  MessageUsageDataSourceImpl(this.dio, this.sharedPreferences);
 
   @override
-  Future<TokenUsageModel> getTokenUsage() async {
+  Future<MessageUsageModel> getMessageUsage() async {
     try {
       // Get auth token
       final token = sharedPreferences.getString('auth_token');
@@ -27,7 +27,7 @@ class TokenUsageDataSourceImpl implements TokenUsageDataSource {
       }
 
       final response = await dio.get<Map<String, dynamic>>(
-        ApiEndpoints.tokenUsage,
+        ApiEndpoints.messageUsage,
         options: Options(
           headers: <String, String>{
             'Content-Type': 'application/json',
@@ -41,10 +41,10 @@ class TokenUsageDataSourceImpl implements TokenUsageDataSource {
       if (response.statusCode == 200) {
         final responseData = response.data;
         if (responseData == null) {
-          throw Exception('No token usage data available');
+          throw Exception('No message usage data available');
         }
 
-        return TokenUsageModel.fromJson(responseData);
+        return MessageUsageModel.fromJson(responseData);
       } else {
         throw Exception('Server error: ${response.statusCode}');
       }
@@ -64,11 +64,11 @@ class TokenUsageDataSourceImpl implements TokenUsageDataSource {
       }
       throw Exception('Network error: ${e.message}');
     } catch (e) {
-      if (e.toString().contains('No token usage data') ||
+      if (e.toString().contains('No message usage data') ||
           e.toString().contains('Authentication required')) {
         rethrow;
       }
-      throw Exception('Failed to load token usage: $e');
+      throw Exception('Failed to load message usage: $e');
     }
   }
 }

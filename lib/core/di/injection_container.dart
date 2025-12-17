@@ -43,15 +43,15 @@ import '../../features/chat/domain/usecases/get_chat_history.dart';
 import '../../features/chat/domain/usecases/get_messages.dart';
 import '../../features/chat/domain/usecases/send_message.dart';
 import '../../features/chat/domain/usecases/update_message.dart';
-import '../../features/chat/domain/usecases/get_token_usage.dart';
+import '../../features/chat/domain/usecases/get_message_usage.dart';
 import '../../features/chat/domain/usecases/submit_feedback.dart';
 import '../../features/chat/presentation/cubit/chat_cubit.dart';
-import '../../features/chat/data/datasources/token_usage_datasource.dart';
-import '../../features/chat/data/datasources/token_usage_mock_datasource.dart';
+import '../../features/chat/data/datasources/message_usage_datasource.dart';
+import '../../features/chat/data/datasources/message_usage_mock_datasource.dart';
 import '../../features/chat/data/datasources/chat_feedback_datasource.dart';
-import '../../features/chat/data/repositories/token_usage_repository_impl.dart';
+import '../../features/chat/data/repositories/message_usage_repository_impl.dart';
 import '../../features/chat/data/repositories/chat_feedback_repository_impl.dart';
-import '../../features/chat/domain/repositories/token_usage_repository.dart';
+import '../../features/chat/domain/repositories/message_usage_repository.dart';
 import '../../features/chat/domain/repositories/chat_feedback_repository.dart';
 // Features - Home (Transaction Search)
 import '../../features/home/data/datasource/remote_datasource/transaction_search_datasource.dart';
@@ -203,7 +203,7 @@ Future<void> init() async {
     () => ChatCubit(
       getMessages: sl(),
       getChatHistory: sl(),
-      getTokenUsage: sl(),
+      getMessageUsage: sl(),
       sendMessage: sl(),
       updateMessage: sl(),
       submitFeedback: sl(),
@@ -314,26 +314,26 @@ Future<void> init() async {
     () => ChatFeedbackDataSourceImpl(sl(), sl()),
   );
 
-  //! Features - Token Usage
+  //! Features - Message Usage
   // Use cases
-  sl.registerLazySingleton(() => GetTokenUsage(sl()));
+  sl.registerLazySingleton(() => GetMessageUsage(sl()));
 
   // Repository
-  sl.registerLazySingleton<TokenUsageRepository>(
-    () => TokenUsageRepositoryImpl(remoteDataSource: sl()),
+  sl.registerLazySingleton<MessageUsageRepository>(
+    () => MessageUsageRepositoryImpl(remoteDataSource: sl()),
   );
 
   // Data sources
-  // Conditionally register mock or real token usage data source
-  sl.registerLazySingleton<TokenUsageDataSource>(
+  // Conditionally register mock or real message usage data source
+  sl.registerLazySingleton<MessageUsageDataSource>(
     () {
       if (AppConstants.isMockMode) {
-        print('🎭 [DI] Registering MOCK TokenUsageDataSource');
-        return TokenUsageMockDataSource();
+        print('🎭 [DI] Registering MOCK MessageUsageDataSource');
+        return MessageUsageMockDataSource();
       } else {
         print(
-            '🌐 [DI] Registering REAL TokenUsageDataSource (Finance Guru API)');
-        return TokenUsageDataSourceImpl(sl(), sl());
+            '🌐 [DI] Registering REAL MessageUsageDataSource (Finance Guru API)');
+        return MessageUsageDataSourceImpl(sl(), sl());
       }
     },
   );

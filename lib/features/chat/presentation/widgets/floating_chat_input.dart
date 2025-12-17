@@ -362,12 +362,12 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
       builder: (context, state) {
         bool isLimitReached = false;
         bool isNearLimit = false;
-        int remainingTokens = 0;
+        int remainingMessages = 0;
 
         if (state is ChatLoaded) {
-          isLimitReached = state.isTokenLimitReached;
-          isNearLimit = state.currentTokenUsage > (state.dailyTokenLimit * 0.9);
-          remainingTokens = state.dailyTokenLimit - state.currentTokenUsage;
+          isLimitReached = state.isMessageLimitReached;
+          isNearLimit = state.messagesUsedToday >= (state.dailyMessageLimit * 0.8);
+          remainingMessages = state.messagesRemaining;
         }
 
         return Container(
@@ -496,7 +496,7 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              AppStrings.chat.nearMessageLimit(remainingTokens),
+                              AppStrings.chat.nearMessageLimit(remainingMessages),
                               style: AppTypography.captionWarning.copyWith(
                                 color:
                                     Theme.of(context).colorScheme.onSecondary,

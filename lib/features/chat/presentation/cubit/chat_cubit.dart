@@ -3,12 +3,12 @@ import 'package:uuid/uuid.dart';
 import 'package:synchronized/synchronized.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../domain/entities/message.dart';
-import '../../domain/entities/token_usage.dart';
+import '../../domain/entities/message_usage.dart';
 import '../../domain/usecases/get_chat_history.dart';
 import '../../domain/usecases/get_messages.dart';
 import '../../domain/usecases/send_message.dart';
 import '../../domain/usecases/update_message.dart';
-import '../../domain/usecases/get_token_usage.dart';
+import '../../domain/usecases/get_message_usage.dart';
 import '../../domain/usecases/submit_feedback.dart';
 import '../../domain/entities/chat_feedback.dart'; // For FeedbackType
 import 'chat_state.dart';
@@ -18,7 +18,7 @@ import '../../../../core/error/failures.dart';
 class ChatCubit extends Cubit<ChatState> {
   final GetMessages getMessages;
   final GetChatHistory getChatHistory;
-  final GetTokenUsage getTokenUsage;
+  final GetMessageUsage getMessageUsage;
   final SendMessage sendMessage;
   final UpdateMessage updateMessage;
   final SubmitFeedback submitFeedback;
@@ -29,12 +29,12 @@ class ChatCubit extends Cubit<ChatState> {
   int _apiPage = 0;
   bool _hasMore = true;
   final Lock _lock = Lock(); // Concurrency control
-  TokenUsage? _cachedTokenUsage; // Cache token usage for state transitions
+  MessageUsage? _cachedMessageUsage; // Cache message usage for state transitions
 
   ChatCubit({
     required this.getMessages,
     required this.getChatHistory,
-    required this.getTokenUsage,
+    required this.getMessageUsage,
     required this.sendMessage,
     required this.updateMessage,
     required this.submitFeedback,
@@ -42,20 +42,20 @@ class ChatCubit extends Cubit<ChatState> {
     required this.uuid,
   }) : super(ChatInitial());
 
-  Future<void> loadTokenUsage() async {
-    final result = await getTokenUsage();
+  Future<void> loadMessageUsage() async {
+    final result = await getMessageUsage();
     result.fold(
       (failure) {},
       (usage) {
-        // Cache the token usage for use when ChatLoaded is emitted
-        _cachedTokenUsage = usage;
+        // Cache the message usage for use when ChatLoaded is emitted
+        _cachedMessageUsage = usage;
 
         // If already in ChatLoaded state, update immediately
         if (state is ChatLoaded) {
           emit((state as ChatLoaded).copyWith(
-            currentTokenUsage: usage.todayUsage,
-            dailyTokenLimit: AppConstants.tokenLimitPer12Hours,
-            tokenUsage: usage,
+            messagesUsedToday: usage.messagesUsedToday,
+            dailyMessageLimit: usage.dailyLimit,
+            messageUsage: usage,
           ));
         }
       },
@@ -71,8 +71,8 @@ class ChatCubit extends Cubit<ChatState> {
 
     emit(ChatLoading());
 
-    // Load token usage first
-    await loadTokenUsage();
+    // Load message usage first
+    await loadMessageUsage();
 
     // Get user ID from SharedPreferences
     final userId = sharedPreferences.getString(AppConstants.keyUserId) ?? '';
@@ -88,8 +88,8 @@ class ChatCubit extends Cubit<ChatState> {
           emit(ChatLoaded(
             messages: cached,
             hasMore: true,
-            currentTokenUsage: _cachedTokenUsage?.todayUsage ?? 0,
-            tokenUsage: _cachedTokenUsage,
+            messagesUsedToday: _cachedMessageUsage?.messagesUsedToday ?? 0,
+            messageUsage: _cachedMessageUsage,
           ));
         }
       },
@@ -128,8 +128,8 @@ class ChatCubit extends Cubit<ChatState> {
               emit(ChatLoaded(
                 messages: messages,
                 hasMore: _hasMore,
-                currentTokenUsage: _cachedTokenUsage?.todayUsage ?? 0,
-                tokenUsage: _cachedTokenUsage,
+                messagesUsedToday: _cachedMessageUsage?.messagesUsedToday ?? 0,
+                messageUsage: _cachedMessageUsage,
               ));
             },
           );
@@ -184,9 +184,9 @@ class ChatCubit extends Cubit<ChatState> {
                 messages: messages,
                 hasMore: _hasMore,
                 isLoadingMore: false,
-                currentTokenUsage: _cachedTokenUsage?.todayUsage ??
-                    currentState.currentTokenUsage,
-                tokenUsage: _cachedTokenUsage ?? currentState.tokenUsage,
+                messagesUsedToday: _cachedMessageUsage?.messagesUsedToday ??
+                    currentState.messagesUsedToday,
+                messageUsage: _cachedMessageUsage ?? currentState.messageUsage,
               ));
             },
           );
@@ -272,8 +272,8 @@ class ChatCubit extends Cubit<ChatState> {
               (messages) {
                 emit(currentState.copyWith(
                     messages: messages, isSending: false));
-                // Update token usage
-                loadTokenUsage();
+                // Update message usage
+                loadMessageUsage();
               },
             );
           }
@@ -292,7 +292,7 @@ class ChatCubit extends Cubit<ChatState> {
       case ChatFailureType.subscriptionExpired:
         return ChatErrorType.subscriptionExpired;
       case ChatFailureType.tokenLimitExceeded:
-        return ChatErrorType.tokenLimitExceeded;
+        return ChatErrorType.messageLimitExceeded;
       case ChatFailureType.rateLimitExceeded:
         return ChatErrorType.rateLimitExceeded;
       case ChatFailureType.general:

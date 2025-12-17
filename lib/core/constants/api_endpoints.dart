@@ -33,7 +33,7 @@ class ApiEndpoints {
   static String get chat => '$financeGuruBaseUrl/chat';
   static String get chatHistory => '$financeGuruBaseUrl/chat-history';
   static String get transactions => '$financeGuruBaseUrl/transactions';
-  static String get tokenUsage => '$financeGuruBaseUrl/token-usage';
+  static String get messageUsage => '$financeGuruBaseUrl/usage';
 
   // Chat feedback endpoint (requires message ID)
   static String chatFeedback(int messageId) =>

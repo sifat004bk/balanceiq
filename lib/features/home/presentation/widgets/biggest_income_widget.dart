@@ -72,7 +72,7 @@ class BiggestIncomeWidget extends StatelessWidget {
             style: textTheme.titleMedium?.copyWith(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: AppPalette.income.withOpacity(0.1),
+              color: AppPalette.income.withOpacity(0.8),
             ),
           ),
         ],

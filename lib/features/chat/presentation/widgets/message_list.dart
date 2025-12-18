@@ -145,7 +145,7 @@ class MessageList extends StatelessWidget {
           ),
 
         // Top Padding
-        const SliverPadding(padding: EdgeInsets.only(top: 16)),
+        SliverPadding(padding: EdgeInsets.only(top: padding?.top ?? 16)),
       ],
     );
   }

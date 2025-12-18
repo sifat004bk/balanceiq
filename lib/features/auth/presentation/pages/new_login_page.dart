@@ -18,6 +18,7 @@ class _NewLoginPageState extends State<NewLoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
+  bool _hasShownErrorMessage = false;
 
   @override
   void dispose() {
@@ -49,8 +50,25 @@ class _NewLoginPageState extends State<NewLoginPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     final args = ModalRoute.of(context)?.settings.arguments;
-    if (args != null && args is String && _emailController.text.isEmpty) {
-      _emailController.text = args;
+
+    // Handle different argument types
+    if (args != null) {
+      if (args is String && _emailController.text.isEmpty) {
+        // Email passed from signup page
+        _emailController.text = args;
+      } else if (args is Map<String, dynamic> && !_hasShownErrorMessage) {
+        // Error message passed from auth interceptor (only show once)
+        final errorMessage = args['errorMessage'] as String?;
+        if (errorMessage != null) {
+          _hasShownErrorMessage = true;
+          // Show error message after frame is built
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) {
+              SnackbarUtils.showError(context, errorMessage);
+            }
+          });
+        }
+      }
     }
   }
 

@@ -19,6 +19,7 @@ class ApiEndpoints {
   // Authentication APIs
   static String get signup => '$authBaseUrl/signup';
   static String get login => '$authBaseUrl/login';
+  static String get googleOAuth => '$authBaseUrl/oauth2/google';
   static String get refreshToken => '$authBaseUrl/refresh-token';
   static String get getProfile => '$authBaseUrl/profile';
   static String get forgotPassword => '$authBaseUrl/forgot-password';

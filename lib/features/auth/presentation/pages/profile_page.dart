@@ -640,25 +640,60 @@ class _ProfilePageState extends State<ProfilePage> {
                     color: colorScheme.primary,
                     width: 3,
                   ),
-                  gradient: LinearGradient(
-                    colors: [
-                      colorScheme.primaryContainer,
-                      colorScheme.secondaryContainer,
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
+                  gradient: user.photoUrl == null || user.photoUrl!.isEmpty
+                      ? LinearGradient(
+                          colors: [
+                            colorScheme.primaryContainer,
+                            colorScheme.secondaryContainer,
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        )
+                      : null,
+                  color: user.photoUrl != null && user.photoUrl!.isNotEmpty
+                      ? colorScheme.surface
+                      : null,
                 ),
-                child: Center(
-                  child: Text(
-                    user.name.isNotEmpty ? user.name[0].toUpperCase() : 'U',
-                    style: TextStyle(
-                      fontSize: 48,
-                      fontWeight: FontWeight.bold,
-                      color: colorScheme.onPrimaryContainer,
-                    ),
-                  ),
-                ),
+                child: user.photoUrl != null && user.photoUrl!.isNotEmpty
+                    ? ClipOval(
+                        child: Image.network(
+                          user.photoUrl!,
+                          width: 114,
+                          height: 114,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Center(
+                              child: Text(
+                                user.name.isNotEmpty ? user.name[0].toUpperCase() : 'U',
+                                style: TextStyle(
+                                  fontSize: 48,
+                                  fontWeight: FontWeight.bold,
+                                  color: colorScheme.onPrimaryContainer,
+                                ),
+                              ),
+                            );
+                          },
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return Center(
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: colorScheme.primary,
+                              ),
+                            );
+                          },
+                        ),
+                      )
+                    : Center(
+                        child: Text(
+                          user.name.isNotEmpty ? user.name[0].toUpperCase() : 'U',
+                          style: TextStyle(
+                            fontSize: 48,
+                            fontWeight: FontWeight.bold,
+                            color: colorScheme.onPrimaryContainer,
+                          ),
+                        ),
+                      ),
               ),
             ),
             if (user.isEmailVerified)

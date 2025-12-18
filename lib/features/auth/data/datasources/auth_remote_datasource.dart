@@ -38,22 +38,93 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   @override
   Future<UserModel> signInWithGoogle() async {
+    GoogleSignInAccount? account;
     try {
-      final GoogleSignInAccount? account = await googleSignIn.signIn();
+      // 1. Trigger Google Sign-In Flow
+      account = await googleSignIn.signIn();
 
       if (account == null) {
         throw Exception('Google sign in was cancelled');
       }
 
-      return UserModel(
-        id: account.id,
-        email: account.email,
-        name: account.displayName ?? 'Unknown',
-        photoUrl: account.photoUrl,
-        authProvider: 'google',
-        createdAt: DateTime.now(),
+      // 2. Get the idToken from Google authentication
+      final GoogleSignInAuthentication googleAuth = await account.authentication;
+      final String? idToken = googleAuth.idToken;
+
+      if (idToken == null) {
+        // Sign out so user can try with different account
+        await googleSignIn.signOut();
+        throw Exception('Failed to retrieve Google ID Token');
+      }
+
+      // 3. Send idToken to backend for verification and session creation
+      final response = await dio.post(
+        ApiEndpoints.googleOAuth,
+        data: {'idToken': idToken},
+        options: Options(
+          headers: {'Content-Type': 'application/json'},
+          sendTimeout: AppConstants.apiTimeout,
+          receiveTimeout: AppConstants.apiTimeout,
+        ),
       );
+
+      if (response.statusCode == 200) {
+        final jsonResponse = response.data;
+        final data = jsonResponse['data'];
+
+        // Store the JWT token from backend
+        if (data['token'] != null) {
+          await sharedPreferences.setString('auth_token', data['token']);
+        }
+        // Store refresh token if present
+        if (data['refreshToken'] != null) {
+          await sharedPreferences.setString('refresh_token', data['refreshToken']);
+        }
+
+        // Return user model with backend data
+        return UserModel(
+          id: data['userId']?.toString() ?? account.id,
+          email: data['email'] ?? account.email,
+          name: data['fullName'] ?? data['username'] ?? account.displayName ?? 'Unknown',
+          photoUrl: account.photoUrl,
+          authProvider: 'google',
+          createdAt: DateTime.now(),
+          isEmailVerified: data['isEmailVerified'] ?? true,
+        );
+      } else {
+        // Backend failed - sign out from Google so user can try different account
+        await googleSignIn.signOut();
+        throw Exception('Backend authentication failed: ${response.statusCode}');
+      }
+    } on DioException catch (e) {
+      // Backend API failed - sign out from Google so user can try different account
+      await googleSignIn.signOut();
+
+      if (e.response?.statusCode == 401) {
+        throw Exception('Google authentication failed: Invalid or expired token');
+      } else if (e.response?.statusCode == 400) {
+        final message = e.response?.data is Map
+            ? e.response?.data['message']
+            : 'Invalid request';
+        throw Exception(message ?? 'Google authentication failed');
+      } else {
+        throw Exception('Network error during Google sign-in: ${e.message}');
+      }
     } catch (e) {
+      // Check if it's a PlatformException for better error messages
+      final errorString = e.toString();
+      if (errorString.contains('ApiException: 10')) {
+        throw Exception('Google Sign-In configuration error. Please check SHA-1 fingerprint.');
+      } else if (errorString.contains('sign_in_canceled') || errorString.contains('cancelled')) {
+        throw Exception('Google sign in was cancelled');
+      } else if (errorString.contains('network_error')) {
+        throw Exception('Network error. Please check your internet connection.');
+      }
+
+      // Sign out so user can try with different account on next attempt
+      if (account != null) {
+        await googleSignIn.signOut();
+      }
       throw Exception('Failed to sign in with Google: $e');
     }
   }
@@ -62,7 +133,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<void> signOut() async {
     try {
+      // Sign out from Google
       await googleSignIn.signOut();
+
+      // Clear all cached tokens
+      await sharedPreferences.remove('auth_token');
+      await sharedPreferences.remove('refresh_token');
     } catch (e) {
       throw Exception('Failed to sign out: $e');
     }

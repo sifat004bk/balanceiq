@@ -30,8 +30,8 @@ class Error404Page extends StatelessWidget {
           ],
         ),
       ),
-      child: Center(
-        child: Padding(
+      child: SafeArea(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(32),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

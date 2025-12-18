@@ -183,12 +183,12 @@ class AuthInterceptor extends Interceptor {
     await sharedPreferences.remove('auth_token');
     await sharedPreferences.remove('refresh_token');
     await sharedPreferences.remove('user_id');
-    
+
     if (kDebugMode) {
       print('🔐 [AuthInterceptor] Session expired. Tokens cleared. Navigating to login screen.');
     }
-    
-    // Navigate to login screen
-    navigateToLogin();
+
+    // Navigate to login screen with error message
+    navigateToLogin(errorMessage: 'Your session has expired. Please log in again.');
   }
 }

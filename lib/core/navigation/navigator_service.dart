@@ -6,10 +6,14 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 /// Navigate to login screen from anywhere in the app
 /// Clears the navigation stack and goes to login
-void navigateToLogin() {
+/// [errorMessage] - Optional error message to display on login page
+void navigateToLogin({String? errorMessage}) {
   navigatorKey.currentState?.pushNamedAndRemoveUntil(
     '/login',
     (route) => false,
+    arguments: errorMessage != null
+        ? {'errorMessage': errorMessage}
+        : null,
   );
 }
 

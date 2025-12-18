@@ -14,32 +14,106 @@ class GenUIChart extends StatelessWidget {
     this.title,
   });
 
+  // Premium color palette for bar charts - each bar gets a unique color
+  static const List<List<Color>> _barColorPalette = [
+    [Color(0xFF6366F1), Color(0xFF818CF8)], // Indigo
+    [Color(0xFF8B5CF6), Color(0xFFA78BFA)], // Violet
+    [Color(0xFFEC4899), Color(0xFFF472B6)], // Pink
+    [Color(0xFFF59E0B), Color(0xFFFBBF24)], // Amber
+    [Color(0xFF10B981), Color(0xFF34D399)], // Emerald
+    [Color(0xFF3B82F6), Color(0xFF60A5FA)], // Blue
+    [Color(0xFFEF4444), Color(0xFFF87171)], // Red
+    [Color(0xFF06B6D4), Color(0xFF22D3EE)], // Cyan
+  ];
+
+  static const List<Color> _lineGradientColors = [
+    Color(0xFF3B82F6), // Blue
+    Color(0xFF06B6D4), // Cyan
+  ];
+
   @override
   Widget build(BuildContext context) {
     if (!data.isValid) return const SizedBox.shrink();
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.symmetric(vertical: 12),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Theme.of(context).dividerColor),
+        gradient: LinearGradient(
+          colors: isDark
+              ? [
+                  Theme.of(context).cardColor,
+                  Theme.of(context).cardColor.withOpacity(0.8),
+                ]
+              : [
+                  Colors.white,
+                  Colors.grey.shade50,
+                ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: isDark
+              ? Colors.white.withOpacity(0.08)
+              : Colors.grey.shade200,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: isDark
+                ? Colors.black.withOpacity(0.3)
+                : Colors.grey.withOpacity(0.15),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+            spreadRadius: 0,
+          ),
+          if (!isDark)
+            BoxShadow(
+              color: Colors.white.withOpacity(0.8),
+              blurRadius: 10,
+              offset: const Offset(-2, -2),
+              spreadRadius: 0,
+            ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (title != null) ...[
-            Text(
-              title!,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
+            Row(
+              children: [
+                Container(
+                  width: 4,
+                  height: 20,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: type == GraphType.bar
+                          ? _barColorPalette[0]
+                          : _lineGradientColors,
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                    borderRadius: BorderRadius.circular(2),
                   ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    title!,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: -0.3,
+                        ),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 28),
           ],
           SizedBox(
-            height: 200,
+            height: 220,
             child: _buildChart(context),
           ),
         ],
@@ -57,33 +131,55 @@ class GenUIChart extends StatelessWidget {
   }
 
   Widget _buildBarChart(BuildContext context) {
-    // We'll use the first dataset for the bar chart for now
-    // If there are multiple datasets, they could be grouped
     final dataset = data.datasets.first;
     final labels = data.labels;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0.0, end: 1.0),
-      duration: const Duration(milliseconds: 800),
+      duration: const Duration(milliseconds: 1000),
       curve: Curves.easeOutCubic,
       builder: (context, animationValue, child) {
         return BarChart(
           BarChartData(
             alignment: BarChartAlignment.spaceAround,
-            maxY: _getMaxValue() * 1.2,
+            maxY: _getMaxValue() * 1.25,
             barTouchData: BarTouchData(
               enabled: true,
               touchTooltipData: BarTouchTooltipData(
-                getTooltipColor: (group) => Theme.of(context).cardColor,
-                tooltipPadding: const EdgeInsets.all(8),
-                tooltipMargin: 8,
+                getTooltipColor: (group) => isDark
+                    ? const Color(0xFF1F2937)
+                    : Colors.white,
+                tooltipPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 10,
+                ),
+                tooltipMargin: 12,
+                tooltipRoundedRadius: 12,
                 getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                  final label = groupIndex < labels.length
+                      ? labels[groupIndex]
+                      : '';
                   return BarTooltipItem(
-                    rod.toY.toString(),
+                    '$label\n',
                     TextStyle(
-                      color: Theme.of(context).colorScheme.onSurface,
-                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.6),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
                     ),
+                    children: [
+                      TextSpan(
+                        text: _formatNumber(rod.toY),
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   );
                 },
               ),
@@ -93,18 +189,22 @@ class GenUIChart extends StatelessWidget {
               bottomTitles: AxisTitles(
                 sideTitles: SideTitles(
                   showTitles: true,
+                  reservedSize: 36,
                   getTitlesWidget: (value, meta) {
                     if (value.toInt() >= 0 && value.toInt() < labels.length) {
                       return Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
+                        padding: const EdgeInsets.only(top: 12.0),
                         child: Text(
-                          labels[value.toInt()],
+                          _truncateLabel(labels[value.toInt()]),
                           style: TextStyle(
-                            fontSize: 10,
-                            color:
-                                Theme.of(context).colorScheme.onSurfaceVariant,
-                            fontWeight: FontWeight.w500,
+                            fontSize: 11,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withOpacity(0.6),
+                            fontWeight: FontWeight.w600,
                           ),
+                          textAlign: TextAlign.center,
                         ),
                       );
                     }
@@ -112,30 +212,33 @@ class GenUIChart extends StatelessWidget {
                   },
                 ),
               ),
-              leftTitles:
-                  const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-              topTitles:
-                  const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-              rightTitles:
-                  const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              leftTitles: const AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
+              ),
+              topTitles: const AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
+              ),
+              rightTitles: const AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
+              ),
             ),
             gridData: FlGridData(
               show: true,
               drawVerticalLine: false,
               horizontalInterval: _getMaxValue() / 4,
               getDrawingHorizontalLine: (value) => FlLine(
-                color: Theme.of(context).dividerColor.withOpacity(0.5),
+                color: Theme.of(context).dividerColor.withOpacity(0.3),
                 strokeWidth: 1,
-                dashArray: [5, 5],
               ),
             ),
             borderData: FlBorderData(show: false),
             barGroups: List.generate(dataset.data.length, (index) {
-              if (index >= labels.length) return null; // Safety check
+              if (index >= labels.length) return null;
 
               final val = dataset.data[index].toDouble();
               final animatedValue = val * animationValue;
-              final color = Theme.of(context).colorScheme.primary;
+
+              final barColors = _barColorPalette[index % _barColorPalette.length];
 
               return BarChartGroupData(
                 x: index,
@@ -143,24 +246,25 @@ class GenUIChart extends StatelessWidget {
                   BarChartRodData(
                     toY: animatedValue,
                     gradient: LinearGradient(
-                      colors: [color.withOpacity(0.6), color],
+                      colors: barColors,
                       begin: Alignment.bottomCenter,
                       end: Alignment.topCenter,
                     ),
-                    width: 18,
-                    borderRadius:
-                        const BorderRadius.vertical(top: Radius.circular(6)),
+                    width: 22,
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(8),
+                    ),
                     backDrawRodData: BackgroundBarChartRodData(
                       show: true,
-                      toY: _getMaxValue() * 1.2,
-                      color: Theme.of(context).dividerColor.withOpacity(0.2),
+                      toY: _getMaxValue() * 1.25,
+                      color: Theme.of(context).dividerColor.withOpacity(0.15),
                     ),
                   ),
                 ],
               );
             }).whereType<BarChartGroupData>().toList(),
           ),
-          swapAnimationDuration: const Duration(milliseconds: 600),
+          swapAnimationDuration: const Duration(milliseconds: 400),
           swapAnimationCurve: Curves.easeOutCubic,
         );
       },
@@ -170,104 +274,154 @@ class GenUIChart extends StatelessWidget {
   Widget _buildLineChart(BuildContext context) {
     final dataset = data.datasets.first;
     final labels = data.labels;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final spots = List.generate(dataset.data.length, (index) {
       return FlSpot(index.toDouble(), dataset.data[index].toDouble());
     });
 
-    final primaryColor = Theme.of(context).colorScheme.primary;
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0.0, end: 1.0),
+      duration: const Duration(milliseconds: 1200),
+      curve: Curves.easeOutCubic,
+      builder: (context, animationValue, child) {
+        final animatedSpots = spots.map((spot) {
+          return FlSpot(spot.x, spot.y * animationValue);
+        }).toList();
 
-    return LineChart(
-      LineChartData(
-        gridData: FlGridData(
-          show: true,
-          drawVerticalLine: false,
-          horizontalInterval: _getMaxValue() / 4,
-          getDrawingHorizontalLine: (value) => FlLine(
-            color: Theme.of(context).dividerColor.withOpacity(0.5),
-            strokeWidth: 1,
-            dashArray: [5, 5],
-          ),
-        ),
-        titlesData: FlTitlesData(
-          bottomTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              getTitlesWidget: (value, meta) {
-                if (value.toInt() >= 0 && value.toInt() < labels.length) {
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: Text(
-                      labels[value.toInt()],
-                      style: TextStyle(
-                        fontSize: 10,
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  );
-                }
-                return const Text('');
-              },
-              interval: 1,
-            ),
-          ),
-          leftTitles:
-              const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          topTitles:
-              const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          rightTitles:
-              const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-        ),
-        borderData: FlBorderData(show: false),
-        lineBarsData: [
-          LineChartBarData(
-            spots: spots,
-            isCurved: true,
-            color: primaryColor,
-            barWidth: 4,
-            isStrokeCapRound: true,
-            dotData: FlDotData(
+        return LineChart(
+          LineChartData(
+            gridData: FlGridData(
               show: true,
-              getDotPainter: (spot, percent, barData, index) {
-                return FlDotCirclePainter(
-                  radius: 4,
-                  color: Theme.of(context).cardColor,
-                  strokeWidth: 2,
-                  strokeColor: primaryColor,
-                );
-              },
-            ),
-            belowBarData: BarAreaData(
-              show: true,
-              gradient: LinearGradient(
-                colors: [
-                  primaryColor.withOpacity(0.3),
-                  primaryColor.withOpacity(0.0),
-                ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
+              drawVerticalLine: false,
+              horizontalInterval: _getMaxValue() / 4,
+              getDrawingHorizontalLine: (value) => FlLine(
+                color: Theme.of(context).dividerColor.withOpacity(0.3),
+                strokeWidth: 1,
               ),
             ),
-          ),
-        ],
-        lineTouchData: LineTouchData(
-          touchTooltipData: LineTouchTooltipData(
-            getTooltipColor: (touchedSpot) => Theme.of(context).cardColor,
-            getTooltipItems: (touchedSpots) {
-              return touchedSpots.map((spot) {
-                return LineTooltipItem(
-                  spot.y.toString(),
-                  TextStyle(
-                    color: Theme.of(context).colorScheme.onSurface,
-                    fontWeight: FontWeight.bold,
+            titlesData: FlTitlesData(
+              bottomTitles: AxisTitles(
+                sideTitles: SideTitles(
+                  showTitles: true,
+                  reservedSize: 36,
+                  getTitlesWidget: (value, meta) {
+                    if (value.toInt() >= 0 && value.toInt() < labels.length) {
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 12.0),
+                        child: Text(
+                          _truncateLabel(labels[value.toInt()]),
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withOpacity(0.6),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      );
+                    }
+                    return const Text('');
+                  },
+                  interval: 1,
+                ),
+              ),
+              leftTitles: const AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
+              ),
+              topTitles: const AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
+              ),
+              rightTitles: const AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
+              ),
+            ),
+            borderData: FlBorderData(show: false),
+            lineBarsData: [
+              LineChartBarData(
+                spots: animatedSpots,
+                isCurved: true,
+                curveSmoothness: 0.35,
+                gradient: LinearGradient(
+                  colors: _lineGradientColors,
+                ),
+                barWidth: 4,
+                isStrokeCapRound: true,
+                shadow: Shadow(
+                  color: _lineGradientColors.first.withOpacity(0.4),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+                dotData: FlDotData(
+                  show: true,
+                  getDotPainter: (spot, percent, barData, index) {
+                    return FlDotCirclePainter(
+                      radius: 6,
+                      color: Colors.white,
+                      strokeWidth: 3,
+                      strokeColor: _lineGradientColors.first,
+                    );
+                  },
+                ),
+                belowBarData: BarAreaData(
+                  show: true,
+                  gradient: LinearGradient(
+                    colors: [
+                      _lineGradientColors.first.withOpacity(0.25),
+                      _lineGradientColors.last.withOpacity(0.05),
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
                   ),
-                );
-              }).toList();
-            },
+                ),
+              ),
+            ],
+            lineTouchData: LineTouchData(
+              touchTooltipData: LineTouchTooltipData(
+                getTooltipColor: (touchedSpot) => isDark
+                    ? const Color(0xFF1F2937)
+                    : Colors.white,
+                tooltipPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 10,
+                ),
+                tooltipRoundedRadius: 12,
+                getTooltipItems: (touchedSpots) {
+                  return touchedSpots.map((spot) {
+                    final label = spot.x.toInt() < labels.length
+                        ? labels[spot.x.toInt()]
+                        : '';
+                    return LineTooltipItem(
+                      '$label\n',
+                      TextStyle(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withOpacity(0.6),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: _formatNumber(spot.y),
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onSurface,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    );
+                  }).toList();
+                },
+              ),
+              handleBuiltInTouches: true,
+              touchSpotThreshold: 20,
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -278,8 +432,23 @@ class GenUIChart extends StatelessWidget {
         if (val.toDouble() > max) max = val.toDouble();
       }
     }
-    // Prevent div by zero or small scales
     if (max == 0) return 10;
     return max;
+  }
+
+  String _formatNumber(double value) {
+    if (value >= 1000000) {
+      return '${(value / 1000000).toStringAsFixed(1)}M';
+    } else if (value >= 1000) {
+      return '${(value / 1000).toStringAsFixed(1)}K';
+    }
+    return value.toStringAsFixed(value.truncateToDouble() == value ? 0 : 1);
+  }
+
+  String _truncateLabel(String label) {
+    if (label.length > 8) {
+      return '${label.substring(0, 6)}...';
+    }
+    return label;
   }
 }

@@ -331,64 +331,37 @@ class _ChatViewState extends State<ChatView> {
         child: Scaffold(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           resizeToAvoidBottomInset: true,
-          body: SafeArea(
-            child: Column(
-              children: [
-                // Top bar with back button and usage button
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      // Back button
-                      GestureDetector(
-                        onTap: () => Navigator.of(context).pop(),
-                        child: Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).cardColor,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color:
-                                    Theme.of(context).shadowColor.withOpacity(0.1),
-                                blurRadius: 8,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          child: Icon(
-                            Icons.arrow_back,
-                            color: Theme.of(context).iconTheme.color,
-                            size: 20,
-                          ),
-                        ),
-                      ),
-                      // Usage button
-                      const MessageUsageButton(),
-                    ],
-                  ),
-                ),
-
-                // Message List (Expanded to fill available space)
-                Expanded(
-                  child: BlocConsumer<ChatCubit, ChatState>(
-                    listener: (context, state) {
-                      if (state is ChatLoaded && state.messages.isNotEmpty) {
-                        final latestMessage = state.messages.first;
-                        if (_latestMessageId != latestMessage.id) {
-                          _latestMessageId = latestMessage.id;
-                          _scrollToBottom();
-                        }
+          body: Stack(
+            children: [
+              // Message List (Base Layer)
+              Positioned.fill(
+                child: BlocConsumer<ChatCubit, ChatState>(
+                  listener: (context, state) {
+                    if (state is ChatLoaded && state.messages.isNotEmpty) {
+                      final latestMessage = state.messages.first;
+                      if (_latestMessageId != latestMessage.id) {
+                        _latestMessageId = latestMessage.id;
+                        _scrollToBottom();
                       }
-                    },
-                    builder: (context, state) {
-                      if (state is ChatLoading) {
-                        return const ChatShimmer();
-                      } else if (state is ChatLoaded) {
-                        if (state.messages.isEmpty && !state.isSending) {
-                          return SuggestedPrompts(
+                    }
+                  },
+                  builder: (context, state) {
+                    final topPadding = MediaQuery.of(context).padding.top + 60;
+                    // Input is always at the bottom, so we need constant padding
+                    const bottomPadding = 80.0;
+
+                    if (state is ChatLoading) {
+                      return Padding(
+                        padding: EdgeInsets.only(
+                            top: topPadding, bottom: bottomPadding),
+                        child: const ChatShimmer(),
+                      );
+                    } else if (state is ChatLoaded) {
+                      if (state.messages.isEmpty && !state.isSending) {
+                        return Padding(
+                          padding: EdgeInsets.only(
+                              top: topPadding, bottom: bottomPadding),
+                          child: SuggestedPrompts(
                             botId: widget.botId,
                             onPromptSelected: (prompt) {
                               context.read<ChatCubit>().sendNewMessage(
@@ -396,45 +369,83 @@ class _ChatViewState extends State<ChatView> {
                                     content: prompt,
                                   );
                             },
-                          );
-                        }
-
-                        return MessageList(
-                          messages: state.messages,
-                          botId: widget.botId,
-                          botName: widget.botName,
-                          isSending: state.isSending,
-                          hasMore: state.hasMore,
-                          isLoadingMore: state.isLoadingMore,
-                          scrollController: _scrollController,
-                          padding: const EdgeInsets.only(bottom: 8),
+                          ),
                         );
-                      } else if (state is ChatError) {
-                        return _buildErrorWidget(context, state);
                       }
-                      return const SizedBox.shrink();
-                    },
+
+                      return MessageList(
+                        messages: state.messages,
+                        botId: widget.botId,
+                        botName: widget.botName,
+                        isSending: state.isSending,
+                        hasMore: state.hasMore,
+                        isLoadingMore: state.isLoadingMore,
+                        scrollController: _scrollController,
+                        padding: EdgeInsets.only(
+                          top: topPadding,
+                          bottom: bottomPadding + 8,
+                        ),
+                      );
+                    } else if (state is ChatError) {
+                      return Padding(
+                        padding: EdgeInsets.only(
+                            top: topPadding, bottom: bottomPadding),
+                        child: _buildErrorWidget(context, state),
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
+              ),
+
+              // Top Left: Back Button
+              Positioned(
+                top: MediaQuery.of(context).padding.top + 8,
+                left: 16,
+                child: GestureDetector(
+                  onTap: () => Navigator.of(context).pop(),
+                  child: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).cardColor,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Theme.of(context).shadowColor.withOpacity(0.1),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Icon(
+                      Icons.arrow_back,
+                      color: Theme.of(context).iconTheme.color,
+                      size: 20,
+                    ),
                   ),
                 ),
+              ),
 
-                // Fixed Chat Input at bottom
-                Container(
+              // Top Right: Usage Button
+              Positioned(
+                top: MediaQuery.of(context).padding.top + 8,
+                right: 16,
+                child: const MessageUsageButton(),
+              ),
+
+              // Bottom: Chat Input
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: Container(
                   key: _chatInputKey,
                   padding: EdgeInsets.only(
                     left: 16,
                     right: 16,
                     top: 8,
                     bottom: keyboardHeight > 0 ? 8 : 16,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).scaffoldBackgroundColor,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Theme.of(context).shadowColor.withOpacity(0.05),
-                        blurRadius: 10,
-                        offset: const Offset(0, -2),
-                      ),
-                    ],
                   ),
                   child: FloatingChatInput(
                     botId: widget.botId,
@@ -443,8 +454,8 @@ class _ChatViewState extends State<ChatView> {
                     isCollapsed: false,
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ));
   }

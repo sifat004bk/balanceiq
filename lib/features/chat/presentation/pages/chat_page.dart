@@ -381,7 +381,6 @@ class _ChatViewState extends State<ChatView> {
 
                       return Padding(
                         padding: EdgeInsets.only(
-                          top: MediaQuery.of(context).padding.top,
                           bottom: 16,
                         ),
                         child: MessageList(
@@ -407,6 +406,36 @@ class _ChatViewState extends State<ChatView> {
                     }
                     return const SizedBox.shrink();
                   },
+                ),
+              ),
+
+              // Glass Header Background
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                height: MediaQuery.of(context).padding.top+10 ,
+                child: ClipRect(
+                  child: Container(
+                    color: Theme.of(context)
+                        .scaffoldBackgroundColor
+                        .withOpacity(0.7),
+                  ),
+                ),
+              ),
+
+              // Glass Footer Background
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                height: MediaQuery.of(context).padding.bottom+16,
+                child: ClipRect(
+                  child: Container(
+                    color: Theme.of(context)
+                        .scaffoldBackgroundColor
+                        .withOpacity(0.7),
+                  ),
                 ),
               ),
 
@@ -467,6 +496,8 @@ class _ChatViewState extends State<ChatView> {
                   ),
                 ),
               ),
+
+
             ],
           ),
         ),

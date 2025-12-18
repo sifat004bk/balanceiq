@@ -366,7 +366,8 @@ class _SimpleChatInputState extends State<SimpleChatInput> {
 
         if (state is ChatLoaded) {
           isLimitReached = state.isMessageLimitReached;
-          isNearLimit = state.messagesUsedToday >= (state.dailyMessageLimit * 0.8);
+          isNearLimit =
+              state.messagesUsedToday >= (state.dailyMessageLimit * 0.8);
           remainingMessages = state.messagesRemaining;
         }
 
@@ -444,7 +445,8 @@ class _SimpleChatInputState extends State<SimpleChatInput> {
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              AppStrings.chat.nearMessageLimit(remainingMessages),
+                              AppStrings.chat
+                                  .nearMessageLimit(remainingMessages),
                               style: AppTypography.captionWarning.copyWith(
                                 color:
                                     Theme.of(context).colorScheme.onSecondary,
@@ -520,234 +522,251 @@ class _SimpleChatInputState extends State<SimpleChatInput> {
                         ),
                       ),
 
-                    // Main Input Container - Clean, simple design
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 10,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).cardColor,
-                        borderRadius: BorderRadius.circular(24),
-                        border: Border.all(
-                          color: _focusNode.hasFocus
-                              ? primaryColor.withOpacity(0.5)
-                              : (isDark
-                                  ? primaryColor.withOpacity(0.15)
-                                  : primaryColor.withOpacity(0.1)),
-                          width: _focusNode.hasFocus ? 1.5 : 1.0,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Theme.of(context).shadowColor.withOpacity(0.08),
-                            blurRadius: 8,
-                            offset: const Offset(0, 2),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(24),
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 10,
                           ),
-                        ],
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          // Attachment button
-                          if (ChatConfig.showAttachments)
-                            GestureDetector(
-                              onTap: isLimitReached
-                                  ? null
-                                  : _showAttachmentOptions,
-                              child: Container(
-                                width: 36,
-                                height: 36,
-                                decoration: BoxDecoration(
-                                  color: primaryColor.withOpacity(0.1),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  Icons.add_rounded,
-                                  color: isLimitReached
-                                      ? Colors.grey
-                                      : primaryColor,
-                                  size: 22,
-                                ),
-                              ),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).cardColor.withOpacity(0.7),
+                            borderRadius: BorderRadius.circular(24),
+                            border: Border.all(
+                              color: _focusNode.hasFocus
+                                  ? primaryColor.withOpacity(0.5)
+                                  : (isDark
+                                      ? primaryColor.withOpacity(0.15)
+                                      : primaryColor.withOpacity(0.1)),
+                              width: _focusNode.hasFocus ? 1.5 : 1.0,
                             ),
-
-                          if (ChatConfig.showAttachments)
-                            const SizedBox(width: 12),
-
-                          // Text field
-                          Expanded(
-                            child: TextField(
-                              controller: _textController,
-                              focusNode: _focusNode,
-                              enabled: !isLimitReached,
-                              maxLines: 4,
-                              minLines: 1,
-                              decoration: InputDecoration(
-                                hintText: isLimitReached
-                                    ? AppStrings.chat.limitReached
-                                    : AppStrings.chat.inputPlaceholderGeneral,
-                                hintStyle: AppTypography.inputLarge.copyWith(
-                                  color: isLimitReached
-                                      ? Theme.of(context).hintColor
-                                      : (isDark
-                                          ? Theme.of(context).hintColor
-                                          : Theme.of(context).hintColor),
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                border: InputBorder.none,
-                                enabledBorder: InputBorder.none,
-                                focusedBorder: InputBorder.none,
-                                disabledBorder: InputBorder.none,
-                                errorBorder: InputBorder.none,
-                                focusedErrorBorder: InputBorder.none,
-                                isDense: true,
-                                filled: false,
-                                contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 8,
-                                ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Theme.of(context)
+                                    .shadowColor
+                                    .withOpacity(0.08),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
                               ),
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: isLimitReached
-                                    ? Colors.grey
-                                    : (isDark
-                                        ? Theme.of(context)
-                                            .colorScheme
-                                            .onSurface
-                                        : Theme.of(context)
-                                            .colorScheme
-                                            .onSurface),
-                              ),
-                            ),
+                            ],
                           ),
-
-                          const SizedBox(width: 12),
-
-                          // Voice recording button with visual feedback (2025)
-                          if (ChatConfig.showAudioRecording)
-                            AnimatedScale(
-                              scale: _isRecording ? 1.1 : 1.0,
-                              duration: const Duration(milliseconds: 200),
-                              child: GestureDetector(
-                                onTap: isLimitReached ? null : _toggleRecording,
-                                child: Container(
-                                  width: 40,
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                    gradient: _isRecording
-                                        ? LinearGradient(
-                                            colors: [
-                                              Theme.of(context)
-                                                  .colorScheme
-                                                  .error,
-                                              Theme.of(context)
-                                                  .colorScheme
-                                                  .error
-                                            ],
-                                            begin: Alignment.topLeft,
-                                            end: Alignment.bottomRight,
-                                          )
-                                        : null,
-                                    color: _isRecording
-                                        ? null
-                                        : (isDark
-                                            ? Theme.of(context).canvasColor
-                                            : Theme.of(context).dividerColor),
-                                    shape: BoxShape.circle,
-                                    boxShadow: _isRecording
-                                        ? [
-                                            BoxShadow(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .error
-                                                  .withOpacity(0.4),
-                                              blurRadius: 16,
-                                              offset: const Offset(0, 4),
-                                            ),
-                                            BoxShadow(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .error
-                                                  .withOpacity(0.2),
-                                              blurRadius: 8,
-                                              spreadRadius: 2,
-                                            ),
-                                          ]
-                                        : null,
-                                  ),
-                                  child: _isRecording
-                                      ? _buildRecordingAnimation()
-                                      : Icon(
-                                          Icons.mic_none,
-                                          color: isLimitReached
-                                              ? Colors.grey
-                                              : primaryColor,
-                                          size: 22,
-                                        ),
-                                ),
-                              ),
-                            ),
-
-                          if (ChatConfig.showAudioRecording)
-                            const SizedBox(width: 8),
-
-                          // Send button (Enhanced with animation - 2025)
-                          AnimatedScale(
-                            scale: (_hasContent && !isLimitReached) ? 1.0 : 0.9,
-                            duration: const Duration(milliseconds: 200),
-                            curve: Curves.easeOutCubic,
-                            child: GestureDetector(
-                              onTap: (_hasContent && !isLimitReached)
-                                  ? _sendMessage
-                                  : null,
-                              child: Container(
-                                width: 44,
-                                height: 44,
-                                decoration: BoxDecoration(
-                                  gradient: (_hasContent && !isLimitReached)
-                                      ? LinearGradient(
-                                          colors: [
-                                            primaryColor,
-                                            primaryColor.withOpacity(0.85),
-                                          ],
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
-                                        )
-                                      : null,
-                                  color: (_hasContent && !isLimitReached)
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              // Attachment button
+                              if (ChatConfig.showAttachments)
+                                GestureDetector(
+                                  onTap: isLimitReached
                                       ? null
-                                      : (isDark
-                                          ? Theme.of(context).canvasColor
-                                          : Theme.of(context).dividerColor),
-                                  shape: BoxShape.circle,
-                                  boxShadow: (_hasContent && !isLimitReached)
-                                      ? [
-                                          BoxShadow(
-                                            color:
-                                                primaryColor.withOpacity(0.4),
-                                            blurRadius: 16,
-                                            offset: const Offset(0, 4),
-                                          ),
-                                          BoxShadow(
-                                            color:
-                                                primaryColor.withOpacity(0.2),
-                                            blurRadius: 8,
-                                            offset: const Offset(0, 2),
-                                          ),
-                                        ]
-                                      : null,
+                                      : _showAttachmentOptions,
+                                  child: Container(
+                                    width: 36,
+                                    height: 36,
+                                    decoration: BoxDecoration(
+                                      color: primaryColor.withOpacity(0.1),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Icon(
+                                      Icons.add_rounded,
+                                      color: isLimitReached
+                                          ? Colors.grey
+                                          : primaryColor,
+                                      size: 22,
+                                    ),
+                                  ),
                                 ),
-                                child: Icon(
-                                  Icons.arrow_upward_rounded,
-                                  color: (_hasContent && !isLimitReached)
-                                      ? Theme.of(context).colorScheme.onPrimary
-                                      : Theme.of(context).hintColor,
-                                  size: 24,
+
+                              if (ChatConfig.showAttachments)
+                                const SizedBox(width: 12),
+
+                              // Text field
+                              Expanded(
+                                child: TextField(
+                                  controller: _textController,
+                                  focusNode: _focusNode,
+                                  enabled: !isLimitReached,
+                                  maxLines: 4,
+                                  minLines: 1,
+                                  decoration: InputDecoration(
+                                    hintText: isLimitReached
+                                        ? AppStrings.chat.limitReached
+                                        : AppStrings
+                                            .chat.inputPlaceholderGeneral,
+                                    hintStyle:
+                                        AppTypography.inputLarge.copyWith(
+                                      color: isLimitReached
+                                          ? Theme.of(context).hintColor
+                                          : (isDark
+                                              ? Theme.of(context).hintColor
+                                              : Theme.of(context).hintColor),
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    border: InputBorder.none,
+                                    enabledBorder: InputBorder.none,
+                                    focusedBorder: InputBorder.none,
+                                    disabledBorder: InputBorder.none,
+                                    errorBorder: InputBorder.none,
+                                    focusedErrorBorder: InputBorder.none,
+                                    isDense: true,
+                                    filled: false,
+                                    contentPadding: const EdgeInsets.symmetric(
+                                      vertical: 8,
+                                    ),
+                                  ),
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: isLimitReached
+                                        ? Colors.grey
+                                        : (isDark
+                                            ? Theme.of(context)
+                                                .colorScheme
+                                                .onSurface
+                                            : Theme.of(context)
+                                                .colorScheme
+                                                .onSurface),
+                                  ),
                                 ),
                               ),
-                            ),
+
+                              const SizedBox(width: 12),
+
+                              // Voice recording button with visual feedback (2025)
+                              if (ChatConfig.showAudioRecording)
+                                AnimatedScale(
+                                  scale: _isRecording ? 1.1 : 1.0,
+                                  duration: const Duration(milliseconds: 200),
+                                  child: GestureDetector(
+                                    onTap: isLimitReached
+                                        ? null
+                                        : _toggleRecording,
+                                    child: Container(
+                                      width: 40,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                        gradient: _isRecording
+                                            ? LinearGradient(
+                                                colors: [
+                                                  Theme.of(context)
+                                                      .colorScheme
+                                                      .error,
+                                                  Theme.of(context)
+                                                      .colorScheme
+                                                      .error
+                                                ],
+                                                begin: Alignment.topLeft,
+                                                end: Alignment.bottomRight,
+                                              )
+                                            : null,
+                                        color: _isRecording
+                                            ? null
+                                            : (isDark
+                                                ? Theme.of(context).canvasColor
+                                                : Theme.of(context)
+                                                    .dividerColor),
+                                        shape: BoxShape.circle,
+                                        boxShadow: _isRecording
+                                            ? [
+                                                BoxShadow(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .error
+                                                      .withOpacity(0.4),
+                                                  blurRadius: 16,
+                                                  offset: const Offset(0, 4),
+                                                ),
+                                                BoxShadow(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .error
+                                                      .withOpacity(0.2),
+                                                  blurRadius: 8,
+                                                  spreadRadius: 2,
+                                                ),
+                                              ]
+                                            : null,
+                                      ),
+                                      child: _isRecording
+                                          ? _buildRecordingAnimation()
+                                          : Icon(
+                                              Icons.mic_none,
+                                              color: isLimitReached
+                                                  ? Colors.grey
+                                                  : primaryColor,
+                                              size: 22,
+                                            ),
+                                    ),
+                                  ),
+                                ),
+
+                              if (ChatConfig.showAudioRecording)
+                                const SizedBox(width: 8),
+
+                              // Send button (Enhanced with animation - 2025)
+                              AnimatedScale(
+                                scale: (_hasContent && !isLimitReached)
+                                    ? 1.0
+                                    : 0.9,
+                                duration: const Duration(milliseconds: 200),
+                                curve: Curves.easeOutCubic,
+                                child: GestureDetector(
+                                  onTap: (_hasContent && !isLimitReached)
+                                      ? _sendMessage
+                                      : null,
+                                  child: Container(
+                                    width: 44,
+                                    height: 44,
+                                    decoration: BoxDecoration(
+                                      gradient: (_hasContent && !isLimitReached)
+                                          ? LinearGradient(
+                                              colors: [
+                                                primaryColor,
+                                                primaryColor.withOpacity(0.85),
+                                              ],
+                                              begin: Alignment.topLeft,
+                                              end: Alignment.bottomRight,
+                                            )
+                                          : null,
+                                      color: (_hasContent && !isLimitReached)
+                                          ? null
+                                          : (isDark
+                                              ? Theme.of(context).canvasColor
+                                              : Theme.of(context).dividerColor),
+                                      shape: BoxShape.circle,
+                                      boxShadow:
+                                          (_hasContent && !isLimitReached)
+                                              ? [
+                                                  BoxShadow(
+                                                    color: primaryColor
+                                                        .withOpacity(0.4),
+                                                    blurRadius: 16,
+                                                    offset: const Offset(0, 4),
+                                                  ),
+                                                  BoxShadow(
+                                                    color: primaryColor
+                                                        .withOpacity(0.2),
+                                                    blurRadius: 8,
+                                                    offset: const Offset(0, 2),
+                                                  ),
+                                                ]
+                                              : null,
+                                    ),
+                                    child: Icon(
+                                      Icons.arrow_upward_rounded,
+                                      color: (_hasContent && !isLimitReached)
+                                          ? Theme.of(context)
+                                              .colorScheme
+                                              .onPrimary
+                                          : Theme.of(context).hintColor,
+                                      size: 24,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   ],

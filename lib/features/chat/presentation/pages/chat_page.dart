@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
@@ -12,6 +13,7 @@ import '../cubit/chat_state.dart';
 import '../widgets/chat_shimmer.dart';
 import '../widgets/floating_chat_input.dart';
 import '../widgets/message_list.dart';
+import '../widgets/simple_chat_input.dart';
 import '../widgets/suggested_prompts.dart';
 import '../widgets/message_usage_button.dart';
 
@@ -318,15 +320,19 @@ class _ChatViewState extends State<ChatView> {
     final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
 
     return BlocListener<ProductTourCubit, ProductTourState>(
-        listener: (context, tourState) {
-          // Show tour when state changes to chatInputHint step
-          if (tourState is TourActive &&
-              tourState.currentStep == TourStep.chatInputHint &&
-              !tourState.isTransitioning) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              _showChatInputTour();
-            });
-          }
+      listener: (context, tourState) {
+        // Show tour when state changes to chatInputHint step
+        if (tourState is TourActive &&
+            tourState.currentStep == TourStep.chatInputHint &&
+            !tourState.isTransitioning) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _showChatInputTour();
+          });
+        }
+      },
+      child: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
         },
         child: Scaffold(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -373,17 +379,23 @@ class _ChatViewState extends State<ChatView> {
                         );
                       }
 
-                      return MessageList(
-                        messages: state.messages,
-                        botId: widget.botId,
-                        botName: widget.botName,
-                        isSending: state.isSending,
-                        hasMore: state.hasMore,
-                        isLoadingMore: state.isLoadingMore,
-                        scrollController: _scrollController,
+                      return Padding(
                         padding: EdgeInsets.only(
-                          top: topPadding,
-                          bottom: bottomPadding + 8,
+                          top: MediaQuery.of(context).padding.top,
+                          bottom: 16,
+                        ),
+                        child: MessageList(
+                          messages: state.messages,
+                          botId: widget.botId,
+                          botName: widget.botName,
+                          isSending: state.isSending,
+                          hasMore: state.hasMore,
+                          isLoadingMore: state.isLoadingMore,
+                          scrollController: _scrollController,
+                          padding: EdgeInsets.only(
+                            top: topPadding,
+                            bottom: bottomPadding + 8,
+                          ),
                         ),
                       );
                     } else if (state is ChatError) {
@@ -444,10 +456,10 @@ class _ChatViewState extends State<ChatView> {
                   padding: EdgeInsets.only(
                     left: 16,
                     right: 16,
-                    top: 8,
+                    top: 16,
                     bottom: keyboardHeight > 0 ? 8 : 16,
                   ),
-                  child: FloatingChatInput(
+                  child: SimpleChatInput(
                     botId: widget.botId,
                     botColor: AppTheme.getBotColor(widget.botId),
                     width: MediaQuery.of(context).size.width - 32,
@@ -457,6 +469,8 @@ class _ChatViewState extends State<ChatView> {
               ),
             ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

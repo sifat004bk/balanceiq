@@ -16,7 +16,7 @@ import '../chat_config.dart';
 
 /// Modern floating chat input widget
 /// Matches the homepage button design but with full chat functionality
-class FloatingChatInput extends StatefulWidget {
+class SimpleChatInput extends StatefulWidget {
   final String botId;
   final Color? botColor;
   final double width;
@@ -25,7 +25,7 @@ class FloatingChatInput extends StatefulWidget {
   final VoidCallback? onToggleCollapse;
   final ValueChanged<bool>? onFocusChanged;
 
-  const FloatingChatInput({
+  const SimpleChatInput({
     super.key,
     required this.botId,
     this.botColor,
@@ -37,10 +37,10 @@ class FloatingChatInput extends StatefulWidget {
   });
 
   @override
-  State<FloatingChatInput> createState() => _FloatingChatInputState();
+  State<SimpleChatInput> createState() => _SimpleChatInputState();
 }
 
-class _FloatingChatInputState extends State<FloatingChatInput> {
+class _SimpleChatInputState extends State<SimpleChatInput> {
   final TextEditingController _textController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
   final AudioRecorder _audioRecorder = AudioRecorder();
@@ -215,11 +215,11 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
     }
 
     context.read<ChatCubit>().sendNewMessage(
-      botId: widget.botId,
-      content: text.isEmpty ? AppStrings.chat.sentMedia : text,
-      imagePath: _selectedImage?.path,
-      audioPath: _recordedAudioPath,
-    );
+          botId: widget.botId,
+          content: text.isEmpty ? AppStrings.chat.sentMedia : text,
+          imagePath: _selectedImage?.path,
+          audioPath: _recordedAudioPath,
+        );
 
     _textController.clear();
     setState(() {
@@ -362,12 +362,12 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
       builder: (context, state) {
         bool isLimitReached = false;
         bool isNearLimit = false;
-        int remainingTokens = 0;
+        int remainingMessages = 0;
 
         if (state is ChatLoaded) {
           isLimitReached = state.isMessageLimitReached;
-          isNearLimit = state.messagesUsedToday > (state.dailyMessageLimit * 0.8);
-          remainingTokens = state.dailyMessageLimit - state.messagesUsedToday;
+          isNearLimit = state.messagesUsedToday >= (state.dailyMessageLimit * 0.8);
+          remainingMessages = state.messagesRemaining;
         }
 
         return Container(
@@ -375,63 +375,11 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
           width: widget.width,
           constraints: const BoxConstraints(
               maxWidth: double.infinity), // Allow full width
-          // No decoration here
           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Collapse Button (Tiny) - Optional, maybe just tap outside?
-              // Let's add a small handle or minimize button
-              // Centered Drag Handle
-              Align(
-                alignment: Alignment.center,
-                child: GestureDetector(
-                  onTap: _toggleCollapse,
-                  onPanUpdate: (details) {
-                    // Normalize delta to handle resizing from center or edges
-                    // User said "dragging left or right... width should increase or decrease"
-                    // If we expand symmetrically, 1px drag = 2px width change?
-                    // Or simple: Right drag = increase, Left = Shrink?
-                    // Let's assume standard resize behavior: Drag Right = Expand, Left = Shrink?
-                    // But it's centered. This is ambiguous.
-                    // "dragging left or right ... width should increase or decrease"
-                    // Let's implement: Drag Right (+) -> Increase width. Drag Left (-) -> Decrease width.
-                    if (widget.onWidthChanged != null) {
-                      widget.onWidthChanged!(details.delta.dx);
-                    }
-                  },
-                  onVerticalDragEnd: (details) {
-                    if (details.primaryVelocity! > 300) {
-                      _toggleCollapse();
-                    }
-                  },
-                  behavior: HitTestBehavior.translucent,
-                  child: Container(
-                    margin:
-                    const EdgeInsets.only(top: 8), // Removed bottom margin
-                    padding: const EdgeInsets.only(
-                        top: 8,
-                        left: 8,
-                        right: 8,
-                        bottom: 2), // Reduced bottom padding
-                    width: 60,
-                    alignment: Alignment.center,
-                    child: Container(
-                      width: 32,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: isDark
-                            ? Theme.of(context).hintColor.withOpacity(0.6)
-                            : Theme.of(context).dividerColor,
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
-              // Content Wrapper
               Padding(
                 padding: const EdgeInsets.only(left: 12, right: 12, bottom: 12),
                 child: Column(
@@ -448,7 +396,7 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                               .colorScheme
                               .error
                               .withOpacity(
-                              0.9), // Higher opacity for legibility
+                                  0.9), // Higher opacity for legibility
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
                               color: Theme.of(context).colorScheme.error),
@@ -496,10 +444,10 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              AppStrings.chat.nearMessageLimit(remainingTokens),
+                              AppStrings.chat.nearMessageLimit(remainingMessages),
                               style: AppTypography.captionWarning.copyWith(
                                 color:
-                                Theme.of(context).colorScheme.onSecondary,
+                                    Theme.of(context).colorScheme.onSecondary,
                               ),
                             ),
                           ],
@@ -572,56 +520,28 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                         ),
                       ),
 
-                    // Main Input Container (Enhanced Floating Pill - 2025)
-                    AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
-                      curve: Curves.easeOutCubic,
-                      transform: Matrix4.identity()
-                        ..scale(_focusNode.hasFocus ? 1.1 : 1.0),
-                      transformAlignment: Alignment.center,
+                    // Main Input Container - Clean, simple design
+                    Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 12,
+                        horizontal: 16,
+                        vertical: 10,
                       ),
                       decoration: BoxDecoration(
-                        // Glassmorphic background
-                        color: isDark
-                            ? Theme.of(context)
-                            .cardColor
-                            .withOpacity(_focusNode.hasFocus ? 1.0 : 0.95)
-                            : Theme.of(context)
-                            .cardColor
-                            .withOpacity(_focusNode.hasFocus ? 1.0 : 0.95),
-                        borderRadius: BorderRadius.circular(28),
+                        color: Theme.of(context).cardColor,
+                        borderRadius: BorderRadius.circular(24),
                         border: Border.all(
                           color: _focusNode.hasFocus
-                              ? primaryColor
-                              .withOpacity(0.8) // Stronger glow on focus
-                              : (_hasContent
-                              ? primaryColor.withOpacity(0.6)
+                              ? primaryColor.withOpacity(0.5)
                               : (isDark
-                              ? primaryColor.withOpacity(0.2)
-                              : primaryColor.withOpacity(0.15))),
-                          width: _focusNode.hasFocus
-                              ? 2.5
-                              : (_hasContent ? 2.0 : 1.5),
+                                  ? primaryColor.withOpacity(0.15)
+                                  : primaryColor.withOpacity(0.1)),
+                          width: _focusNode.hasFocus ? 1.5 : 1.0,
                         ),
                         boxShadow: [
-                          // Spotlight Glow
-                          if (_focusNode.hasFocus)
-                            BoxShadow(
-                              color: primaryColor.withOpacity(0.5),
-                              blurRadius: 16,
-                              spreadRadius: 4,
-                              offset: const Offset(0, 4),
-                            ),
-                          // Primary shadow
                           BoxShadow(
-                            color: _hasContent
-                                ? primaryColor.withOpacity(0.35)
-                                : primaryColor.withOpacity(0.15),
-                            blurRadius: _hasContent ? 10 : 5,
-                            offset: const Offset(0, 4),
+                            color: Theme.of(context).shadowColor.withOpacity(0.08),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
                           ),
                         ],
                       ),
@@ -670,8 +590,8 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                                   color: isLimitReached
                                       ? Theme.of(context).hintColor
                                       : (isDark
-                                      ? Theme.of(context).hintColor
-                                      : Theme.of(context).hintColor),
+                                          ? Theme.of(context).hintColor
+                                          : Theme.of(context).hintColor),
                                   fontWeight: FontWeight.w500,
                                 ),
                                 border: InputBorder.none,
@@ -691,12 +611,12 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                                 color: isLimitReached
                                     ? Colors.grey
                                     : (isDark
-                                    ? Theme.of(context)
-                                    .colorScheme
-                                    .onSurface
-                                    : Theme.of(context)
-                                    .colorScheme
-                                    .onSurface),
+                                        ? Theme.of(context)
+                                            .colorScheme
+                                            .onSurface
+                                        : Theme.of(context)
+                                            .colorScheme
+                                            .onSurface),
                               ),
                             ),
                           ),
@@ -716,54 +636,54 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                                   decoration: BoxDecoration(
                                     gradient: _isRecording
                                         ? LinearGradient(
-                                      colors: [
-                                        Theme.of(context)
-                                            .colorScheme
-                                            .error,
-                                        Theme.of(context)
-                                            .colorScheme
-                                            .error
-                                      ],
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                    )
+                                            colors: [
+                                              Theme.of(context)
+                                                  .colorScheme
+                                                  .error,
+                                              Theme.of(context)
+                                                  .colorScheme
+                                                  .error
+                                            ],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                          )
                                         : null,
                                     color: _isRecording
                                         ? null
                                         : (isDark
-                                        ? Theme.of(context).canvasColor
-                                        : Theme.of(context).dividerColor),
+                                            ? Theme.of(context).canvasColor
+                                            : Theme.of(context).dividerColor),
                                     shape: BoxShape.circle,
                                     boxShadow: _isRecording
                                         ? [
-                                      BoxShadow(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .error
-                                            .withOpacity(0.4),
-                                        blurRadius: 16,
-                                        offset: const Offset(0, 4),
-                                      ),
-                                      BoxShadow(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .error
-                                            .withOpacity(0.2),
-                                        blurRadius: 8,
-                                        spreadRadius: 2,
-                                      ),
-                                    ]
+                                            BoxShadow(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .error
+                                                  .withOpacity(0.4),
+                                              blurRadius: 16,
+                                              offset: const Offset(0, 4),
+                                            ),
+                                            BoxShadow(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .error
+                                                  .withOpacity(0.2),
+                                              blurRadius: 8,
+                                              spreadRadius: 2,
+                                            ),
+                                          ]
                                         : null,
                                   ),
                                   child: _isRecording
                                       ? _buildRecordingAnimation()
                                       : Icon(
-                                    Icons.mic_none,
-                                    color: isLimitReached
-                                        ? Colors.grey
-                                        : primaryColor,
-                                    size: 22,
-                                  ),
+                                          Icons.mic_none,
+                                          color: isLimitReached
+                                              ? Colors.grey
+                                              : primaryColor,
+                                          size: 22,
+                                        ),
                                 ),
                               ),
                             ),
@@ -786,35 +706,35 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                                 decoration: BoxDecoration(
                                   gradient: (_hasContent && !isLimitReached)
                                       ? LinearGradient(
-                                    colors: [
-                                      primaryColor,
-                                      primaryColor.withOpacity(0.85),
-                                    ],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                  )
+                                          colors: [
+                                            primaryColor,
+                                            primaryColor.withOpacity(0.85),
+                                          ],
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                        )
                                       : null,
                                   color: (_hasContent && !isLimitReached)
                                       ? null
                                       : (isDark
-                                      ? Theme.of(context).canvasColor
-                                      : Theme.of(context).dividerColor),
+                                          ? Theme.of(context).canvasColor
+                                          : Theme.of(context).dividerColor),
                                   shape: BoxShape.circle,
                                   boxShadow: (_hasContent && !isLimitReached)
                                       ? [
-                                    BoxShadow(
-                                      color:
-                                      primaryColor.withOpacity(0.4),
-                                      blurRadius: 16,
-                                      offset: const Offset(0, 4),
-                                    ),
-                                    BoxShadow(
-                                      color:
-                                      primaryColor.withOpacity(0.2),
-                                      blurRadius: 8,
-                                      offset: const Offset(0, 2),
-                                    ),
-                                  ]
+                                          BoxShadow(
+                                            color:
+                                                primaryColor.withOpacity(0.4),
+                                            blurRadius: 16,
+                                            offset: const Offset(0, 4),
+                                          ),
+                                          BoxShadow(
+                                            color:
+                                                primaryColor.withOpacity(0.2),
+                                            blurRadius: 8,
+                                            offset: const Offset(0, 2),
+                                          ),
+                                        ]
                                       : null,
                                 ),
                                 child: Icon(

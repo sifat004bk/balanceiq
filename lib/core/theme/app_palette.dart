@@ -22,7 +22,7 @@ class AppPalette {
 
   static const Color success = Color(0xFF00C853);
   static const Color error = Color(0xFFD32F2F);
-  
+
   // --- Backgrounds ---
   static const Color backgroundLight = Color(0xFFFAFBFC);
   static const Color backgroundDark = Color(0xFF0B0418); // Deep Space
@@ -43,6 +43,27 @@ class AppPalette {
   static const Color white = Color(0xFFFFFFFF);
   static const Color black = Color(0xFF000000);
   static const Color transparent = Colors.transparent;
+
+  // --- Chart Colors ---
+  static const List<List<Color>> chartBarColors = [
+    [Color(0xFF6366F1), Color(0xFF818CF8)], // Indigo
+    [Color(0xFF8B5CF6), Color(0xFFA78BFA)], // Violet
+    [Color(0xFFEC4899), Color(0xFFF472B6)], // Pink
+    [Color(0xFFF59E0B), Color(0xFFFBBF24)], // Amber
+    [Color(0xFF10B981), Color(0xFF34D399)], // Emerald
+    [Color(0xFF3B82F6), Color(0xFF60A5FA)], // Blue
+    [Color(0xFFEF4444), Color(0xFFF87171)], // Red
+    [Color(0xFF06B6D4), Color(0xFF22D3EE)], // Cyan
+  ];
+
+  static const List<Color> chartLineGradient = [
+    Color(0xFF3B82F6), // Blue
+    Color(0xFF06B6D4), // Cyan
+  ];
+
+  static Color getTooltipColor(bool isDark) {
+    return isDark ? const Color(0xFF1F2937) : white;
+  }
 
   // --- Category Colors ---
   static const List<Color> categoryColors = [

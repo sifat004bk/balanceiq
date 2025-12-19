@@ -202,13 +202,13 @@ class AppLogger {
 **Description:** Centralize all colors and remove hardcoded values.
 
 **Sub-tasks:**
-- [ ] 2.1.1 Audit hardcoded colors: `grep -rn "Color(0x" lib/features/`
-- [ ] 2.1.2 Audit hardcoded colors: `grep -rn "Colors\." lib/features/`
-- [ ] 2.1.3 Add semantic colors to `app_palette.dart`: `income`, `expense`, `warning`, `info`
-- [ ] 2.1.4 Create theme-aware chart colors in `app_palette.dart`
-- [ ] 2.1.5 Update `gen_ui_chart.dart` to use `AppPalette.getChartColors(context)`
-- [ ] 2.1.6 Update `transactions_page.dart` to use `AppPalette.income/expense`
-- [ ] 2.1.7 Update `date_selector_bottom_sheet.dart` to use theme colors
+- [x] 2.1.1 Audit hardcoded colors: `grep -rn "Color(0x" lib/features/`
+- [x] 2.1.2 Audit hardcoded colors: `grep -rn "Colors\." lib/features/`
+- [x] 2.1.3 Add semantic colors to `app_palette.dart`: `income`, `expense`, `warning`, `info`
+- [x] 2.1.4 Create theme-aware chart colors in `app_palette.dart`
+- [x] 2.1.5 Update `gen_ui_chart.dart` to use `AppPalette.getChartColors(context)`
+- [x] 2.1.6 Update `transactions_page.dart` to use `AppPalette.income/expense`
+- [x] 2.1.7 Update `date_selector_bottom_sheet.dart` to use theme colors
 
 **Files to Modify:**
 ```

@@ -1,6 +1,7 @@
 import 'package:balance_iq/core/constants/app_strings.dart';
 import 'package:balance_iq/core/currency/currency_cubit.dart';
 import 'package:balance_iq/core/di/injection_container.dart';
+import 'package:balance_iq/core/theme/app_palette.dart';
 
 import 'package:balance_iq/features/home/domain/entities/transaction.dart';
 import 'package:balance_iq/features/home/presentation/cubit/transactions_cubit.dart';
@@ -366,13 +367,13 @@ class _TransactionsViewState extends State<TransactionsView> {
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: isIncome
-                      ? Colors.green.withValues(alpha: 0.1)
-                      : Colors.red.withValues(alpha: 0.1),
+                      ? AppPalette.income.withValues(alpha: 0.1)
+                      : AppPalette.expense.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: Icon(
                   isIncome ? Icons.arrow_downward : Icons.arrow_upward,
-                  color: isIncome ? Colors.green : Colors.red,
+                  color: isIncome ? AppPalette.income : AppPalette.expense,
                   size: 24,
                 ),
               ),
@@ -412,11 +413,15 @@ class _TransactionsViewState extends State<TransactionsView> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        sl<CurrencyCubit>().formatAmountWithSign(transaction.amount, isIncome: isIncome),
+                        sl<CurrencyCubit>().formatAmountWithSign(
+                            transaction.amount,
+                            isIncome: isIncome),
                         style:
                             Theme.of(context).textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.bold,
-                                  color: isIncome ? Colors.green : Colors.red,
+                                  color: isIncome
+                                      ? AppPalette.income
+                                      : AppPalette.expense,
                                 ),
                       ),
                     ],

@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'core/di/injection_container.dart' as di;
 import 'core/navigation/navigator_service.dart';
+import 'core/theme/app_palette.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_cubit.dart';
 import 'core/theme/theme_state.dart';
@@ -37,6 +38,47 @@ void main() async {
 
   // Initialize dependency injection
   await di.init();
+
+  // Set Global Error Widget
+  ErrorWidget.builder = (FlutterErrorDetails details) {
+    return Material(
+      color: AppPalette.backgroundLight,
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.error_outline,
+                  color: AppPalette.error,
+                  size: 48,
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Something went wrong!',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: AppPalette.textPrimaryLight,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  details.exceptionAsString(),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: AppPalette.textSecondaryLight,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  };
 
   // Set system UI overlay style
   SystemChrome.setSystemUIOverlayStyle(

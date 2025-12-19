@@ -235,12 +235,12 @@ lib/features/home/presentation/widgets/date_selector_bottom_sheet.dart
 **Description:** Create unified error handling with user-friendly feedback.
 
 **Sub-tasks:**
-- [ ] 2.2.1 Create `lib/core/error/app_exception.dart` with sealed classes
-- [ ] 2.2.2 Create `lib/core/error/error_handler.dart` for Dio error mapping
-- [ ] 2.2.3 Create `lib/core/utils/snackbar_helper.dart` for user feedback
-- [ ] 2.2.4 Update repositories to use new error types
-- [ ] 2.2.5 Update cubits to show snackbars on errors
-- [ ] 2.2.6 Override `ErrorWidget.builder` in main.dart for graceful error screens
+- [x] 2.2.1 Create `lib/core/error/app_exception.dart` with sealed classes
+- [x] 2.2.2 Create `lib/core/error/error_handler.dart` for Dio error mapping
+- [x] 2.2.3 Upgrade `lib/core/utils/snackbar_utils.dart` for user feedback
+- [x] 2.2.4 Update repositories to use new error types
+- [x] 2.2.5 Update cubits to show snackbars on errors
+- [x] 2.2.6 Override `ErrorWidget.builder` in main.dart for graceful error screens
 
 **Files to Create:**
 ```

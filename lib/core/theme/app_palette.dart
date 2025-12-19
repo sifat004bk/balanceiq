@@ -22,6 +22,7 @@ class AppPalette {
 
   static const Color success = Color(0xFF00C853);
   static const Color error = Color(0xFFD32F2F);
+  static const Color info = Color(0xFF2196F3);
 
   // --- Backgrounds ---
   static const Color backgroundLight = Color(0xFFFAFBFC);

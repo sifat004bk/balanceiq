@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme/app_palette.dart';
 import '../constants/design_constants.dart';
 
 /// Centralized Snackbar Utility for Donfin AI
@@ -43,7 +44,7 @@ class SnackbarUtils {
     _showSnackbar(
       context,
       message: message,
-      backgroundColor: Colors.green,
+      backgroundColor: AppPalette.success,
       duration: duration ?? _defaultDuration,
       action: action,
     );
@@ -64,7 +65,7 @@ class SnackbarUtils {
     _showSnackbar(
       context,
       message: message,
-      backgroundColor: Theme.of(context).colorScheme.error,
+      backgroundColor: AppPalette.error,
       duration: duration ?? _defaultDuration,
       action: action,
     );
@@ -85,9 +86,7 @@ class SnackbarUtils {
     _showSnackbar(
       context,
       message: message,
-      backgroundColor: Theme.of(context).brightness == Brightness.dark
-          ? Colors.grey[800]
-          : Colors.grey[700],
+      backgroundColor: AppPalette.info,
       duration: duration ?? _shortDuration,
       action: action,
     );
@@ -108,7 +107,7 @@ class SnackbarUtils {
     _showSnackbar(
       context,
       message: message,
-      backgroundColor: Colors.orange,
+      backgroundColor: AppPalette.warning,
       duration: duration ?? _defaultDuration,
       action: action,
     );
@@ -234,9 +233,8 @@ class SnackbarUtils {
   /// [context]: BuildContext for ScaffoldMessenger
   /// [featureName]: Optional feature name to include in message
   static void showComingSoon(BuildContext context, [String? featureName]) {
-    final message = featureName != null
-        ? '$featureName - Coming Soon'
-        : 'Coming Soon';
+    final message =
+        featureName != null ? '$featureName - Coming Soon' : 'Coming Soon';
     showInfo(context, message);
   }
 

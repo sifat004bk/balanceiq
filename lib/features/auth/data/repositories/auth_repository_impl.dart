@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import '../../domain/entities/user.dart';
 import '../../domain/repositories/auth_repository.dart';
+import '../../../../core/error/app_exception.dart';
 import '../../../../core/error/failures.dart';
 import '../datasources/auth_local_datasource.dart';
 import '../datasources/auth_remote_datasource.dart';
@@ -22,11 +23,12 @@ class AuthRepositoryImpl implements AuthRepository {
       final user = await remoteDataSource.signInWithGoogle();
       await localDataSource.saveUser(user);
       return Right(user);
+    } on AppException catch (e) {
+      return Left(_mapExceptionToFailure(e));
     } catch (e) {
       return Left(AuthFailure('Failed to sign in with Google: $e'));
     }
   }
-
 
   @override
   Future<Either<Failure, void>> signOut() async {
@@ -34,6 +36,8 @@ class AuthRepositoryImpl implements AuthRepository {
       await remoteDataSource.signOut();
       await localDataSource.clearUser();
       return const Right(null);
+    } on AppException catch (e) {
+      return Left(_mapExceptionToFailure(e));
     } catch (e) {
       return Left(AuthFailure('Failed to sign out: $e'));
     }
@@ -75,6 +79,8 @@ class AuthRepositoryImpl implements AuthRepository {
       );
       final response = await remoteDataSource.signup(request);
       return Right(response);
+    } on AppException catch (e) {
+      return Left(_mapExceptionToFailure(e));
     } catch (e) {
       return Left(ServerFailure('Failed to signup: $e'));
     }
@@ -107,6 +113,8 @@ class AuthRepositoryImpl implements AuthRepository {
       }
 
       return Right(response);
+    } on AppException catch (e) {
+      return Left(_mapExceptionToFailure(e));
     } catch (e) {
       return Left(ServerFailure('Failed to login: $e'));
     }
@@ -117,6 +125,8 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       final profile = await remoteDataSource.getProfile(token);
       return Right(profile);
+    } on AppException catch (e) {
+      return Left(_mapExceptionToFailure(e));
     } catch (e) {
       return Left(ServerFailure('Failed to get profile: $e'));
     }
@@ -137,6 +147,8 @@ class AuthRepositoryImpl implements AuthRepository {
       );
       await remoteDataSource.changePassword(request, token);
       return const Right(null);
+    } on AppException catch (e) {
+      return Left(_mapExceptionToFailure(e));
     } catch (e) {
       return Left(ServerFailure('Failed to change password: $e'));
     }
@@ -148,6 +160,8 @@ class AuthRepositoryImpl implements AuthRepository {
       final request = ForgotPasswordRequest(email: email);
       await remoteDataSource.forgotPassword(request);
       return const Right(null);
+    } on AppException catch (e) {
+      return Left(_mapExceptionToFailure(e));
     } catch (e) {
       return Left(ServerFailure('Failed to send forgot password email: $e'));
     }
@@ -167,6 +181,8 @@ class AuthRepositoryImpl implements AuthRepository {
       );
       await remoteDataSource.resetPassword(request);
       return const Right(null);
+    } on AppException catch (e) {
+      return Left(_mapExceptionToFailure(e));
     } catch (e) {
       return Left(ServerFailure('Failed to reset password: $e'));
     }
@@ -177,6 +193,8 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       await remoteDataSource.sendVerificationEmail(token);
       return const Right(null);
+    } on AppException catch (e) {
+      return Left(_mapExceptionToFailure(e));
     } catch (e) {
       return Left(ServerFailure('Failed to send verification email: $e'));
     }
@@ -187,8 +205,24 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       await remoteDataSource.resendVerificationEmail(email);
       return const Right(null);
+    } on AppException catch (e) {
+      return Left(_mapExceptionToFailure(e));
     } catch (e) {
       return Left(ServerFailure('Failed to resend verification email: $e'));
+    }
+  }
+
+  Failure _mapExceptionToFailure(AppException exception) {
+    if (exception is NetworkException) {
+      return NetworkFailure(exception.message);
+    } else if (exception is AuthException) {
+      return AuthFailure(exception.message);
+    } else if (exception is CacheException) {
+      return CacheFailure(exception.message);
+    } else if (exception is ValidationException) {
+      return ValidationFailure(exception.message);
+    } else {
+      return ServerFailure(exception.message);
     }
   }
 }

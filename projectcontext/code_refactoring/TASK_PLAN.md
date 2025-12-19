@@ -114,9 +114,9 @@ lib/features/chat/data/datasources/*.dart
 **Description:** Implement centralized input validation for security and UX.
 
 **Sub-tasks:**
-- [ ] 1.4.1 Create `lib/core/utils/input_validator.dart`
-- [ ] 1.4.2 Implement email validation (RFC 5322 compliant regex)
-- [ ] 1.4.3 Implement password validation (min 8 chars, complexity rules)
+- [x] 1.4.1 Create `lib/core/utils/input_validator.dart`
+- [x] 1.4.2 Implement email validation (RFC 5322 compliant regex)
+- [x] 1.4.3 Implement password validation (min 8 chars, complexity rules)
 - [ ] 1.4.4 Implement string sanitization (XSS prevention)
 - [ ] 1.4.5 Implement amount validation (non-negative, max value)
 - [ ] 1.4.6 Write comprehensive unit tests

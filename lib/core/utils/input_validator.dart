@@ -23,6 +23,10 @@ abstract class InputValidator {
     return null;
   }
 
+  static final RegExp _passwordComplexityRegex = RegExp(
+    r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,}$',
+  );
+
   static String? validatePassword(String? password) {
     if (password == null || password.isEmpty) {
       return 'Password is required';
@@ -30,6 +34,10 @@ abstract class InputValidator {
 
     if (password.length < 8) {
       return 'Password must be at least 8 characters';
+    }
+
+    if (!_passwordComplexityRegex.hasMatch(password)) {
+      return 'Password must contain uppercase, lowercase, number, and special character';
     }
 
     return null;

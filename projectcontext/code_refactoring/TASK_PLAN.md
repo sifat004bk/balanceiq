@@ -25,7 +25,7 @@ This document breaks down the Master Refactoring Plan into actionable tasks with
 - [x] 1.1.2 Create `lib/core/storage/secure_storage_service.dart` (abstract interface)
 - [x] 1.1.3 Create `lib/core/storage/secure_storage_service_impl.dart` (implementation)
 - [x] 1.1.4 Register in `lib/core/di/injection_container.dart`
-- [ ] 1.1.5 Write unit tests for SecureStorageService
+- [x] 1.1.5 Write unit tests for SecureStorageService
 
 **Files to Create:**
 ```

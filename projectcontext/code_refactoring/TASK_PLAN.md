@@ -52,11 +52,11 @@ lib/core/storage/
 **Description:** Update all files using SharedPreferences for tokens to use SecureStorageService.
 
 **Sub-tasks:**
-- [ ] 1.2.1 Update `lib/core/network/auth_interceptor.dart`
-- [ ] 1.2.2 Update `lib/features/auth/data/datasources/auth_remote_datasource.dart`
-- [ ] 1.2.3 Update `lib/features/auth/data/repositories/auth_repository_impl.dart`
-- [ ] 1.2.4 Update `lib/features/chat/presentation/cubit/chat_cubit.dart` (userId retrieval)
-- [ ] 1.2.5 Search for any other SharedPreferences token usage: `grep -r "getString.*token" lib/`
+- [x] 1.2.1 Update `lib/core/network/auth_interceptor.dart`
+- [x] 1.2.2 Update `lib/features/auth/data/datasources/auth_remote_datasource.dart`
+- [x] 1.2.3 Update `lib/features/auth/data/repositories/auth_repository_impl.dart`
+- [x] 1.2.4 Update `lib/features/chat/presentation/cubit/chat_cubit.dart` (userId retrieval)
+- [x] 1.2.5 Search for any other SharedPreferences token usage: `grep -r "getString.*token" lib/`
 - [ ] 1.2.6 Add migration logic for existing users (one-time token transfer)
 
 **Files to Modify:**

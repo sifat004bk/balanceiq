@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/di/injection_container.dart';
+import '../../../../core/storage/secure_storage_service.dart';
 import '../../../home/domain/usecase/get_user_dashbaord.dart';
 
 class SplashPage extends StatefulWidget {
@@ -48,9 +48,9 @@ class _SplashPageState extends State<SplashPage>
   }
 
   Future<void> _validateSession() async {
-    final sharedPreferences = sl<SharedPreferences>();
-    final authToken = sharedPreferences.getString('auth_token');
-    final refreshToken = sharedPreferences.getString('refresh_token');
+    final secureStorage = sl<SecureStorageService>();
+    final authToken = await secureStorage.getToken();
+    final refreshToken = await secureStorage.getRefreshToken();
 
     if (kDebugMode) {
       print('🚀 [SplashPage] Checking session...');

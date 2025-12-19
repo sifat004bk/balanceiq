@@ -104,7 +104,7 @@ Future<void> init() async {
 
     // Add AuthInterceptor - Instantiate directly to pass the dio instance and avoid circular dependency
     dio.interceptors.add(AuthInterceptor(
-      sharedPreferences: sl(),
+      secureStorage: sl(),
       dio: dio,
     ));
 
@@ -159,7 +159,7 @@ Future<void> init() async {
       // Email verification
       sendVerificationEmail: sl(),
       resendVerificationEmail: sl(),
-      sharedPreferences: sl(),
+      secureStorage: sl(),
     ),
   );
 
@@ -199,14 +199,14 @@ Future<void> init() async {
         return AuthRemoteDataSourceImpl(
           googleSignIn: sl(),
           dio: sl(),
-          sharedPreferences: sl(),
+          secureStorage: sl(),
         );
       }
     },
   );
 
   sl.registerLazySingleton<AuthLocalDataSource>(
-    () => AuthLocalDataSourceImpl(sl()),
+    () => AuthLocalDataSourceImpl(sl(), sl()),
   );
 
   //! Features - Chat
@@ -219,7 +219,7 @@ Future<void> init() async {
       sendMessage: sl(),
       updateMessage: sl(),
       submitFeedback: sl(),
-      sharedPreferences: sl(),
+      secureStorage: sl(),
       uuid: sl(),
     ),
   );
@@ -235,7 +235,8 @@ Future<void> init() async {
     () => ChatRepositoryImpl(
       localDataSource: sl(),
       remoteDataSource: sl(),
-      sharedPreferences: sl(),
+      sharedPreferences:
+          sl(), // KEEPING IT for now as I haven't migrated it yet.
       uuid: sl(),
     ),
   );
@@ -254,7 +255,7 @@ Future<void> init() async {
       } else {
         print(
             '🌐 [DI] Registering REAL ChatRemoteDataSource (Finance Guru API)');
-        return ChatFinanceGuruDataSource(sl(), sl());
+        return ChatFinanceGuruDataSource(sl(), sl(), sl());
       }
     },
   );
@@ -322,8 +323,8 @@ Future<void> init() async {
   );
 
   // Data sources
-  sl.registerLazySingleton<ChatFeedbackDataSource>(
-    () => ChatFeedbackDataSourceImpl(sl(), sl()),
+  sl.registerLazySingleton<ChatRemoteDataSource>(
+    () => ChatFinanceGuruDataSource(sl(), sl(), sl()),
   );
 
   //! Features - Message Usage

@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../domain/usecases/sign_in_with_google.dart';
 import '../../domain/usecases/sign_out.dart';
 import '../../domain/usecases/get_current_user.dart';
@@ -14,6 +13,7 @@ import '../../domain/usecases/resend_verification_email.dart';
 import '../../domain/entities/user.dart';
 import '../../data/models/auth_request_models.dart';
 import 'auth_state.dart';
+import '../../../../core/storage/secure_storage_service.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   // OAuth dependencies
@@ -32,7 +32,7 @@ class AuthCubit extends Cubit<AuthState> {
   // Email verification dependencies
   final SendVerificationEmail sendVerificationEmail;
   final ResendVerificationEmail resendVerificationEmail;
-  final SharedPreferences sharedPreferences;
+  final SecureStorageService secureStorage;
 
   AuthCubit({
     // OAuth dependencies
@@ -49,7 +49,7 @@ class AuthCubit extends Cubit<AuthState> {
     // Email verification
     required this.sendVerificationEmail,
     required this.resendVerificationEmail,
-    required this.sharedPreferences,
+    required this.secureStorage,
   }) : super(AuthInitial());
 
   // Check for existing session on app start
@@ -157,7 +157,7 @@ class AuthCubit extends Cubit<AuthState> {
     emit(AuthLoading());
 
     // Get token from storage
-    final token = sharedPreferences.getString('auth_token') ?? '';
+    final token = await secureStorage.getToken() ?? '';
     final result = await getProfile(token);
 
     result.fold(
@@ -185,12 +185,12 @@ class AuthCubit extends Cubit<AuthState> {
   }) async {
     emit(AuthLoading());
 
-    // TODO: Implement token storage and retrieval
+    final token = await secureStorage.getToken() ?? '';
     final result = await changePassword(
       currentPassword: currentPassword,
       newPassword: newPassword,
       confirmPassword: confirmPassword,
-      token: '',
+      token: token,
     );
 
     result.fold(
@@ -242,7 +242,7 @@ class AuthCubit extends Cubit<AuthState> {
     final user = currentState.user;
     emit(VerificationEmailSending());
 
-    final token = sharedPreferences.getString('auth_token') ?? '';
+    final token = await secureStorage.getToken() ?? '';
     final result = await sendVerificationEmail(token: token);
 
     result.fold(

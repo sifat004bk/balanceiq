@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
 import 'package:synchronized/synchronized.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../domain/entities/message.dart';
 import '../../domain/entities/message_usage.dart';
 import '../../domain/usecases/get_chat_history.dart';
@@ -14,6 +13,7 @@ import '../../domain/entities/chat_feedback.dart'; // For FeedbackType
 import 'chat_state.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/error/failures.dart';
+import '../../../../core/storage/secure_storage_service.dart';
 
 class ChatCubit extends Cubit<ChatState> {
   final GetMessages getMessages;
@@ -22,14 +22,15 @@ class ChatCubit extends Cubit<ChatState> {
   final SendMessage sendMessage;
   final UpdateMessage updateMessage;
   final SubmitFeedback submitFeedback;
-  final SharedPreferences sharedPreferences;
+  final SecureStorageService secureStorage;
   final Uuid uuid;
 
   String? currentBotId;
   int _apiPage = 0;
   bool _hasMore = true;
   final Lock _lock = Lock(); // Concurrency control
-  MessageUsage? _cachedMessageUsage; // Cache message usage for state transitions
+  MessageUsage?
+      _cachedMessageUsage; // Cache message usage for state transitions
 
   ChatCubit({
     required this.getMessages,
@@ -38,7 +39,7 @@ class ChatCubit extends Cubit<ChatState> {
     required this.sendMessage,
     required this.updateMessage,
     required this.submitFeedback,
-    required this.sharedPreferences,
+    required this.secureStorage,
     required this.uuid,
   }) : super(ChatInitial());
 
@@ -74,8 +75,8 @@ class ChatCubit extends Cubit<ChatState> {
     // Load message usage first
     await loadMessageUsage();
 
-    // Get user ID from SharedPreferences
-    final userId = sharedPreferences.getString(AppConstants.keyUserId) ?? '';
+    // Get user ID from SecureStorage
+    final userId = await secureStorage.getUserId() ?? '';
 
     // Step 1: Load from cache immediately (fast UX)
     final cachedResult = await getMessages(userId, botId, limit: 20);
@@ -156,7 +157,7 @@ class ChatCubit extends Cubit<ChatState> {
     emit(currentState.copyWith(isLoadingMore: true));
 
     _apiPage++;
-    final userId = sharedPreferences.getString(AppConstants.keyUserId) ?? '0';
+    final userId = await secureStorage.getUserId() ?? '0';
 
     final result = await getChatHistory(
       userId: userId,
@@ -212,9 +213,8 @@ class ChatCubit extends Cubit<ChatState> {
       if (state is ChatLoaded) {
         final currentState = state as ChatLoaded;
 
-        // Get user ID from SharedPreferences
-        final userId =
-            sharedPreferences.getString(AppConstants.keyUserId) ?? '';
+        // Get user ID from SecureStorage
+        final userId = await secureStorage.getUserId() ?? '';
 
         // Create temporary user message for immediate display (optimistic UI)
         final tempUserMessage = Message(

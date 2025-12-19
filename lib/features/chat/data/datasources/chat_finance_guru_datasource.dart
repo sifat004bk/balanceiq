@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/constants/api_endpoints.dart';
+import '../../../../core/storage/secure_storage_service.dart';
 import '../../domain/entities/chart_data.dart';
 import '../models/chat_request_models.dart';
 import '../models/chat_history_response_model.dart';
@@ -39,8 +40,10 @@ class ChatApiException implements Exception {
 class ChatFinanceGuruDataSource implements ChatRemoteDataSource {
   final Dio dio;
   final SharedPreferences sharedPreferences;
+  final SecureStorageService secureStorage;
 
-  ChatFinanceGuruDataSource(this.dio, this.sharedPreferences);
+  ChatFinanceGuruDataSource(
+      this.dio, this.sharedPreferences, this.secureStorage);
 
   @override
   Future<MessageModel> sendMessage({
@@ -50,10 +53,12 @@ class ChatFinanceGuruDataSource implements ChatRemoteDataSource {
     String? audioPath,
   }) async {
     try {
-      // Get user info from SharedPreferences
-      final userId = sharedPreferences.getString(AppConstants.keyUserId) ?? '';
-      final userEmail = sharedPreferences.getString(AppConstants.keyUserEmail) ?? '';
-      final userName = sharedPreferences.getString(AppConstants.keyUserName) ?? 'User';
+      // Get user info
+      final userId = await secureStorage.getUserId() ?? '';
+      final userEmail =
+          sharedPreferences.getString(AppConstants.keyUserEmail) ?? '';
+      final userName =
+          sharedPreferences.getString(AppConstants.keyUserName) ?? 'User';
 
       // Use username from email or full name
       final username = userEmail.split('@').first.isNotEmpty
@@ -68,7 +73,7 @@ class ChatFinanceGuruDataSource implements ChatRemoteDataSource {
       );
 
       // Get auth token if available
-      final token = sharedPreferences.getString('auth_token');
+      final token = await secureStorage.getToken();
 
       // Send request to finance-guru chat endpoint
       final response = await dio.post(
@@ -90,7 +95,9 @@ class ChatFinanceGuruDataSource implements ChatRemoteDataSource {
 
         // Convert graphType string to GraphType enum
         final graphTypeEnum = chatResponse.graphType != null
-            ? (chatResponse.graphType == 'line' ? GraphType.line : GraphType.bar)
+            ? (chatResponse.graphType == 'line'
+                ? GraphType.line
+                : GraphType.bar)
             : null;
 
         // Create a message model from the bot's response
@@ -118,10 +125,12 @@ class ChatFinanceGuruDataSource implements ChatRemoteDataSource {
       if (e.type == DioExceptionType.connectionTimeout ||
           e.type == DioExceptionType.sendTimeout ||
           e.type == DioExceptionType.receiveTimeout) {
-        throw Exception('Request timeout. Please check your internet connection.');
+        throw Exception(
+            'Request timeout. Please check your internet connection.');
       } else if (e.type == DioExceptionType.badResponse) {
         final statusCode = e.response?.statusCode;
-        final message = e.response?.data?['message'] ?? e.response?.data?['error'] ?? '';
+        final message =
+            e.response?.data?['message'] ?? e.response?.data?['error'] ?? '';
 
         // Handle 403 Forbidden errors with specific error types
         if (statusCode == 403) {
@@ -130,7 +139,10 @@ class ChatFinanceGuruDataSource implements ChatRemoteDataSource {
               message: message.toString(),
               errorType: ChatApiErrorType.emailNotVerified,
             );
-          } else if (message.toString().toLowerCase().contains('active subscription')) {
+          } else if (message
+              .toString()
+              .toLowerCase()
+              .contains('active subscription')) {
             throw ChatApiException(
               message: message.toString(),
               errorType: ChatApiErrorType.subscriptionRequired,
@@ -152,7 +164,8 @@ class ChatFinanceGuruDataSource implements ChatRemoteDataSource {
             errorType: ChatApiErrorType.rateLimitExceeded,
           );
         }
-        throw Exception('Server error ($statusCode): ${message ?? 'Unknown error'}');
+        throw Exception(
+            'Server error ($statusCode): ${message ?? 'Unknown error'}');
       } else {
         throw Exception('Network error: ${e.message}');
       }
@@ -175,7 +188,7 @@ class ChatFinanceGuruDataSource implements ChatRemoteDataSource {
       );
 
       // Get auth token if available
-      final token = sharedPreferences.getString('auth_token');
+      final token = await secureStorage.getToken();
 
       final response = await dio.get(
         ApiEndpoints.chatHistory,
@@ -199,11 +212,14 @@ class ChatFinanceGuruDataSource implements ChatRemoteDataSource {
       if (e.type == DioExceptionType.connectionTimeout ||
           e.type == DioExceptionType.sendTimeout ||
           e.type == DioExceptionType.receiveTimeout) {
-        throw Exception('Request timeout. Please check your internet connection.');
+        throw Exception(
+            'Request timeout. Please check your internet connection.');
       } else if (e.type == DioExceptionType.badResponse) {
         final statusCode = e.response?.statusCode;
-        final message = e.response?.data?['message'] ?? e.response?.data?['error'];
-        throw Exception('Server error ($statusCode): ${message ?? 'Unknown error'}');
+        final message =
+            e.response?.data?['message'] ?? e.response?.data?['error'];
+        throw Exception(
+            'Server error ($statusCode): ${message ?? 'Unknown error'}');
       } else {
         throw Exception('Network error: ${e.message}');
       }

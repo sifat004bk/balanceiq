@@ -1,7 +1,7 @@
 import 'package:balance_iq/core/constants/api_endpoints.dart';
 import 'package:balance_iq/features/home/data/models/transaction_model.dart';
 import 'package:dio/dio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../../core/storage/secure_storage_service.dart';
 
 /// Transaction search API data source
 /// Endpoint: GET /api/finance-guru/v1/transactions
@@ -34,9 +34,9 @@ abstract class TransactionSearchDataSource {
 /// Implementation of transaction search data source
 class TransactionSearchDataSourceImpl implements TransactionSearchDataSource {
   final Dio dio;
-  final SharedPreferences sharedPreferences;
+  final SecureStorageService secureStorage;
 
-  TransactionSearchDataSourceImpl(this.dio, this.sharedPreferences);
+  TransactionSearchDataSourceImpl(this.dio, this.secureStorage);
 
   @override
   Future<TransactionSearchResponse> searchTransactions({
@@ -51,7 +51,7 @@ class TransactionSearchDataSourceImpl implements TransactionSearchDataSource {
   }) async {
     try {
       // Get auth token
-      final token = sharedPreferences.getString('auth_token');
+      final token = await secureStorage.getToken();
       if (token == null) {
         throw Exception('Authentication required. Please login.');
       }
@@ -145,7 +145,7 @@ class TransactionSearchDataSourceImpl implements TransactionSearchDataSource {
     DateTime? transactionDate,
   }) async {
     try {
-      final token = sharedPreferences.getString('auth_token');
+      final token = await secureStorage.getToken();
       if (token == null) {
         throw Exception('Authentication required. Please login.');
       }
@@ -182,7 +182,7 @@ class TransactionSearchDataSourceImpl implements TransactionSearchDataSource {
   @override
   Future<void> deleteTransaction(int id) async {
     try {
-      final token = sharedPreferences.getString('auth_token');
+      final token = await secureStorage.getToken();
       if (token == null) {
         throw Exception('Authentication required. Please login.');
       }

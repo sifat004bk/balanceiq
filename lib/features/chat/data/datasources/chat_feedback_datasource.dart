@@ -1,7 +1,7 @@
 import 'package:balance_iq/core/constants/api_endpoints.dart';
 import 'package:balance_iq/features/chat/data/models/chat_feedback_model.dart';
 import 'package:dio/dio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../core/storage/secure_storage_service.dart';
 
 /// Chat feedback API data source
 /// Endpoint: POST /api/finance-guru/v1/chat-history/{id}/feedback
@@ -16,9 +16,9 @@ abstract class ChatFeedbackDataSource {
 /// Implementation of chat feedback data source
 class ChatFeedbackDataSourceImpl implements ChatFeedbackDataSource {
   final Dio dio;
-  final SharedPreferences sharedPreferences;
+  final SecureStorageService secureStorage;
 
-  ChatFeedbackDataSourceImpl(this.dio, this.sharedPreferences);
+  ChatFeedbackDataSourceImpl(this.dio, this.secureStorage);
 
   @override
   Future<ChatFeedbackResponse> submitFeedback({
@@ -27,7 +27,7 @@ class ChatFeedbackDataSourceImpl implements ChatFeedbackDataSource {
   }) async {
     try {
       // Get auth token
-      final token = sharedPreferences.getString('auth_token');
+      final token = await secureStorage.getToken();
       if (token == null) {
         throw Exception('Authentication required. Please login.');
       }
@@ -68,8 +68,7 @@ class ChatFeedbackDataSourceImpl implements ChatFeedbackDataSource {
       } else if (e.response?.statusCode == 401) {
         throw Exception('Unauthorized. Please login again.');
       } else if (e.response?.statusCode == 403) {
-        throw Exception(
-            'You can only provide feedback on your own messages.');
+        throw Exception('You can only provide feedback on your own messages.');
       } else if (e.response?.statusCode == 404) {
         throw Exception('Chat message not found.');
       } else if (e.response?.statusCode == 400) {

@@ -1,18 +1,18 @@
 import 'package:balance_iq/core/constants/api_endpoints.dart';
 import 'package:balance_iq/features/home/data/models/dashboard_summary_response.dart';
 import 'package:dio/dio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../../core/storage/secure_storage_service.dart';
 import 'dashboard_remote_datasource.dart';
 
 /// Finance Guru Dashboard API implementation based on Postman API Collection spec
 /// Endpoint: GET /api/finance-guru/v1/dashboard
-/// Auth: Bearer token (from SharedPreferences)
+/// Auth: Bearer token (from SecureStorage)
 /// Optional query parameters: startDate, endDate (YYYY-MM-DD format)
 class DashboardFinanceGuruDataSource implements DashboardRemoteDataSource {
   final Dio dio;
-  final SharedPreferences sharedPreferences;
+  final SecureStorageService secureStorage;
 
-  DashboardFinanceGuruDataSource(this.dio, this.sharedPreferences);
+  DashboardFinanceGuruDataSource(this.dio, this.secureStorage);
 
   @override
   Future<DashboardSummaryModel> getDashboardSummary({
@@ -21,7 +21,7 @@ class DashboardFinanceGuruDataSource implements DashboardRemoteDataSource {
   }) async {
     try {
       // Get auth token if available
-      final token = sharedPreferences.getString('auth_token');
+      final token = await secureStorage.getToken();
 
       // Build query parameters
       final queryParameters = <String, dynamic>{};
@@ -120,7 +120,7 @@ class DashboardFinanceGuruDataSource implements DashboardRemoteDataSource {
   @override
   Future<bool> updateOnboarded(bool onboarded) async {
     try {
-      final token = sharedPreferences.getString('auth_token');
+      final token = await secureStorage.getToken();
 
       final response = await dio.patch<Map<String, dynamic>>(
         '${ApiEndpoints.dashboard}/onboarded',

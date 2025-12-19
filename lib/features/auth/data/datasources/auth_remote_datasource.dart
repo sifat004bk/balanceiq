@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../../../../core/constants/app_constants.dart';
 import '../../../../core/constants/api_endpoints.dart';
+import '../../../../core/constants/app_constants.dart';
+import '../../../../core/storage/secure_storage_service.dart';
 import '../models/auth_request_models.dart';
 import '../models/user_model.dart';
 
@@ -28,12 +28,12 @@ abstract class AuthRemoteDataSource {
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final GoogleSignIn googleSignIn;
   final Dio dio;
-  final SharedPreferences sharedPreferences;
+  final SecureStorageService secureStorage;
 
   AuthRemoteDataSourceImpl({
     required this.googleSignIn,
     required this.dio,
-    required this.sharedPreferences,
+    required this.secureStorage,
   });
 
   @override
@@ -48,7 +48,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       }
 
       // 2. Get the idToken from Google authentication
-      final GoogleSignInAuthentication googleAuth = await account.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await account.authentication;
       final String? idToken = googleAuth.idToken;
 
       if (idToken == null) {
@@ -74,18 +75,21 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
         // Store the JWT token from backend
         if (data['token'] != null) {
-          await sharedPreferences.setString('auth_token', data['token']);
+          await secureStorage.saveToken(data['token']);
         }
         // Store refresh token if present
         if (data['refreshToken'] != null) {
-          await sharedPreferences.setString('refresh_token', data['refreshToken']);
+          await secureStorage.saveRefreshToken(data['refreshToken']);
         }
 
         // Return user model with backend data
         return UserModel(
           id: data['userId']?.toString() ?? account.id,
           email: data['email'] ?? account.email,
-          name: data['fullName'] ?? data['username'] ?? account.displayName ?? 'Unknown',
+          name: data['fullName'] ??
+              data['username'] ??
+              account.displayName ??
+              'Unknown',
           photoUrl: account.photoUrl,
           authProvider: 'google',
           createdAt: DateTime.now(),
@@ -94,14 +98,16 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       } else {
         // Backend failed - sign out from Google so user can try different account
         await googleSignIn.signOut();
-        throw Exception('Backend authentication failed: ${response.statusCode}');
+        throw Exception(
+            'Backend authentication failed: ${response.statusCode}');
       }
     } on DioException catch (e) {
       // Backend API failed - sign out from Google so user can try different account
       await googleSignIn.signOut();
 
       if (e.response?.statusCode == 401) {
-        throw Exception('Google authentication failed: Invalid or expired token');
+        throw Exception(
+            'Google authentication failed: Invalid or expired token');
       } else if (e.response?.statusCode == 400) {
         final message = e.response?.data is Map
             ? e.response?.data['message']
@@ -114,11 +120,14 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       // Check if it's a PlatformException for better error messages
       final errorString = e.toString();
       if (errorString.contains('ApiException: 10')) {
-        throw Exception('Google Sign-In configuration error. Please check SHA-1 fingerprint.');
-      } else if (errorString.contains('sign_in_canceled') || errorString.contains('cancelled')) {
+        throw Exception(
+            'Google Sign-In configuration error. Please check SHA-1 fingerprint.');
+      } else if (errorString.contains('sign_in_canceled') ||
+          errorString.contains('cancelled')) {
         throw Exception('Google sign in was cancelled');
       } else if (errorString.contains('network_error')) {
-        throw Exception('Network error. Please check your internet connection.');
+        throw Exception(
+            'Network error. Please check your internet connection.');
       }
 
       // Sign out so user can try with different account on next attempt
@@ -129,7 +138,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     }
   }
 
-
   @override
   Future<void> signOut() async {
     try {
@@ -137,8 +145,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       await googleSignIn.signOut();
 
       // Clear all cached tokens
-      await sharedPreferences.remove('auth_token');
-      await sharedPreferences.remove('refresh_token');
+      await secureStorage.clearAllTokens();
     } catch (e) {
       throw Exception('Failed to sign out: $e');
     }
@@ -164,8 +171,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       }
     } on DioException catch (e) {
       if (e.response?.statusCode == 400) {
-        throw Exception(
-            e.response?.data['message'] ?? 'Invalid signup data');
+        throw Exception(e.response?.data['message'] ?? 'Invalid signup data');
       } else if (e.response?.statusCode == 409) {
         throw Exception('User already exists');
       } else {
@@ -192,12 +198,13 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       if (response.statusCode == 200) {
         final loginResponse = LoginResponse.fromJson(response.data);
 
-        // Store the token in SharedPreferences
+        // Store the token in SecureStorage
         if (loginResponse.data?.token != null) {
-          await sharedPreferences.setString('auth_token', loginResponse.data!.token);
+          await secureStorage.saveToken(loginResponse.data!.token);
         }
         if (loginResponse.data?.refreshToken != null) {
-           await sharedPreferences.setString('refresh_token', loginResponse.data!.refreshToken);
+          await secureStorage
+              .saveRefreshToken(loginResponse.data!.refreshToken);
         }
 
         return loginResponse;
@@ -232,11 +239,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
       if (response.statusCode == 200) {
         final refreshResponse = RefreshTokenResponse.fromJson(response.data);
-         if (refreshResponse.data?.token != null) {
-          await sharedPreferences.setString('auth_token', refreshResponse.data!.token);
+        if (refreshResponse.data?.token != null) {
+          await secureStorage.saveToken(refreshResponse.data!.token);
         }
         if (refreshResponse.data?.refreshToken != null) {
-           await sharedPreferences.setString('refresh_token', refreshResponse.data!.refreshToken);
+          await secureStorage
+              .saveRefreshToken(refreshResponse.data!.refreshToken);
         }
         return refreshResponse;
       } else {
@@ -302,8 +310,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       }
     } on DioException catch (e) {
       if (e.response?.statusCode == 400) {
-        throw Exception(
-            e.response?.data['message'] ?? 'Invalid password data');
+        throw Exception(e.response?.data['message'] ?? 'Invalid password data');
       } else if (e.response?.statusCode == 401) {
         throw Exception('Current password is incorrect');
       } else {
@@ -390,7 +397,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       if (response.statusCode == 200) {
         return;
       } else {
-        throw Exception('Failed to send verification email: ${response.statusCode}');
+        throw Exception(
+            'Failed to send verification email: ${response.statusCode}');
       }
     } on DioException catch (e) {
       if (e.response?.statusCode == 400) {
@@ -424,13 +432,15 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       if (response.statusCode == 200) {
         return;
       } else {
-        throw Exception('Failed to resend verification email: ${response.statusCode}');
+        throw Exception(
+            'Failed to resend verification email: ${response.statusCode}');
       }
     } on DioException catch (e) {
       if (e.response?.statusCode == 404) {
         throw Exception('Email not found');
       } else if (e.response?.statusCode == 400) {
-        throw Exception(e.response?.data['message'] ?? 'Email is already verified');
+        throw Exception(
+            e.response?.data['message'] ?? 'Email is already verified');
       } else {
         throw Exception('Network error: ${e.message}');
       }

@@ -1,6 +1,6 @@
 import 'package:balance_iq/core/constants/api_endpoints.dart';
 import 'package:dio/dio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../core/storage/secure_storage_service.dart';
 
 import '../models/plan_dto.dart';
 import '../models/subscription_dto.dart';
@@ -26,14 +26,14 @@ abstract class SubscriptionDataSource {
 /// Implementation of subscription data source
 class SubscriptionDataSourceImpl implements SubscriptionDataSource {
   final Dio dio;
-  final SharedPreferences sharedPreferences;
+  final SecureStorageService secureStorage;
 
-  SubscriptionDataSourceImpl(this.dio, this.sharedPreferences);
+  SubscriptionDataSourceImpl(this.dio, this.secureStorage);
 
   @override
   Future<List<PlanDto>> getAllPlans() async {
     try {
-      final token = sharedPreferences.getString('auth_token');
+      final token = await secureStorage.getToken();
       if (token == null) {
         throw Exception('Authentication required. Please login.');
       }
@@ -76,7 +76,7 @@ class SubscriptionDataSourceImpl implements SubscriptionDataSource {
   @override
   Future<SubscriptionStatusDto> getSubscriptionStatus() async {
     try {
-      final token = sharedPreferences.getString('auth_token');
+      final token = await secureStorage.getToken();
       if (token == null) {
         throw Exception('Authentication required. Please login.');
       }
@@ -115,9 +115,10 @@ class SubscriptionDataSourceImpl implements SubscriptionDataSource {
   }
 
   @override
-  Future<SubscriptionDto> createSubscription(CreateSubscriptionRequest request) async {
+  Future<SubscriptionDto> createSubscription(
+      CreateSubscriptionRequest request) async {
     try {
-      final token = sharedPreferences.getString('auth_token');
+      final token = await secureStorage.getToken();
       if (token == null) {
         throw Exception('Authentication required. Please login.');
       }
@@ -160,9 +161,11 @@ class SubscriptionDataSourceImpl implements SubscriptionDataSource {
 
   void _handleDioError(DioException e) {
     if (e.type == DioExceptionType.connectionTimeout) {
-      throw Exception('Connection timeout. Please check your internet connection.');
+      throw Exception(
+          'Connection timeout. Please check your internet connection.');
     } else if (e.type == DioExceptionType.receiveTimeout) {
-      throw Exception('Server is taking too long to respond. Please try again.');
+      throw Exception(
+          'Server is taking too long to respond. Please try again.');
     } else if (e.type == DioExceptionType.connectionError) {
       throw Exception('No internet connection. Please check your network.');
     } else if (e.response?.statusCode == 401) {
@@ -172,7 +175,8 @@ class SubscriptionDataSourceImpl implements SubscriptionDataSource {
     } else if (e.response?.statusCode == 404) {
       throw Exception('Resource not found.');
     } else if (e.response?.statusCode == 409) {
-      final message = e.response?.data?['message'] ?? 'Active subscription already exists';
+      final message =
+          e.response?.data?['message'] ?? 'Active subscription already exists';
       throw Exception('Conflict: $message');
     } else if (e.response?.statusCode == 400) {
       final message = e.response?.data?['message'] ?? 'Invalid request';

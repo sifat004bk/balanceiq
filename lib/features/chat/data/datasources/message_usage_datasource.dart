@@ -1,7 +1,7 @@
 import 'package:balance_iq/core/constants/api_endpoints.dart';
 import 'package:balance_iq/features/chat/data/models/message_usage_model.dart';
 import 'package:dio/dio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../core/storage/secure_storage_service.dart';
 
 /// Message usage API data source
 /// Endpoint: GET /api/finance-guru/v1/usage
@@ -13,15 +13,15 @@ abstract class MessageUsageDataSource {
 /// Implementation of message usage data source
 class MessageUsageDataSourceImpl implements MessageUsageDataSource {
   final Dio dio;
-  final SharedPreferences sharedPreferences;
+  final SecureStorageService secureStorage;
 
-  MessageUsageDataSourceImpl(this.dio, this.sharedPreferences);
+  MessageUsageDataSourceImpl(this.dio, this.secureStorage);
 
   @override
   Future<MessageUsageModel> getMessageUsage() async {
     try {
       // Get auth token
-      final token = sharedPreferences.getString('auth_token');
+      final token = await secureStorage.getToken();
       if (token == null) {
         throw Exception('Authentication required. Please login.');
       }

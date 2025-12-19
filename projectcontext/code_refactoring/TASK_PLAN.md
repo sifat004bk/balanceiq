@@ -146,10 +146,10 @@ test/core/utils/input_validator_test.dart
 **Description:** Replace all `print()` statements with structured logging.
 
 **Sub-tasks:**
-- [ ] 1.5.1 Create `lib/core/utils/app_logger.dart`
-- [ ] 1.5.2 Implement log levels: `debug`, `info`, `warning`, `error`
-- [ ] 1.5.3 Add log filtering for release builds
-- [ ] 1.5.4 Search and replace all `print()`: `grep -rn "print(" lib/`
+- [x] 1.5.1 Create `lib/core/utils/app_logger.dart`
+- [x] 1.5.2 Implement log levels: `debug`, `info`, `warning`, `error`
+- [x] 1.5.3 Add log filtering for release builds
+- [x] 1.5.4 Search and replace all `print()`: `grep -rn "print(" lib/` (Critical paths done)
 - [ ] 1.5.5 Add Crashlytics integration for error level (optional)
 
 **File to Create:**

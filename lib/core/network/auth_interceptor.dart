@@ -5,6 +5,7 @@ import '../constants/api_endpoints.dart';
 import '../constants/app_constants.dart';
 import '../navigation/navigator_service.dart';
 import '../storage/secure_storage_service.dart';
+import '../utils/app_logger.dart';
 
 class AuthInterceptor extends Interceptor {
   final SecureStorageService secureStorage;
@@ -28,8 +29,10 @@ class AuthInterceptor extends Interceptor {
     }
 
     if (kDebugMode) {
-      print('🔐 [AuthInterceptor] Request: ${options.method} ${options.path}');
-      print('🔐 [AuthInterceptor] Has token: ${token != null}');
+      AppLogger.debug('🔐 Request: ${options.method} ${options.path}',
+          name: 'AuthInterceptor');
+      AppLogger.debug('🔐 Has token: ${token != null}',
+          name: 'AuthInterceptor');
     }
 
     handler.next(options);
@@ -38,8 +41,9 @@ class AuthInterceptor extends Interceptor {
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
     if (kDebugMode) {
-      print(
-          '🔐 [AuthInterceptor] Error: ${err.response?.statusCode} for ${err.requestOptions.path}');
+      AppLogger.debug(
+          '🔐 Error: ${err.response?.statusCode} for ${err.requestOptions.path}',
+          name: 'AuthInterceptor');
     }
 
     // Only handle 401 errors and prevent infinite refresh loops
@@ -49,22 +53,16 @@ class AuthInterceptor extends Interceptor {
       if (requestPath.contains('/auth/login') ||
           requestPath.contains('/auth/signup') ||
           requestPath.contains('/auth/refresh-token')) {
-        if (kDebugMode) {
-          print(
-              '🔐 [AuthInterceptor] Skipping refresh for auth endpoint: $requestPath');
-        }
+        AppLogger.debug('🔐 Skipping refresh for auth endpoint: $requestPath',
+            name: 'AuthInterceptor');
         return handler.next(err);
       }
 
-      final refreshToken = await secureStorage.getRefreshToken();
+      // If we haven't tried to refresh yet, try now
+      if (!_isRefreshing) {
+        AppLogger.debug('🔐 Got 401, attempting token refresh...',
+            name: 'AuthInterceptor');
 
-      if (kDebugMode) {
-        print('🔐 [AuthInterceptor] Got 401, attempting token refresh...');
-        print(
-            '🔐 [AuthInterceptor] Has refresh token: ${refreshToken != null}');
-      }
-
-      if (refreshToken != null && refreshToken.isNotEmpty) {
         _isRefreshing = true;
 
         try {
@@ -74,9 +72,17 @@ class AuthInterceptor extends Interceptor {
           tokenDio.options.sendTimeout = AppConstants.apiTimeout;
           tokenDio.options.receiveTimeout = AppConstants.apiTimeout;
 
-          if (kDebugMode) {
-            print(
-                '🔐 [AuthInterceptor] Calling refresh token endpoint: ${ApiEndpoints.refreshToken}');
+          AppLogger.debug(
+              '🔐 Calling refresh token endpoint: ${ApiEndpoints.refreshToken}',
+              name: 'AuthInterceptor');
+
+          final refreshToken = await secureStorage.getRefreshToken();
+          if (refreshToken == null) {
+            AppLogger.debug('🔐 No refresh token found, cannot refresh.',
+                name: 'AuthInterceptor');
+            _isRefreshing = false;
+            await _handleRefreshFailure();
+            return handler.reject(err);
           }
 
           final response = await tokenDio.post(
@@ -84,22 +90,16 @@ class AuthInterceptor extends Interceptor {
             data: RefreshTokenRequest(refreshToken: refreshToken).toJson(),
           );
 
-          if (kDebugMode) {
-            print(
-                '🔐 [AuthInterceptor] Refresh response status: ${response.statusCode}');
-            print(
-                '🔐 [AuthInterceptor] Refresh response data: ${response.data}');
-          }
+          AppLogger.debug('🔐 Refresh response status: ${response.statusCode}',
+              name: 'AuthInterceptor');
 
           if (response.statusCode == 200) {
             final refreshResponse =
                 RefreshTokenResponse.fromJson(response.data);
 
             if (refreshResponse.success && refreshResponse.data != null) {
-              if (kDebugMode) {
-                print(
-                    '🔐 [AuthInterceptor] Token refresh successful! Updating tokens...');
-              }
+              AppLogger.debug('🔐 Token refresh successful! Updating tokens...',
+                  name: 'AuthInterceptor');
 
               // Update the stored tokens
               if (refreshResponse.data != null) {
@@ -115,10 +115,9 @@ class AuthInterceptor extends Interceptor {
               opts.headers['Authorization'] =
                   'Bearer ${refreshResponse.data!.token}';
 
-              if (kDebugMode) {
-                print(
-                    '🔐 [AuthInterceptor] Retrying original request: ${opts.method} ${opts.path}');
-              }
+              AppLogger.debug(
+                  '🔐 Retrying original request: ${opts.method} ${opts.path}',
+                  name: 'AuthInterceptor');
 
               // Use a fresh Dio without the interceptor to avoid loops
               final retryDio = Dio();
@@ -148,10 +147,9 @@ class AuthInterceptor extends Interceptor {
 
               return handler.resolve(clonedRequest);
             } else {
-              if (kDebugMode) {
-                print(
-                    '🔐 [AuthInterceptor] Refresh response unsuccessful: ${refreshResponse.message}');
-              }
+              AppLogger.warning(
+                  '🔐 Refresh response unsuccessful: ${refreshResponse.message}',
+                  name: 'AuthInterceptor');
               // Refresh response indicated failure
               _isRefreshing = false;
               await _handleRefreshFailure();
@@ -160,31 +158,20 @@ class AuthInterceptor extends Interceptor {
           }
 
           // If we get here, refresh was unsuccessful (non-200)
-          if (kDebugMode) {
-            print(
-                '🔐 [AuthInterceptor] Refresh returned non-200 status: ${response.statusCode}');
-          }
+          AppLogger.warning(
+              '🔐 Refresh returned non-200 status: ${response.statusCode}',
+              name: 'AuthInterceptor');
           _isRefreshing = false;
           await _handleRefreshFailure();
           return handler.reject(err);
         } catch (e) {
           // Refresh failed, clear tokens and navigate to login
           _isRefreshing = false;
-          if (kDebugMode) {
-            print(
-                '🔐 [AuthInterceptor] Token refresh failed with exception: $e');
-          }
+          AppLogger.error('🔐 Token refresh failed with exception: $e',
+              name: 'AuthInterceptor');
           await _handleRefreshFailure();
           return handler.reject(err);
         }
-      } else {
-        // No refresh token available, navigate to login
-        if (kDebugMode) {
-          print(
-              '🔐 [AuthInterceptor] No refresh token available, redirecting to login');
-        }
-        await _handleRefreshFailure();
-        return handler.reject(err);
       }
     }
 
@@ -198,10 +185,9 @@ class AuthInterceptor extends Interceptor {
     await secureStorage.clearAllTokens();
     await secureStorage.delete(key: 'user_id');
 
-    if (kDebugMode) {
-      print(
-          '🔐 [AuthInterceptor] Session expired. Tokens cleared. Navigating to login screen.');
-    }
+    AppLogger.debug(
+        '🔐 Session expired. Tokens cleared. Navigating to login screen.',
+        name: 'AuthInterceptor');
 
     // Navigate to login screen with error message
     navigateToLogin(

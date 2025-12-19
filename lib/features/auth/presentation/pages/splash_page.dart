@@ -1,7 +1,7 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/storage/secure_storage_service.dart';
+import '../../../../core/utils/app_logger.dart';
 import '../../../home/domain/usecase/get_user_dashbaord.dart';
 
 class SplashPage extends StatefulWidget {
@@ -52,17 +52,16 @@ class _SplashPageState extends State<SplashPage>
     final authToken = await secureStorage.getToken();
     final refreshToken = await secureStorage.getRefreshToken();
 
-    if (kDebugMode) {
-      print('🚀 [SplashPage] Checking session...');
-      print('🚀 [SplashPage] Has auth token: ${authToken != null}');
-      print('🚀 [SplashPage] Has refresh token: ${refreshToken != null}');
-    }
+    AppLogger.debug('🚀 Checking session...', name: 'SplashPage');
+    AppLogger.debug('🚀 Has auth token: ${authToken != null}',
+        name: 'SplashPage');
+    AppLogger.debug('🚀 Has refresh token: ${refreshToken != null}',
+        name: 'SplashPage');
 
     // If no tokens, go to onboarding
     if (authToken == null || authToken.isEmpty) {
-      if (kDebugMode) {
-        print('🚀 [SplashPage] No auth token, navigating to onboarding');
-      }
+      AppLogger.debug('🚀 No auth token, navigating to onboarding',
+          name: 'SplashPage');
       _navigateToOnboarding();
       return;
     }
@@ -70,9 +69,8 @@ class _SplashPageState extends State<SplashPage>
     // Try to validate session by calling dashboard API
     // This will trigger the AuthInterceptor if token is expired
     try {
-      if (kDebugMode) {
-        print('🚀 [SplashPage] Validating session by calling dashboard...');
-      }
+      AppLogger.debug('🚀 Validating session by calling dashboard...',
+          name: 'SplashPage');
 
       final getDashboardSummary = sl<GetDashboardSummary>();
 
@@ -93,24 +91,20 @@ class _SplashPageState extends State<SplashPage>
 
       result.fold(
         (failure) {
-          if (kDebugMode) {
-            print('🚀 [SplashPage] Dashboard call failed: ${failure.message}');
-          }
+          AppLogger.debug('🚀 Dashboard call failed: ${failure.message}',
+              name: 'SplashPage');
           // Session invalid, navigate to login
           _navigateToLogin();
         },
         (summary) {
-          if (kDebugMode) {
-            print('🚀 [SplashPage] Session valid, navigating to home');
-          }
+          AppLogger.debug('🚀 Session valid, navigating to home',
+              name: 'SplashPage');
           // Session valid, navigate to home
           _navigateToHome();
         },
       );
     } catch (e) {
-      if (kDebugMode) {
-        print('🚀 [SplashPage] Exception during validation: $e');
-      }
+      AppLogger.error('🚀 Exception during validation: $e', name: 'SplashPage');
       // On error, navigate to login
       _navigateToLogin();
     }

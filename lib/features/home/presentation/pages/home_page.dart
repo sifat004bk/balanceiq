@@ -386,6 +386,7 @@ class _DashboardViewState extends State<DashboardView> {
                             Navigator.pushNamed(context, '/profile');
                           },
                           profileUrl: _profileUrl ?? '',
+                          userName: _userName,
                           displayDate: _getFormattedDateRange(),
                           onTapDateRange: _selectDateRange,
                           profileIconKey: _profileIconKey,

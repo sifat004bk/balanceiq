@@ -10,6 +10,7 @@ class HomeAppbar extends StatelessWidget {
   final String profileUrl;
   final String displayDate;
   final GlobalKey? profileIconKey;
+  final String userName;
 
   const HomeAppbar({
     super.key,
@@ -19,15 +20,21 @@ class HomeAppbar extends StatelessWidget {
     required this.displayDate,
     this.onTapDateRange,
     this.profileIconKey,
+    this.userName = '',
   });
 
   final DashboardSummary summary;
   final VoidCallback? onTapDateRange;
 
+  String _getInitial() {
+    if (userName.isNotEmpty) {
+      return userName[0].toUpperCase();
+    }
+    return 'U';
+  }
+
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return SliverAppBar(
       floating: true,
       snap: true,
@@ -65,57 +72,39 @@ class HomeAppbar extends StatelessWidget {
       ),
       leading: Padding(
         padding: const EdgeInsets.only(left: 12),
-        child: InkWell(
+        child: GestureDetector(
           key: profileIconKey,
           onTap: onTapProfileIcon,
-          borderRadius: BorderRadius.circular(50),
           child: Container(
             width: 40,
             height: 40,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              gradient: LinearGradient(colors: [
-                Theme.of(context).colorScheme.primary,
-                Theme.of(context).colorScheme.primary.withOpacity(0.8)
-              ]),
-              boxShadow: [
-                BoxShadow(
-                  color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
-                  blurRadius: 8,
-                  spreadRadius: 1,
-                ),
-              ],
-            ),
-            child: Container(
-              margin: const EdgeInsets.all(2),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Theme.of(context).scaffoldBackgroundColor,
+              border: Border.all(
+                color: Theme.of(context).colorScheme.primary,
+                width: 2,
               ),
-              child: profileUrl.isEmpty
-                  ? Icon(
-                      Icons.person_rounded,
-                      size: 20,
-                      color: isDark
-                          ? Theme.of(context).colorScheme.primary
-                          : Theme.of(context).colorScheme.primary,
-                    )
-                  : ClipOval(
-                      child: Image.network(
-                        profileUrl,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Icon(
-                            Icons.person_rounded,
-                            size: 20,
-                            color: isDark
-                                ? Theme.of(context).colorScheme.primary
-                                : Theme.of(context).colorScheme.primary,
-                          );
-                        },
+            ),
+            padding: const EdgeInsets.all(2),
+            child: profileUrl.isNotEmpty
+                ? CircleAvatar(
+                    radius: 16,
+                    backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                    backgroundImage: NetworkImage(profileUrl),
+                    onBackgroundImageError: (_, __) {},
+                  )
+                : CircleAvatar(
+                    radius: 16,
+                    backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                    child: Text(
+                      _getInitial(),
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.onPrimaryContainer,
                       ),
                     ),
-            ),
+                  ),
           ),
         ),
       ),

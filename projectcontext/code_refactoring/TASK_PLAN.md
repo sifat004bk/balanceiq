@@ -21,10 +21,10 @@ This document breaks down the Master Refactoring Plan into actionable tasks with
 **Description:** Replace SharedPreferences with flutter_secure_storage for all sensitive data.
 
 **Sub-tasks:**
-- [ ] 1.1.1 Add `flutter_secure_storage: ^9.0.0` to pubspec.yaml
-- [ ] 1.1.2 Create `lib/core/storage/secure_storage_service.dart` (abstract interface)
-- [ ] 1.1.3 Create `lib/core/storage/secure_storage_service_impl.dart` (implementation)
-- [ ] 1.1.4 Register in `lib/core/di/injection_container.dart`
+- [x] 1.1.1 Add `flutter_secure_storage: ^9.0.0` to pubspec.yaml
+- [x] 1.1.2 Create `lib/core/storage/secure_storage_service.dart` (abstract interface)
+- [x] 1.1.3 Create `lib/core/storage/secure_storage_service_impl.dart` (implementation)
+- [x] 1.1.4 Register in `lib/core/di/injection_container.dart`
 - [ ] 1.1.5 Write unit tests for SecureStorageService
 
 **Files to Create:**

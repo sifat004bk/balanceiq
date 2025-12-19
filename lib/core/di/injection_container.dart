@@ -74,6 +74,8 @@ import '../network/auth_interceptor.dart';
 import '../theme/theme_cubit.dart';
 import '../tour/tour.dart';
 import '../currency/currency_cubit.dart';
+import '../storage/secure_storage_service.dart';
+import '../storage/secure_storage_service_impl.dart';
 
 final sl = GetIt.instance;
 
@@ -81,6 +83,11 @@ Future<void> init() async {
   //! External - Must be registered first
   final sharedPreferences = await SharedPreferences.getInstance();
   sl.registerLazySingleton(() => sharedPreferences);
+
+  // Secure Storage
+  sl.registerLazySingleton<SecureStorageService>(
+    () => SecureStorageServiceImpl(),
+  );
 
   // Configure Dio with logging interceptor (only logs in debug mode)
   sl.registerLazySingleton(() {
@@ -94,7 +101,7 @@ Future<void> init() async {
 
     // Add logging interceptor - only logs in debug mode, no logs in release
     dio.interceptors.add(LoggingInterceptor());
-    
+
     // Add AuthInterceptor - Instantiate directly to pass the dio instance and avoid circular dependency
     dio.interceptors.add(AuthInterceptor(
       sharedPreferences: sl(),
@@ -127,7 +134,8 @@ Future<void> init() async {
 
   //! Core - Product Tour
   sl.registerLazySingleton(
-    () => ProductTourService(dashboardDataSource: sl<DashboardRemoteDataSource>()),
+    () => ProductTourService(
+        dashboardDataSource: sl<DashboardRemoteDataSource>()),
   );
   sl.registerFactory(
     () => ProductTourCubit(tourService: sl()),
@@ -367,4 +375,3 @@ Future<void> init() async {
     ),
   );
 }
-

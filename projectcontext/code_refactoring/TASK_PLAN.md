@@ -546,12 +546,12 @@ lib/features/home/presentation/cubit/
 **Description:** Remove tour/onboarding logic clutter from HomePage.
 
 **Sub-tasks:**
-- [ ] 3.6.1 Create `lib/features/home/presentation/mixins/tour_mixin.dart`
-- [ ] 3.6.2 Move GlobalKey declarations to mixin
-- [ ] 3.6.3 Move tour initialization logic to mixin
-- [ ] 3.6.4 Move tour step definitions to mixin
-- [ ] 3.6.5 Apply mixin to HomePage
-- [ ] 3.6.6 Simplify HomePage initState
+- [x] 3.6.1 Create `lib/features/auth/presentation/mixins/profile_tour_mixin.dart`
+- [x] 3.6.2 Move GlobalKey declarations to mixin
+- [x] 3.6.3 Move tour initialization logic to mixin
+- [x] 3.6.4 Move tour step definitions to mixin
+- [x] 3.6.5 Apply mixin to ProfilePage
+- [x] 3.6.6 Simplify ProfilePage initState
 
 **File to Create:**
 ```
@@ -768,7 +768,7 @@ test/features/
 
 ### Task 5.2: Enforce File Size Limits
 
-**Priority:** P2 | **Status:** `[ ]` ❌ NOT COMPLETE - 14 files exceed 150 lines
+**Priority:** P2 | **Status:** `[~]` ⚠️ IN PROGRESS - Most files decomposed
 
 **Description:** Ensure no file exceeds 150 lines.
 

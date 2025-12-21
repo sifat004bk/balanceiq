@@ -66,7 +66,7 @@ void registerChatModule(GetIt sl) {
   // Conditionally register mock or real API chat datasource
   sl.registerLazySingleton<ChatRemoteDataSource>(
     () {
-      if (AppConstants.isMockMode) {
+      if (sl<AppConstants>().isMockMode) {
         AppLogger.debug('Registering MOCK ChatRemoteDataSource', name: 'DI');
         return ChatMockDataSource(sl());
       } else {
@@ -105,7 +105,7 @@ void registerChatModule(GetIt sl) {
   // Conditionally register mock or real message usage data source
   sl.registerLazySingleton<MessageUsageDataSource>(
     () {
-      if (AppConstants.isMockMode) {
+      if (sl<AppConstants>().isMockMode) {
         AppLogger.debug('Registering MOCK MessageUsageDataSource', name: 'DI');
         return MessageUsageMockDataSource();
       } else {

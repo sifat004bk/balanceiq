@@ -11,7 +11,11 @@ import 'package:uuid/uuid.dart';
 
 import '../../../../mocks/mock_datasources.dart';
 
+import 'package:get_it/get_it.dart';
+
 class MockSharedPreferences extends Mock implements SharedPreferences {}
+
+class MockAppConstants extends Mock implements AppConstants {}
 
 class MockUuid extends Mock implements Uuid {}
 
@@ -24,6 +28,7 @@ void main() {
   late MockChatLocalDataSource mockLocalDataSource;
   late MockSharedPreferences mockSharedPreferences;
   late MockUuid mockUuid;
+  late MockAppConstants mockAppConstants;
 
   setUpAll(() {
     registerFallbackValue(FakeMessageModel());
@@ -33,7 +38,14 @@ void main() {
     mockRemoteDataSource = MockChatRemoteDataSource();
     mockLocalDataSource = MockChatLocalDataSource();
     mockSharedPreferences = MockSharedPreferences();
+    mockSharedPreferences = MockSharedPreferences();
     mockUuid = MockUuid();
+    mockAppConstants = MockAppConstants();
+
+    GetIt.instance.registerSingleton<AppConstants>(mockAppConstants);
+    when(() => mockAppConstants.senderUser).thenReturn('user_sender');
+    when(() => mockAppConstants.senderBot).thenReturn('bot_sender');
+    when(() => mockAppConstants.keyUserId).thenReturn('user_id_key');
 
     repository = ChatRepositoryImpl(
       remoteDataSource: mockRemoteDataSource,
@@ -41,6 +53,10 @@ void main() {
       sharedPreferences: mockSharedPreferences,
       uuid: mockUuid,
     );
+  });
+
+  tearDown(() {
+    GetIt.instance.reset();
   });
 
   group('sendMessage', () {
@@ -53,24 +69,23 @@ void main() {
     //   id: tMessageId,
     //   userId: tUserId,
     //   botId: tBotId,
-    //   sender: AppConstants.senderUser,
+    //   sender: GetIt.instance<AppConstants>().senderUser,
     //   content: tContent,
     //   timestamp: DateTime(2023, 1, 1),
     // );
 
-    final tBotMessage = MessageModel(
-      id: 'msg2',
-      userId: tUserId,
-      botId: tBotId,
-      sender: AppConstants.senderBot,
-      content: 'Hi there',
-      timestamp: DateTime(2023, 1, 1),
-    );
-
     test('should send message successfully', () async {
       // Arrange
-      when(() => mockSharedPreferences.getString(AppConstants.keyUserId))
-          .thenReturn(tUserId);
+      final tBotMessage = MessageModel(
+        id: 'msg2',
+        userId: tUserId,
+        botId: tBotId,
+        sender: GetIt.instance<AppConstants>().senderBot,
+        content: 'Hi there',
+        timestamp: DateTime(2023, 1, 1),
+      );
+      when(() => mockSharedPreferences.getString(
+          GetIt.instance<AppConstants>().keyUserId)).thenReturn(tUserId);
       when(() => mockUuid.v4()).thenReturn(tMessageId);
 
       // Stub saveMessage for user message
@@ -96,7 +111,8 @@ void main() {
 
       // Assert
       expect(result, Right(tBotMessage));
-      verify(() => mockSharedPreferences.getString(AppConstants.keyUserId));
+      verify(() => mockSharedPreferences
+          .getString(GetIt.instance<AppConstants>().keyUserId));
       verify(() => mockLocalDataSource.saveMessage(any())).called(2);
       verify(() => mockRemoteDataSource.sendMessage(
             botId: tBotId,
@@ -109,8 +125,8 @@ void main() {
     test('should return ChatApiFailure when remote throws ChatApiException',
         () async {
       // Arrange
-      when(() => mockSharedPreferences.getString(AppConstants.keyUserId))
-          .thenReturn(tUserId);
+      when(() => mockSharedPreferences.getString(
+          GetIt.instance<AppConstants>().keyUserId)).thenReturn(tUserId);
       when(() => mockUuid.v4()).thenReturn(tMessageId);
       when(() => mockLocalDataSource.saveMessage(any()))
           .thenAnswer((_) => Future.value());

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:get_it/get_it.dart';
 import 'package:flutter/foundation.dart';
 import 'package:feature_auth/data/models/auth_request_models.dart';
 import "package:dolfin_core/constants/api_endpoints.dart";
@@ -69,8 +70,10 @@ class AuthInterceptor extends Interceptor {
           // Create a new Dio instance to avoid circular dependency and interceptor loops
           final tokenDio = Dio();
           tokenDio.options.headers['Content-Type'] = 'application/json';
-          tokenDio.options.sendTimeout = AppConstants.apiTimeout;
-          tokenDio.options.receiveTimeout = AppConstants.apiTimeout;
+          tokenDio.options.sendTimeout =
+              GetIt.instance<AppConstants>().apiTimeout;
+          tokenDio.options.receiveTimeout =
+              GetIt.instance<AppConstants>().apiTimeout;
 
           AppLogger.debug(
               '🔐 Calling refresh token endpoint: ${ApiEndpoints.refreshToken}',

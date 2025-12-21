@@ -49,7 +49,7 @@ void registerDashboardModule(GetIt sl) {
   // Conditionally register mock or real API dashboard datasource
   sl.registerLazySingleton<DashboardRemoteDataSource>(
     () {
-      if (AppConstants.isMockMode) {
+      if (sl<AppConstants>().isMockMode) {
         AppLogger.debug('Registering MOCK DashboardRemoteDataSource',
             name: 'DI');
         return DashboardMockDataSource();

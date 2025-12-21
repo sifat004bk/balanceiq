@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../widgets/message_usage_button.dart';
+import '../message_usage_button.dart';
 
 class ChatUsageButton extends StatelessWidget {
   const ChatUsageButton({super.key});

@@ -14,15 +14,12 @@ import '../cubit/chat_cubit.dart';
 import '../cubit/chat_state.dart';
 import '../chat_config.dart';
 
-// Extracted Widgets
 import 'floating_chat_input_widgets/chat_attachment_button.dart';
 import 'floating_chat_input_widgets/chat_mic_button.dart';
 import 'floating_chat_input_widgets/chat_text_field.dart';
 import 'floating_chat_input_widgets/chat_send_button.dart';
 import 'floating_chat_input_widgets/chat_input_container.dart';
 
-/// Modern floating chat input widget
-/// Matches the homepage button design but with full chat functionality
 class FloatingChatInput extends StatefulWidget {
   final String botId;
   final Color? botColor;

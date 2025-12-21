@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../core/theme/app_theme.dart';
-import '../../widgets/simple_chat_input.dart';
+import '../simple_chat_input.dart';
 
 class ChatInputContainer extends StatelessWidget {
   final GlobalKey chatInputKey;

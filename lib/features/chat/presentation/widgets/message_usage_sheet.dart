@@ -6,7 +6,6 @@ import '../../domain/entities/message_usage.dart';
 import '../cubit/chat_cubit.dart';
 import '../cubit/chat_state.dart';
 
-/// Bottom sheet displaying detailed message usage information
 class MessageUsageSheet extends StatelessWidget {
   const MessageUsageSheet({super.key});
 
@@ -346,117 +345,5 @@ class MessageUsageSheet extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  Widget _buildActivityList(
-    BuildContext context, {
-    required List<RecentMessageItem> recentMessages,
-  }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: ListView.separated(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: recentMessages.length > 5 ? 5 : recentMessages.length,
-        separatorBuilder: (context, index) => Divider(
-          height: 1,
-          color: Theme.of(context).dividerColor,
-        ),
-        itemBuilder: (context, index) {
-          final item = recentMessages[index];
-          return _buildActivityItem(
-            context,
-            item: item,
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildActivityItem(
-    BuildContext context, {
-    required RecentMessageItem item,
-  }) {
-    // Format action name for display
-    final actionDisplay = item.formattedActionType;
-
-    // Format timestamp to local time
-    final localTime = item.timestamp;
-    final timeString =
-        '${localTime.hour.toString().padLeft(2, '0')}:${localTime.minute.toString().padLeft(2, '0')}';
-    final dateString = '${localTime.day}/${localTime.month}/${localTime.year}';
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.15),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Icon(
-              _getActionIcon(item.actionType),
-              color: Theme.of(context).colorScheme.primary,
-              size: 18,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  actionDisplay,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  '$dateString at $timeString',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Theme.of(context).hintColor,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // Show message icon instead of token count
-          Icon(
-            Icons.check_circle_outline,
-            color: Theme.of(context).colorScheme.primary,
-            size: 18,
-          ),
-        ],
-      ),
-    );
-  }
-
-  IconData _getActionIcon(String action) {
-    final actionLower = action.toLowerCase();
-    if (actionLower.contains('income') ||
-        actionLower.contains('record_income')) {
-      return Icons.trending_up_rounded;
-    } else if (actionLower.contains('expense') ||
-        actionLower.contains('record_expense')) {
-      return Icons.trending_down_rounded;
-    } else if (actionLower.contains('search') ||
-        actionLower.contains('transaction')) {
-      return Icons.search_rounded;
-    } else if (actionLower.contains('chat') ||
-        actionLower.contains('general')) {
-      return Icons.chat_bubble_outline_rounded;
-    } else if (actionLower.contains('log')) {
-      return Icons.receipt_long_outlined;
-    }
-    return Icons.chat_bubble_outline;
   }
 }

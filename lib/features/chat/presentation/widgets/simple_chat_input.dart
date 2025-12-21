@@ -14,8 +14,6 @@ import '../cubit/chat_cubit.dart';
 import '../cubit/chat_state.dart';
 import '../chat_config.dart';
 
-/// Modern floating chat input widget
-/// Matches the homepage button design but with full chat functionality
 class SimpleChatInput extends StatefulWidget {
   final String botId;
   final Color? botColor;
@@ -45,20 +43,16 @@ class _SimpleChatInputState extends State<SimpleChatInput> {
   final ImagePicker _picker = ImagePicker();
   final AudioRecorder _audioRecorder = AudioRecorder();
 
-  // State for attachment
   XFile? _selectedImage;
   String? _recordedAudioPath;
   bool _isRecording = false;
   bool _hasContent = false;
 
-  // Focus node
   final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
-    // No local collapse state init needed
-    // Initialize focus listener
     _textController.addListener(_onTextChanged);
     _focusNode.addListener(_onFocusChanged);
   }
@@ -67,9 +61,7 @@ class _SimpleChatInputState extends State<SimpleChatInput> {
     if (widget.onFocusChanged != null) {
       widget.onFocusChanged!(_focusNode.hasFocus);
     }
-    setState(() {
-      // Rebuild to update UI based on focus
-    });
+    setState(() {});
   }
 
   @override
@@ -86,7 +78,6 @@ class _SimpleChatInputState extends State<SimpleChatInput> {
     widget.onToggleCollapse?.call();
   }
 
-  /// Animated recording indicator (2025 design)
   Widget _buildRecordingAnimation() {
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0.0, end: 1.0),

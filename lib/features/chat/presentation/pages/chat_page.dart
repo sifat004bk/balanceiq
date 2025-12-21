@@ -1,19 +1,16 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import '../../../../core/di/injection_container.dart';
-import '../../../../core/theme/app_theme.dart';
 import '../../../../core/tour/tour.dart';
 import '../cubit/chat_cubit.dart';
 import '../cubit/chat_state.dart';
 import '../widgets/chat_shimmer.dart';
 import '../widgets/message_list.dart';
-import '../widgets/simple_chat_input.dart';
 import '../widgets/suggested_prompts.dart';
-import '../widgets/message_usage_button.dart';
 import '../widgets/chat_page_widgets/chat_error_widget.dart';
+import 'chat_page_widgets/chat_page_widgets.dart';
 
 class ChatPage extends StatelessWidget {
   final String botId;
@@ -253,135 +250,17 @@ class _ChatViewState extends State<ChatView> {
                   },
                 ),
               ),
-              _GlassHeaderBackground(),
-              _GlassFooterBackground(),
-              _BackButton(),
-              const _UsageButton(),
-              _ChatInputContainer(
+              const GlassHeaderBackground(),
+              const GlassFooterBackground(),
+              const ChatBackButton(),
+              const ChatUsageButton(),
+              ChatInputContainer(
                 chatInputKey: _chatInputKey,
                 keyboardHeight: keyboardHeight,
                 botId: widget.botId,
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _GlassHeaderBackground extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      top: 0,
-      left: 0,
-      right: 0,
-      height: MediaQuery.of(context).padding.top + 10,
-      child: ClipRect(
-        child: Container(
-          color:
-              Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.7),
-        ),
-      ),
-    );
-  }
-}
-
-class _GlassFooterBackground extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      left: 0,
-      right: 0,
-      bottom: 0,
-      height: MediaQuery.of(context).padding.bottom + 16,
-      child: ClipRect(
-        child: Container(
-          color:
-              Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.7),
-        ),
-      ),
-    );
-  }
-}
-
-class _BackButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      top: MediaQuery.of(context).padding.top + 8,
-      left: 16,
-      child: GestureDetector(
-        onTap: () => Navigator.of(context).pop(),
-        child: Container(
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            color: Theme.of(context).cardColor,
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: Theme.of(context).shadowColor.withValues(alpha: 0.1),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Icon(
-            Icons.arrow_back,
-            color: Theme.of(context).iconTheme.color,
-            size: 20,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _UsageButton extends StatelessWidget {
-  const _UsageButton();
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      top: MediaQuery.of(context).padding.top + 8,
-      right: 16,
-      child: const MessageUsageButton(),
-    );
-  }
-}
-
-class _ChatInputContainer extends StatelessWidget {
-  final GlobalKey chatInputKey;
-  final double keyboardHeight;
-  final String botId;
-
-  const _ChatInputContainer({
-    required this.chatInputKey,
-    required this.keyboardHeight,
-    required this.botId,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      left: 0,
-      right: 0,
-      bottom: 0,
-      child: Container(
-        key: chatInputKey,
-        padding: EdgeInsets.only(
-          left: 16,
-          right: 16,
-          top: 16,
-          bottom: keyboardHeight > 0 ? 8 : 16,
-        ),
-        child: SimpleChatInput(
-          botId: botId,
-          botColor: AppTheme.getBotColor(botId),
-          width: MediaQuery.of(context).size.width - 32,
-          isCollapsed: false,
         ),
       ),
     );

@@ -1,7 +1,7 @@
 import 'dart:ui';
 
-import 'package:balance_iq/core/constants/app_strings.dart';
-import 'package:balance_iq/core/currency/currency_cubit.dart';
+import 'package:dolfin_core/constants/app_strings.dart';
+import 'package:dolfin_core/currency/currency_cubit.dart';
 import 'package:balance_iq/core/di/injection_container.dart';
 import 'package:balance_iq/features/home/presentation/pages/transactions_page.dart';
 import 'package:flutter/material.dart';

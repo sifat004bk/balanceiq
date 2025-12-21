@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'product_tour_cubit.dart';
-import 'product_tour_state.dart';
+import 'package:dolfin_core/tour/product_tour_cubit.dart';
+import 'package:dolfin_core/tour/product_tour_state.dart';
 
 /// A modal-based tour overlay that doesn't require GlobalKeys.
 /// Shows instruction cards with visual indicators pointing to UI areas.

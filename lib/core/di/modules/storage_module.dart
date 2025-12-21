@@ -1,8 +1,8 @@
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../database/database_helper.dart';
-import '../../storage/secure_storage_service.dart';
-import '../../storage/secure_storage_service_impl.dart';
+import "package:dolfin_core/database/database_helper.dart";
+import "package:dolfin_core/storage/secure_storage_service.dart";
+import "package:dolfin_core/storage/secure_storage_service_impl.dart";
 
 Future<void> registerStorageModule(GetIt sl) async {
   // External - Must be registered first

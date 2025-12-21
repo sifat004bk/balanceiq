@@ -1,4 +1,4 @@
-import 'package:balance_iq/core/error/failures.dart';
+import 'package:dolfin_core/error/failures.dart';
 import 'package:balance_iq/features/home/domain/entities/dashbaord_summary.dart';
 import 'package:balance_iq/features/home/domain/usecase/get_user_dashbaord.dart';
 import 'package:balance_iq/features/home/presentation/cubit/dashboard_cubit.dart';

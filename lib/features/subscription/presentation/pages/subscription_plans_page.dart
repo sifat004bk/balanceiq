@@ -1,22 +1,22 @@
-import 'package:balance_iq/core/constants/app_strings.dart';
+import 'package:dolfin_core/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/di/injection_container.dart';
-import '../../../../core/theme/app_typography.dart';
+import 'package:dolfin_ui_kit/theme/app_typography.dart';
 import '../../../../core/tour/tour.dart';
-import '../../../../core/utils/snackbar_utils.dart';
+import 'package:dolfin_core/utils/snackbar_utils.dart';
 import '../../../chat/presentation/pages/chat_page.dart';
-import '../../domain/entities/plan.dart';
-import '../cubit/subscription_cubit.dart';
-import '../cubit/subscription_state.dart';
+import 'package:feature_subscription/domain/entities/plan.dart';
+import 'package:feature_subscription/presentation/cubit/subscription_cubit.dart';
+import 'package:feature_subscription/presentation/cubit/subscription_state.dart';
 
 class SubscriptionPlansPage extends StatelessWidget {
   const SubscriptionPlansPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
+    return BlocProvider<SubscriptionCubit>(
       create: (_) => sl<SubscriptionCubit>()..loadPlansAndStatus(),
       child: const _SubscriptionPlansView(),
     );

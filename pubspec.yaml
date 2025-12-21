@@ -87,6 +87,18 @@ dependencies:
   flutter_animate: ^4.5.2
   currency_picker: ^2.0.21
 
+  # Workspace Packages
+  dolfin_core:
+    path: ../../packages/core/dolfin_core
+  dolfin_ui_kit:
+    path: ../../packages/core/dolfin_ui_kit
+  feature_auth:
+    path: ../../packages/features/feature_auth
+  feature_chat:
+    path: ../../packages/features/feature_chat
+  feature_subscription:
+    path: ../../packages/features/feature_subscription
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -1,4 +1,4 @@
-import 'package:balance_iq/core/constants/app_strings.dart';
+import 'package:dolfin_core/constants/app_strings.dart';
 import 'package:balance_iq/core/di/injection_container.dart';
 import 'package:balance_iq/features/home/domain/entities/transaction.dart';
 import 'package:balance_iq/features/home/presentation/cubit/transaction_filter_cubit.dart';
@@ -20,11 +20,11 @@ class TransactionsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
+        BlocProvider<TransactionsCubit>(
           create: (context) => sl<TransactionsCubit>()
             ..loadTransactions(limit: 50, category: category),
         ),
-        BlocProvider(
+        BlocProvider<TransactionFilterCubit>(
           create: (context) =>
               sl<TransactionFilterCubit>()..updateCategory(category),
         ),

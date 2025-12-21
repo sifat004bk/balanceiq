@@ -1,5 +1,5 @@
-import 'package:balance_iq/core/error/app_exception.dart';
-import 'package:balance_iq/core/error/error_handler.dart';
+import 'package:dolfin_core/error/app_exception.dart';
+import 'package:dolfin_core/error/error_handler.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 

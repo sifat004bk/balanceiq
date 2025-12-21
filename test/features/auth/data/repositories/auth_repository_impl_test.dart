@@ -1,8 +1,8 @@
-import 'package:balance_iq/core/error/app_exception.dart';
-import 'package:balance_iq/core/error/failures.dart';
-import 'package:balance_iq/features/auth/data/models/auth_request_models.dart';
-import 'package:balance_iq/features/auth/data/models/user_model.dart';
-import 'package:balance_iq/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:dolfin_core/error/app_exception.dart';
+import 'package:dolfin_core/error/failures.dart';
+import 'package:feature_auth/data/models/auth_request_models.dart';
+import 'package:feature_auth/data/models/user_model.dart';
+import 'package:feature_auth/data/repositories/auth_repository_impl.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';

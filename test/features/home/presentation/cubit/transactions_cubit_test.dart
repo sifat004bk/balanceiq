@@ -1,4 +1,4 @@
-import 'package:balance_iq/core/error/failures.dart';
+import 'package:dolfin_core/error/failures.dart';
 import 'package:balance_iq/features/home/domain/entities/transaction.dart';
 import 'package:balance_iq/features/home/domain/usecases/delete_transaction.dart';
 import 'package:balance_iq/features/home/domain/usecases/search_transactions.dart';

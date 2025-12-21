@@ -1,9 +1,0 @@
-name: dolfin_workspace
-description: Dolfin AI Workspace - Shared packages for AI assistant apps
-
-environment:
-  sdk: ">=3.4.0 <4.0.0"
-
-dev_dependencies:
-  melos: ^6.1.0
-  flutter_lints: ^4.0.0

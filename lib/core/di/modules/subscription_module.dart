@@ -1,13 +1,13 @@
 import 'package:get_it/get_it.dart';
 
 // Features - Subscription
-import '../../../features/subscription/data/datasources/subscription_datasource.dart';
-import '../../../features/subscription/data/repositories/subscription_repository_impl.dart';
-import '../../../features/subscription/domain/repositories/subscription_repository.dart';
-import '../../../features/subscription/domain/usecases/get_all_plans.dart';
-import '../../../features/subscription/domain/usecases/get_subscription_status.dart';
-import '../../../features/subscription/domain/usecases/create_subscription.dart';
-import '../../../features/subscription/presentation/cubit/subscription_cubit.dart';
+import 'package:feature_subscription/data/datasources/subscription_datasource.dart';
+import 'package:feature_subscription/data/repositories/subscription_repository_impl.dart';
+import 'package:feature_subscription/domain/repositories/subscription_repository.dart';
+import 'package:feature_subscription/domain/usecases/get_all_plans.dart';
+import 'package:feature_subscription/domain/usecases/get_subscription_status.dart';
+import 'package:feature_subscription/domain/usecases/create_subscription.dart';
+import 'package:feature_subscription/presentation/cubit/subscription_cubit.dart';
 
 void registerSubscriptionModule(GetIt sl) {
   //! Features - Subscription

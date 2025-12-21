@@ -1,29 +1,29 @@
 import 'package:get_it/get_it.dart';
-import '../../constants/app_constants.dart';
-import '../../utils/app_logger.dart';
+import "package:dolfin_core/constants/app_constants.dart";
+import "package:dolfin_core/utils/app_logger.dart";
 
 // Features - Chat
-import '../../../features/chat/data/datasources/chat_local_datasource.dart';
-import '../../../features/chat/data/datasources/chat_remote_datasource.dart';
-import '../../../features/chat/data/datasources/chat_finance_guru_datasource.dart';
-import '../../../features/chat/data/datasources/chat_mock_datasource.dart';
-import '../../../features/chat/data/repositories/chat_repository_impl.dart';
-import '../../../features/chat/domain/repositories/chat_repository.dart';
-import '../../../features/chat/domain/usecases/get_chat_history.dart';
-import '../../../features/chat/domain/usecases/get_messages.dart';
-import '../../../features/chat/domain/usecases/send_message.dart';
-import '../../../features/chat/domain/usecases/update_message.dart';
-import '../../../features/chat/domain/usecases/get_message_usage.dart';
-import '../../../features/chat/domain/usecases/submit_feedback.dart';
-import '../../../features/chat/presentation/cubit/chat_cubit.dart';
-import '../../../features/chat/data/datasources/message_usage_datasource.dart';
-import '../../../features/chat/data/datasources/message_usage_mock_datasource.dart';
-import '../../../features/chat/data/datasources/chat_feedback_datasource.dart';
+import 'package:feature_chat/data/datasources/chat_local_datasource.dart';
+import 'package:feature_chat/data/datasources/chat_remote_datasource.dart';
+import 'package:feature_chat/data/datasources/chat_finance_guru_datasource.dart';
+import 'package:feature_chat/data/datasources/chat_mock_datasource.dart';
+import 'package:feature_chat/data/repositories/chat_repository_impl.dart';
+import 'package:feature_chat/domain/repositories/chat_repository.dart';
+import 'package:feature_chat/domain/usecases/get_chat_history.dart';
+import 'package:feature_chat/domain/usecases/get_messages.dart';
+import 'package:feature_chat/domain/usecases/send_message.dart';
+import 'package:feature_chat/domain/usecases/update_message.dart';
+import 'package:feature_chat/domain/usecases/get_message_usage.dart';
+import 'package:feature_chat/domain/usecases/submit_feedback.dart';
+import 'package:feature_chat/presentation/cubit/chat_cubit.dart';
+import 'package:feature_chat/data/datasources/message_usage_datasource.dart';
+import 'package:feature_chat/data/datasources/message_usage_mock_datasource.dart';
+import 'package:feature_chat/data/datasources/chat_feedback_datasource.dart';
 
-import '../../../features/chat/data/repositories/message_usage_repository_impl.dart';
-import '../../../features/chat/data/repositories/chat_feedback_repository_impl.dart';
-import '../../../features/chat/domain/repositories/message_usage_repository.dart';
-import '../../../features/chat/domain/repositories/chat_feedback_repository.dart';
+import 'package:feature_chat/data/repositories/message_usage_repository_impl.dart';
+import 'package:feature_chat/data/repositories/chat_feedback_repository_impl.dart';
+import 'package:feature_chat/domain/repositories/message_usage_repository.dart';
+import 'package:feature_chat/domain/repositories/chat_feedback_repository.dart';
 
 void registerChatModule(GetIt sl) {
   //! Features - Chat

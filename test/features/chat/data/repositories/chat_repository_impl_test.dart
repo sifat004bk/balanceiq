@@ -1,8 +1,8 @@
-import 'package:balance_iq/core/constants/app_constants.dart';
-import 'package:balance_iq/core/error/failures.dart';
-import 'package:balance_iq/features/chat/data/models/message_model.dart';
-import 'package:balance_iq/features/chat/data/datasources/chat_finance_guru_datasource.dart';
-import 'package:balance_iq/features/chat/data/repositories/chat_repository_impl.dart';
+import 'package:dolfin_core/constants/app_constants.dart';
+import 'package:dolfin_core/error/failures.dart';
+import 'package:feature_chat/data/models/message_model.dart';
+import 'package:feature_chat/data/datasources/chat_finance_guru_datasource.dart';
+import 'package:feature_chat/data/repositories/chat_repository_impl.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart'; // Standard Flutter Test
 import 'package:mocktail/mocktail.dart';

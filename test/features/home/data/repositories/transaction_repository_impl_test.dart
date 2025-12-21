@@ -1,4 +1,4 @@
-import 'package:balance_iq/core/error/failures.dart';
+import 'package:dolfin_core/error/failures.dart';
 import 'package:balance_iq/features/home/data/models/transaction_model.dart';
 import 'package:balance_iq/features/home/data/repositories/transaction_repository_impl.dart';
 import 'package:flutter_test/flutter_test.dart';

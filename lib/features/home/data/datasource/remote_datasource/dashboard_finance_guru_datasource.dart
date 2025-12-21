@@ -1,7 +1,7 @@
-import 'package:balance_iq/core/constants/api_endpoints.dart';
+import 'package:dolfin_core/constants/api_endpoints.dart';
 import 'package:balance_iq/features/home/data/models/dashboard_summary_response.dart';
 import 'package:dio/dio.dart';
-import '../../../../../core/storage/secure_storage_service.dart';
+import 'package:dolfin_core/storage/secure_storage_service.dart';
 import 'dashboard_remote_datasource.dart';
 
 /// Finance Guru Dashboard API implementation based on Postman API Collection spec

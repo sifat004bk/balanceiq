@@ -4,12 +4,17 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/tour/tour.dart';
-import '../cubit/chat_cubit.dart';
-import '../cubit/chat_state.dart';
-import '../widgets/chat_shimmer.dart';
-import '../widgets/message_list.dart';
-import '../widgets/suggested_prompts.dart';
-import '../widgets/chat_page_widgets/chat_page_widgets.dart';
+import 'package:feature_chat/presentation/cubit/chat_cubit.dart';
+import 'package:feature_chat/presentation/cubit/chat_state.dart';
+import 'package:feature_chat/presentation/widgets/chat_shimmer.dart';
+import 'package:feature_chat/presentation/widgets/message_list.dart';
+import 'package:feature_chat/presentation/widgets/suggested_prompts.dart';
+import 'package:feature_chat/presentation/widgets/chat_page_widgets/chat_error_widget.dart';
+import 'package:feature_chat/presentation/widgets/chat_page_widgets/chat_input_container.dart';
+import 'package:feature_chat/presentation/widgets/chat_page_widgets/chat_back_button.dart';
+import 'package:feature_chat/presentation/widgets/chat_page_widgets/chat_usage_button.dart';
+import 'package:feature_chat/presentation/widgets/chat_page_widgets/glass_header_background.dart';
+import 'package:feature_chat/presentation/widgets/chat_page_widgets/glass_footer_background.dart';
 
 class ChatPage extends StatelessWidget {
   final String botId;
@@ -23,7 +28,7 @@ class ChatPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
+    return BlocProvider<ChatCubit>(
       create: (_) => sl<ChatCubit>()..loadChatHistory(botId),
       child: ChatView(botId: botId, botName: botName),
     );

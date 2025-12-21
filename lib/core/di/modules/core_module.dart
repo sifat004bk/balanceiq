@@ -2,8 +2,8 @@ import 'package:get_it/get_it.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../tour/tour.dart';
-import '../../theme/theme_cubit.dart';
-import '../../currency/currency_cubit.dart';
+import 'package:dolfin_ui_kit/theme/theme_cubit.dart';
+import "package:dolfin_core/currency/currency_cubit.dart";
 import '../../../features/home/data/datasource/remote_datasource/dashboard_remote_datasource.dart';
 
 void registerCoreModule(GetIt sl) {
@@ -17,8 +17,8 @@ void registerCoreModule(GetIt sl) {
   sl.registerLazySingleton(() => CurrencyCubit());
 
   //! Core - Product Tour
-  sl.registerLazySingleton(
-    () => ProductTourService(
+  sl.registerLazySingleton<ProductTourService>(
+    () => ProductTourServiceImpl(
         dashboardDataSource: sl<DashboardRemoteDataSource>()),
   );
   sl.registerFactory(

@@ -1,5 +1,5 @@
-import 'package:balance_iq/features/auth/domain/entities/user.dart';
-import 'package:balance_iq/features/chat/domain/entities/message.dart';
+import 'package:feature_auth/domain/entities/user.dart';
+import 'package:feature_chat/domain/entities/message.dart';
 
 class TestFixtures {
   static final user = User(

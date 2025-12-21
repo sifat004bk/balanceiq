@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import '../../features/auth/data/models/auth_request_models.dart';
-import '../constants/api_endpoints.dart';
-import '../constants/app_constants.dart';
+import 'package:feature_auth/data/models/auth_request_models.dart';
+import "package:dolfin_core/constants/api_endpoints.dart";
+import "package:dolfin_core/constants/app_constants.dart";
 import '../navigation/navigator_service.dart';
-import '../storage/secure_storage_service.dart';
-import '../utils/app_logger.dart';
+import "package:dolfin_core/storage/secure_storage_service.dart";
+import "package:dolfin_core/utils/app_logger.dart";
 
 class AuthInterceptor extends Interceptor {
   final SecureStorageService secureStorage;

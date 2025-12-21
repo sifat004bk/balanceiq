@@ -1,17 +1,17 @@
-import 'package:balance_iq/features/auth/domain/usecases/login.dart';
-import 'package:balance_iq/features/auth/domain/usecases/sign_in_with_google.dart';
-import 'package:balance_iq/features/auth/domain/usecases/signup.dart';
-import 'package:balance_iq/features/auth/domain/usecases/send_verification_email.dart';
-import 'package:balance_iq/features/auth/domain/usecases/resend_verification_email.dart';
-import 'package:balance_iq/features/auth/domain/usecases/get_current_user.dart';
-import 'package:balance_iq/features/auth/domain/usecases/sign_out.dart';
-import 'package:balance_iq/features/auth/domain/usecases/get_profile.dart';
-import 'package:balance_iq/features/chat/domain/usecases/get_chat_history.dart';
-import 'package:balance_iq/features/chat/domain/usecases/get_message_usage.dart';
-import 'package:balance_iq/features/chat/domain/usecases/get_messages.dart';
-import 'package:balance_iq/features/chat/domain/usecases/send_message.dart';
-import 'package:balance_iq/features/chat/domain/usecases/submit_feedback.dart';
-import 'package:balance_iq/features/chat/domain/usecases/update_message.dart';
+import 'package:feature_auth/domain/usecases/login.dart';
+import 'package:feature_auth/domain/usecases/sign_in_with_google.dart';
+import 'package:feature_auth/domain/usecases/signup.dart';
+import 'package:feature_auth/domain/usecases/send_verification_email.dart';
+import 'package:feature_auth/domain/usecases/resend_verification_email.dart';
+import 'package:feature_auth/domain/usecases/get_current_user.dart';
+import 'package:feature_auth/domain/usecases/sign_out.dart';
+import 'package:feature_auth/domain/usecases/get_profile.dart';
+import 'package:feature_chat/domain/usecases/get_chat_history.dart';
+import 'package:feature_chat/domain/usecases/get_message_usage.dart';
+import 'package:feature_chat/domain/usecases/get_messages.dart';
+import 'package:feature_chat/domain/usecases/send_message.dart';
+import 'package:feature_chat/domain/usecases/submit_feedback.dart';
+import 'package:feature_chat/domain/usecases/update_message.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockLogin extends Mock implements Login {}

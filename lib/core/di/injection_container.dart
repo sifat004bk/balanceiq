@@ -1,9 +1,10 @@
+import 'package:feature_auth/feature_auth.dart';
+import 'package:balance_iq/core/config/app_auth_config.dart';
 import 'package:get_it/get_it.dart';
 
 import 'modules/storage_module.dart';
 import 'modules/network_module.dart';
 import 'modules/core_module.dart';
-import 'modules/auth_module.dart';
 import 'modules/chat_module.dart';
 import 'modules/dashboard_module.dart';
 import 'modules/subscription_module.dart';
@@ -21,7 +22,7 @@ Future<void> init() async {
   registerCoreModule(sl);
 
   //! Features
-  registerAuthModule(sl);
+  await initAuthFeature(sl, AppAuthConfig());
   registerChatModule(sl);
   registerDashboardModule(sl);
   registerSubscriptionModule(sl);

@@ -1,4 +1,4 @@
-import 'package:balance_iq/core/utils/input_validator.dart';
+import 'package:dolfin_core/utils/input_validator.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

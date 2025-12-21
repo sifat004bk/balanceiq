@@ -1,6 +1,6 @@
-import 'package:balance_iq/core/currency/currency_cubit.dart';
+import 'package:dolfin_core/currency/currency_cubit.dart';
 import 'package:balance_iq/core/di/injection_container.dart';
-import 'package:balance_iq/core/theme/app_palette.dart';
+import 'package:dolfin_ui_kit/theme/app_palette.dart';
 import 'package:balance_iq/features/home/domain/entities/transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';

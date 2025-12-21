@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import '../../domain/entities/transaction.dart';
 import '../../domain/repositories/transaction_repository.dart';
-import '../../../../core/error/failures.dart';
+import 'package:dolfin_core/error/failures.dart';
 import '../datasource/remote_datasource/transaction_search_datasource.dart';
 
 class TransactionRepositoryImpl implements TransactionRepository {

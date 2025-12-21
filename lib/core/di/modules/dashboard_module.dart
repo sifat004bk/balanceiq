@@ -1,6 +1,6 @@
 import 'package:get_it/get_it.dart';
-import '../../constants/app_constants.dart';
-import '../../utils/app_logger.dart';
+import "package:dolfin_core/constants/app_constants.dart";
+import "package:dolfin_core/utils/app_logger.dart";
 
 // Features - Dashboard
 import '../../../features/home/data/datasource/remote_datasource/dashboard_finance_guru_datasource.dart';

@@ -1,4 +1,4 @@
-import 'package:balance_iq/core/constants/app_strings.dart';
+import 'package:dolfin_core/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:balance_iq/features/chat/presentation/pages/chat_page.dart';
 

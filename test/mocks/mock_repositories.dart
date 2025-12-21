@@ -1,10 +1,10 @@
-import 'package:balance_iq/features/auth/domain/repositories/auth_repository.dart';
-import 'package:balance_iq/features/chat/domain/repositories/chat_feedback_repository.dart';
-import 'package:balance_iq/features/chat/domain/repositories/chat_repository.dart';
-import 'package:balance_iq/features/chat/domain/repositories/message_usage_repository.dart';
+import 'package:feature_auth/domain/repositories/auth_repository.dart';
+import 'package:feature_chat/domain/repositories/chat_feedback_repository.dart';
+import 'package:feature_chat/domain/repositories/chat_repository.dart';
+import 'package:feature_chat/domain/repositories/message_usage_repository.dart';
 import 'package:balance_iq/features/home/domain/repositories/transaction_repository.dart';
 import 'package:balance_iq/features/home/domain/repository/dashboard_repository.dart';
-import 'package:balance_iq/features/subscription/domain/repositories/subscription_repository.dart';
+import 'package:feature_subscription/domain/repositories/subscription_repository.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockAuthRepository extends Mock implements AuthRepository {}

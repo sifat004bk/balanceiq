@@ -1,5 +1,5 @@
-import 'package:balance_iq/core/mock/mock_data.dart';
-import 'package:balance_iq/core/utils/app_logger.dart';
+import 'package:dolfin_core/mock/mock_data.dart';
+import 'package:dolfin_core/utils/app_logger.dart';
 import 'package:balance_iq/features/home/data/models/dashboard_summary_response.dart';
 import 'dashboard_remote_datasource.dart';
 

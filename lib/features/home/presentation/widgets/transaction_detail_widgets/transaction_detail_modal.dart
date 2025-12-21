@@ -1,4 +1,4 @@
-import 'package:balance_iq/core/constants/app_strings.dart';
+import 'package:dolfin_core/constants/app_strings.dart';
 import 'package:balance_iq/features/home/domain/entities/transaction.dart';
 import 'package:balance_iq/features/home/presentation/widgets/transaction_detail_widgets/transaction_detail_widgets.dart';
 import 'package:flutter/material.dart';

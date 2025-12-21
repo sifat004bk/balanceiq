@@ -5,31 +5,29 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'core/di/injection_container.dart' as di;
 import 'core/navigation/navigator_service.dart';
-import 'core/theme/app_palette.dart';
-import 'core/theme/app_theme.dart';
-import 'core/theme/theme_cubit.dart';
-import 'core/theme/theme_state.dart';
+import 'package:dolfin_ui_kit/theme/app_palette.dart';
+import 'package:dolfin_ui_kit/theme/app_theme.dart';
+import 'package:dolfin_ui_kit/theme/theme_cubit.dart';
+import 'package:dolfin_ui_kit/theme/theme_state.dart';
 import 'core/tour/tour.dart';
-
-// Cubits
-import 'features/auth/presentation/cubit/session/session_cubit.dart';
-import 'features/auth/presentation/cubit/login/login_cubit.dart';
-import 'features/auth/presentation/cubit/signup/signup_cubit.dart';
-import 'features/auth/presentation/cubit/password/password_cubit.dart';
+import 'package:feature_auth/presentation/cubit/session/session_cubit.dart';
+import 'package:feature_auth/presentation/cubit/login/login_cubit.dart';
+import 'package:feature_auth/presentation/cubit/signup/signup_cubit.dart';
+import 'package:feature_auth/presentation/cubit/password/password_cubit.dart';
 
 // Pages
-import 'features/auth/presentation/pages/change_password_page.dart';
-import 'features/auth/presentation/pages/email_verification_page.dart';
-import 'features/auth/presentation/pages/forgot_password_page.dart';
-import 'features/auth/presentation/pages/loading_page.dart';
-import 'features/auth/presentation/pages/login_page.dart';
-import 'features/auth/presentation/pages/splash_page.dart';
-import 'features/auth/presentation/pages/onboarding_page.dart';
-import 'features/auth/presentation/pages/signup_page.dart';
-import 'features/auth/presentation/pages/interactive_onboarding/interactive_onboarding_page.dart';
-import 'features/auth/presentation/pages/profile_page.dart';
-import 'features/auth/presentation/pages/reset_password_page.dart';
-import 'features/auth/presentation/pages/verification_success_page.dart';
+import "package:feature_auth/presentation/pages/change_password_page.dart";
+import "package:feature_auth/presentation/pages/email_verification_page.dart";
+import "package:feature_auth/presentation/pages/forgot_password_page.dart";
+import 'package:feature_auth/presentation/pages/loading_page.dart';
+import "package:feature_auth/presentation/pages/login_page.dart";
+import 'package:feature_auth/presentation/pages/splash_page.dart';
+import "package:feature_auth/presentation/pages/onboarding_page.dart";
+import "package:feature_auth/presentation/pages/signup_page.dart";
+import 'package:feature_auth/presentation/pages/interactive_onboarding/interactive_onboarding_page.dart';
+import "package:feature_auth/presentation/pages/profile_page.dart";
+import "package:feature_auth/presentation/pages/reset_password_page.dart";
+import "package:feature_auth/presentation/pages/verification_success_page.dart";
 import 'features/home/presentation/cubit/dashboard_cubit.dart';
 import 'features/home/presentation/pages/home_page.dart';
 import 'features/home/presentation/pages/transactions_page.dart';
@@ -104,16 +102,16 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         // SessionCubit replaces AuthCubit for global auth state
-        BlocProvider(
+        BlocProvider<SessionCubit>(
           create: (context) => di.sl<SessionCubit>()..checkAuthStatus(),
         ),
-        BlocProvider(
+        BlocProvider<ThemeCubit>(
           create: (context) => di.sl<ThemeCubit>(),
         ),
-        BlocProvider(
+        BlocProvider<DashboardCubit>(
           create: (context) => di.sl<DashboardCubit>(),
         ),
-        BlocProvider(
+        BlocProvider<ProductTourCubit>(
           create: (context) => di.sl<ProductTourCubit>(),
         ),
       ],
@@ -135,11 +133,11 @@ class MyApp extends StatelessWidget {
               '/onboarding': (context) => const OnboardingPage(),
               '/interactive-onboarding': (context) =>
                   const InteractiveOnboardingPage(),
-              '/login': (context) => BlocProvider(
+              '/login': (context) => BlocProvider<LoginCubit>(
                     create: (context) => di.sl<LoginCubit>(),
                     child: const LoginPage(),
                   ),
-              '/signup': (context) => BlocProvider(
+              '/signup': (context) => BlocProvider<SignupCubit>(
                     create: (context) => di.sl<SignupCubit>(),
                     child: const SignUpPage(),
                   ),
@@ -147,11 +145,11 @@ class MyApp extends StatelessWidget {
                   const VerificationSuccessPage(),
               '/loading': (context) => const LoadingPage(),
               '/home': (context) => const HomePage(),
-              '/forgot-password': (context) => BlocProvider(
+              '/forgot-password': (context) => BlocProvider<PasswordCubit>(
                     create: (context) => di.sl<PasswordCubit>(),
                     child: const ForgotPasswordPage(),
                   ),
-              '/change-password': (context) => BlocProvider(
+              '/change-password': (context) => BlocProvider<PasswordCubit>(
                     create: (context) => di.sl<PasswordCubit>(),
                     child: const ChangePasswordPage(),
                   ),
@@ -166,7 +164,7 @@ class MyApp extends StatelessWidget {
                 final email =
                     settings.arguments as String? ?? 'user@example.com';
                 return MaterialPageRoute(
-                  builder: (context) => BlocProvider(
+                  builder: (context) => BlocProvider<SignupCubit>(
                     create: (context) => di.sl<SignupCubit>(),
                     child: EmailVerificationPage(email: email),
                   ),
@@ -175,7 +173,7 @@ class MyApp extends StatelessWidget {
               if (settings.name == '/reset-password') {
                 final token = settings.arguments as String? ?? '';
                 return MaterialPageRoute(
-                  builder: (context) => BlocProvider(
+                  builder: (context) => BlocProvider<PasswordCubit>(
                     create: (context) => di.sl<PasswordCubit>(),
                     child: ResetPasswordPage(token: token),
                   ),

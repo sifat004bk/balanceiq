@@ -1,9 +1,9 @@
-import 'package:balance_iq/core/storage/secure_storage_service.dart';
-import 'package:balance_iq/features/chat/domain/entities/chat_history_response.dart';
-import 'package:balance_iq/features/chat/domain/entities/message.dart';
-import 'package:balance_iq/features/chat/domain/entities/message_usage.dart';
-import 'package:balance_iq/features/chat/presentation/cubit/chat_cubit.dart';
-import 'package:balance_iq/features/chat/presentation/cubit/chat_state.dart';
+import 'package:dolfin_core/storage/secure_storage_service.dart';
+import 'package:feature_chat/domain/entities/chat_history_response.dart';
+import 'package:feature_chat/domain/entities/message.dart';
+import 'package:feature_chat/domain/entities/message_usage.dart';
+import 'package:feature_chat/presentation/cubit/chat_cubit.dart';
+import 'package:feature_chat/presentation/cubit/chat_state.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';

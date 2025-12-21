@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:balance_iq/core/constants/app_strings.dart';
+import 'package:dolfin_core/constants/app_strings.dart';
 
 import '../../../../core/di/injection_container.dart';
-import '../../../../core/theme/app_typography.dart';
-import '../../domain/entities/subscription.dart';
-import '../cubit/subscription_cubit.dart';
-import '../cubit/subscription_state.dart';
+import 'package:dolfin_ui_kit/theme/app_typography.dart';
+import 'package:feature_subscription/domain/entities/subscription.dart';
+import 'package:feature_subscription/presentation/cubit/subscription_cubit.dart';
+import 'package:feature_subscription/presentation/cubit/subscription_state.dart';
 
 class ManageSubscriptionPage extends StatelessWidget {
   const ManageSubscriptionPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
+    return BlocProvider<SubscriptionCubit>(
       create: (_) => sl<SubscriptionCubit>()..loadSubscriptionStatus(),
       child: const _ManageSubscriptionView(),
     );

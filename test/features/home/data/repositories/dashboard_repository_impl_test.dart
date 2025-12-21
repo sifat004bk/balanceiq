@@ -1,5 +1,5 @@
-import 'package:balance_iq/core/error/failures.dart';
-import 'package:balance_iq/features/auth/data/models/user_model.dart';
+import 'package:dolfin_core/error/failures.dart';
+import 'package:feature_auth/data/models/user_model.dart';
 import 'package:balance_iq/features/home/data/models/dashboard_summary_response.dart';
 import 'package:balance_iq/features/home/data/repository/dashboard_repository_impl.dart';
 import 'package:balance_iq/features/home/domain/entities/dashbaord_summary.dart';

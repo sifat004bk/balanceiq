@@ -1,4 +1,4 @@
-import 'package:balance_iq/core/constants/app_strings.dart';
+import 'package:dolfin_core/constants/app_strings.dart';
 import 'package:balance_iq/features/home/presentation/cubit/transaction_filter_cubit.dart';
 import 'package:balance_iq/features/home/presentation/cubit/transaction_filter_state.dart';
 import 'package:balance_iq/features/home/presentation/widgets/calendar_widgets/date_selector_bottom_sheet.dart';

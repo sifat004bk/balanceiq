@@ -1,7 +1,7 @@
-import 'package:balance_iq/core/currency/currency_cubit.dart';
+import 'package:dolfin_core/currency/currency_cubit.dart';
 import 'package:balance_iq/core/di/injection_container.dart';
 import 'package:balance_iq/core/tour/tour.dart';
-import 'package:balance_iq/features/auth/data/datasources/auth_local_datasource.dart';
+import 'package:feature_auth/data/datasources/auth_local_datasource.dart';
 import 'package:balance_iq/features/home/presentation/cubit/dashboard_state.dart';
 import 'package:balance_iq/features/home/presentation/widgets/dashboard_widgets/dashboard_shimmer.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +20,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
+    return BlocProvider<TransactionsCubit>(
       create: (context) => sl<TransactionsCubit>()..loadTransactions(limit: 5),
       child: const DashboardView(),
     );

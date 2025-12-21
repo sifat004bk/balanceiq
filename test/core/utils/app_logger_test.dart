@@ -1,4 +1,4 @@
-import 'package:balance_iq/core/utils/app_logger.dart';
+import 'package:dolfin_core/utils/app_logger.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

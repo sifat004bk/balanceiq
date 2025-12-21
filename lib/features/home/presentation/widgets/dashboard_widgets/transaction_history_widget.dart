@@ -1,5 +1,5 @@
-import 'package:balance_iq/core/constants/app_strings.dart';
-import 'package:balance_iq/core/currency/currency_cubit.dart';
+import 'package:dolfin_core/constants/app_strings.dart';
+import 'package:dolfin_core/currency/currency_cubit.dart';
 import 'package:balance_iq/core/di/injection_container.dart';
 import 'package:balance_iq/features/home/domain/entities/transaction.dart';
 import 'package:balance_iq/features/home/presentation/cubit/transactions_cubit.dart';

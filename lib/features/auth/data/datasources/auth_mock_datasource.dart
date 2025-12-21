@@ -1,6 +1,6 @@
-// ignore_for_file: avoid_print
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
+import '../../../../core/utils/app_logger.dart';
 import '../models/auth_request_models.dart';
 import '../models/user_model.dart';
 import 'auth_remote_datasource.dart';
@@ -332,8 +332,9 @@ class AuthMockDataSource implements AuthRemoteDataSource {
 
     // In real implementation, would send email
     // For mock, we'll just store the token
-    print('🔐 [MOCK] Password reset token: $resetToken');
-    print('📧 [MOCK] Reset link: /reset-password?token=$resetToken');
+    AppLogger.debug('Password reset token: $resetToken', name: 'MockAuth');
+    AppLogger.debug('Reset link: /reset-password?token=$resetToken',
+        name: 'MockAuth');
   }
 
   @override
@@ -463,9 +464,11 @@ class AuthMockDataSource implements AuthRemoteDataSource {
     }
 
     // In real implementation, would send email
-    print('📧 [MOCK] Verification email sent to: ${user.email}');
-    print(
-        '🔗 [MOCK] Verification link: /verify-email?token=mock_verify_${user.id}');
+    AppLogger.debug('Verification email sent to: ${user.email}',
+        name: 'MockAuth');
+    AppLogger.debug(
+        'Verification link: /verify-email?token=mock_verify_${user.id}',
+        name: 'MockAuth');
   }
 
   @override
@@ -488,9 +491,10 @@ class AuthMockDataSource implements AuthRemoteDataSource {
     }
 
     // In real implementation, would send email
-    print('📧 [MOCK] Verification email resent to: $email');
-    print(
-        '🔗 [MOCK] Verification link: /verify-email?token=mock_verify_${user.id}');
+    AppLogger.debug('Verification email resent to: $email', name: 'MockAuth');
+    AppLogger.debug(
+        'Verification link: /verify-email?token=mock_verify_${user.id}',
+        name: 'MockAuth');
   }
 
   /// Clear all mock data (useful for testing)

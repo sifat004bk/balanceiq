@@ -1,6 +1,6 @@
-// ignore_for_file: avoid_print
 import 'package:get_it/get_it.dart';
 import '../../constants/app_constants.dart';
+import '../../utils/app_logger.dart';
 
 // Features - Chat
 import '../../../features/chat/data/datasources/chat_local_datasource.dart';
@@ -67,11 +67,12 @@ void registerChatModule(GetIt sl) {
   sl.registerLazySingleton<ChatRemoteDataSource>(
     () {
       if (AppConstants.isMockMode) {
-        print('🎭 [DI] Registering MOCK ChatRemoteDataSource');
+        AppLogger.debug('Registering MOCK ChatRemoteDataSource', name: 'DI');
         return ChatMockDataSource(sl());
       } else {
-        print(
-            '🌐 [DI] Registering REAL ChatRemoteDataSource (Finance Guru API)');
+        AppLogger.debug(
+            'Registering REAL ChatRemoteDataSource (Finance Guru API)',
+            name: 'DI');
         return ChatFinanceGuruDataSource(sl(), sl(), sl());
       }
     },
@@ -105,11 +106,12 @@ void registerChatModule(GetIt sl) {
   sl.registerLazySingleton<MessageUsageDataSource>(
     () {
       if (AppConstants.isMockMode) {
-        print('🎭 [DI] Registering MOCK MessageUsageDataSource');
+        AppLogger.debug('Registering MOCK MessageUsageDataSource', name: 'DI');
         return MessageUsageMockDataSource();
       } else {
-        print(
-            '🌐 [DI] Registering REAL MessageUsageDataSource (Finance Guru API)');
+        AppLogger.debug(
+            'Registering REAL MessageUsageDataSource (Finance Guru API)',
+            name: 'DI');
         return MessageUsageDataSourceImpl(sl(), sl());
       }
     },

@@ -1,5 +1,5 @@
-// ignore_for_file: avoid_print
 import 'package:balance_iq/core/mock/mock_data.dart';
+import 'package:balance_iq/core/utils/app_logger.dart';
 import 'package:balance_iq/features/home/data/models/dashboard_summary_response.dart';
 import 'dashboard_remote_datasource.dart';
 
@@ -17,8 +17,9 @@ class DashboardMockDataSource implements DashboardRemoteDataSource {
     String? startDate,
     String? endDate,
   }) async {
-    print(
-        '🏠 [MockDashboard] Fetching dashboard data (startDate: $startDate, endDate: $endDate)');
+    AppLogger.debug(
+        'Fetching dashboard data (startDate: $startDate, endDate: $endDate)',
+        name: 'MockDashboard');
 
     // Simulate network delay
     await _simulateNetworkDelay();
@@ -29,7 +30,7 @@ class DashboardMockDataSource implements DashboardRemoteDataSource {
       botId: 'balance_tracker',
     );
 
-    print('✅ [MockDashboard] Mock dashboard data generated');
+    AppLogger.debug('Mock dashboard data generated', name: 'MockDashboard');
 
     // Convert to model
     return DashboardSummaryModel.fromJson(mockData);
@@ -37,7 +38,8 @@ class DashboardMockDataSource implements DashboardRemoteDataSource {
 
   @override
   Future<bool> updateOnboarded(bool onboarded) async {
-    print('🏠 [MockDashboard] Updating onboarded status: $onboarded');
+    AppLogger.debug('Updating onboarded status: $onboarded',
+        name: 'MockDashboard');
     await _simulateNetworkDelay();
     return true;
   }

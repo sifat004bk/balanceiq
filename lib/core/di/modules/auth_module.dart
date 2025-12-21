@@ -1,7 +1,7 @@
-// ignore_for_file: avoid_print
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../../constants/app_constants.dart';
+import '../../utils/app_logger.dart';
 
 // Features - Auth
 import '../../../features/auth/data/datasources/auth_local_datasource.dart';
@@ -107,13 +107,13 @@ void registerAuthModule(GetIt sl) {
   sl.registerLazySingleton<AuthRemoteDataSource>(
     () {
       if (AppConstants.isMockMode) {
-        print('🎭 [DI] Registering MOCK AuthRemoteDataSource');
+        AppLogger.debug('Registering MOCK AuthRemoteDataSource', name: 'DI');
         return AuthMockDataSource(
           sharedPreferences: sl(),
           uuid: sl(),
         );
       } else {
-        print('🌐 [DI] Registering REAL AuthRemoteDataSource');
+        AppLogger.debug('Registering REAL AuthRemoteDataSource', name: 'DI');
         return AuthRemoteDataSourceImpl(
           googleSignIn: sl(),
           dio: sl(),

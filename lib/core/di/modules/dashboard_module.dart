@@ -1,6 +1,6 @@
-// ignore_for_file: avoid_print
 import 'package:get_it/get_it.dart';
 import '../../constants/app_constants.dart';
+import '../../utils/app_logger.dart';
 
 // Features - Dashboard
 import '../../../features/home/data/datasource/remote_datasource/dashboard_finance_guru_datasource.dart';
@@ -50,11 +50,13 @@ void registerDashboardModule(GetIt sl) {
   sl.registerLazySingleton<DashboardRemoteDataSource>(
     () {
       if (AppConstants.isMockMode) {
-        print('🎭 [DI] Registering MOCK DashboardRemoteDataSource');
+        AppLogger.debug('Registering MOCK DashboardRemoteDataSource',
+            name: 'DI');
         return DashboardMockDataSource();
       } else {
-        print(
-            '🌐 [DI] Registering REAL DashboardRemoteDataSource (Finance Guru API)');
+        AppLogger.debug(
+            'Registering REAL DashboardRemoteDataSource (Finance Guru API)',
+            name: 'DI');
         return DashboardFinanceGuruDataSource(sl(), sl());
       }
     },

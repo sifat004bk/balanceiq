@@ -1,7 +1,7 @@
-// ignore_for_file: avoid_print
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../constants/app_constants.dart';
+import '../utils/app_logger.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._init();
@@ -119,7 +119,8 @@ class DatabaseHelper {
   }
 
   Future<void> _migrateToV2(Database db) async {
-    print('🔄 Migrating database from v1 to v2: Adding chat sync fields');
+    AppLogger.info('Migrating database from v1 to v2: Adding chat sync fields',
+        name: 'Database');
 
     // Create new messages table with sync fields and UNIQUE constraint
     await db.execute('''
@@ -172,16 +173,18 @@ class DatabaseHelper {
       ON ${AppConstants.messagesTable}(bot_id, timestamp)
     ''');
 
-    print('✅ Migration to v2 completed successfully');
+    AppLogger.info('Migration to v2 completed successfully', name: 'Database');
   }
 
   Future<void> _migrateToV3(Database db) async {
-    print(
-        '🔄 Migrating database from v2 to v3: Adding user_id for user isolation');
+    AppLogger.info(
+        'Migrating database from v2 to v3: Adding user_id for user isolation',
+        name: 'Database');
 
     // Strategy: Delete all existing messages (fresh start)
     // This ensures clean user isolation without orphaned data
-    print('⚠️ Clearing all existing messages for fresh start...');
+    AppLogger.warning('Clearing all existing messages for fresh start...',
+        name: 'Database');
     await db.delete(AppConstants.messagesTable);
 
     // Drop old table
@@ -223,42 +226,49 @@ class DatabaseHelper {
       ON ${AppConstants.messagesTable}(user_id, bot_id, timestamp DESC)
     ''');
 
-    print('✅ Migration to v3 completed successfully');
-    print('ℹ️ All previous messages have been cleared for user isolation');
+    AppLogger.info('Migration to v3 completed successfully', name: 'Database');
+    AppLogger.info('All previous messages have been cleared for user isolation',
+        name: 'Database');
   }
 
   Future<void> _migrateToV4(Database db) async {
-    print('🔄 Migrating database from v3 to v4: Adding action_type column');
+    AppLogger.info(
+        'Migrating database from v3 to v4: Adding action_type column',
+        name: 'Database');
 
     // Add action_type column to existing table
     await db.execute(
         'ALTER TABLE ${AppConstants.messagesTable} ADD COLUMN action_type TEXT');
 
-    print('✅ Migration to v4 completed successfully');
+    AppLogger.info('Migration to v4 completed successfully', name: 'Database');
   }
 
   Future<void> _migrateToV5(Database db) async {
-    print('🔄 Migrating database from v4 to v5: Adding conversation_id column');
+    AppLogger.info(
+        'Migrating database from v4 to v5: Adding conversation_id column',
+        name: 'Database');
 
     // Add conversation_id column to existing table
     await db.execute(
         'ALTER TABLE ${AppConstants.messagesTable} ADD COLUMN conversation_id INTEGER');
 
-    print('✅ Migration to v5 completed successfully');
+    AppLogger.info('Migration to v5 completed successfully', name: 'Database');
   }
 
   Future<void> _migrateToV6(Database db) async {
-    print('🔄 Migrating database from v5 to v6: Adding feedback column');
+    AppLogger.info('Migrating database from v5 to v6: Adding feedback column',
+        name: 'Database');
 
     // Add feedback column to existing table
     await db.execute(
         'ALTER TABLE ${AppConstants.messagesTable} ADD COLUMN feedback TEXT');
 
-    print('✅ Migration to v6 completed successfully');
+    AppLogger.info('Migration to v6 completed successfully', name: 'Database');
   }
 
   Future<void> _migrateToV7(Database db) async {
-    print('🔄 Migrating database from v6 to v7: Adding chart data fields');
+    AppLogger.info('Migrating database from v6 to v7: Adding chart data fields',
+        name: 'Database');
 
     // Add chart data columns to existing table
     await db.execute(
@@ -270,7 +280,7 @@ class DatabaseHelper {
     await db.execute(
         'ALTER TABLE ${AppConstants.messagesTable} ADD COLUMN graph_data TEXT');
 
-    print('✅ Migration to v7 completed successfully');
+    AppLogger.info('Migration to v7 completed successfully', name: 'Database');
   }
 
   Future<void> close() async {

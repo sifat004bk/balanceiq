@@ -15,12 +15,19 @@ class MockSharedPreferences extends Mock implements SharedPreferences {}
 
 class MockUuid extends Mock implements Uuid {}
 
+// Fallback values for mocktail's any() matcher
+class FakeMessageModel extends Fake implements MessageModel {}
+
 void main() {
   late ChatRepositoryImpl repository;
   late MockChatRemoteDataSource mockRemoteDataSource;
   late MockChatLocalDataSource mockLocalDataSource;
   late MockSharedPreferences mockSharedPreferences;
   late MockUuid mockUuid;
+
+  setUpAll(() {
+    registerFallbackValue(FakeMessageModel());
+  });
 
   setUp(() {
     mockRemoteDataSource = MockChatRemoteDataSource();
@@ -70,10 +77,12 @@ void main() {
       when(() => mockLocalDataSource.saveMessage(any()))
           .thenAnswer((_) => Future.value());
 
-      // Stub remote sendMessage
+      // Stub remote sendMessage with all parameters (including optional ones)
       when(() => mockRemoteDataSource.sendMessage(
-            botId: tBotId,
-            content: tContent,
+            botId: any(named: 'botId'),
+            content: any(named: 'content'),
+            imagePath: any(named: 'imagePath'),
+            audioPath: any(named: 'audioPath'),
           )).thenAnswer((_) async => tBotMessage);
 
       // The repository saves user message, calls remote, then saves bot message.
@@ -92,6 +101,8 @@ void main() {
       verify(() => mockRemoteDataSource.sendMessage(
             botId: tBotId,
             content: tContent,
+            imagePath: null,
+            audioPath: null,
           )).called(1);
     });
 
@@ -105,8 +116,10 @@ void main() {
           .thenAnswer((_) => Future.value());
 
       when(() => mockRemoteDataSource.sendMessage(
-            botId: tBotId,
-            content: tContent,
+            botId: any(named: 'botId'),
+            content: any(named: 'content'),
+            imagePath: any(named: 'imagePath'),
+            audioPath: any(named: 'audioPath'),
           )).thenThrow(ChatApiException(
         message: 'Limit exceeded',
         errorType: ChatApiErrorType.tokenLimitExceeded,

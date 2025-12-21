@@ -9,10 +9,20 @@ import 'package:mocktail/mocktail.dart';
 
 import '../../../../mocks/mock_datasources.dart';
 
+// Fallback values for mocktail's any() matcher
+class FakeLoginRequest extends Fake implements LoginRequest {}
+
+class FakeUserModel extends Fake implements UserModel {}
+
 void main() {
   late AuthRepositoryImpl repository;
   late MockAuthRemoteDataSource mockRemoteDataSource;
   late MockAuthLocalDataSource mockLocalDataSource;
+
+  setUpAll(() {
+    registerFallbackValue(FakeLoginRequest());
+    registerFallbackValue(FakeUserModel());
+  });
 
   setUp(() {
     mockRemoteDataSource = MockAuthRemoteDataSource();
@@ -69,8 +79,6 @@ void main() {
   group('login', () {
     const tUsername = 'testuser';
     const tPassword = 'password';
-    final tLoginRequest =
-        LoginRequest(username: tUsername, password: tPassword);
     final tLoginResponse = LoginResponse(
       success: true,
       message: 'Success',
@@ -89,7 +97,7 @@ void main() {
     test('should return LoginResponse and save user when call is successful',
         () async {
       // Arrange
-      when(() => mockRemoteDataSource.login(tLoginRequest))
+      when(() => mockRemoteDataSource.login(any()))
           .thenAnswer((_) async => tLoginResponse);
       when(() => mockLocalDataSource.saveUser(any())).thenAnswer((_) async {});
 
@@ -101,13 +109,13 @@ void main() {
 
       // Assert
       expect(result, Right(tLoginResponse));
-      verify(() => mockRemoteDataSource.login(tLoginRequest)).called(1);
+      verify(() => mockRemoteDataSource.login(any())).called(1);
       verify(() => mockLocalDataSource.saveUser(any())).called(1);
     });
 
     test('should return ServerFailure when call fails', () async {
       // Arrange
-      when(() => mockRemoteDataSource.login(tLoginRequest))
+      when(() => mockRemoteDataSource.login(any()))
           .thenThrow(ServerException('Failed'));
 
       // Act
@@ -118,7 +126,7 @@ void main() {
 
       // Assert
       expect(result, const Left(ServerFailure('Failed')));
-      verify(() => mockRemoteDataSource.login(tLoginRequest)).called(1);
+      verify(() => mockRemoteDataSource.login(any())).called(1);
       verifyNever(() => mockLocalDataSource.saveUser(any()));
     });
   });

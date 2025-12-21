@@ -9,7 +9,7 @@ import '../../domain/usecases/send_message.dart';
 import '../../domain/usecases/update_message.dart';
 import '../../domain/usecases/get_message_usage.dart';
 import '../../domain/usecases/submit_feedback.dart';
-import '../../domain/entities/chat_feedback.dart'; // For FeedbackType
+import '../../domain/entities/chat_feedback.dart';
 import 'chat_state.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/error/failures.dart';
@@ -28,9 +28,8 @@ class ChatCubit extends Cubit<ChatState> {
   String? currentBotId;
   int _apiPage = 0;
   bool _hasMore = true;
-  final Lock _lock = Lock(); // Concurrency control
-  MessageUsage?
-      _cachedMessageUsage; // Cache message usage for state transitions
+  final Lock _lock = Lock();
+  MessageUsage? _cachedMessageUsage;
 
   ChatCubit({
     required this.getMessages,
@@ -48,10 +47,8 @@ class ChatCubit extends Cubit<ChatState> {
     result.fold(
       (failure) {},
       (usage) {
-        // Cache the message usage for use when ChatLoaded is emitted
         _cachedMessageUsage = usage;
 
-        // If already in ChatLoaded state, update immediately
         if (state is ChatLoaded) {
           emit((state as ChatLoaded).copyWith(
             messagesUsedToday: usage.messagesUsedToday,
@@ -63,27 +60,18 @@ class ChatCubit extends Cubit<ChatState> {
     );
   }
 
-  /// Load chat history with cache-first strategy
-  /// 1. Load from local cache immediately (fast UX)
-  /// 2. Sync with API in background
-  /// 3. Reload from cache with updated data
   Future<void> loadChatHistory(String botId) async {
     currentBotId = botId;
 
     emit(ChatLoading());
 
-    // Load message usage first
     await loadMessageUsage();
 
-    // Get user ID from SecureStorage
     final userId = await secureStorage.getUserId() ?? '';
 
-    // Step 1: Load from cache immediately (fast UX)
     final cachedResult = await getMessages(userId, botId, limit: 20);
     cachedResult.fold(
-      (failure) {
-        // Ignore cache failures, try API sync
-      },
+      (failure) {},
       (cached) {
         if (cached.isNotEmpty && !isClosed) {
           emit(ChatLoaded(
@@ -96,7 +84,6 @@ class ChatCubit extends Cubit<ChatState> {
       },
     );
 
-    // Step 2: Sync with API in background
     _apiPage = 1;
 
     final apiResult = await getChatHistory(
@@ -109,7 +96,6 @@ class ChatCubit extends Cubit<ChatState> {
     if (!isClosed) {
       apiResult.fold(
         (failure) {
-          // If we have cache, show error but keep cached messages
           final currentState = state;
           if (currentState is ChatLoaded) {
             emit(ChatError(
@@ -121,7 +107,6 @@ class ChatCubit extends Cubit<ChatState> {
         (response) async {
           _hasMore = response.pagination.hasNext;
 
-          // Step 3: Reload from cache (now includes API data)
           final updatedResult = await getMessages(userId, botId, limit: 20);
           updatedResult.fold(
             (failure) => emit(ChatError(message: failure.message)),
@@ -139,7 +124,6 @@ class ChatCubit extends Cubit<ChatState> {
     }
   }
 
-  /// Load older messages (pagination)
   Future<void> loadMoreMessages() async {
     if (!_hasMore || currentBotId == null) {
       return;
@@ -174,7 +158,6 @@ class ChatCubit extends Cubit<ChatState> {
         (response) async {
           _hasMore = response.pagination.hasNext;
 
-          // Reload with more messages
           final currentCount = currentState.messages.length;
           final updatedResult = await getMessages(userId, currentBotId!,
               limit: currentCount + 20);
@@ -196,7 +179,6 @@ class ChatCubit extends Cubit<ChatState> {
     }
   }
 
-  /// Legacy method for backward compatibility
   @Deprecated('Use loadChatHistory instead')
   Future<void> loadMessages(String botId, {bool showLoading = true}) async {
     await loadChatHistory(botId);
@@ -208,15 +190,12 @@ class ChatCubit extends Cubit<ChatState> {
     String? imagePath,
     String? audioPath,
   }) async {
-    // Use lock to prevent race conditions with chat history sync
     await _lock.synchronized(() async {
       if (state is ChatLoaded) {
         final currentState = state as ChatLoaded;
 
-        // Get user ID from SecureStorage
         final userId = await secureStorage.getUserId() ?? '';
 
-        // Create temporary user message for immediate display (optimistic UI)
         final tempUserMessage = Message(
           id: uuid.v4(),
           userId: userId,
@@ -230,12 +209,10 @@ class ChatCubit extends Cubit<ChatState> {
           hasError: false,
         );
 
-        // Immediately show user message in UI (prepend for descending order)
         final updatedMessages = [tempUserMessage, ...currentState.messages];
 
         emit(currentState.copyWith(messages: updatedMessages, isSending: true));
 
-        // Send message in background (repository will save with different ID)
         final result = await sendMessage(
           botId: botId,
           content: content,
@@ -243,12 +220,9 @@ class ChatCubit extends Cubit<ChatState> {
           audioPath: audioPath,
         );
 
-        // After API completes, reload from DB to get actual messages
         if (!isClosed) {
-          // Check result of API call
           result.fold(
             (failure) {
-              // Handle ChatApiFailure with specific error types
               if (failure is ChatApiFailure) {
                 final errorType = _mapChatFailureType(failure.failureType);
                 emit(ChatError(
@@ -258,12 +232,10 @@ class ChatCubit extends Cubit<ChatState> {
                 ));
                 return;
               }
-              // For other errors, just update the sending state
             },
             (_) => null,
           );
 
-          // Only reload if we didn't emit an error
           if (state is! ChatError) {
             final reloadResult = await getMessages(userId, botId,
                 limit: currentState.messages.length + 2);
@@ -272,7 +244,6 @@ class ChatCubit extends Cubit<ChatState> {
               (messages) {
                 emit(currentState.copyWith(
                     messages: messages, isSending: false));
-                // Update message usage
                 loadMessageUsage();
               },
             );
@@ -282,7 +253,6 @@ class ChatCubit extends Cubit<ChatState> {
     });
   }
 
-  /// Maps ChatFailureType to ChatErrorType for state emission
   ChatErrorType _mapChatFailureType(ChatFailureType failureType) {
     switch (failureType) {
       case ChatFailureType.emailNotVerified:
@@ -305,7 +275,6 @@ class ChatCubit extends Cubit<ChatState> {
     if (state is ChatLoaded) {
       final currentState = state as ChatLoaded;
 
-      // 1. Optimistic Update
       final updatedMessages = currentState.messages.map((msg) {
         if (msg.id == messageId) {
           return msg.copyWith(feedback: feedback.toApiValue());
@@ -315,24 +284,18 @@ class ChatCubit extends Cubit<ChatState> {
 
       emit(currentState.copyWith(messages: updatedMessages));
 
-      // 2. Persist local change immediately
       final updatedMessage =
           updatedMessages.firstWhere((m) => m.id == messageId);
       await updateMessage(updatedMessage);
 
-      // 3. Find message to get conversationId (needed for API)
       if (updatedMessage.conversationId != null) {
-        // 4. Call API
         final result = await submitFeedback(
           messageId: updatedMessage.conversationId!,
           feedback: feedback,
         );
 
         result.fold(
-          (failure) {
-            // We kept the local update, so user sees their action.
-            // In a robust app, we might queue the sync or show an error that it's "offline".
-          },
+          (failure) {},
           (success) {},
         );
       } else {}

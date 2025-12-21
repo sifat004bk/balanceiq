@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 
 import 'package:dolfin_core/constants/app_strings.dart';
 import 'package:dolfin_core/utils/snackbar_utils.dart';
@@ -21,9 +22,11 @@ class AiMessageFeedbackRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
+    final chatConfig = GetIt.instance<ChatConfig>();
+
     return Row(
       children: [
-        if (ChatConfig.showFeedbackButtons) ...[
+        if (chatConfig.showFeedbackButtons) ...[
           _buildActionButton(
             context,
             icon: message.feedback == 'LIKE'
@@ -73,7 +76,7 @@ class AiMessageFeedbackRow extends StatelessWidget {
         ],
 
         // Select Text (Replaces Filter/Tune)
-        if (ChatConfig.showSelectTextButton) ...[
+        if (chatConfig.showSelectTextButton) ...[
           _buildActionButton(
             context,
             icon: Icons.select_all,
@@ -85,7 +88,7 @@ class AiMessageFeedbackRow extends StatelessWidget {
           const SizedBox(width: 4),
         ],
 
-        if (ChatConfig.showCopyButton) ...[
+        if (chatConfig.showCopyButton) ...[
           _buildActionButton(
             context,
             icon: Icons.content_copy,
@@ -99,7 +102,7 @@ class AiMessageFeedbackRow extends StatelessWidget {
         ],
 
         // Regenerate Button
-        if (ChatConfig.showRegenerateButton)
+        if (chatConfig.showRegenerateButton)
           _buildActionButton(
             context,
             icon: Icons.refresh,
@@ -109,13 +112,13 @@ class AiMessageFeedbackRow extends StatelessWidget {
             },
           ),
         // Disclaimer
-        if (ChatConfig.bottomDisclaimerText.isNotEmpty)
+        if (chatConfig.bottomDisclaimerText?.isNotEmpty ?? false)
           Expanded(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
-                  ChatConfig.bottomDisclaimerText,
+                  chatConfig.bottomDisclaimerText!,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Theme.of(context).hintColor,
                         fontSize: 12,

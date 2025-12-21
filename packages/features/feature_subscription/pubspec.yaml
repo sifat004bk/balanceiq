@@ -17,6 +17,8 @@ dependencies:
   flutter_bloc: ^8.1.6
   get_it: ^8.0.2
   purchases_flutter: ^8.2.4
+  feature_chat:
+    path: ../feature_chat
   
 dev_dependencies:
   flutter_test:

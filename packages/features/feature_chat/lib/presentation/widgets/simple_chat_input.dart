@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:record/record.dart';
+import 'package:get_it/get_it.dart';
 
 import 'package:dolfin_core/constants/app_strings.dart';
 import 'package:dolfin_ui_kit/theme/app_typography.dart';
@@ -358,7 +359,8 @@ class _SimpleChatInputState extends State<SimpleChatInput> {
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              if (ChatConfig.showAttachments) ...[
+                              if (GetIt.instance<ChatConfig>()
+                                  .showAttachments) ...[
                                 ChatAttachmentButton(
                                   primaryColor: primaryColor,
                                   isDisabled: isLimitReached,
@@ -374,7 +376,8 @@ class _SimpleChatInputState extends State<SimpleChatInput> {
                                 ),
                               ),
                               const SizedBox(width: 12),
-                              if (ChatConfig.showAudioRecording) ...[
+                              if (GetIt.instance<ChatConfig>()
+                                  .showAudioRecording) ...[
                                 ChatMicButton(
                                   isRecording: _isRecording,
                                   isDisabled: isLimitReached,

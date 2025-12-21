@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:record/record.dart';
+import 'package:get_it/get_it.dart';
 
 import 'package:dolfin_core/constants/app_strings.dart';
 import 'package:dolfin_ui_kit/theme/app_typography.dart';
@@ -531,7 +532,7 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           // Attachment button
-                          if (ChatConfig.showAttachments)
+                          if (GetIt.instance<ChatConfig>().showAttachments)
                             ChatAttachmentButton(
                               onTap: isLimitReached
                                   ? null
@@ -539,7 +540,7 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                               isEnabled: !isLimitReached,
                             ),
 
-                          if (ChatConfig.showAttachments)
+                          if (GetIt.instance<ChatConfig>().showAttachments)
                             const SizedBox(width: 12),
 
                           // Text field
@@ -553,14 +554,14 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                           const SizedBox(width: 12),
 
                           // Voice recording button
-                          if (ChatConfig.showAudioRecording)
+                          if (GetIt.instance<ChatConfig>().showAudioRecording)
                             ChatMicButton(
                               isRecording: _isRecording,
                               onTap: isLimitReached ? () {} : _toggleRecording,
                               isEnabled: !isLimitReached,
                             ),
 
-                          if (ChatConfig.showAudioRecording)
+                          if (GetIt.instance<ChatConfig>().showAudioRecording)
                             const SizedBox(width: 8),
 
                           // Send button

@@ -1,24 +1,23 @@
-class ChatConfig {
+abstract class ChatConfig {
   /// Whether to show the attachment (image/file) button in the chat input
-  static const bool showAttachments = false;
+  bool get showAttachments;
 
   /// Whether to show the audio recording button in the chat input
-  static const bool showAudioRecording = false;
+  bool get showAudioRecording;
 
   /// Whether to show like/dislike buttons on AI messages
-  static const bool showFeedbackButtons = true;
+  bool get showFeedbackButtons;
 
   /// Whether to show the select text button on messages
-  static const bool showSelectTextButton = false;
+  bool get showSelectTextButton;
 
   /// Whether to show the copy button on messages
-  static const bool showCopyButton = true;
+  bool get showCopyButton;
 
-  /// Whether to show the copy button on me
   /// Whether to show the regenerate button on AI messages
-  static const bool showRegenerateButton = false;
+  bool get showRegenerateButton;
 
   /// Text to display at the bottom of the chat (disclaimer)
   /// Set to null to hide
-  static const String bottomDisclaimerText = "Donfin AI can make mistake.";
+  String? get bottomDisclaimerText;
 }

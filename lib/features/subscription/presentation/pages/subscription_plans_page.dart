@@ -394,12 +394,12 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                           ? Theme.of(context).disabledColor
                           : isPopular
                               ? Theme.of(context).colorScheme.primary
-                              : Theme.of(context).colorScheme.surfaceContainer,
+                              : Theme.of(context).colorScheme.onSurface,
                       foregroundColor: isCurrentPlan
                           ? Theme.of(context).colorScheme.onSurface
                           : isPopular
                               ? Theme.of(context).colorScheme.onPrimary
-                              : Theme.of(context).colorScheme.onSurface,
+                              : Theme.of(context).colorScheme.onPrimary,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),

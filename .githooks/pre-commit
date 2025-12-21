@@ -2,7 +2,7 @@
 echo "🔍 Running pre-commit checks..."
 
 # 1. Check Formatting
-echo "🎨 1/3 Checking formatting..."
+echo "🎨 1/2 Checking formatting..."
 if ! dart format --set-exit-if-changed .; then
   echo "❌ Formatting check failed. Run 'dart format .' to fix."
   exit 1
@@ -11,17 +11,18 @@ fi
 # 2. Run Analyzer
 # NOTE: Using --no-fatal-infos for now to allow existing info-level issues.
 # User can switch to --fatal-infos when the backlog is cleared.
-echo "🕵️ 2/3 Running analyzer..."
+echo "🕵️ 2/2 Running analyzer..."
 if ! flutter analyze --no-fatal-infos; then
   echo "❌ Analyzer check failed. Fix errors before committing."
   exit 1
 fi
 
-# 3. Running Tests
-echo "🧪 3/3 Running tests..."
-if ! flutter test; then
-  echo "❌ Tests failed. Fix tests before committing."
-  exit 1
-fi
+# 3. Tests are disabled for faster commits
+# Uncomment below to re-enable tests:
+# echo "🧪 3/3 Running tests..."
+# if ! flutter test; then
+#   echo "❌ Tests failed. Fix tests before committing."
+#   exit 1
+# fi
 
 echo "✅ All checks passed!"

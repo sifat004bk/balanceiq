@@ -1,6 +1,6 @@
 import 'package:dolfin_core/constants/app_strings.dart';
 import 'package:flutter/material.dart';
-import 'package:balance_iq/features/chat/presentation/pages/chat_page.dart';
+import 'package:feature_chat/presentation/pages/chat_page.dart';
 
 /// Modern floating chat button for homepage
 /// Matches the chat input design but acts as a navigation button

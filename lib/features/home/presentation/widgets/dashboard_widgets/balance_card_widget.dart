@@ -1,7 +1,7 @@
 import 'package:dolfin_core/constants/app_strings.dart';
 import 'package:dolfin_core/currency/currency_cubit.dart';
 import 'package:balance_iq/core/di/injection_container.dart';
-import 'package:balance_iq/core/widgets/glass_presets.dart';
+import 'package:dolfin_ui_kit/widgets/glass_presets.dart';
 import 'package:flutter/material.dart';
 
 import 'package:dolfin_ui_kit/theme/app_palette.dart';

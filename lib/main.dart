@@ -31,8 +31,8 @@ import "package:feature_auth/presentation/pages/verification_success_page.dart";
 import 'features/home/presentation/cubit/dashboard_cubit.dart';
 import 'features/home/presentation/pages/home_page.dart';
 import 'features/home/presentation/pages/transactions_page.dart';
-import 'features/subscription/presentation/pages/manage_subscription_page.dart';
-import 'features/subscription/presentation/pages/subscription_plans_page.dart';
+import 'package:feature_subscription/presentation/pages/manage_subscription_page.dart';
+import 'package:feature_subscription/presentation/pages/subscription_plans_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

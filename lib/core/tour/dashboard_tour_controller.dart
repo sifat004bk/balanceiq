@@ -5,7 +5,8 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:dolfin_core/constants/app_strings.dart';
 import 'package:dolfin_core/tour/product_tour_cubit.dart';
 import 'package:dolfin_core/tour/product_tour_state.dart';
-import 'package:dolfin_core/tour/tour_content_widgets.dart';
+import 'package:dolfin_core/tour/tour_widget_factory.dart';
+import 'package:get_it/get_it.dart';
 
 /// Controller for managing the dashboard tour.
 ///
@@ -48,7 +49,7 @@ class DashboardTourController {
           TargetContent(
             align: ContentAlign.bottom,
             builder: (context, controller) {
-              return TourTooltipContent(
+              return GetIt.instance<TourWidgetFactory>().createTooltip(
                 icon: Icons.person_outline_rounded,
                 title: AppStrings.dashboard.completeProfile,
                 description: AppStrings.dashboard.verifyEmailSetup,

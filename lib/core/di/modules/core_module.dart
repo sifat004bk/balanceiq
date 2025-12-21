@@ -8,6 +8,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:dolfin_core/constants/app_constants.dart';
 import 'package:balance_iq/core/config/app_constants_impl.dart';
 import 'package:balance_iq/core/config/app_palette_impl.dart';
+import 'package:dolfin_core/tour/tour_widget_factory.dart';
+import '../../tour/tour_widget_factory_impl.dart';
 
 import "package:dolfin_core/currency/currency_cubit.dart";
 import '../../../features/home/data/datasource/remote_datasource/dashboard_remote_datasource.dart';
@@ -30,6 +32,8 @@ void registerCoreModule(GetIt sl) {
   sl.registerFactory(
     () => ProductTourCubit(tourService: sl()),
   );
+  sl.registerLazySingleton<TourWidgetFactory>(() => TourWidgetFactoryImpl());
+
   //! Core - Configuration
   sl.registerLazySingleton<AppConstants>(() => AppConstantsImpl());
   sl.registerLazySingleton<AppPalette>(() => AppPaletteImpl());

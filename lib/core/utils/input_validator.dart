@@ -7,7 +7,28 @@ abstract class InputValidator {
 
   static final RegExp _nameRegex = RegExp(r'^[a-zA-Z\s]+$');
 
+  // XSS and injection patterns
   static final RegExp _htmlTagRegex = RegExp(r'<[^>]*>');
+  static final RegExp _scriptTagRegex = RegExp(
+    r'<\s*script[^>]*>.*?<\s*/\s*script\s*>',
+    caseSensitive: false,
+    dotAll: true,
+  );
+  static final RegExp _eventHandlerRegex = RegExp(
+    r'\bon\w+\s*=',
+    caseSensitive: false,
+  );
+  static final RegExp _sqlInjectionRegex = RegExp(
+    r"(\b(SELECT|INSERT|UPDATE|DELETE|DROP|UNION|ALTER|CREATE|TRUNCATE)\b)|(')|(--)|(;)",
+    caseSensitive: false,
+  );
+  static final RegExp _javascriptProtocolRegex = RegExp(
+    r'javascript\s*:',
+    caseSensitive: false,
+  );
+
+  /// Maximum allowed amount to prevent overflow issues
+  static const double maxAmount = 999999999.99;
 
   static String? validateEmail(String? email) {
     if (email == null || email.trim().isEmpty) {
@@ -65,6 +86,10 @@ abstract class InputValidator {
     return null;
   }
 
+  /// Validates amount for financial transactions
+  /// - Must be a valid number
+  /// - Must be greater than zero
+  /// - Must not exceed max amount (999,999,999.99)
   static String? validateAmount(String? amount) {
     if (amount == null || amount.trim().isEmpty) {
       return 'Amount is required';
@@ -81,14 +106,85 @@ abstract class InputValidator {
       return 'Amount must be greater than zero';
     }
 
+    if (parsedAmount > maxAmount) {
+      return 'Amount exceeds maximum allowed value';
+    }
+
     return null;
   }
 
+  /// Validates amount allowing zero (for filters, etc.)
+  static String? validateAmountAllowZero(String? amount) {
+    if (amount == null || amount.trim().isEmpty) {
+      return 'Amount is required';
+    }
+
+    final trimmedAmount = amount.trim();
+    final parsedAmount = double.tryParse(trimmedAmount);
+
+    if (parsedAmount == null) {
+      return 'Please enter a valid number';
+    }
+
+    if (parsedAmount < 0) {
+      return 'Amount cannot be negative';
+    }
+
+    if (parsedAmount > maxAmount) {
+      return 'Amount exceeds maximum allowed value';
+    }
+
+    return null;
+  }
+
+  /// Sanitizes input by removing potentially dangerous content
+  /// - Removes HTML tags
+  /// - Removes script tags and content
+  /// - Removes event handlers (onclick, onload, etc.)
+  /// - Removes javascript: protocols
   static String sanitizeInput(String input) {
-    return input.replaceAll(_htmlTagRegex, '').trim();
+    String sanitized = input;
+
+    // Remove script tags and their content first
+    sanitized = sanitized.replaceAll(_scriptTagRegex, '');
+
+    // Remove all HTML tags
+    sanitized = sanitized.replaceAll(_htmlTagRegex, '');
+
+    // Remove event handlers
+    sanitized = sanitized.replaceAll(_eventHandlerRegex, '');
+
+    // Remove javascript: protocol
+    sanitized = sanitized.replaceAll(_javascriptProtocolRegex, '');
+
+    return sanitized.trim();
+  }
+
+  /// Sanitizes input for database queries (basic SQL injection prevention)
+  /// Note: Always use parameterized queries as primary defense
+  static String sanitizeForQuery(String input) {
+    String sanitized = sanitizeInput(input);
+
+    // Remove common SQL injection patterns
+    sanitized = sanitized.replaceAll(_sqlInjectionRegex, '');
+
+    return sanitized.trim();
+  }
+
+  /// Checks if input contains potentially malicious content
+  static bool containsMaliciousContent(String input) {
+    return _scriptTagRegex.hasMatch(input) ||
+        _eventHandlerRegex.hasMatch(input) ||
+        _javascriptProtocolRegex.hasMatch(input) ||
+        _sqlInjectionRegex.hasMatch(input);
   }
 
   static bool isValidEmail(String email) {
     return _emailRegex.hasMatch(email.trim());
+  }
+
+  /// Validates that a double amount is within acceptable range
+  static bool isValidAmount(double amount) {
+    return amount > 0 && amount <= maxAmount;
   }
 }

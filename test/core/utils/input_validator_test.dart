@@ -107,14 +107,92 @@ void main() {
         expect(InputValidator.validateAmount('-100'),
             'Amount must be greater than zero');
       });
+
+      test('should return error message for amount exceeding maximum', () {
+        expect(InputValidator.validateAmount('9999999999'),
+            'Amount exceeds maximum allowed value');
+      });
+    });
+
+    group('validateAmountAllowZero', () {
+      test('should return null for zero amount', () {
+        expect(InputValidator.validateAmountAllowZero('0'), null);
+      });
+
+      test('should return error for negative amount', () {
+        expect(InputValidator.validateAmountAllowZero('-1'),
+            'Amount cannot be negative');
+      });
+
+      test('should return error for amount exceeding maximum', () {
+        expect(InputValidator.validateAmountAllowZero('9999999999'),
+            'Amount exceeds maximum allowed value');
+      });
     });
 
     group('sanitizeInput', () {
       test('should remove HTML tags', () {
-        expect(InputValidator.sanitizeInput('<script>alert("xss")</script>'),
-            'alert("xss")');
         expect(InputValidator.sanitizeInput('<b>Bold</b>'), 'Bold');
         expect(InputValidator.sanitizeInput('Normal text'), 'Normal text');
+      });
+
+      test('should remove script tags and content', () {
+        expect(
+            InputValidator.sanitizeInput('<script>alert("xss")</script>'), '');
+        expect(
+            InputValidator.sanitizeInput('Hello<script>evil()</script>World'),
+            'HelloWorld');
+      });
+
+      test('should remove event handlers', () {
+        expect(InputValidator.sanitizeInput('onclick=alert("xss")'),
+            'alert("xss")');
+        expect(
+            InputValidator.sanitizeInput('onload=malicious()'), 'malicious()');
+      });
+
+      test('should remove javascript: protocol', () {
+        expect(InputValidator.sanitizeInput('javascript:alert(1)'), 'alert(1)');
+      });
+    });
+
+    group('sanitizeForQuery', () {
+      test('should remove SQL injection patterns', () {
+        // Removes quotes, semicolons, and double-dash comments
+        expect(InputValidator.sanitizeForQuery("'; DROP TABLE users; --"),
+            'TABLE users');
+        // Removes SQL keywords
+        expect(InputValidator.sanitizeForQuery('SELECT * FROM users'),
+            '* FROM users');
+      });
+    });
+
+    group('containsMaliciousContent', () {
+      test('should detect script tags', () {
+        expect(
+            InputValidator.containsMaliciousContent(
+                '<script>alert(1)</script>'),
+            true);
+      });
+
+      test('should detect event handlers', () {
+        expect(InputValidator.containsMaliciousContent('onclick=evil()'), true);
+      });
+
+      test('should detect javascript protocol', () {
+        expect(InputValidator.containsMaliciousContent('javascript:alert(1)'),
+            true);
+      });
+
+      test('should detect SQL injection', () {
+        expect(InputValidator.containsMaliciousContent("'; DROP TABLE users;"),
+            true);
+      });
+
+      test('should return false for safe content', () {
+        expect(InputValidator.containsMaliciousContent('Hello World'), false);
+        expect(
+            InputValidator.containsMaliciousContent('Normal text 123'), false);
       });
     });
 
@@ -125,6 +203,19 @@ void main() {
 
       test('should return false for invalid email', () {
         expect(InputValidator.isValidEmail('test'), false);
+      });
+    });
+
+    group('isValidAmount', () {
+      test('should return true for valid amount', () {
+        expect(InputValidator.isValidAmount(100.0), true);
+        expect(InputValidator.isValidAmount(999999999.99), true);
+      });
+
+      test('should return false for invalid amount', () {
+        expect(InputValidator.isValidAmount(0), false);
+        expect(InputValidator.isValidAmount(-10), false);
+        expect(InputValidator.isValidAmount(9999999999), false);
       });
     });
   });

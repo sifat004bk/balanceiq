@@ -682,10 +682,10 @@ test/features/
 **Description:** Test core utilities with 90%+ coverage.
 
 **Sub-tasks:**
-- [ ] 4.4.1 Write tests for `InputValidator`
-- [ ] 4.4.2 Write tests for `SecureStorageService`
-- [ ] 4.4.3 Write tests for `ErrorHandler`
-- [ ] 4.4.4 Write tests for `AppLogger` (mock logging)
+- [x] 4.4.1 Write tests for `InputValidator`
+- [x] 4.4.2 Write tests for `SecureStorageService`
+- [x] 4.4.3 Write tests for `ErrorHandler`
+- [x] 4.4.4 Write tests for `AppLogger` (mock logging)
 
 **Files to Create:**
 ```
@@ -712,11 +712,11 @@ test/core/
 **Description:** Test decomposed widgets in isolation.
 
 **Sub-tasks:**
-- [ ] 4.5.1 Write tests for `ChatTextField`
+- [x] 4.5.1 Write tests for `ChatTextField`
 - [x] 4.5.2 Write tests for `ChatSendButton`
 - [x] 4.5.3 Write tests for `UserMessageBubble` (was `TextMessage`)
 - [x] 4.5.4 Write tests for `DetailHeader`
-- [ ] 4.5.5 Write tests for `DetailActionButtons`
+- [x] 4.5.5 Write tests for `DetailActionButtons`
 - [ ] 4.5.6 Write tests for `LoginForm`
 
 **Files to Create:**

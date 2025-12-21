@@ -34,11 +34,11 @@ class DetailActionButtons extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-            ),
-          )
-              .animate()
-              .fadeIn(delay: 400.ms, duration: 300.ms)
-              .slideY(begin: 0.2, end: 0, delay: 400.ms, duration: 300.ms),
+            )
+                .animate()
+                .fadeIn(delay: 400.ms, duration: 300.ms)
+                .slideY(begin: 0.2, end: 0, delay: 400.ms, duration: 300.ms),
+          ),
           const SizedBox(width: 16),
           Expanded(
             flex: 2,
@@ -56,11 +56,11 @@ class DetailActionButtons extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-            ),
-          )
-              .animate()
-              .fadeIn(delay: 450.ms, duration: 300.ms)
-              .slideY(begin: 0.2, end: 0, delay: 450.ms, duration: 300.ms),
+            )
+                .animate()
+                .fadeIn(delay: 450.ms, duration: 300.ms)
+                .slideY(begin: 0.2, end: 0, delay: 450.ms, duration: 300.ms),
+          ),
         ],
       ),
     );

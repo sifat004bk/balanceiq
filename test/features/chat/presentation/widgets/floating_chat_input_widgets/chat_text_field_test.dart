@@ -15,26 +15,18 @@ void main() {
       focusNode = FocusNode();
     });
 
-    tearDown(() async {
-      // Unmount the widget to detach the FocusNode
-      // We can't access tester here easily in tearDown without passing it,
-      // so better to do it in test or make tearDown take specific action?
-      // Actually, flutter_test's setUp/tearDown don't take arguments.
-      // But we can use addTearDown within the test if we need tester.
-      // However, usually disposing in tearDown is fine if the test finished.
-      // The issue is likely that the widget is still in the tree.
-      // controller.dispose();
-      // focusNode.dispose();
-    });
-
     testWidgets('renders correctly', (tester) async {
       await tester.pumpApp(
         Scaffold(
-          body: ChatTextField(
-            controller: controller,
-            focusNode: focusNode,
-            isLimitReached: false,
-            isDark: false,
+          body: Column(
+            children: [
+              ChatTextField(
+                controller: controller,
+                focusNode: focusNode,
+                isLimitReached: false,
+                isDark: false,
+              ),
+            ],
           ),
         ),
       );
@@ -46,11 +38,15 @@ void main() {
     testWidgets('shows general hint when limit not reached', (tester) async {
       await tester.pumpApp(
         Scaffold(
-          body: ChatTextField(
-            controller: controller,
-            focusNode: focusNode,
-            isLimitReached: false,
-            isDark: false,
+          body: Column(
+            children: [
+              ChatTextField(
+                controller: controller,
+                focusNode: focusNode,
+                isLimitReached: false,
+                isDark: false,
+              ),
+            ],
           ),
         ),
       );
@@ -62,11 +58,15 @@ void main() {
     testWidgets('shows limit reached hint when limit reached', (tester) async {
       await tester.pumpApp(
         Scaffold(
-          body: ChatTextField(
-            controller: controller,
-            focusNode: focusNode,
-            isLimitReached: true,
-            isDark: false,
+          body: Column(
+            children: [
+              ChatTextField(
+                controller: controller,
+                focusNode: focusNode,
+                isLimitReached: true,
+                isDark: false,
+              ),
+            ],
           ),
         ),
       );
@@ -77,11 +77,15 @@ void main() {
     testWidgets('is disabled when limit reached', (tester) async {
       await tester.pumpApp(
         Scaffold(
-          body: ChatTextField(
-            controller: controller,
-            focusNode: focusNode,
-            isLimitReached: true,
-            isDark: false,
+          body: Column(
+            children: [
+              ChatTextField(
+                controller: controller,
+                focusNode: focusNode,
+                isLimitReached: true,
+                isDark: false,
+              ),
+            ],
           ),
         ),
       );
@@ -93,11 +97,15 @@ void main() {
     testWidgets('updates text when typing', (tester) async {
       await tester.pumpApp(
         Scaffold(
-          body: ChatTextField(
-            controller: controller,
-            focusNode: focusNode,
-            isLimitReached: false,
-            isDark: false,
+          body: Column(
+            children: [
+              ChatTextField(
+                controller: controller,
+                focusNode: focusNode,
+                isLimitReached: false,
+                isDark: false,
+              ),
+            ],
           ),
         ),
       );

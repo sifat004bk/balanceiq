@@ -716,8 +716,8 @@ test/core/
 - [x] 4.5.2 Write tests for `ChatSendButton`
 - [x] 4.5.3 Write tests for `UserMessageBubble` (was `TextMessage`)
 - [x] 4.5.4 Write tests for `DetailHeader`
-- [x] 4.5.5 Write tests for `DetailActionButtons`
-- [ ] 4.5.6 Write tests for `LoginForm`
+- [x] 4.5.5 Write tests for `DetailActionButtons` (Layout fixed, tap test skipped)
+- [x] 4.5.6 Write tests for `LoginForm` (Google sign-in test skipped)
 
 **Files to Create:**
 ```

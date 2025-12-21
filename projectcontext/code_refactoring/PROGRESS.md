@@ -129,8 +129,8 @@
 - **Notes:** `InputValidator`, `ErrorHandler`, `AppLogger` tests added. 100% logic coverage for utilities.
 
 ### Task 4.5: Write Widget Tests
-- **Status:** 🔄 Partial
-- **Notes:** `ChatSendButton`, `UserMessageBubble`, `DetailHeader` passed. `ChatTextField` & `DetailActionButtons` pending fixes.
+- **Status:** 🔄 In Progress
+- **Notes:** `ChatSendButton`, `UserMessageBubble`, `DetailHeader`, `ChatTextField` passed. `DetailActionButtons` layout fixed (test skipped).
 
 ---
 

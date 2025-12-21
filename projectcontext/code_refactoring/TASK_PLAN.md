@@ -615,7 +615,7 @@ test/
 - [x] 4.2.2 Write tests for `SignupCubit`
 - [x] 4.2.3 Write tests for `SessionCubit`
 - [x] 4.2.4 Write tests for `ChatCubit`
-- [ ] 4.2.5 Write tests for `DashboardCubit`
+- [x] 4.2.5 Write tests for `DashboardCubit`
 - [ ] 4.2.6 Write tests for `TransactionsCubit`
 - [ ] 4.2.7 Write tests for `TransactionFilterCubit`
 

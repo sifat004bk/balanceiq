@@ -119,25 +119,17 @@
 - **Notes:** Covered `LoginCubit`, `SignupCubit`, `SessionCubit`, `ChatCubit` (100%).
 
 ### Task 4.3: Write Repository Tests
-- **Status:** ⏳ Pending
+- **Status:** ✅ Completed
+- **Completed:** 2025-12-21
+- **Notes:** Covered `AuthRepository`, `ChatRepository`, `TransactionRepository`.
 
 ### Task 4.4: Write Core Utility Tests
 - **Status:** ⏳ Pending
-- **Notes:** `secure_storage_service_test.dart` exists.
+- **Notes:** `secure_storage_service_test.dart` exists. Need tests for `InputValidator`, `ErrorHandler`, `AppLogger`.
 
 ### Task 4.5: Write Widget Tests
 - **Status:** 🔄 Partial
-- **Notes:** `ChatSendButton` tested.
-
-### Task 4.3: Write Repository Tests
-- **Status:** ⏳ Pending
-
-### Task 4.4: Write Core Utility Tests
-- **Status:** ⏳ Pending
-- **Notes:** `secure_storage_service_test.dart` exists.
-
-### Task 4.5: Write Widget Tests
-- **Status:** ⏳ Pending
+- **Notes:** `ChatSendButton`, `UserMessageBubble`, `DetailHeader` passed. `ChatTextField` & `DetailActionButtons` pending fixes.
 
 ---
 

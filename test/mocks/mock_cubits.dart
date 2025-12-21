@@ -17,7 +17,7 @@ import 'package:balance_iq/features/home/presentation/cubit/dashboard_state.dart
 import 'package:balance_iq/features/home/presentation/cubit/transactions_state.dart';
 import 'package:balance_iq/features/home/presentation/cubit/transaction_filter_state.dart';
 import 'package:balance_iq/features/chat/presentation/cubit/chat_state.dart';
-import 'package:balance_iq/features/auth/presentation/cubit/interactive_onboarding_state.dart';
+
 import 'package:balance_iq/features/subscription/presentation/cubit/subscription_state.dart';
 import 'package:bloc_test/bloc_test.dart';
 

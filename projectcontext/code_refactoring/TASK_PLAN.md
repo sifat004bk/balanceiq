@@ -651,10 +651,10 @@ test/features/
 **Description:** Test repository implementations with mocked data sources.
 
 **Sub-tasks:**
-- [ ] 4.3.1 Write tests for `AuthRepositoryImpl`
-- [ ] 4.3.2 Write tests for `ChatRepositoryImpl`
+- [x] 4.3.1 Write tests for `AuthRepositoryImpl`
+- [x] 4.3.2 Write tests for `ChatRepositoryImpl`
 - [ ] 4.3.3 Write tests for `DashboardRepositoryImpl`
-- [ ] 4.3.4 Write tests for `TransactionsRepositoryImpl`
+- [x] 4.3.4 Write tests for `TransactionsRepositoryImpl`
 
 **Files to Create:**
 ```
@@ -713,10 +713,10 @@ test/core/
 
 **Sub-tasks:**
 - [ ] 4.5.1 Write tests for `ChatTextField`
-- [ ] 4.5.2 Write tests for `ChatSendButton`
-- [ ] 4.5.3 Write tests for `TextMessage`
-- [ ] 4.5.4 Write tests for `DetailHeader`
-- [ ] 4.5.5 Write tests for `DetailActions`
+- [x] 4.5.2 Write tests for `ChatSendButton`
+- [x] 4.5.3 Write tests for `UserMessageBubble` (was `TextMessage`)
+- [x] 4.5.4 Write tests for `DetailHeader`
+- [ ] 4.5.5 Write tests for `DetailActionButtons`
 - [ ] 4.5.6 Write tests for `LoginForm`
 
 **Files to Create:**

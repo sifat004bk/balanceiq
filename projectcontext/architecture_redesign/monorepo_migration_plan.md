@@ -42,6 +42,9 @@ workspace/
 - `lib/core/usecases/**` -> `lib/usecases/`
 - `lib/core/constants/app_strings.dart` -> `lib/constants/` (Base strings only)
 
+**New Core Components:**
+- Create `lib/config/environment_config.dart` (Abstract interface for Base URLs).
+
 **Dependencies:**
 - `dio`, `flutter_secure_storage`, `dartz`, `equatable`, `logger`
 
@@ -74,6 +77,7 @@ workspace/
 **Key Refactor:**
 - Create `class AuthConfig` interface to inject API endpoints and branding.
 - Remove hardcoded `GoRouter` paths. Return `auth_routes` list instead.
+- **Refactor `ApiEndpoints` usage:** Replace static `ApiEndpoints` calls with `EnvironmentConfig` paths injected from Core.
 
 ---
 

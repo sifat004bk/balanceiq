@@ -69,6 +69,35 @@ class AuthConfig {
   const AuthConfig({...});
 }
 
+### 3.1 Network & API Configuration (Handling Different Base URLs)
+To solve the "Different Apps, Different URLs" problem, we will pull `ApiEndpoints` out of global scope and into an injected configuration.
+
+**1. Define Interface in Core:**
+```dart
+// packages/core/balance_core/lib/config/environment_config.dart
+abstract class EnvironmentConfig {
+  String get apiBaseUrl;
+  String get authBaseUrl;
+  // ... other environment specific variables
+}
+```
+
+**2. Inject in App:**
+```dart
+// apps/ai_diet_assistant/lib/main.dart
+class DietAppEnv implements EnvironmentConfig {
+  @override
+  String get apiBaseUrl => "https://api.diet-assistant.com";
+}
+
+void main() {
+  // Config is passed to the core module during init
+  initCore(environment: DietAppEnv());
+}
+```
+
+**3. Use in Features:**
+Features will access `GetIt.I<EnvironmentConfig>().apiBaseUrl` instead of a static `ApiEndpoints` class. This allows every app to have completely different backends while using the exact same Chat/Auth code.
 // In package: feature_auth extraction
 class LoginScreen extends StatelessWidget {
   // It gets config from a Provider/GetIt defined at App level

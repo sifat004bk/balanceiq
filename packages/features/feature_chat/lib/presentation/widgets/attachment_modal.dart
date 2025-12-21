@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../../core/constants/app_strings.dart';
-import '../../../../core/theme/app_typography.dart';
+import 'package:dolfin_core/constants/app_strings.dart';
+import 'package:dolfin_ui_kit/theme/app_typography.dart';
 
 class AttachmentModal extends StatelessWidget {
   final VoidCallback onCameraTap;

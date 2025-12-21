@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../../../core/constants/app_constants.dart';
-import '../../../../core/constants/api_endpoints.dart';
-import '../../../../core/storage/secure_storage_service.dart';
+import 'package:dolfin_core/constants/app_constants.dart';
+import 'package:dolfin_core/constants/api_endpoints.dart';
+import 'package:dolfin_core/storage/secure_storage_service.dart';
 import '../../domain/entities/chart_data.dart';
 import '../models/chat_request_models.dart';
 import '../models/chat_history_response_model.dart';

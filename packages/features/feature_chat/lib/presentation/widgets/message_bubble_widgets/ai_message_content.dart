@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../core/constants/app_strings.dart';
+import 'package:dolfin_core/constants/app_strings.dart';
 import '../../../domain/entities/message.dart';
 import '../../cubit/chat_cubit.dart';
 

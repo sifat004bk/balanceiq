@@ -1,7 +1,7 @@
 import 'package:dolfin_core/constants/api_endpoints.dart';
 import 'package:feature_chat/data/models/message_usage_model.dart';
 import 'package:dio/dio.dart';
-import '../../../../core/storage/secure_storage_service.dart';
+import 'package:dolfin_core/storage/secure_storage_service.dart';
 
 /// Message usage API data source
 /// Endpoint: GET /api/finance-guru/v1/usage

@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../../../core/constants/app_constants.dart';
-import '../../../../core/storage/secure_storage_service.dart';
+import 'package:dolfin_core/constants/app_constants.dart';
+import 'package:dolfin_core/storage/secure_storage_service.dart';
 import '../models/user_model.dart';
 
 abstract class AuthLocalDataSource {

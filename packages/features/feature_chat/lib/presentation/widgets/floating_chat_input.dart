@@ -6,9 +6,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:record/record.dart';
 
-import '../../../../core/constants/app_strings.dart';
-import '../../../../core/theme/app_typography.dart';
-import '../../../../core/utils/snackbar_utils.dart';
+import 'package:dolfin_core/constants/app_strings.dart';
+import 'package:dolfin_ui_kit/theme/app_typography.dart';
+import 'package:dolfin_core/utils/snackbar_utils.dart';
 import '../cubit/chat_cubit.dart';
 import '../cubit/chat_state.dart';
 import '../chat_config.dart';

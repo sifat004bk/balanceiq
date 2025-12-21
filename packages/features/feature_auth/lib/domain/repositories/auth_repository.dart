@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import '../entities/user.dart';
-import '../../../../core/error/failures.dart';
+import 'package:dolfin_core/error/failures.dart';
 import '../../data/models/auth_request_models.dart';
 
 abstract class AuthRepository {

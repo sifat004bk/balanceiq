@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../core/constants/app_strings.dart';
-import '../../../../../core/utils/snackbar_utils.dart';
+import 'package:dolfin_core/constants/app_strings.dart';
+import 'package:dolfin_core/utils/snackbar_utils.dart';
 import '../../../domain/entities/message.dart';
 import '../../../domain/entities/chat_feedback.dart';
 import '../../chat_config.dart';

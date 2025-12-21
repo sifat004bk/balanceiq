@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import '../../domain/entities/chat_feedback.dart';
 import '../../domain/repositories/chat_feedback_repository.dart';
-import '../../../../core/error/failures.dart';
+import 'package:dolfin_core/error/failures.dart';
 import '../datasources/chat_feedback_datasource.dart';
 import '../models/chat_feedback_model.dart' as model;
 

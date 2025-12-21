@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import '../entities/message.dart';
 import '../repositories/chat_repository.dart';
-import '../../../../core/error/failures.dart';
+import 'package:dolfin_core/error/failures.dart';
 
 class SendMessage {
   final ChatRepository repository;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
-import '../../../../core/constants/app_strings.dart';
+import 'package:dolfin_core/constants/app_strings.dart';
 import '../cubit/session/session_cubit.dart';
 import '../../domain/entities/user.dart';
 

@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import '../entities/message.dart';
 import '../entities/chat_history_response.dart';
-import '../../../../core/error/failures.dart';
+import 'package:dolfin_core/error/failures.dart';
 
 abstract class ChatRepository {
   Future<Either<Failure, List<Message>>> getMessages(

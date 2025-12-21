@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
-import '../../../../core/utils/app_logger.dart';
+import 'package:dolfin_core/utils/app_logger.dart';
 import '../models/auth_request_models.dart';
 import '../models/user_model.dart';
 import 'auth_remote_datasource.dart';

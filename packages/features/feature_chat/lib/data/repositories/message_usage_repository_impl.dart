@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import '../../domain/entities/message_usage.dart';
 import '../../domain/repositories/message_usage_repository.dart';
-import '../../../../core/error/failures.dart';
+import 'package:dolfin_core/error/failures.dart';
 import '../datasources/message_usage_datasource.dart';
 
 class MessageUsageRepositoryImpl implements MessageUsageRepository {

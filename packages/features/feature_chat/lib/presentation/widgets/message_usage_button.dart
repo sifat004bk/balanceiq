@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/constants/app_constants.dart';
+import 'package:dolfin_core/constants/app_constants.dart';
 
 import '../cubit/chat_cubit.dart';
 import '../cubit/chat_state.dart';

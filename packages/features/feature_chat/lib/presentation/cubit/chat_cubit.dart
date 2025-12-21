@@ -11,9 +11,9 @@ import '../../domain/usecases/get_message_usage.dart';
 import '../../domain/usecases/submit_feedback.dart';
 import '../../domain/entities/chat_feedback.dart';
 import 'chat_state.dart';
-import '../../../../core/constants/app_constants.dart';
-import '../../../../core/error/failures.dart';
-import '../../../../core/storage/secure_storage_service.dart';
+import 'package:dolfin_core/constants/app_constants.dart';
+import 'package:dolfin_core/error/failures.dart';
+import 'package:dolfin_core/storage/secure_storage_service.dart';
 
 class ChatCubit extends Cubit<ChatState> {
   final GetMessages getMessages;

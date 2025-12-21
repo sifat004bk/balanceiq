@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../core/theme/app_theme.dart';
+import '../package:dolfin_ui_kit/theme/app_theme.dart';
 import '../simple_chat_input.dart';
 
 class ChatInputContainer extends StatelessWidget {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
-import '../../../../core/tour/tour.dart';
+import 'package:dolfin_core/tour/tour.dart';
 import '../pages/profile_page.dart';
 
 mixin ProfileTourMixin on State<ProfilePage> {

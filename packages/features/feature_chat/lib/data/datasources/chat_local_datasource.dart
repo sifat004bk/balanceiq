@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
-import '../../../../core/constants/app_constants.dart';
-import '../../../../core/database/database_helper.dart';
+import 'package:dolfin_core/constants/app_constants.dart';
+import 'package:dolfin_core/database/database_helper.dart';
 import '../models/message_model.dart';
 
 abstract class ChatLocalDataSource {

@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
 import '../../domain/entities/user.dart';
 import '../../domain/repositories/auth_repository.dart';
-import '../../../../core/error/app_exception.dart';
-import '../../../../core/error/failures.dart';
+import 'package:dolfin_core/error/app_exception.dart';
+import 'package:dolfin_core/error/failures.dart';
 import '../datasources/auth_local_datasource.dart';
 import '../datasources/auth_remote_datasource.dart';
 import '../models/auth_request_models.dart';

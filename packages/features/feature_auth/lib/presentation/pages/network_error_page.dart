@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../core/utils/snackbar_utils.dart';
+import 'package:dolfin_core/utils/snackbar_utils.dart';
 
 class NetworkErrorPage extends StatelessWidget {
   final VoidCallback? onRetry;

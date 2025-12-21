@@ -1,7 +1,7 @@
 import 'package:dolfin_core/constants/api_endpoints.dart';
 import 'package:feature_chat/data/models/chat_feedback_model.dart';
 import 'package:dio/dio.dart';
-import '../../../../core/storage/secure_storage_service.dart';
+import 'package:dolfin_core/storage/secure_storage_service.dart';
 
 /// Chat feedback API data source
 /// Endpoint: POST /api/finance-guru/v1/chat-history/{id}/feedback

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../../core/di/injection_container.dart';
-import '../../../../core/storage/secure_storage_service.dart';
-import '../../../../core/utils/app_logger.dart';
+import 'package:dolfin_core/di/injection_container.dart';
+import 'package:dolfin_core/storage/secure_storage_service.dart';
+import 'package:dolfin_core/utils/app_logger.dart';
 import '../../../home/domain/usecase/get_user_dashbaord.dart';
 
 class SplashPage extends StatefulWidget {

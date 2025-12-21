@@ -4,7 +4,7 @@ import '../../../domain/entities/user.dart';
 import '../../../domain/usecases/get_current_user.dart';
 import '../../../domain/usecases/get_profile.dart';
 import '../../../domain/usecases/sign_out.dart';
-import '../../../../../core/storage/secure_storage_service.dart';
+import 'package:dolfin_core/storage/secure_storage_service.dart';
 
 // States
 abstract class SessionState extends Equatable {

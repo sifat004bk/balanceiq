@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import '../entities/user.dart';
 import '../repositories/auth_repository.dart';
-import '../../../../core/error/failures.dart';
+import 'package:dolfin_core/error/failures.dart';
 
 class SignInWithGoogle {
   final AuthRepository repository;

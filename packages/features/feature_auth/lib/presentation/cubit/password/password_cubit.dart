@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../domain/usecases/change_password.dart';
 import '../../../domain/usecases/forgot_password.dart';
 import '../../../domain/usecases/reset_password.dart';
-import '../../../../../core/storage/secure_storage_service.dart';
+import 'package:dolfin_core/storage/secure_storage_service.dart';
 
 // States
 abstract class PasswordState extends Equatable {

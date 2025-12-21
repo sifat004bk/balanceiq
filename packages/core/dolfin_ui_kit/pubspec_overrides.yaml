@@ -1,0 +1,4 @@
+# melos_managed_dependency_overrides: dolfin_core
+dependency_overrides:
+  dolfin_core:
+    path: ../dolfin_core

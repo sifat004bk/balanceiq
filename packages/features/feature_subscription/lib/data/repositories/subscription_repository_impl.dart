@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import '../../../../core/error/failures.dart';
+import 'package:dolfin_core/error/failures.dart';
 import '../../domain/entities/plan.dart';
 import '../../domain/entities/subscription.dart';
 import '../../domain/entities/subscription_status.dart';

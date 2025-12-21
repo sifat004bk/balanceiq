@@ -2,10 +2,10 @@ import 'package:dolfin_core/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/di/injection_container.dart';
-import '../../../../core/theme/app_typography.dart';
-import '../../../../core/tour/tour.dart';
-import '../../../../core/utils/snackbar_utils.dart';
+import 'package:dolfin_core/di/injection_container.dart';
+import 'package:dolfin_ui_kit/theme/app_typography.dart';
+import 'package:dolfin_core/tour/tour.dart';
+import 'package:dolfin_core/utils/snackbar_utils.dart';
 import '../../../chat/presentation/pages/chat_page.dart';
 import '../../domain/entities/plan.dart';
 import '../cubit/subscription_cubit.dart';

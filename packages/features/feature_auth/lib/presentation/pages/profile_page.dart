@@ -2,11 +2,11 @@ import 'package:currency_picker/currency_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/constants/app_strings.dart';
-import '../../../../core/currency/currency_cubit.dart';
-import '../../../../core/di/injection_container.dart';
-import '../../../../core/tour/tour.dart';
-import '../../../../core/utils/snackbar_utils.dart';
+import 'package:dolfin_core/constants/app_strings.dart';
+import 'package:dolfin_core/currency/currency_cubit.dart';
+import 'package:dolfin_core/di/injection_container.dart';
+import 'package:dolfin_core/tour/tour.dart';
+import 'package:dolfin_core/utils/snackbar_utils.dart';
 import '../../../subscription/presentation/cubit/subscription_cubit.dart';
 import '../../../subscription/presentation/cubit/subscription_state.dart';
 import '../cubit/session/session_cubit.dart';

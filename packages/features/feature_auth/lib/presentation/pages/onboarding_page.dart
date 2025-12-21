@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import '../../../../core/constants/app_strings.dart';
+import 'package:dolfin_core/constants/app_strings.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});

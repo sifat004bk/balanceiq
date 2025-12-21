@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../../../../core/constants/app_strings.dart';
+import 'package:dolfin_core/constants/app_strings.dart';
 import '../../../../subscription/presentation/cubit/subscription_cubit.dart';
 
 class SubscriptionCardLoading extends StatelessWidget {

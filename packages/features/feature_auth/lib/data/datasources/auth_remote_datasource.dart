@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import '../../../../core/constants/api_endpoints.dart';
-import '../../../../core/constants/app_constants.dart';
-import '../../../../core/error/app_exception.dart';
-import '../../../../core/error/error_handler.dart';
-import '../../../../core/storage/secure_storage_service.dart';
+import 'package:dolfin_core/constants/api_endpoints.dart';
+import 'package:dolfin_core/constants/app_constants.dart';
+import 'package:dolfin_core/error/app_exception.dart';
+import 'package:dolfin_core/error/error_handler.dart';
+import 'package:dolfin_core/storage/secure_storage_service.dart';
 import '../models/auth_request_models.dart';
 import '../models/user_model.dart';
 

@@ -1,6 +1,6 @@
 import 'package:dolfin_core/constants/api_endpoints.dart';
 import 'package:dio/dio.dart';
-import '../../../../core/storage/secure_storage_service.dart';
+import 'package:dolfin_core/storage/secure_storage_service.dart';
 
 import '../models/plan_dto.dart';
 import '../models/subscription_dto.dart';

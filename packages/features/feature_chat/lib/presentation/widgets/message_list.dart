@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../domain/entities/message.dart';
-import '../../../../core/constants/app_constants.dart';
-import '../../../../core/theme/app_theme.dart';
+import 'package:dolfin_core/constants/app_constants.dart';
+import 'package:dolfin_ui_kit/theme/app_theme.dart';
 import 'message_bubble.dart';
 import 'typing_indicator.dart';
 

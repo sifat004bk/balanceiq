@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import '../../domain/entities/message.dart';
 import '../../domain/entities/message_usage.dart';
-import '../../../../core/constants/app_constants.dart';
+import 'package:dolfin_core/constants/app_constants.dart';
 
 abstract class ChatState extends Equatable {
   const ChatState();

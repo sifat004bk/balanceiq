@@ -5,7 +5,7 @@ import '../../../domain/usecases/resend_verification_email.dart';
 import '../../../domain/usecases/send_verification_email.dart';
 import '../../../domain/usecases/signup.dart';
 import '../../../domain/usecases/sign_in_with_google.dart';
-import '../../../../../core/storage/secure_storage_service.dart';
+import 'package:dolfin_core/storage/secure_storage_service.dart';
 
 // States
 abstract class SignupState extends Equatable {

@@ -174,69 +174,6 @@ class DashboardSummaryModel extends DashboardSummary {
     return value.toString();
   }
 
-  /// Type-safe helper to parse integers
-  static int _parseInt(dynamic value, String fieldName) {
-    if (value == null) {
-      throw FormatException('$fieldName is null');
-    }
-
-    if (value is int) {
-      return value;
-    }
-
-    if (value is String) {
-      final parsed = int.tryParse(value);
-      if (parsed == null) {
-        throw FormatException('$fieldName: Cannot parse "$value" as int');
-      }
-      return parsed;
-    }
-
-    if (value is double) {
-      return value.toInt();
-    }
-
-    throw FormatException('$fieldName: Unsupported type ${value.runtimeType}');
-  }
-
-  /// Type-safe helper to parse doubles
-  static double _parseDouble(dynamic value, String fieldName) {
-    if (value == null) {
-      throw FormatException('$fieldName is null');
-    }
-
-    if (value is double) {
-      return value;
-    }
-
-    if (value is int) {
-      return value.toDouble();
-    }
-
-    if (value is String) {
-      final parsed = double.tryParse(value);
-      if (parsed == null) {
-        throw FormatException('$fieldName: Cannot parse "$value" as double');
-      }
-      return parsed;
-    }
-
-    throw FormatException('$fieldName: Unsupported type ${value.runtimeType}');
-  }
-
-  /// Type-safe helper to parse strings
-  static String _parseString(dynamic value, String fieldName) {
-    if (value == null) {
-      throw FormatException('$fieldName is null');
-    }
-
-    if (value is String) {
-      return value;
-    }
-
-    return value.toString();
-  }
-
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'total_income': totalIncome,

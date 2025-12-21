@@ -54,7 +54,6 @@ void main() {
         'test_${DateTime.now().millisecondsSinceEpoch}@example.com';
     const testPassword = 'Test@123456';
     const testFullName = 'Test User';
-    String? userAuthToken;
 
     test('should successfully signup a new user', () async {
       try {
@@ -92,7 +91,6 @@ void main() {
         expect(response.data, isNotNull);
         expect(response.data['token'], isNotNull);
 
-        userAuthToken = response.data['token'];
         print('✅ Login test passed - Token received');
       } catch (e) {
         print('⚠️ Login test: $e');

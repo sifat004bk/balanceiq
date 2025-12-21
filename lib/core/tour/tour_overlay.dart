@@ -115,9 +115,6 @@ class _TourCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-
     return Material(
       color: Colors.black.withOpacity(0.7),
       child: SafeArea(

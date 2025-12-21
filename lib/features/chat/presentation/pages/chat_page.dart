@@ -9,7 +9,6 @@ import '../cubit/chat_state.dart';
 import '../widgets/chat_shimmer.dart';
 import '../widgets/message_list.dart';
 import '../widgets/suggested_prompts.dart';
-import '../widgets/chat_page_widgets/chat_error_widget.dart';
 import '../widgets/chat_page_widgets/chat_page_widgets.dart';
 
 class ChatPage extends StatelessWidget {

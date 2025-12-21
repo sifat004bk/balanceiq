@@ -1,7 +1,6 @@
 import 'package:currency_picker/currency_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/currency/currency_cubit.dart';
@@ -13,6 +12,7 @@ import '../../../subscription/presentation/cubit/subscription_state.dart';
 import '../cubit/session/session_cubit.dart';
 import '../cubit/signup/signup_cubit.dart';
 import '../widgets/profile/profile_widgets.dart';
+import '../mixins/profile_tour_mixin.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -21,15 +21,7 @@ class ProfilePage extends StatefulWidget {
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
-  TutorialCoachMark? _tutorialCoachMark;
-  bool _emailVerifyTourShown = false;
-  bool _subscriptionTourShown = false;
-
-  // Tour keys
-  final GlobalKey _emailVerifyKey = GlobalKey();
-  final GlobalKey _subscriptionCardKey = GlobalKey();
-
+class _ProfilePageState extends State<ProfilePage> with ProfileTourMixin {
   @override
   void initState() {
     super.initState();
@@ -38,155 +30,14 @@ class _ProfilePageState extends State<ProfilePage> {
 
     // Check if we should show tour after frame is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _checkAndShowTour();
+      checkAndShowTour();
     });
   }
 
   @override
   void dispose() {
-    _tutorialCoachMark?.finish();
+    disposeTour();
     super.dispose();
-  }
-
-  void _checkAndShowTour() {
-    final tourCubit = context.read<ProductTourCubit>();
-    final tourState = tourCubit.state;
-
-    if (tourState is TourActive) {
-      if (tourState.currentStep == TourStep.profileEmailVerify) {
-        _showEmailVerifyTour();
-      } else if (tourState.currentStep == TourStep.profileSubscription) {
-        _showSubscriptionTour();
-      }
-    }
-  }
-
-  void _showEmailVerifyTour() {
-    if (_emailVerifyTourShown) return;
-    if (_emailVerifyKey.currentContext == null) {
-      Future.delayed(const Duration(milliseconds: 500), () {
-        if (mounted) _showEmailVerifyTour();
-      });
-      return;
-    }
-
-    _emailVerifyTourShown = true;
-    final tourCubit = context.read<ProductTourCubit>();
-
-    final targets = [
-      TargetFocus(
-        identify: 'email_verify',
-        keyTarget: _emailVerifyKey,
-        alignSkip: Alignment.bottomRight,
-        enableOverlayTab: false,
-        enableTargetTab: true,
-        shape: ShapeLightFocus.RRect,
-        radius: 16,
-        contents: [
-          TargetContent(
-            align: ContentAlign.bottom,
-            builder: (context, controller) {
-              return TourTooltipContent(
-                icon: Icons.email_outlined,
-                title: 'Verify Your Email',
-                description:
-                    'Click the button to send a verification email. This unlocks all features!',
-                buttonText: 'Got it',
-                onButtonPressed: () {
-                  controller.next();
-                },
-                showSkip: true,
-                onSkip: () {
-                  tourCubit.skipTour();
-                  controller.skip();
-                },
-              );
-            },
-          ),
-        ],
-      ),
-    ];
-
-    _tutorialCoachMark = TutorialCoachMark(
-      targets: targets,
-      colorShadow: Colors.black,
-      opacityShadow: 0.8,
-      hideSkip: true,
-      onClickOverlay: (target) {},
-      onFinish: () {
-        // Tour tooltip dismissed
-      },
-      onSkip: () {
-        tourCubit.skipTour();
-        return true;
-      },
-    );
-
-    _tutorialCoachMark!.show(context: context);
-  }
-
-  void _showSubscriptionTour() {
-    if (_subscriptionTourShown) return;
-    if (_subscriptionCardKey.currentContext == null) {
-      Future.delayed(const Duration(milliseconds: 500), () {
-        if (mounted) _showSubscriptionTour();
-      });
-      return;
-    }
-
-    _subscriptionTourShown = true;
-    final tourCubit = context.read<ProductTourCubit>();
-
-    final targets = [
-      TargetFocus(
-        identify: 'subscription',
-        keyTarget: _subscriptionCardKey,
-        alignSkip: Alignment.bottomRight,
-        enableOverlayTab: false,
-        enableTargetTab: true,
-        shape: ShapeLightFocus.RRect,
-        radius: 20,
-        contents: [
-          TargetContent(
-            align: ContentAlign.bottom,
-            builder: (context, controller) {
-              return TourTooltipContent(
-                icon: Icons.card_membership_outlined,
-                title: 'Choose a Plan',
-                description:
-                    'Subscribe to start tracking your finances. We have a free plan to get you started!',
-                buttonText: 'Got it',
-                onButtonPressed: () {
-                  controller.next();
-                },
-                showSkip: true,
-                onSkip: () {
-                  tourCubit.skipTour();
-                  controller.skip();
-                },
-              );
-            },
-          ),
-        ],
-      ),
-    ];
-
-    _tutorialCoachMark = TutorialCoachMark(
-      targets: targets,
-      colorShadow: Colors.black,
-      opacityShadow: 0.8,
-      hideSkip: true,
-      onClickOverlay: (target) {},
-      onFinish: () {
-        // Tour tooltip dismissed
-      },
-      onSkip: () {
-        tourCubit.skipTour();
-        return true;
-      },
-    );
-
-    _tutorialCoachMark!.show(context: context);
   }
 
   void _handleEmailVerificationClick(dynamic user) {
@@ -211,7 +62,7 @@ class _ProfilePageState extends State<ProfilePage> {
         tourCubit.acknowledgeEmailSent();
         // Show subscription tour after a delay
         Future.delayed(const Duration(milliseconds: 500), () {
-          if (mounted) _showSubscriptionTour();
+          if (mounted) showSubscriptionTour();
         });
       },
     );
@@ -245,7 +96,7 @@ class _ProfilePageState extends State<ProfilePage> {
               if (tourState is TourActive && !tourState.isTransitioning) {
                 if (tourState.currentStep == TourStep.profileEmailVerify) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
-                    _showEmailVerifyTour();
+                    showEmailVerifyTour();
                   });
                 } else if (tourState.currentStep == TourStep.emailSentModal) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -254,7 +105,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 } else if (tourState.currentStep ==
                     TourStep.profileSubscription) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
-                    _showSubscriptionTour();
+                    showSubscriptionTour();
                   });
                 }
               }
@@ -304,7 +155,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     // Email Verification Banner (if not verified)
                     if (!user.isEmailVerified)
                       Container(
-                        key: _emailVerifyKey,
+                        key: emailVerifyKey,
                         child: EmailVerificationBanner(
                           user: user,
                           onVerificationClick: () =>
@@ -326,7 +177,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     const SizedBox(height: 40),
                     // Subscription Card with real data
                     Container(
-                      key: _subscriptionCardKey,
+                      key: subscriptionCardKey,
                       child: BlocBuilder<SubscriptionCubit, SubscriptionState>(
                         builder: (context, subState) {
                           if (subState is SubscriptionStatusLoading) {

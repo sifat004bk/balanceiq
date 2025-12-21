@@ -1,5 +1,5 @@
-// ignore_for_file: avoid_print
 import 'dart:convert';
+import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
@@ -30,89 +30,93 @@ class LoggingInterceptor extends Interceptor {
     super.onError(err, handler);
   }
 
+  void _log(String message) {
+    log(message, name: 'DIO');
+  }
+
   void _logRequest(RequestOptions options) {
-    print('\n');
-    print('┌─────────────────────────────────────────────────────────────');
-    print('│ 🚀 REQUEST');
-    print('├─────────────────────────────────────────────────────────────');
-    print('│ Method: ${options.method}');
-    print('│ URL: ${options.uri}');
+    _log('\n');
+    _log('┌─────────────────────────────────────────────────────────────');
+    _log('│ 🚀 REQUEST');
+    _log('├─────────────────────────────────────────────────────────────');
+    _log('│ Method: ${options.method}');
+    _log('│ URL: ${options.uri}');
 
     if (options.headers.isNotEmpty) {
-      print('│ Headers:');
+      _log('│ Headers:');
       options.headers.forEach((key, value) {
-        print('│   $key: $value');
+        _log('│   $key: $value');
       });
     }
 
     if (options.queryParameters.isNotEmpty) {
-      print('│ Query Parameters:');
+      _log('│ Query Parameters:');
       options.queryParameters.forEach((key, value) {
-        print('│   $key: $value');
+        _log('│   $key: $value');
       });
     }
 
     if (options.data != null) {
-      print('│ Body:');
+      _log('│ Body:');
       _printBody(options.data);
     }
 
-    print('└─────────────────────────────────────────────────────────────');
-    print('\n');
+    _log('└─────────────────────────────────────────────────────────────');
+    _log('\n');
   }
 
   void _logResponse(Response response) {
-    print('\n');
-    print('┌─────────────────────────────────────────────────────────────');
-    print('│ ✅ RESPONSE');
-    print('├─────────────────────────────────────────────────────────────');
-    print('│ Status Code: ${response.statusCode}');
-    print('│ Status Message: ${response.statusMessage}');
-    print('│ URL: ${response.requestOptions.uri}');
+    _log('\n');
+    _log('┌─────────────────────────────────────────────────────────────');
+    _log('│ ✅ RESPONSE');
+    _log('├─────────────────────────────────────────────────────────────');
+    _log('│ Status Code: ${response.statusCode}');
+    _log('│ Status Message: ${response.statusMessage}');
+    _log('│ URL: ${response.requestOptions.uri}');
 
     if (response.headers.map.isNotEmpty) {
-      print('│ Headers:');
+      _log('│ Headers:');
       response.headers.map.forEach((key, value) {
-        print('│   $key: ${value.join(", ")}');
+        _log('│   $key: ${value.join(", ")}');
       });
     }
 
     if (response.data != null) {
-      print('│ Response Body:');
+      _log('│ Response Body:');
       _printBody(response.data);
     }
 
-    print('└─────────────────────────────────────────────────────────────');
-    print('\n');
+    _log('└─────────────────────────────────────────────────────────────');
+    _log('\n');
   }
 
   void _logError(DioException error) {
-    print('\n');
-    print('┌─────────────────────────────────────────────────────────────');
-    print('│ ❌ ERROR');
-    print('├─────────────────────────────────────────────────────────────');
-    print('│ Type: ${error.type}');
-    print('│ Message: ${error.message}');
-    print('│ URL: ${error.requestOptions.uri}');
+    _log('\n');
+    _log('┌─────────────────────────────────────────────────────────────');
+    _log('│ ❌ ERROR');
+    _log('├─────────────────────────────────────────────────────────────');
+    _log('│ Type: ${error.type}');
+    _log('│ Message: ${error.message}');
+    _log('│ URL: ${error.requestOptions.uri}');
 
     if (error.response != null) {
-      print('│ Status Code: ${error.response?.statusCode}');
-      print('│ Status Message: ${error.response?.statusMessage}');
+      _log('│ Status Code: ${error.response?.statusCode}');
+      _log('│ Status Message: ${error.response?.statusMessage}');
 
       if (error.response?.data != null) {
-        print('│ Error Response:');
+        _log('│ Error Response:');
         _printBody(error.response?.data);
       }
     }
 
-    print('│ Stack Trace:');
+    _log('│ Stack Trace:');
     final stackLines = error.stackTrace.toString().split('\n').take(5);
     for (var line in stackLines) {
-      print('│   $line');
+      _log('│   $line');
     }
 
-    print('└─────────────────────────────────────────────────────────────');
-    print('\n');
+    _log('└─────────────────────────────────────────────────────────────');
+    _log('\n');
   }
 
   void _printBody(dynamic body) {
@@ -149,10 +153,10 @@ class LoggingInterceptor extends Interceptor {
       // Print with indentation
       final lines = bodyString.split('\n');
       for (var line in lines) {
-        print('│   $line');
+        _log('│   $line');
       }
     } catch (e) {
-      print('│   [Unable to format body: $e]');
+      _log('│   [Unable to format body: $e]');
     }
   }
 }

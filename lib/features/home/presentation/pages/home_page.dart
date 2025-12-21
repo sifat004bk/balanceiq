@@ -3,25 +3,15 @@ import 'package:balance_iq/core/di/injection_container.dart';
 import 'package:balance_iq/core/tour/tour.dart';
 import 'package:balance_iq/features/auth/data/datasources/auth_local_datasource.dart';
 import 'package:balance_iq/features/home/presentation/cubit/dashboard_state.dart';
-import 'package:balance_iq/features/home/presentation/widgets/analysis_widgets/accounts_breakdown_widget.dart';
-import 'package:balance_iq/features/home/presentation/widgets/dashboard_widgets/balance_card_widget.dart';
-import 'package:balance_iq/features/home/presentation/widgets/dashboard_widgets/biggest_expense_widget.dart';
-import 'package:balance_iq/features/home/presentation/widgets/analysis_widgets/category_breakdown_widget.dart';
 import 'package:balance_iq/features/home/presentation/widgets/dashboard_widgets/dashboard_shimmer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 import '../cubit/dashboard_cubit.dart';
 import '../cubit/transactions_cubit.dart';
-import '../widgets/dashboard_widgets/biggest_income_widget.dart';
 import '../widgets/calendar_widgets/date_selector_bottom_sheet.dart';
-import '../widgets/dashboard_widgets/floating_chat_button.dart';
-import '../widgets/dashboard_widgets/financial_ratio_widget.dart';
-import '../widgets/dashboard_widgets/home_appbar.dart';
-import '../widgets/analysis_widgets/spending_trend_chart.dart';
-import '../widgets/dashboard_widgets/transaction_history_widget.dart';
+import '../widgets/dashboard_layout.dart';
 import 'error_page.dart';
 import 'welcome_page.dart';
 
@@ -288,233 +278,21 @@ class _DashboardViewState extends State<DashboardView> {
                 if (state is DashboardLoaded) {
                   final summary = state.summary;
 
-                  return Stack(
-                    children: [
-                      RefreshIndicator(
-                        onRefresh: _refreshDashboard,
-                        color: Theme.of(context).colorScheme.primary,
-                        backgroundColor: Theme.of(context).canvasColor,
-                        child: CustomScrollView(
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          slivers: [
-                            // --- Animated AppBar ---
-                            HomeAppbar(
-                              summary: summary,
-                              onTapProfileIcon: () {
-                                final tourCubit =
-                                    context.read<ProductTourCubit>();
-                                if (tourCubit
-                                    .isAtStep(TourStep.dashboardProfileIcon)) {
-                                  tourCubit.onProfileIconTapped();
-                                }
-                                Navigator.pushNamed(context, '/profile');
-                              },
-                              profileUrl: _profileUrl ?? '',
-                              userName: _userName,
-                              displayDate: _getFormattedDateRange(),
-                              onTapDateRange: _selectDateRange,
-                              profileIconKey: _profileIconKey,
-                            ),
-
-                            // --- Dashboard Body ---
-                            SliverToBoxAdapter(
-                              child: Column(
-                                children: [
-                                  const SizedBox(height: 8),
-
-                                  // Balance Card - Fade in and slide up
-                                  BalanceCard(
-                                    netBalance: summary.netBalance,
-                                    totalIncome: summary.totalIncome,
-                                    totalExpense: summary.totalExpense,
-                                    period: summary.period,
-                                  )
-                                      .animate()
-                                      .fadeIn(
-                                          duration: 500.ms,
-                                          curve: Curves.easeOutCubic)
-                                      .slideY(
-                                        begin: 0.1,
-                                        end: 0,
-                                        duration: 500.ms,
-                                        curve: Curves.easeOutCubic,
-                                      ),
-                                  const SizedBox(height: 24),
-
-                                  // Spending Trend Chart - Fade in with scale
-                                  if (summary.spendingTrend.isNotEmpty) ...[
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 16),
-                                      child: SpendingTrendChart(
-                                        spendingTrend: summary.spendingTrend,
-                                      ),
-                                    )
-                                        .animate()
-                                        .fadeIn(
-                                          delay: 150.ms,
-                                          duration: 500.ms,
-                                          curve: Curves.easeOutCubic,
-                                        )
-                                        .scaleXY(
-                                          begin: 0.95,
-                                          end: 1,
-                                          delay: 150.ms,
-                                          duration: 500.ms,
-                                          curve: Curves.easeOutCubic,
-                                        ),
-                                    const SizedBox(height: 16),
-                                  ],
-
-                                  // Financial Ratios - Slide in from sides
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16),
-                                    child: FinancialRatiosWidget(
-                                      expenseRatio: summary.expenseRatio,
-                                      savingsRate: summary.savingsRate,
-                                    ),
-                                  )
-                                      .animate()
-                                      .fadeIn(
-                                        delay: 250.ms,
-                                        duration: 500.ms,
-                                        curve: Curves.easeOutCubic,
-                                      )
-                                      .slideX(
-                                        begin: -0.05,
-                                        end: 0,
-                                        delay: 250.ms,
-                                        duration: 500.ms,
-                                        curve: Curves.easeOutCubic,
-                                      ),
-                                  const SizedBox(height: 16),
-
-                                  // Accounts Breakdown - Fade in with slide
-                                  if (summary.accountsBreakdown.isNotEmpty) ...[
-                                    AccountsBreakdownWidget(
-                                      accountsBreakdown:
-                                          summary.accountsBreakdown,
-                                    )
-                                        .animate()
-                                        .fadeIn(
-                                          delay: 350.ms,
-                                          duration: 500.ms,
-                                          curve: Curves.easeOutCubic,
-                                        )
-                                        .slideY(
-                                          begin: 0.05,
-                                          end: 0,
-                                          delay: 350.ms,
-                                          duration: 500.ms,
-                                          curve: Curves.easeOutCubic,
-                                        ),
-                                    const SizedBox(height: 16),
-                                  ],
-
-                                  // Biggest Expense & Category
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16),
-                                    child: Column(
-                                      children: [
-                                        BiggestIncomeWidget(
-                                          amount: summary.biggestIncomeAmount,
-                                          description:
-                                              summary.biggestIncomeDescription,
-                                        )
-                                            .animate()
-                                            .fadeIn(
-                                              delay: 450.ms,
-                                              duration: 500.ms,
-                                              curve: Curves.easeOutCubic,
-                                            )
-                                            .slideX(
-                                              begin: 0.05,
-                                              end: 0,
-                                              delay: 450.ms,
-                                              duration: 500.ms,
-                                              curve: Curves.easeOutCubic,
-                                            ),
-                                        if (summary.biggestIncomeAmount > 0)
-                                          const SizedBox(height: 16),
-                                        BiggestExpenseWidget(
-                                          amount: summary.biggestExpenseAmount,
-                                          description:
-                                              summary.biggestExpenseDescription,
-                                          category: summary.expenseCategory,
-                                          account: summary.expenseAccount,
-                                        )
-                                            .animate()
-                                            .fadeIn(
-                                              delay: 550.ms,
-                                              duration: 500.ms,
-                                              curve: Curves.easeOutCubic,
-                                            )
-                                            .slideX(
-                                              begin: -0.05,
-                                              end: 0,
-                                              delay: 550.ms,
-                                              duration: 500.ms,
-                                              curve: Curves.easeOutCubic,
-                                            ),
-                                        const SizedBox(height: 16),
-                                        if (summary.categories.isNotEmpty)
-                                          CategoryBreakdownWidget(
-                                            categories: summary.categories,
-                                          )
-                                              .animate()
-                                              .fadeIn(
-                                                delay: 650.ms,
-                                                duration: 500.ms,
-                                                curve: Curves.easeOutCubic,
-                                              )
-                                              .slideY(
-                                                begin: 0.05,
-                                                end: 0,
-                                                delay: 650.ms,
-                                                duration: 500.ms,
-                                                curve: Curves.easeOutCubic,
-                                              ),
-                                        const SizedBox(height: 16),
-                                        TransactionHistoryWidget(
-                                          onViewAll: () => Navigator.pushNamed(
-                                              context, '/transactions'),
-                                        )
-                                            .animate()
-                                            .fadeIn(
-                                              delay: 750.ms,
-                                              duration: 500.ms,
-                                              curve: Curves.easeOutCubic,
-                                            )
-                                            .slideY(
-                                              begin: 0.05,
-                                              end: 0,
-                                              delay: 750.ms,
-                                              duration: 500.ms,
-                                              curve: Curves.easeOutCubic,
-                                            ),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(height: 120),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      // Positioned chat button at the bottom
-                      Positioned(
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        child: const Hero(
-                          tag: 'chat_input',
-                          child: FloatingChatButton(),
-                        ),
-                      ),
-                    ],
+                  return DashboardLayout(
+                    summary: summary,
+                    onRefresh: _refreshDashboard,
+                    onTapProfileIcon: () {
+                      final tourCubit = context.read<ProductTourCubit>();
+                      if (tourCubit.isAtStep(TourStep.dashboardProfileIcon)) {
+                        tourCubit.onProfileIconTapped();
+                      }
+                      Navigator.pushNamed(context, '/profile');
+                    },
+                    profileUrl: _profileUrl ?? '',
+                    userName: _userName,
+                    displayDate: _getFormattedDateRange(),
+                    onTapDateRange: _selectDateRange,
+                    profileIconKey: _profileIconKey,
                   );
                 }
 

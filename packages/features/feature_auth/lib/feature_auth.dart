@@ -85,10 +85,6 @@ Future<void> initAuthFeature(GetIt sl, AuthConfig config) async {
   sl.registerFactory(() => LoginCubit(
         login: sl(),
         signInWithGoogle: sl(),
-        // checkUserSession: sl(), // SessionCubit uses GetCurrentUser, LoginCubit might not need it?
-        // Checking LoginCubit dependencies...
-        // Previous auth_module said: checkUserSession: sl() -> Wait, LoginCubit uses what?
-        // Let's assume it matches constructor. I'll need to check LoginCubit.
       ));
 
   sl.registerFactory(() => SessionCubit(

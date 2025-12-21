@@ -15,6 +15,7 @@ class ChartDatasetModel extends ChartDataset {
     );
   }
 
+  @override
   Map<String, dynamic> toJson() {
     return {
       'label': label,
@@ -49,6 +50,7 @@ class GraphDataModel extends GraphData {
     );
   }
 
+  @override
   Map<String, dynamic> toJson() {
     return {
       'labels': labels,

@@ -109,13 +109,13 @@ class AiMessageFeedbackRow extends StatelessWidget {
             },
           ),
         // Disclaimer
-        if (ChatConfig.bottomDisclaimerText != null)
+        if (ChatConfig.bottomDisclaimerText.isNotEmpty)
           Expanded(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
-                  ChatConfig.bottomDisclaimerText!,
+                  ChatConfig.bottomDisclaimerText,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Theme.of(context).hintColor,
                         fontSize: 12,

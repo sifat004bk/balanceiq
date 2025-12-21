@@ -11,7 +11,7 @@ class GetMessageUsage {
 
   /// Call the use case to get message usage
   ///
-  /// Returns Either<Failure, MessageUsage> containing:
+  /// Returns `Either<Failure, MessageUsage>` containing:
   /// - messagesUsedToday: Count of messages sent since 00:00 UTC today
   /// - messagesRemaining: dailyLimit - messagesUsedToday (min 0)
   /// - dailyLimit: Hard limit (currently 10)

@@ -1,4 +1,3 @@
-import 'package:balance_iq/core/tour/tour_content_widgets.dart';
 import 'package:currency_picker/currency_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

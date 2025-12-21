@@ -1,4 +1,4 @@
-/// Request and response models for authentication API endpoints
+// Request and response models for authentication API endpoints
 
 class SignupRequest {
   final String username;

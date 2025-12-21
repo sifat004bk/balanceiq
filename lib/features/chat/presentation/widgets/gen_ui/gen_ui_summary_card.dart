@@ -13,18 +13,27 @@ class GenUISummaryCard extends StatelessWidget {
     final trendColorString = data['trendColor'] as String?;
     final iconName = data['icon'] as String?;
 
-    // Determine trend color
     Color trendColor = Colors.green;
-    if (trendColorString == 'red')
+    if (trendColorString == 'red') {
       trendColor = Theme.of(context).colorScheme.error;
-    if (trendColorString == 'grey') trendColor = Colors.grey;
+    }
+    if (trendColorString == 'grey') {
+      trendColor = Colors.grey;
+    }
 
-    // Resolve Icon
     IconData icon = Icons.account_balance;
-    if (iconName == 'shopping_bag') icon = Icons.shopping_bag;
-    if (iconName == 'trending_up') icon = Icons.trending_up;
-    if (iconName == 'savings') icon = Icons.savings;
-    if (iconName == 'credit_card') icon = Icons.credit_card;
+    if (iconName == 'shopping_bag') {
+      icon = Icons.shopping_bag;
+    }
+    if (iconName == 'trending_up') {
+      icon = Icons.trending_up;
+    }
+    if (iconName == 'savings') {
+      icon = Icons.savings;
+    }
+    if (iconName == 'credit_card') {
+      icon = Icons.credit_card;
+    }
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 12),

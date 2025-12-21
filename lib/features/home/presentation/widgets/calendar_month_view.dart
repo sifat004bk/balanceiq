@@ -99,7 +99,7 @@ class CalendarMonthView extends StatelessWidget {
   }
 
   DateCellType _getCellType(DateTime date) {
-    final isSameDay = (DateTime d1, DateTime d2) =>
+    bool isSameDay(DateTime d1, DateTime d2) =>
         d1.year == d2.year && d1.month == d2.month && d1.day == d2.day;
 
     // Check if it's the start date

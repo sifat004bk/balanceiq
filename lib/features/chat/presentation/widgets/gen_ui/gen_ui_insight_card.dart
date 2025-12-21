@@ -75,7 +75,7 @@ class GenUIInsightCard extends StatelessWidget {
           ],
           if (items != null && items.isNotEmpty) ...[
             const SizedBox(height: 16),
-            ...items.map((item) => _buildItem(context, item, type)).toList(),
+            ...items.map((item) => _buildItem(context, item, type)),
           ],
         ],
       ),

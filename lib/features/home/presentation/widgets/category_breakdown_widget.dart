@@ -263,42 +263,61 @@ class CategoryBreakdownWidget extends StatelessWidget {
 
   Color _getCategoryColor(String category, int index) {
     final name = category.toLowerCase();
-    if (name.contains('food') || name.contains('dining'))
+    if (name.contains('food') || name.contains('dining')) {
       return const Color(0xFFFF9800);
-    if (name.contains('transport')) return const Color(0xFF2196F3);
-    if (name.contains('shop')) return const Color(0xFFE91E63);
-    if (name.contains('bill') || name.contains('util'))
+    }
+    if (name.contains('transport')) {
+      return const Color(0xFF2196F3);
+    }
+    if (name.contains('shop')) {
+      return const Color(0xFFE91E63);
+    }
+    if (name.contains('bill') || name.contains('util')) {
       return const Color(0xFF00BCD4);
-    if (name.contains('rent') || name.contains('house'))
+    }
+    if (name.contains('rent') || name.contains('house')) {
       return const Color(0xFF3F51B5);
-    if (name.contains('health') || name.contains('med'))
+    }
+    if (name.contains('health') || name.contains('med')) {
       return const Color(0xFFF44336);
-    if (name.contains('entertain')) return const Color(0xFF9C27B0);
+    }
+    if (name.contains('entertain')) {
+      return const Color(0xFF9C27B0);
+    }
 
-    // Fallback palette with vibrant colors
     final colors = [
-      const Color(0xFF009688), // Teal
-      const Color(0xFFCDDC39), // Lime
-      const Color(0xFFFFC107), // Amber
-      const Color(0xFFFF5722), // Deep Orange
-      const Color(0xFF03A9F4), // Light Blue
+      const Color(0xFF009688),
+      const Color(0xFFCDDC39),
+      const Color(0xFFFFC107),
+      const Color(0xFFFF5722),
+      const Color(0xFF03A9F4),
     ];
     return colors[index % colors.length];
   }
 
   IconData _getCategoryIcon(String category) {
     final name = category.toLowerCase();
-    if (name.contains('food') || name.contains('dining'))
+    if (name.contains('food') || name.contains('dining')) {
       return Icons.restaurant_rounded;
-    if (name.contains('transport')) return Icons.directions_car_rounded;
-    if (name.contains('shop')) return Icons.shopping_bag_rounded;
-    if (name.contains('bill') || name.contains('util'))
+    }
+    if (name.contains('transport')) {
+      return Icons.directions_car_rounded;
+    }
+    if (name.contains('shop')) {
+      return Icons.shopping_bag_rounded;
+    }
+    if (name.contains('bill') || name.contains('util')) {
       return Icons.receipt_long_rounded;
-    if (name.contains('rent') || name.contains('house'))
+    }
+    if (name.contains('rent') || name.contains('house')) {
       return Icons.home_rounded;
-    if (name.contains('health') || name.contains('med'))
+    }
+    if (name.contains('health') || name.contains('med')) {
       return Icons.medical_services_rounded;
-    if (name.contains('entertain')) return Icons.movie_rounded;
+    }
+    if (name.contains('entertain')) {
+      return Icons.movie_rounded;
+    }
 
     return Icons.category_rounded;
   }

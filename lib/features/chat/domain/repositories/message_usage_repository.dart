@@ -6,7 +6,7 @@ import '../entities/message_usage.dart';
 abstract class MessageUsageRepository {
   /// Get user's message usage statistics
   ///
-  /// Returns Either<Failure, MessageUsage>
+  /// Returns `Either<Failure, MessageUsage>`
   /// - messagesUsedToday: Messages sent since 00:00 UTC today
   /// - messagesRemaining: Daily limit - messages used today
   /// - dailyLimit: Maximum messages per day (currently 10)

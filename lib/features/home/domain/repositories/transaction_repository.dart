@@ -16,7 +16,7 @@ abstract class TransactionRepository {
   /// - [maxAmount]: Maximum transaction amount
   /// - [limit]: Maximum number of results to return (max 200)
   ///
-  /// Returns Either<Failure, TransactionSearchResult>
+  /// Returns `Either<Failure, TransactionSearchResult>`
   Future<Either<Failure, TransactionSearchResult>> searchTransactions({
     String? search,
     String? category,

@@ -10,7 +10,7 @@ abstract class ChatFeedbackRepository {
   /// - [messageId]: The ID of the chat message (from chat history)
   /// - [feedback]: Feedback type (LIKE, DISLIKE, NONE)
   ///
-  /// Returns Either<Failure, ChatFeedback>
+  /// Returns `Either<Failure, ChatFeedback>`
   ///
   /// Errors:
   /// - AuthFailure: User not authenticated

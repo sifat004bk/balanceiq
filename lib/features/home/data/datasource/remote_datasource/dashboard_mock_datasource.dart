@@ -1,3 +1,4 @@
+// ignore_for_file: avoid_print
 import 'package:balance_iq/core/mock/mock_data.dart';
 import 'package:balance_iq/features/home/data/models/dashboard_summary_response.dart';
 import 'dashboard_remote_datasource.dart';

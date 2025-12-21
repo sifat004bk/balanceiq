@@ -78,13 +78,13 @@ class GenUIProgress extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '${_formatNumber(current)}',
+                  _formatNumber(current),
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         fontWeight: FontWeight.w500,
                       ),
                 ),
                 Text(
-                  '${_formatNumber(target)}',
+                  _formatNumber(target),
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Theme.of(context)
                             .textTheme

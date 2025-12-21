@@ -21,7 +21,7 @@ class SearchTransactions {
   /// - [maxAmount]: Maximum amount
   /// - [limit]: Maximum number of results (default: 50, max: 200)
   ///
-  /// Returns Either<Failure, TransactionSearchResult>
+  /// Returns `Either<Failure, TransactionSearchResult>`
   Future<Either<Failure, TransactionSearchResult>> call({
     String? search,
     String? category,

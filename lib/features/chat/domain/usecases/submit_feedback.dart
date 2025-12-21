@@ -15,7 +15,7 @@ class SubmitFeedback {
   /// - [messageId]: The ID of the chat message (from chat history)
   /// - [feedback]: Feedback type (like, dislike, none)
   ///
-  /// Returns Either<Failure, ChatFeedback>
+  /// Returns `Either<Failure, ChatFeedback>`
   ///
   /// Possible failures:
   /// - AuthFailure: User not authenticated

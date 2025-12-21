@@ -1,5 +1,5 @@
-/// Request and response models for Finance Guru Chat API endpoints
-/// Based on Postman API Collection spec
+// Request and response models for Finance Guru Chat API endpoints
+// Based on Postman API Collection spec
 import 'chart_data_model.dart';
 
 /// Request model for POST /api/finance-guru/chat

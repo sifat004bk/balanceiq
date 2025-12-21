@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../cubit/interactive_onboarding_cubit.dart';
+import 'package:feature_auth/presentation/cubit/interactive_onboarding/interactive_onboarding_cubit.dart';
 import '../../widgets/celebration_animation.dart';
 import 'onboarding_welcome_screen.dart';
 import 'salary_day_story_screen.dart';

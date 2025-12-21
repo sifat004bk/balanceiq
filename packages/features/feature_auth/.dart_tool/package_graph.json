@@ -11,6 +11,7 @@
         "dartz",
         "dolfin_core",
         "dolfin_ui_kit",
+        "feature_subscription",
         "firebase_auth",
         "flutter",
         "flutter_bloc",
@@ -49,6 +50,7 @@
         "currency_picker",
         "dartz",
         "dio",
+        "dolfin_ui_kit",
         "equatable",
         "flutter",
         "flutter_animate",
@@ -124,6 +126,18 @@
         "test_api",
         "vector_math",
         "vm_service"
+      ]
+    },
+    {
+      "name": "feature_subscription",
+      "version": "1.0.0",
+      "dependencies": [
+        "dolfin_core",
+        "dolfin_ui_kit",
+        "flutter",
+        "flutter_bloc",
+        "get_it",
+        "purchases_flutter"
       ]
     },
     {
@@ -587,6 +601,15 @@
       "dependencies": [
         "clock",
         "collection"
+      ]
+    },
+    {
+      "name": "purchases_flutter",
+      "version": "8.11.0",
+      "dependencies": [
+        "flutter",
+        "freezed_annotation",
+        "json_annotation"
       ]
     },
     {
@@ -1250,6 +1273,22 @@
         "source_span",
         "watcher",
         "yaml"
+      ]
+    },
+    {
+      "name": "json_annotation",
+      "version": "4.9.0",
+      "dependencies": [
+        "meta"
+      ]
+    },
+    {
+      "name": "freezed_annotation",
+      "version": "2.4.4",
+      "dependencies": [
+        "collection",
+        "json_annotation",
+        "meta"
       ]
     },
     {

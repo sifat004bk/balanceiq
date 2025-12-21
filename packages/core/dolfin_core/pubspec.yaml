@@ -10,6 +10,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  dolfin_ui_kit:
+    path: ../dolfin_ui_kit
   dio: ^5.4.0
   dartz: ^0.10.1
   equatable: ^2.0.5

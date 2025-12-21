@@ -110,6 +110,12 @@
       "languageVersion": "3.3"
     },
     {
+      "name": "dolfin_ui_kit",
+      "rootUri": "../../dolfin_ui_kit",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
       "name": "equatable",
       "rootUri": "file:///Users/sifatullahchowdhury/.pub-cache/hosted/pub.dev/equatable-2.0.7",
       "packageUri": "lib/",

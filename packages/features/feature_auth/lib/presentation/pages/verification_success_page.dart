@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
 import 'package:dolfin_core/constants/app_strings.dart';
-import '../cubit/session/session_cubit.dart';
-import '../../domain/entities/user.dart';
+import "package:feature_auth/presentation/cubit/session/session_cubit.dart";
+import 'package:feature_auth/domain/entities/user.dart';
 
 class VerificationSuccessPage extends StatefulWidget {
   const VerificationSuccessPage({super.key});

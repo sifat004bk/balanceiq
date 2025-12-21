@@ -62,4 +62,8 @@ class AppConstants {
 
   // Message Usage Limits (per day, resets at 00:00 UTC)
   static const int dailyMessageLimit = 10;
+
+  // Auth
+  static String get serverClientId =>
+      dotenv.get('GOOGLE_SERVER_CLIENT_ID', fallback: '');
 }

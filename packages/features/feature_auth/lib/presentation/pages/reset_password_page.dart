@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dolfin_core/constants/app_strings.dart';
 import 'package:dolfin_core/utils/snackbar_utils.dart';
 
-import '../cubit/password/password_cubit.dart';
+import 'package:feature_auth/presentation/cubit/password/password_cubit.dart';
 
 class ResetPasswordPage extends StatefulWidget {
   final String token; // Token from email link

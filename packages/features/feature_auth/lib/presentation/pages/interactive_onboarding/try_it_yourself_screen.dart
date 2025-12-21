@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../cubit/interactive_onboarding_cubit.dart';
-import '../../widgets/simulated_chat_bubble.dart';
+import 'package:feature_auth/presentation/cubit/interactive_onboarding/interactive_onboarding_cubit.dart';
+import "package:feature_auth/presentation/widgets/simulated_chat_bubble.dart";
 import '../../widgets/celebration_animation.dart';
 
 /// Try It Yourself screen - user practices with a sample transaction

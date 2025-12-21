@@ -12,6 +12,7 @@
         "currency_picker",
         "dartz",
         "dio",
+        "dolfin_ui_kit",
         "equatable",
         "flutter",
         "flutter_animate",
@@ -311,6 +312,18 @@
         "meta",
         "mime",
         "path"
+      ]
+    },
+    {
+      "name": "dolfin_ui_kit",
+      "version": "1.0.0",
+      "dependencies": [
+        "dolfin_core",
+        "equatable",
+        "flutter",
+        "flutter_bloc",
+        "google_fonts",
+        "shared_preferences"
       ]
     },
     {

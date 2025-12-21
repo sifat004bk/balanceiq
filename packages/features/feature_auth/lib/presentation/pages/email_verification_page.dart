@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:async';
 
-import '../cubit/signup/signup_cubit.dart';
+import "package:feature_auth/presentation/cubit/signup/signup_cubit.dart";
 
 class EmailVerificationPage extends StatefulWidget {
   final String email;

@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dolfin_core/constants/app_strings.dart';
 import 'package:dolfin_core/utils/snackbar_utils.dart';
-import '../widgets/signup_body.dart';
-
-import '../cubit/signup/signup_cubit.dart';
+import 'package:feature_auth/presentation/widgets/signup_body.dart';
+import "package:feature_auth/presentation/cubit/signup/signup_cubit.dart";
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});

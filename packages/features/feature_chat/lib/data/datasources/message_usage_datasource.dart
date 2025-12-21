@@ -1,5 +1,5 @@
-import 'package:balance_iq/core/constants/api_endpoints.dart';
-import 'package:balance_iq/features/chat/data/models/message_usage_model.dart';
+import 'package:dolfin_core/constants/api_endpoints.dart';
+import 'package:feature_chat/data/models/message_usage_model.dart';
 import 'package:dio/dio.dart';
 import '../../../../core/storage/secure_storage_service.dart';
 

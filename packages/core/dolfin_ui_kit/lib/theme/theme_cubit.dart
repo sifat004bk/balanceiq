@@ -1,7 +1,7 @@
+import 'package:dolfin_core/constants/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../constants/app_constants.dart';
 import 'theme_state.dart';
 
 class ThemeCubit extends Cubit<ThemeState> {

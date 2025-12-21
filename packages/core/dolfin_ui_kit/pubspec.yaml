@@ -11,6 +11,9 @@ dependencies:
   flutter:
     sdk: flutter
   google_fonts: ^6.2.1
+  flutter_bloc: ^8.1.6
+  equatable: ^2.0.5
+  shared_preferences: ^2.3.3
   dolfin_core:
     path: ../dolfin_core
 

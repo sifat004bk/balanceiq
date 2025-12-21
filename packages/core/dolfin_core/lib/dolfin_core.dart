@@ -5,12 +5,12 @@
 library dolfin_core;
 
 // Error handling
-export 'error/exceptions.dart';
+export 'error/app_exception.dart';
+export 'error/error_handler.dart';
 export 'error/failures.dart';
 
 // Network
-export 'network/api_client.dart';
-export 'network/network_info.dart';
+export 'network/logging_interceptor.dart';
 
 // Storage
 export 'storage/secure_storage_service.dart';
@@ -18,9 +18,6 @@ export 'storage/secure_storage_service.dart';
 // Utils
 export 'utils/app_logger.dart';
 export 'utils/input_validator.dart';
-
-// Usecases
-export 'usecases/usecase.dart';
 
 // Constants
 export 'constants/app_constants.dart';

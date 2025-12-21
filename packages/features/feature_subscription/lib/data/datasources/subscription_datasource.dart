@@ -1,4 +1,4 @@
-import 'package:balance_iq/core/constants/api_endpoints.dart';
+import 'package:dolfin_core/constants/api_endpoints.dart';
 import 'package:dio/dio.dart';
 import '../../../../core/storage/secure_storage_service.dart';
 

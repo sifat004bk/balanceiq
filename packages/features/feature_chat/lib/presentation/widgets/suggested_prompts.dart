@@ -1,5 +1,5 @@
-import 'package:balance_iq/core/constants/app_constants.dart';
-import 'package:balance_iq/core/constants/app_strings.dart';
+import 'package:dolfin_core/constants/app_constants.dart';
+import 'package:dolfin_core/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 
 /// Gemini-style suggested prompts shown in empty chat state

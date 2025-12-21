@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:balance_iq/core/constants/app_strings.dart';
+import 'package:dolfin_core/constants/app_strings.dart';
 
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/theme/app_typography.dart';

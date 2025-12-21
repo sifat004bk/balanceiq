@@ -1,7 +1,7 @@
-import 'package:balance_iq/core/utils/snackbar_utils.dart';
-import 'package:balance_iq/features/auth/presentation/cubit/login/login_cubit.dart';
-import 'package:balance_iq/features/auth/presentation/cubit/session/session_cubit.dart';
-import 'package:balance_iq/features/auth/presentation/widgets/login_form.dart';
+import 'package:dolfin_core/utils/snackbar_utils.dart';
+import 'package:feature_auth/presentation/cubit/login/login_cubit.dart';
+import 'package:feature_auth/presentation/cubit/session/session_cubit.dart';
+import 'package:feature_auth/presentation/widgets/login_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

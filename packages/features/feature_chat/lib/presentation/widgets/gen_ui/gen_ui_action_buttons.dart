@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:balance_iq/core/constants/app_strings.dart';
-import 'package:balance_iq/core/utils/snackbar_utils.dart';
+import 'package:dolfin_core/constants/app_strings.dart';
+import 'package:dolfin_core/utils/snackbar_utils.dart';
 
 class GenUIActionButtons extends StatelessWidget {
   final Map<String, dynamic> data;

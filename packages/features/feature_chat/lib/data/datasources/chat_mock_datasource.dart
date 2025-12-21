@@ -1,4 +1,4 @@
-import 'package:balance_iq/core/constants/app_constants.dart';
+import 'package:dolfin_core/constants/app_constants.dart';
 import 'package:balance_iq/core/mock/mock_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/chat_history_response_model.dart';

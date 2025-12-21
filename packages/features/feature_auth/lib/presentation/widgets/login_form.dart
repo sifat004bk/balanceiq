@@ -1,6 +1,6 @@
-import 'package:balance_iq/core/constants/app_strings.dart';
-import 'package:balance_iq/core/theme/app_palette.dart';
-import 'package:balance_iq/features/auth/presentation/cubit/login/login_cubit.dart';
+import 'package:dolfin_core/constants/app_strings.dart';
+import 'package:dolfin_ui_kit/theme/app_palette.dart';
+import 'package:feature_auth/presentation/cubit/login/login_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

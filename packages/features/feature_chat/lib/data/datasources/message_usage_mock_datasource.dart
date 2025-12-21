@@ -1,4 +1,4 @@
-import 'package:balance_iq/features/chat/data/models/message_usage_model.dart';
+import 'package:feature_chat/data/models/message_usage_model.dart';
 import 'message_usage_datasource.dart';
 
 /// Mock implementation of message usage data source for testing/demo

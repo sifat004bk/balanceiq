@@ -24,3 +24,6 @@ export 'constants/app_constants.dart';
 
 // Config
 export 'config/environment_config.dart';
+
+// Mock
+export 'mock/mock_data.dart';

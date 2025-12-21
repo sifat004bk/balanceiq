@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import '../package:dolfin_ui_kit/theme/app_palette.dart';
+import 'package:dolfin_ui_kit/theme/app_palette.dart';
 import '../../../domain/entities/chart_data.dart';
 
 class GenUIChart extends StatelessWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dolfin_core/constants/app_strings.dart';
-import '../package:dolfin_ui_kit/theme/app_typography.dart';
+import 'package:dolfin_ui_kit/theme/app_typography.dart';
 
 class ChatTextField extends StatelessWidget {
   final TextEditingController controller;

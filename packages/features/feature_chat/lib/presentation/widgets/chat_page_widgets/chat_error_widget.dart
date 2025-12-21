@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:dolfin_core/constants/app_strings.dart';
-import '../package:dolfin_ui_kit/theme/app_typography.dart';
+import 'package:dolfin_ui_kit/theme/app_typography.dart';
 import '../../cubit/chat_cubit.dart';
 import '../../cubit/chat_state.dart';
 

@@ -11,9 +11,24 @@ This document tracks progress on the monorepo package extraction and architectur
 
 ### Completed Steps:
 
-1. **Removed duplicate packages** from `apps/dolfin_ai/packages/`
-2. **Added workspace package deps** to `apps/dolfin_ai/pubspec.yaml`:
-   - dolfin_core, dolfin_ui_kit, feature_auth, feature_chat, feature_subscription
+- [x] Extract `dolfin_core` (Moved constants, utils, di, tour, database, currency, theme from app/core)
+- [x] Extract `dolfin_ui_kit` (Moved theme, widgets, extracted AppTypography, AppPalette)
+- [x] Extract `feature_auth` (Moved login, signup, auth logic, removed tight coupling)
+- [x] Extract `feature_chat` (Moved chat logic, widgets, gen_ui, fixed flutter_markdown_plus conflict)
+- [x] Extract `feature_subscription` (Moved logic, removed app-specific pages)
+- [x] Resolve dependency conflicts (flutter_markdown_plus, record)
+- [x] Verify standalone build with `melos analyze`
+
+## Current Status
+- **Date:** 2025-02-19
+- **Status:** Refactoring Complete.
+- **Notes:**
+  - All feature packages (`feature_auth`, `feature_chat`, `feature_subscription`) now compile independently (with expected path dependency warnings).
+  - Shared core logic resides in `dolfin_core`.
+  - Shared UI resides in `dolfin_ui_kit`.
+  - Mock data extracted to `dolfin_core/mock`.
+  - Pages with heavy cross-feature coupling (ProfilePage, ChatPage, ManageSubscriptionPage) were removed from packages and should be maintained in the app layer (`apps/dolfin_ai`).
+
 3. **Copied core files** to `dolfin_core`:
    - `constants/` (api_endpoints, app_strings, app_constants, design_constants, app_assets)
    - `utils/` (snackbar_utils and others)

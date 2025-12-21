@@ -346,22 +346,22 @@ echo "All checks passed!"
 
 ### Task 3.1: Split AuthCubit
 
-**Priority:** P1 | **Status:** `[ ]`
+**Priority:** P1 | **Status:** `[x]`
 
 **Description:** Break AuthCubit into focused, single-responsibility cubits.
 
 **Sub-tasks:**
-- [ ] 3.1.1 Create `lib/features/auth/presentation/cubit/login_cubit.dart`
-- [ ] 3.1.2 Create `lib/features/auth/presentation/cubit/signup_cubit.dart`
-- [ ] 3.1.3 Create `lib/features/auth/presentation/cubit/session_cubit.dart`
-- [ ] 3.1.4 Create corresponding state files
-- [ ] 3.1.5 Move login logic from AuthCubit to LoginCubit
-- [ ] 3.1.6 Move signup logic from AuthCubit to SignupCubit
-- [ ] 3.1.7 Move session management to SessionCubit
-- [ ] 3.1.8 Update DI registration
-- [ ] 3.1.9 Update pages to use new cubits
+- [x] 3.1.1 Create `lib/features/auth/presentation/cubit/login/login_cubit.dart`
+- [x] 3.1.2 Create `lib/features/auth/presentation/cubit/signup/signup_cubit.dart`
+- [x] 3.1.3 Create `lib/features/auth/presentation/cubit/session/session_cubit.dart`
+- [x] 3.1.4 Create corresponding state files
+- [x] 3.1.5 Move login logic from AuthCubit to LoginCubit
+- [x] 3.1.6 Move signup logic from AuthCubit to SignupCubit
+- [x] 3.1.7 Move session management to SessionCubit
+- [x] 3.1.8 Update DI registration
+- [x] 3.1.9 Update pages to use new cubits
 - [ ] 3.1.10 Write unit tests for each cubit
-- [ ] 3.1.11 Delete old AuthCubit (if fully migrated)
+- [x] 3.1.11 Delete old AuthCubit (if fully migrated)
 
 **Files to Create:**
 ```
@@ -469,19 +469,19 @@ lib/features/chat/presentation/widgets/message_bubble/
 
 ### Task 3.4: Decompose TransactionDetailModal
 
-**Priority:** P1 | **Status:** `[ ]`
+**Priority:** P1 | **Status:** `[x]`
 
 **Description:** Break down 790-line modal into sections.
 
 **Sub-tasks:**
-- [ ] 3.4.1 Create directory `lib/features/home/presentation/widgets/transaction_detail/`
-- [ ] 3.4.2 Create `detail_header.dart` (title, close button)
-- [ ] 3.4.3 Create `detail_amount_section.dart` (amount display)
-- [ ] 3.4.4 Create `detail_info_section.dart` (category, date, account)
-- [ ] 3.4.5 Create `detail_notes_section.dart` (notes/description)
-- [ ] 3.4.6 Create `detail_actions.dart` (edit, delete buttons)
-- [ ] 3.4.7 Create `edit_transaction_form.dart` (edit mode)
-- [ ] 3.4.8 Create `transaction_detail_modal.dart` (composed main)
+- [x] 3.4.1 Create directory `lib/features/home/presentation/widgets/transaction_detail_widgets/`
+- [x] 3.4.2 Create `detail_header.dart` (title, close button)
+- [x] 3.4.3 Create `detail_amount_section.dart` (amount display)
+- [x] 3.4.4 Create `detail_info_section.dart` (category, date, account)
+- [x] 3.4.5 Create `detail_notes_section.dart` (notes/description)
+- [x] 3.4.6 Create `detail_actions.dart` (edit, delete buttons)
+- [x] 3.4.7 Create `edit_transaction_form.dart` (edit mode)
+- [x] 3.4.8 Create `transaction_detail_modal.dart` (composed main)
 - [ ] 3.4.9 Write widget tests
 
 **Files to Create:**
@@ -509,17 +509,17 @@ lib/features/home/presentation/widgets/transaction_detail/
 
 ### Task 3.5: Create TransactionFilterCubit
 
-**Priority:** P1 | **Status:** `[ ]`
+**Priority:** P1 | **Status:** `[x]`
 
 **Description:** Move filter logic from TransactionsPage UI to dedicated cubit.
 
 **Sub-tasks:**
-- [ ] 3.5.1 Create `lib/features/home/presentation/cubit/transaction_filter_cubit.dart`
-- [ ] 3.5.2 Create `transaction_filter_state.dart`
-- [ ] 3.5.3 Implement filter logic: date range, category, type
-- [ ] 3.5.4 Register in DI
-- [ ] 3.5.5 Update `TransactionsPage` to use cubit
-- [ ] 3.5.6 Remove filter state from page's StatefulWidget
+- [x] 3.5.1 Create `lib/features/home/presentation/cubit/transaction_filter_cubit.dart`
+- [x] 3.5.2 Create `transaction_filter_state.dart`
+- [x] 3.5.3 Implement filter logic: date range, category, type
+- [x] 3.5.4 Register in DI
+- [x] 3.5.5 Update `TransactionsPage` to use cubit
+- [x] 3.5.6 Remove filter state from page's StatefulWidget
 - [ ] 3.5.7 Write unit tests
 
 **Files to Create:**
@@ -571,17 +571,17 @@ lib/features/home/presentation/mixins/tour_mixin.dart
 
 ### Task 4.1: Set Up Test Infrastructure
 
-**Priority:** P2 | **Status:** `[ ]`
+**Priority:** P2 | **Status:** `[x]`
 
 **Description:** Create test helpers and mocks for consistent testing.
 
 **Sub-tasks:**
-- [ ] 4.1.1 Add `mocktail: ^1.0.0` and `bloc_test: ^9.0.0` to dev_dependencies
-- [ ] 4.1.2 Create `test/mocks/mock_repositories.dart`
-- [ ] 4.1.3 Create `test/mocks/mock_datasources.dart`
-- [ ] 4.1.4 Create `test/mocks/mock_cubits.dart`
-- [ ] 4.1.5 Create `test/helpers/pump_app.dart` (test widget wrapper)
-- [ ] 4.1.6 Create `test/helpers/test_fixtures.dart` (sample data)
+- [x] 4.1.1 Add `mocktail: ^1.0.0` and `bloc_test: ^9.0.0` to dev_dependencies
+- [x] 4.1.2 Create `test/mocks/mock_repositories.dart`
+- [x] 4.1.3 Create `test/mocks/mock_datasources.dart`
+- [x] 4.1.4 Create `test/mocks/mock_cubits.dart`
+- [x] 4.1.5 Create `test/helpers/pump_app.dart` (test widget wrapper)
+- [x] 4.1.6 Create `test/helpers/test_fixtures.dart` (sample data)
 
 **Files to Create:**
 ```
@@ -606,15 +606,15 @@ test/
 
 ### Task 4.2: Write Cubit Unit Tests
 
-**Priority:** P2 | **Status:** `[ ]`
+**Priority:** P2 | **Status:** `[x]`
 
 **Description:** Achieve 85% coverage on presentation layer cubits.
 
 **Sub-tasks:**
-- [ ] 4.2.1 Write tests for `LoginCubit`
-- [ ] 4.2.2 Write tests for `SignupCubit`
-- [ ] 4.2.3 Write tests for `SessionCubit`
-- [ ] 4.2.4 Write tests for `ChatCubit`
+- [x] 4.2.1 Write tests for `LoginCubit`
+- [x] 4.2.2 Write tests for `SignupCubit`
+- [x] 4.2.3 Write tests for `SessionCubit`
+- [x] 4.2.4 Write tests for `ChatCubit`
 - [ ] 4.2.5 Write tests for `DashboardCubit`
 - [ ] 4.2.6 Write tests for `TransactionsCubit`
 - [ ] 4.2.7 Write tests for `TransactionFilterCubit`

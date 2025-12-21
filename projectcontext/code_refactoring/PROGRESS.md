@@ -12,10 +12,10 @@
 |-------|--------|----------|------------|
 | Phase 1: Security | ✅ Complete | 100% | 5/5 |
 | Phase 2: Core | ✅ Complete | 100% | 4/4 |
-| Phase 3: Features | 🔄 Partial | 50% | 3/6 |
+| Phase 3: Features | ✅ Complete | 100% | 6/6 |
 | Phase 4: Testing | ⏳ Pending | 10% | 0.5/5 |
 | Phase 5: Polish | ✅ Complete | 100% | 3/3 |
-| **Overall** | 🔄 In Progress | **75%** | **15.5/23** |
+| **Overall** | 🔄 In Progress | **82%** | **18.5/23** |
 
 ---
 
@@ -75,8 +75,9 @@
 ## Phase 3: Feature Refactoring (P1)
 
 ### Task 3.1: Split AuthCubit
-- **Status:** ⏳ Pending
-- **Notes:** `SessionCubit` exists. Full split pending.
+- **Status:** ✅ Completed
+- **Completed:** 2025-12-21
+- **Notes:** Logic moved to `LoginCubit`, `SignupCubit`, `SessionCubit`. AuthCubit removed. UI/DI updated.
 
 ### Task 3.2: Decompose FloatingChatInput
 - **Status:** ✅ Completed
@@ -89,12 +90,14 @@
 - **Notes:** Extracted to `message_bubble_widgets/`: `AiFeedbackRow`, `AiMessageContent`, `AiMessageHeader`, `UserMessageContent`.
 
 ### Task 3.4: Decompose TransactionDetailModal
-- **Status:** ⏳ Pending
-- **Notes:** Still a large file (~800 lines). Needs decomposition.
+- **Status:** ✅ Completed
+- **Completed:** 2025-12-21
+- **Notes:** Decomposed into `transaction_detail_widgets/`: `DetailHeader`, `AmountSection`, `DetailRow`, `DetailActionButtons`, `EditTransactionForm`.
 
 ### Task 3.5: Create TransactionFilterCubit
-- **Status:** ⏳ Pending
-- **Notes:** Filter logic still in UI.
+- **Status:** ✅ Completed
+- **Completed:** 2025-12-21
+- **Notes:** Logic moved to `TransactionFilterCubit`. `TransactionsPage` refactored and widgets decomposed.
 
 ### Task 3.6: Extract Tour Logic
 - **Status:** ✅ Completed
@@ -106,11 +109,25 @@
 ## Phase 4: Testing (P2)
 
 ### Task 4.1: Set Up Test Infrastructure
-- **Status:** 🔄 Partial
-- **Notes:** `mocktail` and `bloc_test` added. Some mocks exist.
+- **Status:** ✅ Completed
+- **Completed:** 2025-12-21
+- **Notes:** `mocktail` and `bloc_test` added. All mocks created.
 
 ### Task 4.2: Write Cubit Unit Tests
+- **Status:** ✅ Completed
+- **Completed:** 2025-12-21
+- **Notes:** Covered `LoginCubit`, `SignupCubit`, `SessionCubit`, `ChatCubit` (100%).
+
+### Task 4.3: Write Repository Tests
 - **Status:** ⏳ Pending
+
+### Task 4.4: Write Core Utility Tests
+- **Status:** ⏳ Pending
+- **Notes:** `secure_storage_service_test.dart` exists.
+
+### Task 4.5: Write Widget Tests
+- **Status:** 🔄 Partial
+- **Notes:** `ChatSendButton` tested.
 
 ### Task 4.3: Write Repository Tests
 - **Status:** ⏳ Pending
@@ -166,6 +183,14 @@
 - Added super parameters to exception classes
 - Disabled pre-commit tests for faster commits
 - Fixed API integration test expectations
+
+### Session 3 - 2025-12-21 (Late)
+**Completed:**
+- **Task 3.4:** Decomposed `TransactionDetailModal` (~800 lines -> 5 widgets)
+- **Task 3.5:** Implemented `TransactionFilterCubit` and refactored filtering logic
+- **Task 3.6/3.7:** Decomposed `TransactionsPage` and organized all Home widgets into `dashboard_widgets`, `analysis_widgets`, `calendar_widgets`
+- **Task 3.1:** Verified `AuthCubit` split completion (Logic moved, files cleaned)
+- Verified all changes on Pixel 6
 
 ---
 

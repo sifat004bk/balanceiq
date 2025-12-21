@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import 'package:balance_iq/core/config/app_network_config.dart';
+
 import 'core/di/injection_container.dart' as di;
 import 'core/navigation/navigator_service.dart';
 import 'package:dolfin_ui_kit/theme/app_palette.dart';
@@ -37,13 +39,12 @@ import 'package:feature_subscription/presentation/pages/subscription_plans_page.
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Load environment variables
   await dotenv.load(fileName: ".env");
 
-  // Initialize dependency injection
+  AppNetworkConfig.init();
+
   await di.init();
 
-  // Set Global Error Widget
   ErrorWidget.builder = (FlutterErrorDetails details) {
     return Material(
       color: AppPalette.backgroundLight,

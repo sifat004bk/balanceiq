@@ -1,28 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 import 'package:get_it/get_it.dart';
-import 'package:dolfin_core/constants/app_constants.dart';
 import 'package:feature_auth/domain/auth_config.dart';
 import 'package:balance_iq/features/home/domain/usecase/get_user_dashbaord.dart';
 
 class AppAuthConfig implements AuthConfig {
-  String get googleClientId => AppConstants.serverClientId;
-
-  String get authBaseUrl => dotenv.get(
-        'AUTH_BASE_URL',
-        fallback: 'http://localhost:8080/api/auth',
-      );
-
-  String get financeGuruBaseUrl => dotenv.get(
-        'FINANCE_GURU_BASE_URL',
-        fallback: 'http://localhost:8080/api/finance-guru',
-      );
-
-  String get backendBaseUrl => dotenv.get(
-        'BACKEND_BASE_URL',
-        fallback: 'http://localhost:8080',
-      );
-
   @override
   Future<bool> isSessionValid() async {
     try {

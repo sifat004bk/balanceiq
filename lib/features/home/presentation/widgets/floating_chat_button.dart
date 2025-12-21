@@ -68,7 +68,7 @@ class FloatingChatButton extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(colors: [
                   Theme.of(context).colorScheme.primary,
-                  Theme.of(context).colorScheme.secondary,
+                  Theme.of(context).colorScheme.primary,
                 ]),
                 shape: BoxShape.circle,
                 boxShadow: [
@@ -112,7 +112,7 @@ class FloatingChatButton extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(colors: [
                   Theme.of(context).colorScheme.primary,
-                  Theme.of(context).colorScheme.secondary,
+                  Theme.of(context).colorScheme.primary,
                 ]),
                 shape: BoxShape.circle,
                 boxShadow: [

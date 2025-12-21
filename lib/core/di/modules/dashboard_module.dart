@@ -11,6 +11,7 @@ import '../../../features/home/domain/repository/dashboard_repository.dart';
 import '../../../features/home/domain/usecase/get_user_dashbaord.dart';
 import '../../../features/home/presentation/cubit/dashboard_cubit.dart';
 import '../../../features/home/presentation/cubit/transactions_cubit.dart';
+import '../../../features/home/presentation/cubit/transaction_filter_cubit.dart';
 
 // Features - Home (Transaction Search)
 import '../../../features/home/data/datasource/remote_datasource/transaction_search_datasource.dart';
@@ -24,6 +25,7 @@ void registerDashboardModule(GetIt sl) {
   //! Features - Dashboard
   // Cubit
   sl.registerFactory(() => DashboardCubit(getDashboardSummary: sl()));
+  sl.registerFactory(() => TransactionFilterCubit());
   sl.registerFactory(
     () => TransactionsCubit(
       searchTransactions: sl(),

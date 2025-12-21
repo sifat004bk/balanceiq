@@ -51,7 +51,7 @@ class TransactionsCubit extends Cubit<TransactionsState> {
       endDate: _currentParams.endDate,
       minAmount: _currentParams.minAmount,
       maxAmount: _currentParams.maxAmount,
-      limit: _currentParams.limit,
+      limit: _currentParams.limit ?? 50,
     );
 
     result.fold(
@@ -109,6 +109,46 @@ class TransactionsCubit extends Cubit<TransactionsState> {
               searchResult.transactions.length < (_currentParams.limit ?? 50),
         ),
       ),
+    );
+  }
+
+  Future<void> loadMoreTransactions() async {
+    if (state is! TransactionsLoaded) return;
+    final currentState = state as TransactionsLoaded;
+    if (currentState.hasReachedMax || currentState.isMoreLoading) return;
+
+    emit(currentState.copyWith(isMoreLoading: true));
+
+    final newLimit = (_currentParams.limit ?? 50) + 50;
+    _currentParams = _currentParams.copyWith(limit: newLimit);
+
+    final result = await searchTransactions(
+      search: _currentParams.search,
+      category: _currentParams.category,
+      type: _currentParams.type,
+      startDate: _currentParams.startDate,
+      endDate: _currentParams.endDate,
+      minAmount: _currentParams.minAmount,
+      maxAmount: _currentParams.maxAmount,
+      limit: _currentParams.limit,
+    );
+
+    result.fold(
+      (failure) {
+        // In case of error loading more, we revert isMoreLoading but keep old data
+        // For now, simpler to just show error or emit loaded without loading
+        emit(currentState.copyWith(isMoreLoading: false));
+      },
+      (searchResult) {
+        emit(
+          TransactionsLoaded(
+            transactions: searchResult.transactions,
+            hasReachedMax:
+                searchResult.transactions.length < (_currentParams.limit ?? 50),
+            isMoreLoading: false,
+          ),
+        );
+      },
     );
   }
 }

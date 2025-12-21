@@ -616,8 +616,8 @@ test/
 - [x] 4.2.3 Write tests for `SessionCubit`
 - [x] 4.2.4 Write tests for `ChatCubit`
 - [x] 4.2.5 Write tests for `DashboardCubit`
-- [ ] 4.2.6 Write tests for `TransactionsCubit`
-- [ ] 4.2.7 Write tests for `TransactionFilterCubit`
+- [x] 4.2.6 Write tests for `TransactionsCubit`
+- [x] 4.2.7 Write tests for `TransactionFilterCubit`
 
 **Files to Create:**
 ```

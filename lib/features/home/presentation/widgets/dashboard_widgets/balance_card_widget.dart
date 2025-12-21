@@ -4,7 +4,7 @@ import 'package:balance_iq/core/di/injection_container.dart';
 import 'package:balance_iq/core/widgets/glass_presets.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../core/theme/app_palette.dart';
+import 'package:balance_iq/core/theme/app_palette.dart';
 
 class BalanceCard extends StatelessWidget {
   final double netBalance;

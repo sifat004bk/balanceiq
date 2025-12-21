@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:balance_iq/features/home/presentation/widgets/calendar_month_view.dart';
+import 'package:balance_iq/features/home/presentation/widgets/calendar_widgets/calendar_month_view.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

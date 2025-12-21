@@ -4,7 +4,7 @@ import 'package:balance_iq/features/home/domain/entities/transaction.dart';
 import 'package:balance_iq/features/home/presentation/cubit/transaction_filter_cubit.dart';
 import 'package:balance_iq/features/home/presentation/cubit/transaction_filter_state.dart';
 import 'package:balance_iq/features/home/presentation/cubit/transactions_cubit.dart';
-import 'package:balance_iq/features/home/presentation/widgets/transaction_detail_modal.dart';
+import 'package:balance_iq/features/home/presentation/widgets/transaction_detail_widgets/transaction_detail_modal.dart';
 import 'package:balance_iq/features/home/presentation/widgets/transactions_page_widgets/transactions_filter_section.dart';
 import 'package:balance_iq/features/home/presentation/widgets/transactions_page_widgets/transactions_list.dart';
 import 'package:flutter/material.dart';

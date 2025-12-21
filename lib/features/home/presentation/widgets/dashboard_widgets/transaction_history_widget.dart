@@ -4,7 +4,7 @@ import 'package:balance_iq/core/di/injection_container.dart';
 import 'package:balance_iq/features/home/domain/entities/transaction.dart';
 import 'package:balance_iq/features/home/presentation/cubit/transactions_cubit.dart';
 import 'package:balance_iq/features/home/presentation/cubit/transactions_state.dart';
-import 'package:balance_iq/features/home/presentation/widgets/transaction_detail_modal.dart';
+import 'package:balance_iq/features/home/presentation/widgets/transaction_detail_widgets/transaction_detail_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';

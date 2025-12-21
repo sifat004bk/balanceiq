@@ -1,6 +1,6 @@
 import 'package:balance_iq/core/constants/app_strings.dart';
 import 'package:balance_iq/core/theme/app_palette.dart';
-import 'package:balance_iq/features/home/presentation/widgets/custom_calendar_date_range_picker.dart';
+import 'package:balance_iq/features/home/presentation/widgets/calendar_widgets/custom_calendar_date_range_picker.dart';
 import 'package:flutter/material.dart';
 
 class DateSelectorBottomSheet extends StatefulWidget {

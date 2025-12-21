@@ -3,7 +3,7 @@ import 'package:balance_iq/features/home/presentation/cubit/transaction_filter_c
 import 'package:balance_iq/features/home/presentation/cubit/transactions_cubit.dart';
 import 'package:balance_iq/features/home/presentation/cubit/transactions_state.dart';
 import 'package:balance_iq/features/home/presentation/widgets/transactions_page_widgets/transaction_list_item.dart';
-import 'package:balance_iq/features/home/presentation/widgets/transactions_shimmer.dart';
+import 'package:balance_iq/features/home/presentation/widgets/transactions_page_widgets/transactions_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

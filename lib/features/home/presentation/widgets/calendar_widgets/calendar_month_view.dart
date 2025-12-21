@@ -1,4 +1,4 @@
-import 'package:balance_iq/features/home/presentation/widgets/calendar_date_cell.dart';
+import 'package:balance_iq/features/home/presentation/widgets/calendar_widgets/calendar_date_cell.dart';
 import 'package:flutter/material.dart';
 
 class CalendarMonthView extends StatelessWidget {

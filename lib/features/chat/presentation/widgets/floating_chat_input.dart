@@ -18,7 +18,7 @@ import 'floating_chat_input_widgets/chat_attachment_button.dart';
 import 'floating_chat_input_widgets/chat_mic_button.dart';
 import 'floating_chat_input_widgets/chat_text_field.dart';
 import 'floating_chat_input_widgets/chat_send_button.dart';
-import 'floating_chat_input_widgets/chat_input_container.dart';
+import 'floating_chat_input_widgets/floating_chat_input_container.dart';
 
 class FloatingChatInput extends StatefulWidget {
   final String botId;
@@ -525,7 +525,7 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                       ),
 
                     // Main Input Container (Using extracted widget)
-                    ChatInputContainer(
+                    FloatingChatInputContainer(
                       hasFocus: _focusNode.hasFocus,
                       hasContent: _hasContent,
                       isDark: isDark,

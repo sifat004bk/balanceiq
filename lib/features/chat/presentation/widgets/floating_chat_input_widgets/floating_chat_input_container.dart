@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class ChatInputContainer extends StatelessWidget {
+class FloatingChatInputContainer extends StatelessWidget {
   final Widget child;
   final bool hasFocus;
   final bool hasContent;
   final bool isDark;
 
-  const ChatInputContainer({
+  const FloatingChatInputContainer({
     super.key,
     required this.child,
     required this.hasFocus,

@@ -1,10 +1,11 @@
 import 'package:dolfin_core/constants/app_strings.dart';
 import 'package:dolfin_core/currency/currency_cubit.dart';
 import 'package:balance_iq/core/di/injection_container.dart';
+import 'package:dolfin_ui_kit/theme/app_palette.dart';
 import 'package:dolfin_ui_kit/widgets/glass_presets.dart';
 import 'package:flutter/material.dart';
 
-import 'package:dolfin_ui_kit/theme/app_palette.dart';
+import 'package:get_it/get_it.dart';
 
 class BalanceCard extends StatelessWidget {
   final double netBalance;
@@ -117,7 +118,9 @@ class BalanceCard extends StatelessWidget {
     required bool isIncome,
   }) {
     final textTheme = Theme.of(context).textTheme;
-    final iconColor = isIncome ? AppPalette.income : AppPalette.expense;
+    final iconColor = isIncome
+        ? GetIt.instance<AppPalette>().income
+        : GetIt.instance<AppPalette>().expense;
 
     return ThemedGlass.container(
       context: context,

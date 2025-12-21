@@ -1,6 +1,7 @@
 import 'package:dolfin_core/currency/currency_cubit.dart';
 import 'package:balance_iq/core/di/injection_container.dart';
 import 'package:dolfin_ui_kit/theme/app_palette.dart';
+import 'package:get_it/get_it.dart';
 import 'package:balance_iq/features/home/domain/entities/transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -56,13 +57,19 @@ class TransactionListItem extends StatelessWidget {
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: isIncome
-                      ? AppPalette.income.withValues(alpha: 0.1)
-                      : AppPalette.expense.withValues(alpha: 0.1),
+                      ? GetIt.instance<AppPalette>()
+                          .income
+                          .withValues(alpha: 0.1)
+                      : GetIt.instance<AppPalette>()
+                          .expense
+                          .withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: Icon(
                   isIncome ? Icons.arrow_downward : Icons.arrow_upward,
-                  color: isIncome ? AppPalette.income : AppPalette.expense,
+                  color: isIncome
+                      ? GetIt.instance<AppPalette>().income
+                      : GetIt.instance<AppPalette>().expense,
                   size: 24,
                 ),
               ),
@@ -109,8 +116,8 @@ class TransactionListItem extends StatelessWidget {
                             Theme.of(context).textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.bold,
                                   color: isIncome
-                                      ? AppPalette.income
-                                      : AppPalette.expense,
+                                      ? GetIt.instance<AppPalette>().income
+                                      : GetIt.instance<AppPalette>().expense,
                                 ),
                       ),
                     ],

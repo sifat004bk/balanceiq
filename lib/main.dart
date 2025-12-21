@@ -1,3 +1,4 @@
+import 'package:dolfin_ui_kit/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,7 +8,7 @@ import 'package:balance_iq/core/config/app_network_config.dart';
 
 import 'core/di/injection_container.dart' as di;
 import 'core/navigation/navigator_service.dart';
-import 'package:dolfin_ui_kit/theme/app_palette.dart';
+import 'package:get_it/get_it.dart';
 import 'package:dolfin_ui_kit/theme/app_theme.dart';
 import 'package:dolfin_ui_kit/theme/theme_cubit.dart';
 import 'package:dolfin_ui_kit/theme/theme_state.dart';
@@ -47,7 +48,7 @@ void main() async {
 
   ErrorWidget.builder = (FlutterErrorDetails details) {
     return Material(
-      color: AppPalette.backgroundLight,
+      color: GetIt.instance<AppPalette>().backgroundLight,
       child: Center(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -55,26 +56,26 @@ void main() async {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(
+                Icon(
                   Icons.error_outline,
-                  color: AppPalette.error,
+                  color: GetIt.instance<AppPalette>().error,
                   size: 48,
                 ),
                 const SizedBox(height: 16),
-                const Text(
+                Text(
                   'Something went wrong!',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: AppPalette.textPrimaryLight,
+                    color: GetIt.instance<AppPalette>().textPrimaryLight,
                   ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   details.exceptionAsString(),
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: AppPalette.textSecondaryLight,
+                  style: TextStyle(
+                    color: GetIt.instance<AppPalette>().textSecondaryLight,
                   ),
                 ),
               ],

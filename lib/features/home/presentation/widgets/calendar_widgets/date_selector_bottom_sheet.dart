@@ -1,5 +1,6 @@
 import 'package:dolfin_core/constants/app_strings.dart';
 import 'package:dolfin_ui_kit/theme/app_palette.dart';
+import 'package:get_it/get_it.dart';
 import 'package:balance_iq/features/home/presentation/widgets/calendar_widgets/custom_calendar_date_range_picker.dart';
 import 'package:flutter/material.dart';
 
@@ -222,9 +223,9 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
                         ),
                       ],
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.date_range_rounded,
-                      color: AppPalette.white,
+                      color: GetIt.instance<AppPalette>().white,
                       size: 20,
                     ),
                   ),

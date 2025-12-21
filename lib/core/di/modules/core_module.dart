@@ -1,3 +1,4 @@
+import 'package:dolfin_ui_kit/theme/app_palette.dart';
 import 'package:get_it/get_it.dart';
 import 'package:uuid/uuid.dart';
 
@@ -6,6 +7,7 @@ import 'package:dolfin_ui_kit/theme/theme_cubit.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:dolfin_core/constants/app_constants.dart';
 import 'package:balance_iq/core/config/app_constants_impl.dart';
+import 'package:balance_iq/core/config/app_palette_impl.dart';
 
 import "package:dolfin_core/currency/currency_cubit.dart";
 import '../../../features/home/data/datasource/remote_datasource/dashboard_remote_datasource.dart';
@@ -30,6 +32,7 @@ void registerCoreModule(GetIt sl) {
   );
   //! Core - Configuration
   sl.registerLazySingleton<AppConstants>(() => AppConstantsImpl());
+  sl.registerLazySingleton<AppPalette>(() => AppPaletteImpl());
 
   //! Core - Authentication
   sl.registerLazySingleton<GoogleSignIn>(() {

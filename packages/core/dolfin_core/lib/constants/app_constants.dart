@@ -1,6 +1,4 @@
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-
-class AppConstants {
+abstract class AppConstants {
   // App Info
   static const String appName = 'Donfin AI';
   static const String appVersion = '1.0.0';
@@ -38,10 +36,7 @@ class AppConstants {
 
   // Mock Mode
   // When true, uses mock data instead of real API calls
-  static bool get isMockMode {
-    final mockMode = dotenv.get('MOCK_MODE', fallback: 'false').toLowerCase();
-    return mockMode == 'true' || mockMode == '1' || mockMode == 'yes';
-  }
+  bool get isMockMode;
 
   // Message Types
   static const String messageTypeText = 'text';
@@ -64,6 +59,5 @@ class AppConstants {
   static const int dailyMessageLimit = 10;
 
   // Auth
-  static String get serverClientId =>
-      dotenv.get('GOOGLE_SERVER_CLIENT_ID', fallback: '');
+  String get serverClientId;
 }

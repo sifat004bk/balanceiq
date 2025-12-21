@@ -124,7 +124,11 @@
 ### Task 4.3: Write Repository Tests ✅
 - **Status:** ✅ Completed
 - **Completed:** 2025-12-22
-- **Notes:** All repository tests written: Auth, Chat, Transactions, Dashboard.
+- **Notes:** All repository tests written and passing:
+  - Auth (auth_repository_impl_test.dart)
+  - Chat (chat_repository_impl_test.dart)
+  - Transactions (transaction_repository_impl_test.dart)
+  - Dashboard (dashboard_repository_impl_test.dart) - 10 tests passing
 
 ### Task 4.4: Write Core Utility Tests ✅
 - **Status:** ✅ Completed
@@ -176,7 +180,7 @@
 5. ~~**Task 5.2:** Decompose signup_page.dart~~ ✅
 6. ~~**Task 5.2:** Decompose home_page.dart~~ ✅
 7. ~~**Task 3.3:** Decompose MessageBubble widget~~ ✅
-8. **Task 4.3.3:** Write DashboardRepositoryImpl tests
+8. ~~**Task 4.3.3:** Write DashboardRepositoryImpl tests~~ ✅ (10 tests passing)
 
 ### 🟢 Low Priority
 9. ~~**Task 3.6:** Create Tour mixin~~ ✅ (ProfileTourMixin created)

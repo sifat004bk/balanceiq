@@ -1,22 +1,18 @@
 import 'package:currency_picker/currency_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
-import '../../../../core/constants/design_constants.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/currency/currency_cubit.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/tour/tour.dart';
 import '../../../../core/utils/snackbar_utils.dart';
-import '../../../subscription/domain/entities/subscription_status.dart';
 import '../../../subscription/presentation/cubit/subscription_cubit.dart';
 import '../../../subscription/presentation/cubit/subscription_state.dart';
-
-// New Cubits
 import '../cubit/session/session_cubit.dart';
 import '../cubit/signup/signup_cubit.dart';
+import '../widgets/profile/profile_widgets.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -223,8 +219,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -271,12 +265,12 @@ class _ProfilePageState extends State<ProfilePage> {
           body: BlocBuilder<SessionCubit, SessionState>(
             builder: (context, state) {
               if (state is SessionLoading) {
-                return _buildProfileShimmer();
+                return const ProfileShimmer();
               }
 
               if (state is Authenticated) {
                 final user = state.user;
-                return _buildProfileContent(context, user, colorScheme);
+                return _buildProfileContent(context, user);
               }
 
               return Center(
@@ -289,11 +283,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildProfileContent(
-    BuildContext context,
-    dynamic user,
-    ColorScheme colorScheme,
-  ) {
+  Widget _buildProfileContent(BuildContext context, dynamic user) {
     return Stack(
       children: [
         CustomScrollView(
@@ -315,16 +305,22 @@ class _ProfilePageState extends State<ProfilePage> {
                     if (!user.isEmailVerified)
                       Container(
                         key: _emailVerifyKey,
-                        child: _buildEmailVerificationBanner(context, user),
+                        child: EmailVerificationBanner(
+                          user: user,
+                          onVerificationClick: () =>
+                              _handleEmailVerificationClick(user),
+                        ),
                       ),
                     // Profile Header with dynamic subscription badge
                     BlocBuilder<SubscriptionCubit, SubscriptionState>(
                       builder: (context, subState) {
-                        SubscriptionStatus? status;
-                        if (subState is SubscriptionStatusLoaded) {
-                          status = subState.status;
-                        }
-                        return _buildProfileHeader(user, status, context);
+                        return ProfileHeader(
+                          user: user,
+                          subscriptionStatus:
+                              subState is SubscriptionStatusLoaded
+                                  ? subState.status
+                                  : null,
+                        );
                       },
                     ),
                     const SizedBox(height: 40),
@@ -334,35 +330,31 @@ class _ProfilePageState extends State<ProfilePage> {
                       child: BlocBuilder<SubscriptionCubit, SubscriptionState>(
                         builder: (context, subState) {
                           if (subState is SubscriptionStatusLoading) {
-                            return _buildSubscriptionCardLoading(context);
+                            return const SubscriptionCardLoading();
                           }
                           if (subState is SubscriptionStatusLoaded) {
-                            return _buildSubscriptionCard(
-                                context, subState.status);
+                            return SubscriptionCard(status: subState.status);
                           }
                           if (subState is SubscriptionError) {
-                            return _buildSubscriptionCardError(
-                                context, subState.message);
+                            return SubscriptionCardError(
+                                message: subState.message);
                           }
-                          return _buildSubscriptionCardLoading(context);
+                          return const SubscriptionCardLoading();
                         },
                       ),
                     ),
                     const SizedBox(height: 32),
                     // Menu Items
-                    _buildMenuItem(
-                      context,
+                    ProfileMenuItem(
                       icon: Icons.person_outline,
                       title: 'Account Details',
                       onTap: () {
-                        // TODO: Navigate to account details
                         SnackbarUtils.showComingSoon(
                             context, AppStrings.profile.accountDetails);
                       },
                     ),
                     const SizedBox(height: 12),
-                    _buildMenuItem(
-                      context,
+                    ProfileMenuItem(
                       icon: Icons.lock_outline,
                       title: 'Security',
                       onTap: () {
@@ -370,23 +362,19 @@ class _ProfilePageState extends State<ProfilePage> {
                       },
                     ),
                     const SizedBox(height: 12),
-                    _buildMenuItem(
-                      context,
+                    ProfileMenuItem(
                       icon: Icons.notifications_outlined,
                       title: 'Notifications',
                       onTap: () {
-                        // TODO: Navigate to notifications
                         SnackbarUtils.showComingSoon(
                             context, AppStrings.profile.notifications);
                       },
                     ),
                     const SizedBox(height: 12),
-                    _buildMenuItem(
-                      context,
+                    ProfileMenuItem(
                       icon: Icons.palette_outlined,
                       title: 'Appearance',
                       onTap: () {
-                        // TODO: Navigate to appearance settings
                         SnackbarUtils.showComingSoon(
                             context, AppStrings.profile.appearance);
                       },
@@ -396,8 +384,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     BlocBuilder<CurrencyCubit, CurrencyState>(
                       bloc: sl<CurrencyCubit>(),
                       builder: (context, currencyState) {
-                        return _buildMenuItem(
-                          context,
+                        return ProfileMenuItem(
                           icon: Icons.currency_exchange_outlined,
                           title: AppStrings.profile.currency,
                           subtitle:
@@ -444,19 +431,17 @@ class _ProfilePageState extends State<ProfilePage> {
                       },
                     ),
                     const SizedBox(height: 12),
-                    _buildMenuItem(
-                      context,
+                    ProfileMenuItem(
                       icon: Icons.help_outline,
                       title: 'Help Center',
                       onTap: () {
-                        // TODO: Navigate to help center
                         SnackbarUtils.showComingSoon(
                             context, AppStrings.profile.helpCenter);
                       },
                     ),
                     const SizedBox(height: 40),
                     // Log Out Button
-                    _buildLogOutButton(context),
+                    const LogOutButton(),
                     const SizedBox(height: 32),
                   ],
                 ),
@@ -482,843 +467,6 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildEmailVerificationBanner(
-    BuildContext context,
-    dynamic user,
-  ) {
-    // Use design system colors
-    final colorScheme = Theme.of(context).colorScheme;
-    final warningColor = Colors.orange;
-
-    final backgroundColor = warningColor.withValues(alpha: 0.1);
-    final borderColor = warningColor.withValues(alpha: 0.3);
-    final iconBgColor = warningColor.withValues(alpha: 0.15);
-    final titleColor = colorScheme.onSurface;
-    final subtitleColor = colorScheme.onSurface.withValues(alpha: 0.7);
-
-    // Use SignupCubit for verification actions
-    return BlocConsumer<SignupCubit, SignupState>(
-      listener: (context, state) {
-        if (state is VerificationEmailSent) {
-          SnackbarUtils.showSuccess(
-              context, '${AppStrings.auth.emailSent} ${state.email}');
-        } else if (state is VerificationEmailError) {
-          SnackbarUtils.showError(context, state.message);
-        }
-      },
-      builder: (context, state) {
-        final isSending = state is VerificationEmailSending;
-
-        return Container(
-          margin: EdgeInsets.only(bottom: DesignConstants.space6),
-          padding: EdgeInsets.all(DesignConstants.space4),
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            borderRadius: BorderRadius.circular(DesignConstants.radiusLarge),
-            border: Border.all(
-              color: borderColor,
-              width: DesignConstants.glassBorderWidth,
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(DesignConstants.space2),
-                    decoration: BoxDecoration(
-                      color: iconBgColor,
-                      borderRadius:
-                          BorderRadius.circular(DesignConstants.radiusSmall),
-                    ),
-                    child: Icon(
-                      Icons.warning_amber_rounded,
-                      color: warningColor,
-                      size: DesignConstants.iconSizeLarge,
-                    ),
-                  ),
-                  SizedBox(width: DesignConstants.space3),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Verify your email',
-                          style: TextStyle(
-                            fontSize: DesignConstants.fontSizeL,
-                            fontWeight: DesignConstants.fontWeightSemiBold,
-                            color: titleColor,
-                          ),
-                        ),
-                        SizedBox(height: DesignConstants.space1),
-                        Text(
-                          'Please verify your email to access all features',
-                          style: TextStyle(
-                            fontSize: DesignConstants.fontSizeS,
-                            color: subtitleColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: DesignConstants.space4),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: isSending
-                      ? null
-                      : () {
-                          _handleEmailVerificationClick(user);
-                        },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: warningColor,
-                    foregroundColor: colorScheme.onInverseSurface,
-                    disabledBackgroundColor:
-                        warningColor.withValues(alpha: 0.5),
-                    padding:
-                        EdgeInsets.symmetric(vertical: DesignConstants.space3),
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(DesignConstants.radiusMedium),
-                    ),
-                    elevation: 0,
-                  ),
-                  child: isSending
-                      ? SizedBox(
-                          height: DesignConstants.loadingIndicatorSmall,
-                          width: DesignConstants.loadingIndicatorSmall,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: colorScheme.onInverseSurface,
-                          ),
-                        )
-                      : Text(
-                          'Send Verification Email',
-                          style: TextStyle(
-                            fontSize: DesignConstants.fontSizeM,
-                            fontWeight: DesignConstants.fontWeightSemiBold,
-                          ),
-                        ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildProfileHeader(
-      dynamic user, SubscriptionStatus? status, BuildContext context) {
-    final hasSubscription = status?.hasActiveSubscription ?? false;
-    final planName = status?.subscription?.plan.displayName ?? '';
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return Column(
-      children: [
-        // Avatar with glow effect
-        Stack(
-          clipBehavior: Clip.none,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: colorScheme.primary.withValues(alpha: 0.4),
-                    blurRadius: 40,
-                    spreadRadius: 10,
-                  ),
-                ],
-              ),
-              child: Container(
-                width: 120,
-                height: 120,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: colorScheme.primary,
-                    width: 3,
-                  ),
-                  gradient: user.photoUrl == null || user.photoUrl!.isEmpty
-                      ? LinearGradient(
-                          colors: [
-                            colorScheme.primaryContainer,
-                            colorScheme.secondaryContainer,
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        )
-                      : null,
-                  color: user.photoUrl != null && user.photoUrl!.isNotEmpty
-                      ? colorScheme.surface
-                      : null,
-                ),
-                child: user.photoUrl != null && user.photoUrl!.isNotEmpty
-                    ? ClipOval(
-                        child: Image.network(
-                          user.photoUrl!,
-                          width: 114,
-                          height: 114,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Center(
-                              child: Text(
-                                user.name.isNotEmpty
-                                    ? user.name[0].toUpperCase()
-                                    : 'U',
-                                style: TextStyle(
-                                  fontSize: 48,
-                                  fontWeight: FontWeight.bold,
-                                  color: colorScheme.onPrimaryContainer,
-                                ),
-                              ),
-                            );
-                          },
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return Center(
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: colorScheme.primary,
-                              ),
-                            );
-                          },
-                        ),
-                      )
-                    : Center(
-                        child: Text(
-                          user.name.isNotEmpty
-                              ? user.name[0].toUpperCase()
-                              : 'U',
-                          style: TextStyle(
-                            fontSize: 48,
-                            fontWeight: FontWeight.bold,
-                            color: colorScheme.onPrimaryContainer,
-                          ),
-                        ),
-                      ),
-              ),
-            ),
-            if (user.isEmailVerified)
-              Positioned(
-                bottom: 0,
-                right: 0,
-                child: Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).canvasColor,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.verified_rounded,
-                    color: Colors.green,
-                    size: 24,
-                  ),
-                ),
-              ),
-          ],
-        ),
-        const SizedBox(height: 24),
-        // User Name with Subscription Badge
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              user.name,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: colorScheme.onSurface,
-              ),
-            ),
-            const SizedBox(width: 8),
-            if (hasSubscription)
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: hasSubscription
-                      ? colorScheme.primary.withValues(alpha: 0.2)
-                      : Colors.transparent,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: hasSubscription
-                        ? colorScheme.primary
-                        : Colors.transparent,
-                    width: 1,
-                  ),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      hasSubscription ? Icons.star : null,
-                      size: 16,
-                      color: hasSubscription
-                          ? colorScheme.primary
-                          : Colors.transparent,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      planName,
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: hasSubscription
-                            ? colorScheme.primary
-                            : Theme.of(context).hintColor,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        // Email
-        Text(
-          user.email,
-          style: TextStyle(
-            fontSize: 14,
-            color: Theme.of(context).hintColor,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSubscriptionCardLoading(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: Theme.of(context).dividerColor,
-          width: 1,
-        ),
-      ),
-      child: Shimmer.fromColors(
-        baseColor: isDark ? Colors.grey.shade800 : Colors.grey.shade300,
-        highlightColor: isDark ? Colors.grey.shade700 : Colors.grey.shade100,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: 120,
-              height: 14,
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
-                borderRadius: BorderRadius.circular(4),
-              ),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: 150,
-                      height: 20,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.surface,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Container(
-                      width: 180,
-                      height: 14,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.surface,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  width: 80,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSubscriptionCardError(BuildContext context, String message) {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: Theme.of(context).dividerColor,
-          width: 1,
-        ),
-      ),
-      child: Column(
-        children: [
-          Icon(Icons.error_outline,
-              color: Theme.of(context).colorScheme.error, size: 32),
-          const SizedBox(height: 8),
-          Text(
-            'Failed to load subscription',
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
-          ),
-          const SizedBox(height: 8),
-          TextButton(
-            onPressed: () =>
-                context.read<SubscriptionCubit>().loadSubscriptionStatus(),
-            child: Text(AppStrings.common.retry),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSubscriptionCard(
-      BuildContext context, SubscriptionStatus status) {
-    if (!status.hasActiveSubscription) {
-      return _buildNoSubscriptionCard(context);
-    }
-
-    final subscription = status.subscription!;
-
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: Theme.of(context).dividerColor,
-          width: 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Theme.of(context).shadowColor.withValues(alpha: 0.05),
-            blurRadius: 10,
-            spreadRadius: 0,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'My Subscription',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Theme.of(context).hintColor,
-                ),
-              ),
-              if (subscription.isExpiringSoon)
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.orange.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.warning, size: 14, color: Colors.orange),
-                      const SizedBox(width: 4),
-                      Text(
-                        '${subscription.daysRemaining} days left',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.orange,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Plan: ${subscription.plan.displayName}',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Renews on ${subscription.formattedEndDate}',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Theme.of(context).hintColor,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 16),
-              ElevatedButton(
-                onPressed: () async {
-                  final result = await Navigator.pushNamed(
-                      context, '/manage-subscription');
-                  if (result == true && context.mounted) {
-                    context.read<SubscriptionCubit>().loadSubscriptionStatus();
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  elevation: 0,
-                ),
-                child: const Text(
-                  'Manage',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildProfileShimmer() {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return Shimmer.fromColors(
-      baseColor: isDark ? Colors.grey.shade800 : Colors.grey.shade300,
-      highlightColor: isDark ? Colors.grey.shade700 : Colors.grey.shade100,
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            children: [
-              const SizedBox(height: 56), // Approximate AppBar height
-              // Avatar Shimmer
-              Container(
-                width: 120,
-                height: 120,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).cardColor,
-                  shape: BoxShape.circle,
-                ),
-              ),
-              const SizedBox(height: 24),
-              // Name Shimmer
-              Container(
-                width: 200,
-                height: 24,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).cardColor,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-              ),
-              const SizedBox(height: 8),
-              // Email Shimmer
-              Container(
-                width: 150,
-                height: 14,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).cardColor,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-              ),
-              const SizedBox(height: 40),
-              // Subscription Card Shimmer
-              Container(
-                height: 120,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).cardColor,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-              const SizedBox(height: 32),
-              // Menu Items Shimmer
-              for (int i = 0; i < 5; i++)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: Container(
-                    height: 56,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).cardColor,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                  ),
-                ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNoSubscriptionCard(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: Theme.of(context).dividerColor,
-          width: 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Theme.of(context).shadowColor.withValues(alpha: 0.05),
-            blurRadius: 10,
-            spreadRadius: 0,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'My Subscription',
-            style: TextStyle(
-              fontSize: 14,
-              color: Theme.of(context).hintColor,
-            ),
-          ),
-          const SizedBox(height: 12),
-          const SizedBox(height: 12),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'No Active Plan',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Subscribe to unlock premium features',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Theme.of(context).hintColor,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 16),
-              ElevatedButton(
-                onPressed: () async {
-                  final result =
-                      await Navigator.pushNamed(context, '/subscription-plans');
-                  if (result == true && context.mounted) {
-                    context.read<SubscriptionCubit>().loadSubscriptionStatus();
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  elevation: 0,
-                ),
-                child: const Text(
-                  'Subscribe',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMenuItem(
-    BuildContext context, {
-    required IconData icon,
-    required String title,
-    required VoidCallback onTap,
-    String? subtitle,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Theme.of(context).cardColor,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: Theme.of(context).dividerColor,
-            width: 1,
-          ),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                color: Theme.of(context)
-                    .colorScheme
-                    .primary
-                    .withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(
-                icon,
-                color: Theme.of(context).colorScheme.primary,
-                size: 24,
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: Theme.of(context).colorScheme.onSurface,
-                    ),
-                  ),
-                  if (subtitle != null) ...[
-                    const SizedBox(height: 4),
-                    Text(
-                      subtitle,
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Theme.of(context).hintColor,
-                      ),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-            Icon(
-              Icons.chevron_right,
-              color: Theme.of(context).hintColor,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLogOutButton(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: () {
-          // Show confirmation dialog
-          showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: Text(AppStrings.profile.logOut),
-              content: Text(AppStrings.profile.logOutConfirm),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: Text(AppStrings.common.cancel),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    // Use SessionCubit for logout
-                    context.read<SessionCubit>().logout();
-                  },
-                  child: Text(
-                    'Log Out',
-                    style:
-                        TextStyle(color: Theme.of(context).colorScheme.error),
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Theme.of(context).cardColor,
-          foregroundColor: Theme.of(context).colorScheme.error,
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          elevation: 0,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.logout,
-              size: 20,
-              color: Theme.of(context).colorScheme.error,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              'Log Out',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Theme.of(context).colorScheme.error,
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

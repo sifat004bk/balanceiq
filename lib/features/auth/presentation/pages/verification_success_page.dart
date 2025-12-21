@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
 import '../../../../core/constants/app_strings.dart';
-import '../cubit/auth_cubit.dart';
-import '../cubit/auth_state.dart';
+import '../cubit/session/session_cubit.dart';
 import '../../domain/entities/user.dart';
 
 class VerificationSuccessPage extends StatefulWidget {
@@ -68,7 +67,8 @@ class _VerificationSuccessPageState extends State<VerificationSuccessPage>
       authProvider: 'email',
       createdAt: DateTime.now(),
     );
-    context.read<AuthCubit>().emit(AuthAuthenticated(mockUser));
+    context.read<SessionCubit>().updateUser(mockUser);
+    Navigator.of(context).pushReplacementNamed('/home');
   }
 
   @override

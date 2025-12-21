@@ -1,18 +1,9 @@
-import 'package:balance_iq/core/constants/app_strings.dart';
-import 'package:balance_iq/core/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:intl/intl.dart';
+
 import '../../domain/entities/message.dart';
-import '../../domain/entities/chat_feedback.dart'; // For FeedbackType
-import '../chat_config.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../cubit/chat_cubit.dart';
-import 'gen_ui/gen_ui_builder.dart';
-import 'gen_ui/gen_ui_chart.dart';
-import 'gen_ui/gen_ui_table.dart';
+import 'message_bubble_widgets/user_message_bubble.dart';
+import 'message_bubble_widgets/ai_message_bubble.dart';
 
 /// Gemini-style message bubble with animations
 class MessageBubble extends StatefulWidget {
@@ -84,481 +75,47 @@ class _MessageBubbleState extends State<MessageBubble>
   Widget _buildMessageContent(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      // Reduced vertical padding
-      child: Column(
+      child: Row(
+        mainAxisAlignment:
+            widget.isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (!widget.isUser) ...[
-            Padding(
-              padding: const EdgeInsets.only(top: 0), // Align with top of text
-              child: CircleAvatar(
-                radius: 14, // Smaller avatar
-                backgroundColor: Colors.transparent, // Transparent bg
-                child: Icon(
-                  Icons.auto_awesome, // Gemini sparkle icon
-                  color: widget.botColor, // Use bot specific color
-                  size: 20,
-                ),
-              ),
-            ),
-            const SizedBox(width: 12),
-          ],
-          Row(
-            mainAxisAlignment:
-                widget.isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Message content
-              Flexible(
-                child: Column(
-                  crossAxisAlignment: widget.isUser
-                      ? CrossAxisAlignment.end
-                      : CrossAxisAlignment.start,
-                  children: [
-                    // Message bubble
-                    widget.isUser
-                        ? _buildUserMessage(context)
-                        : _buildAiMessage(context),
-                    // Timestamp (User only, or bottom for AI?) - Keeping as is for now
-                    if (widget.isUser)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 4, right: 4),
-                        child: Text(
-                          _formatTimestamp(widget.message.timestamp),
-                          style:
-                              Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    fontSize: 10,
-                                    color: Theme.of(context).hintColor,
-                                  ),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+          // If not user (AI), we relied on the internal header of AiMessageBubble.
+          // The previous code had a redundant avatar here. We are removing it to rely on AiMessageBubble's design.
 
-  /// User message with gradient background (2025 redesign)
-  Widget _buildUserMessage(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primary,
-        borderRadius: const BorderRadius.all(
-          Radius.circular(24),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            widget.message.content,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onPrimary,
-                  fontSize: 16,
-                  height: 1.4,
-                ),
-          ),
-          if (widget.message.imageUrl != null &&
-              widget.message.imageUrl!.isNotEmpty) ...[
-            const SizedBox(height: 12),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: _buildImage(widget.message.imageUrl!),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-
-  /// AI message with glassmorphism and modern design (2025 redesign)
-  Widget _buildAiMessage(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-
-    return Container(
-      constraints: const BoxConstraints(maxWidth: 500),
-      // Wider for AI responses
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Bot header with avatar
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8, left: 4),
-            child: Row(
+          Flexible(
+            child: Column(
+              crossAxisAlignment: widget.isUser
+                  ? CrossAxisAlignment.end
+                  : CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: 28,
-                  height: 28,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        widget.botColor,
-                        widget.botColor.withOpacity(0.8),
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: widget.botColor.withOpacity(0.3),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
+                // Message bubble
+                widget.isUser
+                    ? UserMessageBubble(message: widget.message)
+                    : AiMessageBubble(
+                        message: widget.message,
+                        botName: widget.botName,
+                        botColor: widget.botColor,
+                        isLastMessage: widget.isLastMessage,
                       ),
-                    ],
-                  ),
-                  child: Icon(
-                    Icons.auto_awesome,
-                    color: Colors.white,
-                    size: 16,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  widget.botName,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: Theme.of(context).hintColor,
-                        fontSize: 13,
-                      ),
-                ),
-              ],
-            ),
-          ),
-
-          // Content
-          if (widget.message.content.isNotEmpty)
-            MarkdownBody(
-              data: widget.message.content,
-              selectable: true,
-              builders: {
-                'ui:chart': GenUIChartBuilder(),
-                'ui:table': GenUITableBuilder(),
-                'ui:summary_card': GenUISummaryCardBuilder(),
-                'ui:action_list': GenUIActionListBuilder(),
-                'ui:metric': GenUIMetricCardBuilder(),
-                'ui:progress': GenUIProgressBuilder(),
-                'ui:actions': GenUIActionButtonsBuilder(),
-                'ui:stats': GenUIStatsBuilder(),
-                'ui:insight': GenUIInsightCardBuilder(),
-              },
-              styleSheet: MarkdownStyleSheet(
-                p: textTheme.bodyMedium?.copyWith(
-                  color: colorScheme.onSurface,
-                  fontSize: 16,
-                  height: 1.5,
-                ),
-                h1: textTheme.headlineMedium?.copyWith(
-                  color: colorScheme.onSurface,
-                  fontWeight: FontWeight.bold,
-                ),
-                h2: textTheme.headlineSmall?.copyWith(
-                  color: colorScheme.onSurface,
-                  fontWeight: FontWeight.bold,
-                ),
-                h3: textTheme.titleLarge?.copyWith(
-                  color: colorScheme.onSurface,
-                  fontWeight: FontWeight.w600,
-                ),
-                h4: textTheme.titleMedium?.copyWith(
-                  color: colorScheme.onSurface,
-                  fontWeight: FontWeight.w600,
-                ),
-                h5: textTheme.titleSmall?.copyWith(
-                  color: colorScheme.onSurface,
-                  fontWeight: FontWeight.w600,
-                ),
-                h6: textTheme.bodyLarge?.copyWith(
-                  color: colorScheme.onSurface,
-                  fontWeight: FontWeight.w600,
-                ),
-                code: textTheme.bodyMedium?.copyWith(
-                  fontFamily: 'Google Sans Mono',
-                  backgroundColor: colorScheme.surfaceContainerHighest,
-                  color: colorScheme.onSurfaceVariant,
-                  fontSize: 13,
-                ),
-                codeblockDecoration: BoxDecoration(
-                  color: colorScheme.surfaceContainerHighest,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                blockquote: textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).hintColor,
-                  fontStyle: FontStyle.italic,
-                ),
-                blockquoteDecoration: BoxDecoration(
-                  color: Colors.transparent,
-                  border: Border(
-                    left: BorderSide(
-                      color: colorScheme.primary,
-                      width: 4,
-                    ),
-                  ),
-                ),
-                listBullet: textTheme.bodyMedium?.copyWith(
-                  color: colorScheme.onSurface,
-                ),
-                tableBody: textTheme.bodyMedium?.copyWith(
-                  color: colorScheme.onSurface,
-                ),
-                tableHead: textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: colorScheme.onSurface,
-                ),
-                a: textTheme.bodyMedium?.copyWith(
-                  color: colorScheme.primary,
-                  decoration: TextDecoration.underline,
-                ),
-                em: const TextStyle(fontStyle: FontStyle.italic),
-                strong: const TextStyle(fontWeight: FontWeight.bold),
-                horizontalRuleDecoration: BoxDecoration(
-                  border: Border(
-                    top: BorderSide(
-                      color: colorScheme.surfaceContainerHighest,
-                      width: 1,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-
-          const SizedBox(height: 16),
-
-          // GenUI Table
-          if (widget.message.hasTable && widget.message.tableData != null) ...[
-            GenUITable(data: widget.message.tableData!),
-            const SizedBox(height: 16),
-          ],
-
-          // GenUI Chart
-          if (widget.message.graphType != null &&
-              widget.message.graphData != null) ...[
-            GenUIChart(
-                data: widget.message.graphData!,
-                type: widget.message.graphType!),
-            const SizedBox(height: 16),
-          ],
-
-          // Action Type Display & Change Button - only for record_income/record_expense
-          if (widget.message.actionType != null &&
-              (widget.message.actionType!.toLowerCase() == 'record_income' ||
-                  widget.message.actionType!.toLowerCase() ==
-                      'record_expense')) ...[
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              decoration: BoxDecoration(
-                color: Theme.of(context).cardColor,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: Theme.of(context).dividerColor,
-                ),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    _formatActionType(widget.message.actionType!),
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).hintColor,
-                          fontStyle: FontStyle.italic,
-                        ),
-                  ),
-                  if (widget.isLastMessage) ...[
-                    const SizedBox(width: 8),
-                    GestureDetector(
-                      onTap: () => _showActionTypeOptions(context),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: colorScheme.primary.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: colorScheme.primary,
-                            width: 1,
+                // Timestamp (User only)
+                if (widget.isUser)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4, right: 4),
+                    child: Text(
+                      _formatTimestamp(widget.message.timestamp),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            fontSize: 10,
+                            color: Theme.of(context).hintColor,
                           ),
-                        ),
-                        child: Text(
-                          AppStrings.chat.change,
-                          style:
-                              Theme.of(context).textTheme.labelSmall?.copyWith(
-                                    color: colorScheme.primary,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                        ),
-                      ),
                     ),
-                  ],
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-          ],
-
-          // Action Row: Like, Dislike, Select Text, Copy, Regenerate (Enhanced 2025)
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              if (ChatConfig.showFeedbackButtons) ...[
-                _buildActionButton(
-                  context,
-                  icon: widget.message.feedback == 'LIKE'
-                      ? Icons.thumb_up
-                      : Icons.thumb_up_outlined,
-                  color: widget.message.feedback == 'LIKE'
-                      ? colorScheme.primary
-                      : colorScheme.onSurface.withOpacity(0.6),
-                  onPressed: () {
-                    final newFeedback = widget.message.feedback == 'LIKE'
-                        ? FeedbackType.none
-                        : FeedbackType.like;
-
-                    context
-                        .read<ChatCubit>()
-                        .submitMessageFeedback(widget.message.id, newFeedback);
-
-                    if (newFeedback == FeedbackType.like) {
-                      SnackbarUtils.showInfo(context, AppStrings.chat.feedbackThanks);
-                    }
-                  },
-                ),
-                const SizedBox(width: 4),
-                _buildActionButton(
-                  context,
-                  icon: widget.message.feedback == 'DISLIKE'
-                      ? Icons.thumb_down
-                      : Icons.thumb_down_outlined,
-                  color: widget.message.feedback == 'DISLIKE'
-                      ? colorScheme.error
-                      : colorScheme.onSurface.withOpacity(0.6),
-                  onPressed: () {
-                    final newFeedback = widget.message.feedback == 'DISLIKE'
-                        ? FeedbackType.none
-                        : FeedbackType.dislike;
-
-                    context
-                        .read<ChatCubit>()
-                        .submitMessageFeedback(widget.message.id, newFeedback);
-
-                    if (newFeedback == FeedbackType.dislike) {
-                      SnackbarUtils.showInfo(context, AppStrings.chat.feedbackThanks);
-                    }
-                  },
-                ),
-                const SizedBox(width: 4),
-              ],
-
-              // Select Text (Replaces Filter/Tune)
-              if (ChatConfig.showSelectTextButton) ...[
-                _buildActionButton(
-                  context,
-                  icon: Icons.select_all,
-                  color: colorScheme.onSurface.withOpacity(0.6),
-                  onPressed: () {
-                    SnackbarUtils.showInfo(context, AppStrings.common.selectTextMode);
-                  },
-                ),
-                const SizedBox(width: 4),
-              ],
-
-              if (ChatConfig.showCopyButton) ...[
-                _buildActionButton(
-                  context,
-                  icon: Icons.content_copy,
-                  color: colorScheme.onSurface.withOpacity(0.6),
-                  onPressed: () {
-                    Clipboard.setData(
-                        ClipboardData(text: widget.message.content));
-                    SnackbarUtils.showInfo(context, AppStrings.common.copied);
-                  },
-                ),
-                const SizedBox(width: 4),
-              ],
-
-              // Regenerate Button
-              if (ChatConfig.showRegenerateButton)
-                _buildActionButton(
-                  context,
-                  icon: Icons.refresh,
-                  color: colorScheme.onSurface.withOpacity(0.6),
-                  onPressed: () {
-                    SnackbarUtils.showInfo(context, AppStrings.chat.regenerating);
-                  },
-                ),
-              // Disclaimer
-              if (ChatConfig.bottomDisclaimerText != null)
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        ChatConfig.bottomDisclaimerText!,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context).hintColor,
-                              fontSize: 12,
-                            ),
-                        textAlign: TextAlign.right,
-                      ),
-                    ],
                   ),
-                ),
-            ],
-          ),
-
-          // Image logic
-          if (widget.message.imageUrl != null &&
-              widget.message.imageUrl!.isNotEmpty) ...[
-            const SizedBox(height: 12),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: _buildImage(widget.message.imageUrl!),
+              ],
             ),
-          ],
+          ),
         ],
       ),
     );
-  }
-
-  Widget _buildImage(String imageUrl) {
-    if (imageUrl.startsWith('http')) {
-      return CachedNetworkImage(
-        imageUrl: imageUrl,
-        fit: BoxFit.cover,
-        placeholder: (context, url) => Container(
-          height: 200,
-          color: Theme.of(context).scaffoldBackgroundColor,
-          child: const Center(child: CircularProgressIndicator()),
-        ),
-        errorWidget: (context, url, error) => Container(
-          height: 200,
-          color: Theme.of(context).scaffoldBackgroundColor,
-          child: Icon(
-            Icons.error,
-            color: Theme.of(context).hintColor,
-          ),
-        ),
-      );
-    } else {
-      // Local file
-      return Image.asset(
-        imageUrl,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) => Container(
-          height: 200,
-          color: Theme.of(context).scaffoldBackgroundColor,
-          child: Icon(
-            Icons.error,
-            color: Theme.of(context).hintColor,
-          ),
-        ),
-      );
-    }
   }
 
   String _formatTimestamp(DateTime timestamp) {
@@ -572,103 +129,5 @@ class _MessageBubbleState extends State<MessageBubble>
     } else {
       return DateFormat('MMM d, h:mm a').format(timestamp);
     }
-  }
-
-  String _formatActionType(String type) {
-    switch (type.toLowerCase()) {
-      case 'record_income':
-        return AppStrings.chat.recordedIncome;
-      case 'record_expense':
-        return AppStrings.chat.recordedExpense;
-      default:
-        return '';
-    }
-  }
-
-  void _showActionTypeOptions(BuildContext context) {
-    // Capture the cubit from the current context (where the provider is available)
-    // before showing the bottom sheet (which pushes a new route without the provider)
-    final chatCubit = context.read<ChatCubit>();
-
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) {
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  AppStrings.chat.changeActionType,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-                const SizedBox(height: 16),
-                ListTile(
-                  leading: Icon(Icons.arrow_downward, color: Colors.green),
-                  title: Text(AppStrings.dashboard.income),
-                  onTap: () {
-                    Navigator.pop(context);
-                    _sendCorrectionMessage(chatCubit, 'income');
-                  },
-                ),
-                ListTile(
-                  leading: Icon(Icons.arrow_upward, color: Colors.red),
-                  title: Text(AppStrings.dashboard.expense),
-                  onTap: () {
-                    Navigator.pop(context);
-                    _sendCorrectionMessage(chatCubit, 'expense');
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  void _sendCorrectionMessage(ChatCubit chatCubit, String newType) {
-    final correctionText =
-        "change the actiontype of the last entry as $newType";
-    chatCubit.sendNewMessage(
-      botId: widget.message.botId,
-      content: correctionText,
-    );
-  }
-
-  /// Modern action button with proper touch targets (2025 design)
-  Widget _buildActionButton(
-    BuildContext context, {
-    required IconData icon,
-    required Color color,
-    required VoidCallback onPressed,
-  }) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onPressed,
-        borderRadius: BorderRadius.circular(20),
-        child: Container(
-          width: 36,
-          height: 36,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Icon(
-            icon,
-            color: color,
-            size: 18,
-          ),
-        ),
-      ),
-    );
   }
 }

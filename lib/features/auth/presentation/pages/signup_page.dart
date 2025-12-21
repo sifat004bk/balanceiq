@@ -1,88 +1,79 @@
-import 'package:balance_iq/core/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/utils/snackbar_utils.dart';
-import '../cubit/auth_cubit.dart';
-import '../cubit/auth_state.dart';
 
-class NewLoginPage extends StatefulWidget {
-  const NewLoginPage({super.key});
+import '../cubit/signup/signup_cubit.dart';
+
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key});
 
   @override
-  State<NewLoginPage> createState() => _NewLoginPageState();
+  State<SignUpPage> createState() => _SignUpPageState();
 }
 
-class _NewLoginPageState extends State<NewLoginPage> {
+class _SignUpPageState extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
   bool _isPasswordVisible = false;
-  bool _hasShownErrorMessage = false;
+  bool _isConfirmPasswordVisible = false;
 
   @override
   void dispose() {
+    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
-  void _handleLogin() {
+  void _handleSignUp() {
     if (_formKey.currentState!.validate()) {
-      // Extract username from email input (before @)
-      final username = _emailController.text.contains('@')
-          ? _emailController.text.split('@').first
-          : _emailController.text;
+      final username = _emailController.text.split('@').first;
 
-      // Call real backend login API
-      context.read<AuthCubit>().loginWithEmail(
+      context.read<SignupCubit>().signupWithEmail(
             username: username,
             password: _passwordController.text,
+            fullName: _nameController.text,
+            email: _emailController.text,
           );
     }
   }
 
-  void _handleGoogleSignIn() {
-    context.read<AuthCubit>().signInGoogle();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final args = ModalRoute.of(context)?.settings.arguments;
-
-    // Handle different argument types
-    if (args != null) {
-      if (args is String && _emailController.text.isEmpty) {
-        // Email passed from signup page
-        _emailController.text = args;
-      } else if (args is Map<String, dynamic> && !_hasShownErrorMessage) {
-        // Error message passed from auth interceptor (only show once)
-        final errorMessage = args['errorMessage'] as String?;
-        if (errorMessage != null) {
-          _hasShownErrorMessage = true;
-          // Show error message after frame is built
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (mounted) {
-              SnackbarUtils.showError(context, errorMessage);
-            }
-          });
-        }
-      }
-    }
+  void _handleGoogleSignUp() {
+    context.read<SignupCubit>().signInGoogle();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthCubit, AuthState>(
+    return BlocListener<SignupCubit, SignupState>(
       listener: (context, state) {
-        if (state is AuthAuthenticated) {
-          // Navigate to home when authenticated
-          // Tour will be triggered from HomePage after dashboard loads
+        if (state is SignupAuthenticated) {
+          // Navigate to home when authenticated (auto-login after signup or OAuth)
           Navigator.of(context).pushReplacementNamed('/home');
-        } else if (state is AuthError) {
+        } else if (state is SignupSuccess) {
+          // Show success message and navigate to email verification
+          SnackbarUtils.showSuccess(
+            context,
+            '${AppStrings.auth.accountCreated}! ${AppStrings.auth.pleaseLogin}',
+            duration: const Duration(seconds: 5),
+          );
+          // Navigate to login page
+          Navigator.pushReplacementNamed(
+            context,
+            '/login',
+            arguments: state.email,
+          );
+        } else if (state is SignupError) {
           // Show error message
-          SnackbarUtils.showError(context, state.message);
+          SnackbarUtils.showError(
+            context,
+            state.message,
+            duration: const Duration(seconds: 4),
+          );
         }
       },
       child: Scaffold(
@@ -93,46 +84,51 @@ class _NewLoginPageState extends State<NewLoginPage> {
               key: _formKey,
               child: Column(
                 children: [
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 24),
                   // Logo
                   Container(
-                    width: 64,
-                    height: 64,
+                    width: 40,
+                    height: 40,
                     decoration: BoxDecoration(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .primary
-                          .withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(16),
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Theme.of(context).colorScheme.primary,
+                        width: 4,
+                      ),
                     ),
-                    child: Icon(
-                      Icons.hub,
-                      color: Theme.of(context).colorScheme.primary,
-                      size: 40,
+                    child: Center(
+                      child: Text(
+                        'IQ',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 24),
                   // Title
                   Text(
-                    AppStrings.auth.loginTitle,
+                    'Create Your Account',
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    AppStrings.auth.loginSubtitle,
+                    'Unlock automation, AI, and more.',
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           color: Theme.of(context).hintColor,
                         ),
                   ),
                   const SizedBox(height: 32),
-                  // Email field
+                  // Full Name field
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        AppStrings.auth.emailLabel,
+                        'Full Name',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.w500,
                               color: Theme.of(context).hintColor,
@@ -140,10 +136,13 @@ class _NewLoginPageState extends State<NewLoginPage> {
                       ),
                       const SizedBox(height: 8),
                       TextFormField(
-                        controller: _emailController,
-                        keyboardType: TextInputType.emailAddress,
+                        controller: _nameController,
                         decoration: InputDecoration(
-                          hintText: AppStrings.auth.emailHint,
+                          hintText: 'Enter your full name',
+                          prefixIcon: Icon(
+                            Icons.person_outline,
+                            color: Theme.of(context).hintColor,
+                          ),
                           filled: true,
                           fillColor:
                               Theme.of(context).inputDecorationTheme.fillColor,
@@ -170,7 +169,65 @@ class _NewLoginPageState extends State<NewLoginPage> {
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return AppStrings.auth.emailRequired;
+                            return 'Please enter your full name';
+                          }
+                          return null;
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  // Email field
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Email',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.w500,
+                              color: Theme.of(context).hintColor,
+                            ),
+                      ),
+                      const SizedBox(height: 8),
+                      TextFormField(
+                        controller: _emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: InputDecoration(
+                          hintText: 'Enter your email address',
+                          prefixIcon: Icon(
+                            Icons.mail_outline,
+                            color: Theme.of(context).hintColor,
+                          ),
+                          filled: true,
+                          fillColor:
+                              Theme.of(context).inputDecorationTheme.fillColor,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: Theme.of(context).dividerColor,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: Theme.of(context).dividerColor,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.primary,
+                              width: 2,
+                            ),
+                          ),
+                          contentPadding: const EdgeInsets.all(12),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your email';
+                          }
+                          if (!value.contains('@')) {
+                            return 'Please enter a valid email';
                           }
                           return null;
                         },
@@ -183,7 +240,7 @@ class _NewLoginPageState extends State<NewLoginPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        AppStrings.auth.passwordLabel,
+                        'Password',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.w500,
                               color: Theme.of(context).hintColor,
@@ -194,7 +251,11 @@ class _NewLoginPageState extends State<NewLoginPage> {
                         controller: _passwordController,
                         obscureText: !_isPasswordVisible,
                         decoration: InputDecoration(
-                          hintText: AppStrings.auth.passwordHint,
+                          hintText: 'Enter your password',
+                          prefixIcon: Icon(
+                            Icons.lock_outline,
+                            color: Theme.of(context).hintColor,
+                          ),
                           filled: true,
                           fillColor:
                               Theme.of(context).inputDecorationTheme.fillColor,
@@ -236,38 +297,97 @@ class _NewLoginPageState extends State<NewLoginPage> {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your password';
                           }
+                          if (value.length < 6) {
+                            return 'Password must be at least 6 characters';
+                          }
+                          return null;
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  // Confirm Password field
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Confirm Password',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.w500,
+                              color: Theme.of(context).hintColor,
+                            ),
+                      ),
+                      const SizedBox(height: 8),
+                      TextFormField(
+                        controller: _confirmPasswordController,
+                        obscureText: !_isConfirmPasswordVisible,
+                        decoration: InputDecoration(
+                          hintText: 'Confirm your password',
+                          prefixIcon: Icon(
+                            Icons.lock_reset,
+                            color: Theme.of(context).hintColor,
+                          ),
+                          filled: true,
+                          fillColor:
+                              Theme.of(context).inputDecorationTheme.fillColor,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: Theme.of(context).dividerColor,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: Theme.of(context).dividerColor,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.primary,
+                              width: 2,
+                            ),
+                          ),
+                          contentPadding: const EdgeInsets.all(12),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _isConfirmPasswordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: Theme.of(context).hintColor,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _isConfirmPasswordVisible =
+                                    !_isConfirmPasswordVisible;
+                              });
+                            },
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please confirm your password';
+                          }
+                          if (value != _passwordController.text) {
+                            return 'Passwords do not match';
+                          }
                           return null;
                         },
                       ),
                     ],
                   ),
                   const SizedBox(height: 24),
-                  // Forgot password
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/forgot-password');
-                      },
-                      child: Text(
-                        AppStrings.auth.forgotPassword,
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ),
-                  // Login button
+                  // Create Account button
                   SizedBox(
                     width: double.infinity,
                     height: 48,
-                    child: BlocBuilder<AuthCubit, AuthState>(
+                    child: BlocBuilder<SignupCubit, SignupState>(
                       builder: (context, state) {
-                        final isLoading = state is AuthLoading;
+                        final isLoading = state is SignupLoading;
 
                         return ElevatedButton(
-                          onPressed: isLoading ? null : _handleLogin,
+                          onPressed: isLoading ? null : _handleSignUp,
                           style: ElevatedButton.styleFrom(
                               backgroundColor:
                                   Theme.of(context).colorScheme.primary,
@@ -289,16 +409,12 @@ class _NewLoginPageState extends State<NewLoginPage> {
                                             .onPrimary),
                                   ),
                                 )
-                              : Text(
-                                  AppStrings.auth.loginButton,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium
-                                      ?.copyWith(
-                                        fontWeight: FontWeight.w800,
-                                        color:
-                                            AppPalette.white.withOpacity(0.9),
-                                      ),
+                              : const Text(
+                                  'Create Account',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                         );
                       },
@@ -331,12 +447,12 @@ class _NewLoginPageState extends State<NewLoginPage> {
                     ],
                   ),
                   const SizedBox(height: 24),
-                  // Social login buttons
+                  // Social sign up buttons
                   Row(
                     children: [
                       Expanded(
                         child: OutlinedButton(
-                          onPressed: _handleGoogleSignIn,
+                          onPressed: _handleGoogleSignUp,
                           style: OutlinedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 12),
                             side: BorderSide(
@@ -371,22 +487,22 @@ class _NewLoginPageState extends State<NewLoginPage> {
                     ],
                   ),
                   const SizedBox(height: 24),
-                  // Sign up link
+                  // Login link
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        AppStrings.auth.noAccount,
+                        'Already have an account? ',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               color: Theme.of(context).hintColor,
                             ),
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.pushReplacementNamed(context, '/signup');
+                          Navigator.pushReplacementNamed(context, '/login');
                         },
                         child: Text(
-                          AppStrings.auth.signupLink,
+                          'Log In',
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.primary,
                             fontWeight: FontWeight.w600,

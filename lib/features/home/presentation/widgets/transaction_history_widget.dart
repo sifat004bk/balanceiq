@@ -199,7 +199,8 @@ class TransactionHistoryWidget extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    sl<CurrencyCubit>().formatAmountWithSign(transaction.amount, isIncome: isIncome),
+                    sl<CurrencyCubit>().formatAmountWithSign(transaction.amount,
+                        isIncome: isIncome),
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: isIncome

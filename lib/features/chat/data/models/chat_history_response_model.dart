@@ -19,9 +19,11 @@ class ChatHistoryResponseModel {
     return ChatHistoryResponseModel(
       userId: json['userId'] as int,
       conversations: (json['conversations'] as List<dynamic>)
-          .map((item) => ConversationModel.fromJson(item as Map<String, dynamic>))
+          .map((item) =>
+              ConversationModel.fromJson(item as Map<String, dynamic>))
           .toList(),
-      pagination: PaginationModel.fromJson(json['pagination'] as Map<String, dynamic>),
+      pagination:
+          PaginationModel.fromJson(json['pagination'] as Map<String, dynamic>),
     );
   }
 
@@ -68,8 +70,10 @@ class ChatHistoryResponseModel {
         botId: botId,
         sender: 'bot',
         content: conversation.aiResponse,
-        timestamp: DateTime.parse(conversation.createdAt).add(const Duration(milliseconds: 1)),
-        serverCreatedAt: DateTime.parse(conversation.createdAt).add(const Duration(milliseconds: 1)),
+        timestamp: DateTime.parse(conversation.createdAt)
+            .add(const Duration(milliseconds: 1)),
+        serverCreatedAt: DateTime.parse(conversation.createdAt)
+            .add(const Duration(milliseconds: 1)),
         isSynced: true,
         syncStatus: 'sent',
         conversationId: conversation.id,
@@ -127,7 +131,8 @@ class ConversationModel {
         );
       } else if (json['tableData'] is Map) {
         // Legacy format: {rows: [...]}
-        parsedTableData = GenUITableData.fromJson(json['tableData'] as Map<String, dynamic>);
+        parsedTableData =
+            GenUITableData.fromJson(json['tableData'] as Map<String, dynamic>);
       }
     }
 

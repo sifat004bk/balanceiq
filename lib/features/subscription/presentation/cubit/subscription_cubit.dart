@@ -33,14 +33,15 @@ class SubscriptionCubit extends Cubit<SubscriptionState> {
     emit(PlansLoading());
 
     final plansResult = await getAllPlansUseCase();
-    
+
     await plansResult.fold(
       (failure) async => emit(SubscriptionError(failure.message)),
       (plans) async {
         final statusResult = await getSubscriptionStatusUseCase();
         statusResult.fold(
           (failure) => emit(PlansLoaded(plans: plans)),
-          (status) => emit(PlansLoaded(plans: plans, subscriptionStatus: status)),
+          (status) =>
+              emit(PlansLoaded(plans: plans, subscriptionStatus: status)),
         );
       },
     );

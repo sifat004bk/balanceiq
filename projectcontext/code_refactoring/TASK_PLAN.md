@@ -303,12 +303,12 @@ lib/core/di/modules/
 **Description:** Automate code quality checks before commits.
 
 **Sub-tasks:**
-- [ ] 2.4.1 Create `.githooks/pre-commit` script
-- [ ] 2.4.2 Add `dart format --set-exit-if-changed .` check
-- [ ] 2.4.3 Add `flutter analyze --fatal-infos` check
-- [ ] 2.4.4 Add `flutter test` execution
-- [ ] 2.4.5 Update `README.md` with setup instructions
-- [ ] 2.4.6 Add to CLAUDE.md workflow instructions
+- [x] 2.4.1 Create `.githooks/pre-commit` script
+- [x] 2.4.2 Add `dart format --set-exit-if-changed .` check
+- [x] 2.4.3 Add `flutter analyze --fatal-infos` check
+- [x] 2.4.4 Add `flutter test` execution
+- [x] 2.4.5 Update `README.md` with setup instructions
+- [x] 2.4.6 Add to CLAUDE.md workflow instructions
 
 **File to Create:**
 ```

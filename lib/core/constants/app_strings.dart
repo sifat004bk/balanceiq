@@ -929,8 +929,7 @@ class _ErrorStrings {
   final saveFailed =
       'Couldn\'t save changes. Check your internet connection and try again.';
   final deleteFailed = 'Couldn\'t delete. Please try again.';
-  final updateFailed =
-      'Couldn\'t update. Check your connection and try again.';
+  final updateFailed = 'Couldn\'t update. Check your connection and try again.';
 
   // Storage Errors
   final storageNearFull =

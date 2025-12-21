@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/utils/snackbar_utils.dart';
-import '../cubit/auth_cubit.dart';
-import '../cubit/auth_state.dart';
+import '../cubit/password/password_cubit.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
@@ -24,7 +23,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
   void _handleSubmit() {
     if (_formKey.currentState!.validate()) {
-      context.read<AuthCubit>().requestPasswordReset(
+      context.read<PasswordCubit>().requestPasswordReset(
             email: _emailController.text.trim(),
           );
     }
@@ -32,9 +31,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthCubit, AuthState>(
+    return BlocListener<PasswordCubit, PasswordState>(
       listener: (context, state) {
-        if (state is PasswordResetEmailSent) {
+        if (state is PasswordEmailSent) {
           // Show success message
           SnackbarUtils.showSuccess(
             context,
@@ -43,7 +42,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           );
           // Navigate back to login
           Navigator.of(context).pop();
-        } else if (state is AuthError) {
+        } else if (state is PasswordError) {
           SnackbarUtils.showError(context, state.message);
         }
       },
@@ -131,9 +130,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   SizedBox(
                     width: double.infinity,
                     height: 48,
-                    child: BlocBuilder<AuthCubit, AuthState>(
+                    child: BlocBuilder<PasswordCubit, PasswordState>(
                       builder: (context, state) {
-                        final isLoading = state is AuthLoading;
+                        final isLoading = state is PasswordLoading;
 
                         return ElevatedButton(
                           onPressed: isLoading ? null : _handleSubmit,

@@ -95,18 +95,30 @@ class MessageUsage extends Equatable {
     int hour = limitResetsAt.hour;
     final minute = limitResetsAt.minute.toString().padLeft(2, '0');
     final period = hour >= 12 ? 'PM' : 'AM';
-    
+
     // Convert to 12-hour format
     hour = hour % 12;
     if (hour == 0) hour = 12;
-    
+
     return '$hour:$minute $period';
   }
 
   /// Format reset date for display (e.g., "18 Dec")
   String get formattedResetDate {
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
+    ];
     final day = limitResetsAt.day;
     final month = months[limitResetsAt.month - 1];
     return '$day $month';

@@ -460,7 +460,8 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  sl<CurrencyCubit>().formatAmountWithSign(transaction.amount, isIncome: isIncome),
+                  sl<CurrencyCubit>().formatAmountWithSign(transaction.amount,
+                      isIncome: isIncome),
                   style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: isIncome ? Colors.green : Colors.red,

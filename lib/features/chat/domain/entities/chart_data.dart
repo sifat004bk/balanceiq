@@ -28,7 +28,8 @@ class ChartDataset extends Equatable {
   List<Object?> get props => [label, data];
 
   @override
-  String toString() => 'ChartDataset(label: $label, dataPoints: ${data.length})';
+  String toString() =>
+      'ChartDataset(label: $label, dataPoints: ${data.length})';
 }
 
 /// Graph/Chart data entity for rendering visualizations
@@ -106,12 +107,12 @@ class GenUITableData extends Equatable {
   factory GenUITableData.fromJson(Map<String, dynamic> json) {
     // Handle both 'rows' key or direct list if simplified structure
     if (json.containsKey('rows')) {
-       return GenUITableData(
+      return GenUITableData(
         rows: (json['rows'] as List).cast<Map<String, dynamic>>(),
       );
     }
     // Fallback if structure is different
-    return const GenUITableData(rows: []); 
+    return const GenUITableData(rows: []);
   }
 
   Map<String, dynamic> toJson() {

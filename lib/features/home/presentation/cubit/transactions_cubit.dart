@@ -59,7 +59,8 @@ class TransactionsCubit extends Cubit<TransactionsState> {
       (searchResult) => emit(
         TransactionsLoaded(
           transactions: searchResult.transactions,
-          hasReachedMax: searchResult.transactions.length < (_currentParams.limit ?? 50),
+          hasReachedMax:
+              searchResult.transactions.length < (_currentParams.limit ?? 50),
         ),
       ),
     );
@@ -104,7 +105,8 @@ class TransactionsCubit extends Cubit<TransactionsState> {
       (searchResult) => emit(
         TransactionsLoaded(
           transactions: searchResult.transactions,
-          hasReachedMax: searchResult.transactions.length < (_currentParams.limit ?? 50),
+          hasReachedMax:
+              searchResult.transactions.length < (_currentParams.limit ?? 50),
         ),
       ),
     );

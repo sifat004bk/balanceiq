@@ -277,9 +277,8 @@ class UserInfo {
 
   factory UserInfo.fromJson(Map<String, dynamic> json) {
     // Handle both direct user object and nested data structure
-    final Map<String, dynamic> userData = json.containsKey('data')
-        ? json['data'] as Map<String, dynamic>
-        : json;
+    final Map<String, dynamic> userData =
+        json.containsKey('data') ? json['data'] as Map<String, dynamic> : json;
 
     return UserInfo(
       id: userData['id'] as int? ?? userData['userId'] as int? ?? 0,

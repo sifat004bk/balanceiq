@@ -19,7 +19,12 @@ import '../../../features/auth/domain/usecases/sign_out.dart';
 import '../../../features/auth/domain/usecases/signup.dart';
 import '../../../features/auth/domain/usecases/send_verification_email.dart';
 import '../../../features/auth/domain/usecases/resend_verification_email.dart';
-import '../../../features/auth/presentation/cubit/auth_cubit.dart';
+
+// Cubits
+import '../../../features/auth/presentation/cubit/session/session_cubit.dart';
+import '../../../features/auth/presentation/cubit/login/login_cubit.dart';
+import '../../../features/auth/presentation/cubit/signup/signup_cubit.dart';
+import '../../../features/auth/presentation/cubit/password/password_cubit.dart';
 
 void registerAuthModule(GetIt sl) {
   sl.registerLazySingleton(
@@ -34,23 +39,43 @@ void registerAuthModule(GetIt sl) {
   );
 
   //! Features - Auth
-  // Cubit
-  sl.registerFactory(
-    () => AuthCubit(
-      // OAuth dependencies
-      signInWithGoogle: sl(),
-      signOutUseCase: sl(),
+  // Cubits
+
+  // SessionCubit (Global)
+  sl.registerLazySingleton(
+    () => SessionCubit(
       getCurrentUser: sl(),
-      // Backend API dependencies
-      signup: sl(),
-      login: sl(),
+      signOutUseCase: sl(),
       getProfile: sl(),
+      secureStorage: sl(),
+    ),
+  );
+
+  // LoginCubit
+  sl.registerFactory(
+    () => LoginCubit(
+      login: sl(),
+      signInWithGoogle: sl(),
+    ),
+  );
+
+  // SignupCubit
+  sl.registerFactory(
+    () => SignupCubit(
+      signup: sl(),
+      signInWithGoogle: sl(),
+      sendVerificationEmail: sl(),
+      resendVerificationEmail: sl(),
+      secureStorage: sl(),
+    ),
+  );
+
+  // PasswordCubit
+  sl.registerFactory(
+    () => PasswordCubit(
       changePassword: sl(),
       forgotPassword: sl(),
       resetPassword: sl(),
-      // Email verification
-      sendVerificationEmail: sl(),
-      resendVerificationEmail: sl(),
       secureStorage: sl(),
     ),
   );

@@ -11,7 +11,8 @@ void main() {
     late String baseUrl;
     String? authToken;
     final testUsername = 'test_user_${DateTime.now().millisecondsSinceEpoch}';
-    final testEmail = 'test_${DateTime.now().millisecondsSinceEpoch}@example.com';
+    final testEmail =
+        'test_${DateTime.now().millisecondsSinceEpoch}@example.com';
     final testPassword = 'Test@123456';
     final testFullName = 'Test User';
 
@@ -154,7 +155,8 @@ void main() {
         fail('Should have thrown an exception');
       } on DioException catch (e) {
         expect(e.response?.statusCode, anyOf([401, 404]));
-        print('✅ Invalid login correctly rejected with status ${e.response?.statusCode}');
+        print(
+            '✅ Invalid login correctly rejected with status ${e.response?.statusCode}');
       }
     });
 

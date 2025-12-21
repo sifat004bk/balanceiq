@@ -11,9 +11,7 @@ void navigateToLogin({String? errorMessage}) {
   navigatorKey.currentState?.pushNamedAndRemoveUntil(
     '/login',
     (route) => false,
-    arguments: errorMessage != null
-        ? {'errorMessage': errorMessage}
-        : null,
+    arguments: errorMessage != null ? {'errorMessage': errorMessage} : null,
   );
 }
 

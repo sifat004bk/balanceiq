@@ -34,7 +34,8 @@ class MessageModel extends Message {
     if (json['table_data'] != null && json['table_data'] is String) {
       try {
         final tableJson = jsonDecode(json['table_data'] as String);
-        parsedTableData = GenUITableData.fromJson(tableJson as Map<String, dynamic>);
+        parsedTableData =
+            GenUITableData.fromJson(tableJson as Map<String, dynamic>);
       } catch (e) {
         // If parsing fails, leave as null
       }
@@ -45,7 +46,8 @@ class MessageModel extends Message {
     if (json['graph_data'] != null && json['graph_data'] is String) {
       try {
         final graphJson = jsonDecode(json['graph_data'] as String);
-        parsedGraphData = GraphDataModel.fromJson(graphJson as Map<String, dynamic>);
+        parsedGraphData =
+            GraphDataModel.fromJson(graphJson as Map<String, dynamic>);
       } catch (e) {
         // If parsing fails, leave as null
       }

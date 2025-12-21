@@ -38,8 +38,18 @@ class Subscription extends Equatable {
   /// Format end date for display
   String get formattedEndDate {
     final months = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
     ];
     return '${months[endDate.month - 1]} ${endDate.day}, ${endDate.year}';
   }

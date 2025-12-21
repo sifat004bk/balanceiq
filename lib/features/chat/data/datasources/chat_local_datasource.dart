@@ -4,7 +4,8 @@ import '../../../../core/database/database_helper.dart';
 import '../models/message_model.dart';
 
 abstract class ChatLocalDataSource {
-  Future<List<MessageModel>> getMessages(String userId, String botId, {int? limit});
+  Future<List<MessageModel>> getMessages(String userId, String botId,
+      {int? limit});
   Future<void> saveMessage(MessageModel message);
   Future<void> saveMessages(List<MessageModel> messages);
   Future<void> updateMessage(MessageModel message);
@@ -19,7 +20,8 @@ class ChatLocalDataSourceImpl implements ChatLocalDataSource {
   ChatLocalDataSourceImpl(this.databaseHelper);
 
   @override
-  Future<List<MessageModel>> getMessages(String userId, String botId, {int? limit}) async {
+  Future<List<MessageModel>> getMessages(String userId, String botId,
+      {int? limit}) async {
     final db = await databaseHelper.database;
     final List<Map<String, dynamic>> maps = await db.query(
       AppConstants.messagesTable,
@@ -58,7 +60,7 @@ class ChatLocalDataSourceImpl implements ChatLocalDataSource {
         // check for and delete any corresponding local pending message (server_created_at IS NULL)
         // to prevent duplicates.
         if (message.serverCreatedAt != null) {
-           await txn.delete(
+          await txn.delete(
             AppConstants.messagesTable,
             where: '''
               user_id = ? AND 
@@ -67,7 +69,12 @@ class ChatLocalDataSourceImpl implements ChatLocalDataSource {
               content = ? AND 
               server_created_at IS NULL
             ''',
-            whereArgs: [message.userId, message.botId, message.sender, message.content],
+            whereArgs: [
+              message.userId,
+              message.botId,
+              message.sender,
+              message.content
+            ],
           );
         }
 

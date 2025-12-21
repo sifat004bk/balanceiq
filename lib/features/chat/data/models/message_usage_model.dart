@@ -52,7 +52,7 @@ class RecentMessageItemModel {
 }
 
 /// Message usage response model - matches new API response format
-/// 
+///
 /// API Response:
 /// {
 ///   "messagesUsedToday": 3,
@@ -87,7 +87,7 @@ class MessageUsageModel {
     // API sends: "2025-12-18T00:00:00" (UTC without 'Z')
     final resetAtStr = json['limitResetsAt'] as String;
     DateTime resetAt;
-    
+
     // Add 'Z' suffix to force UTC parsing if not already present
     if (!resetAtStr.endsWith('Z') &&
         !resetAtStr.contains('+') &&

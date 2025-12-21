@@ -14,6 +14,13 @@ import '../cubit/chat_cubit.dart';
 import '../cubit/chat_state.dart';
 import '../chat_config.dart';
 
+// Extracted Widgets
+import 'floating_chat_input_widgets/chat_attachment_button.dart';
+import 'floating_chat_input_widgets/chat_mic_button.dart';
+import 'floating_chat_input_widgets/chat_text_field.dart';
+import 'floating_chat_input_widgets/chat_send_button.dart';
+import 'floating_chat_input_widgets/chat_input_container.dart';
+
 /// Modern floating chat input widget
 /// Matches the homepage button design but with full chat functionality
 class FloatingChatInput extends StatefulWidget {
@@ -57,8 +64,6 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
   @override
   void initState() {
     super.initState();
-    // No local collapse state init needed
-    // Initialize focus listener
     _textController.addListener(_onTextChanged);
     _focusNode.addListener(_onFocusChanged);
   }
@@ -84,49 +89,6 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
 
   void _toggleCollapse() {
     widget.onToggleCollapse?.call();
-  }
-
-  /// Animated recording indicator (2025 design)
-  Widget _buildRecordingAnimation() {
-    return TweenAnimationBuilder<double>(
-      tween: Tween(begin: 0.0, end: 1.0),
-      duration: const Duration(milliseconds: 800),
-      curve: Curves.easeInOut,
-      builder: (context, value, child) {
-        return Stack(
-          alignment: Alignment.center,
-          children: [
-            // Pulsing outer ring
-            Container(
-              width: 30 + (value * 4),
-              height: 30 + (value * 4),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
-                      .withOpacity(0.6 * (1 - value)),
-                  width: 2,
-                ),
-              ),
-            ),
-            // Stop icon
-            Icon(
-              Icons.stop_rounded,
-              color: Theme.of(context).colorScheme.onSurface,
-              size: 20,
-            ),
-          ],
-        );
-      },
-      onEnd: () {
-        // Restart animation if still recording
-        if (_isRecording && mounted) {
-          setState(() {});
-        }
-      },
-    );
   }
 
   void _onTextChanged() {
@@ -215,11 +177,11 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
     }
 
     context.read<ChatCubit>().sendNewMessage(
-      botId: widget.botId,
-      content: text.isEmpty ? AppStrings.chat.sentMedia : text,
-      imagePath: _selectedImage?.path,
-      audioPath: _recordedAudioPath,
-    );
+          botId: widget.botId,
+          content: text.isEmpty ? AppStrings.chat.sentMedia : text,
+          imagePath: _selectedImage?.path,
+          audioPath: _recordedAudioPath,
+        );
 
     _textController.clear();
     setState(() {
@@ -366,7 +328,8 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
 
         if (state is ChatLoaded) {
           isLimitReached = state.isMessageLimitReached;
-          isNearLimit = state.messagesUsedToday > (state.dailyMessageLimit * 0.8);
+          isNearLimit =
+              state.messagesUsedToday > (state.dailyMessageLimit * 0.8);
           remainingTokens = state.dailyMessageLimit - state.messagesUsedToday;
         }
 
@@ -389,14 +352,6 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                 child: GestureDetector(
                   onTap: _toggleCollapse,
                   onPanUpdate: (details) {
-                    // Normalize delta to handle resizing from center or edges
-                    // User said "dragging left or right... width should increase or decrease"
-                    // If we expand symmetrically, 1px drag = 2px width change?
-                    // Or simple: Right drag = increase, Left = Shrink?
-                    // Let's assume standard resize behavior: Drag Right = Expand, Left = Shrink?
-                    // But it's centered. This is ambiguous.
-                    // "dragging left or right ... width should increase or decrease"
-                    // Let's implement: Drag Right (+) -> Increase width. Drag Left (-) -> Decrease width.
                     if (widget.onWidthChanged != null) {
                       widget.onWidthChanged!(details.delta.dx);
                     }
@@ -409,7 +364,7 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                   behavior: HitTestBehavior.translucent,
                   child: Container(
                     margin:
-                    const EdgeInsets.only(top: 8), // Removed bottom margin
+                        const EdgeInsets.only(top: 8), // Removed bottom margin
                     padding: const EdgeInsets.only(
                         top: 8,
                         left: 8,
@@ -448,7 +403,7 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                               .colorScheme
                               .error
                               .withOpacity(
-                              0.9), // Higher opacity for legibility
+                                  0.9), // Higher opacity for legibility
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
                               color: Theme.of(context).colorScheme.error),
@@ -499,7 +454,7 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                               AppStrings.chat.nearMessageLimit(remainingTokens),
                               style: AppTypography.captionWarning.copyWith(
                                 color:
-                                Theme.of(context).colorScheme.onSecondary,
+                                    Theme.of(context).colorScheme.onSecondary,
                               ),
                             ),
                           ],
@@ -572,260 +527,52 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                         ),
                       ),
 
-                    // Main Input Container (Enhanced Floating Pill - 2025)
-                    AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
-                      curve: Curves.easeOutCubic,
-                      transform: Matrix4.identity()
-                        ..scale(_focusNode.hasFocus ? 1.1 : 1.0),
-                      transformAlignment: Alignment.center,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 12,
-                      ),
-                      decoration: BoxDecoration(
-                        // Glassmorphic background
-                        color: isDark
-                            ? Theme.of(context)
-                            .cardColor
-                            .withOpacity(_focusNode.hasFocus ? 1.0 : 0.95)
-                            : Theme.of(context)
-                            .cardColor
-                            .withOpacity(_focusNode.hasFocus ? 1.0 : 0.95),
-                        borderRadius: BorderRadius.circular(28),
-                        border: Border.all(
-                          color: _focusNode.hasFocus
-                              ? primaryColor
-                              .withOpacity(0.8) // Stronger glow on focus
-                              : (_hasContent
-                              ? primaryColor.withOpacity(0.6)
-                              : (isDark
-                              ? primaryColor.withOpacity(0.2)
-                              : primaryColor.withOpacity(0.15))),
-                          width: _focusNode.hasFocus
-                              ? 2.5
-                              : (_hasContent ? 2.0 : 1.5),
-                        ),
-                        boxShadow: [
-                          // Spotlight Glow
-                          if (_focusNode.hasFocus)
-                            BoxShadow(
-                              color: primaryColor.withOpacity(0.5),
-                              blurRadius: 16,
-                              spreadRadius: 4,
-                              offset: const Offset(0, 4),
-                            ),
-                          // Primary shadow
-                          BoxShadow(
-                            color: _hasContent
-                                ? primaryColor.withOpacity(0.35)
-                                : primaryColor.withOpacity(0.15),
-                            blurRadius: _hasContent ? 10 : 5,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
+                    // Main Input Container (Using extracted widget)
+                    ChatInputContainer(
+                      hasFocus: _focusNode.hasFocus,
+                      hasContent: _hasContent,
+                      isDark: isDark,
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           // Attachment button
                           if (ChatConfig.showAttachments)
-                            GestureDetector(
+                            ChatAttachmentButton(
                               onTap: isLimitReached
                                   ? null
                                   : _showAttachmentOptions,
-                              child: Container(
-                                width: 36,
-                                height: 36,
-                                decoration: BoxDecoration(
-                                  color: primaryColor.withOpacity(0.1),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  Icons.add_rounded,
-                                  color: isLimitReached
-                                      ? Colors.grey
-                                      : primaryColor,
-                                  size: 22,
-                                ),
-                              ),
+                              isEnabled: !isLimitReached,
                             ),
 
                           if (ChatConfig.showAttachments)
                             const SizedBox(width: 12),
 
                           // Text field
-                          Expanded(
-                            child: TextField(
-                              controller: _textController,
-                              focusNode: _focusNode,
-                              enabled: !isLimitReached,
-                              maxLines: 4,
-                              minLines: 1,
-                              decoration: InputDecoration(
-                                hintText: isLimitReached
-                                    ? AppStrings.chat.limitReached
-                                    : AppStrings.chat.inputPlaceholderGeneral,
-                                hintStyle: AppTypography.inputLarge.copyWith(
-                                  color: isLimitReached
-                                      ? Theme.of(context).hintColor
-                                      : (isDark
-                                      ? Theme.of(context).hintColor
-                                      : Theme.of(context).hintColor),
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                border: InputBorder.none,
-                                enabledBorder: InputBorder.none,
-                                focusedBorder: InputBorder.none,
-                                disabledBorder: InputBorder.none,
-                                errorBorder: InputBorder.none,
-                                focusedErrorBorder: InputBorder.none,
-                                isDense: true,
-                                filled: false,
-                                contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 8,
-                                ),
-                              ),
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: isLimitReached
-                                    ? Colors.grey
-                                    : (isDark
-                                    ? Theme.of(context)
-                                    .colorScheme
-                                    .onSurface
-                                    : Theme.of(context)
-                                    .colorScheme
-                                    .onSurface),
-                              ),
-                            ),
+                          ChatTextField(
+                            controller: _textController,
+                            focusNode: _focusNode,
+                            isLimitReached: isLimitReached,
+                            isDark: isDark,
                           ),
 
                           const SizedBox(width: 12),
 
-                          // Voice recording button with visual feedback (2025)
+                          // Voice recording button
                           if (ChatConfig.showAudioRecording)
-                            AnimatedScale(
-                              scale: _isRecording ? 1.1 : 1.0,
-                              duration: const Duration(milliseconds: 200),
-                              child: GestureDetector(
-                                onTap: isLimitReached ? null : _toggleRecording,
-                                child: Container(
-                                  width: 40,
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                    gradient: _isRecording
-                                        ? LinearGradient(
-                                      colors: [
-                                        Theme.of(context)
-                                            .colorScheme
-                                            .error,
-                                        Theme.of(context)
-                                            .colorScheme
-                                            .error
-                                      ],
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                    )
-                                        : null,
-                                    color: _isRecording
-                                        ? null
-                                        : (isDark
-                                        ? Theme.of(context).canvasColor
-                                        : Theme.of(context).dividerColor),
-                                    shape: BoxShape.circle,
-                                    boxShadow: _isRecording
-                                        ? [
-                                      BoxShadow(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .error
-                                            .withOpacity(0.4),
-                                        blurRadius: 16,
-                                        offset: const Offset(0, 4),
-                                      ),
-                                      BoxShadow(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .error
-                                            .withOpacity(0.2),
-                                        blurRadius: 8,
-                                        spreadRadius: 2,
-                                      ),
-                                    ]
-                                        : null,
-                                  ),
-                                  child: _isRecording
-                                      ? _buildRecordingAnimation()
-                                      : Icon(
-                                    Icons.mic_none,
-                                    color: isLimitReached
-                                        ? Colors.grey
-                                        : primaryColor,
-                                    size: 22,
-                                  ),
-                                ),
-                              ),
+                            ChatMicButton(
+                              isRecording: _isRecording,
+                              onTap: isLimitReached ? () {} : _toggleRecording,
+                              isEnabled: !isLimitReached,
                             ),
 
                           if (ChatConfig.showAudioRecording)
                             const SizedBox(width: 8),
 
-                          // Send button (Enhanced with animation - 2025)
-                          AnimatedScale(
-                            scale: (_hasContent && !isLimitReached) ? 1.0 : 0.9,
-                            duration: const Duration(milliseconds: 200),
-                            curve: Curves.easeOutCubic,
-                            child: GestureDetector(
-                              onTap: (_hasContent && !isLimitReached)
-                                  ? _sendMessage
-                                  : null,
-                              child: Container(
-                                width: 44,
-                                height: 44,
-                                decoration: BoxDecoration(
-                                  gradient: (_hasContent && !isLimitReached)
-                                      ? LinearGradient(
-                                    colors: [
-                                      primaryColor,
-                                      primaryColor.withOpacity(0.85),
-                                    ],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                  )
-                                      : null,
-                                  color: (_hasContent && !isLimitReached)
-                                      ? null
-                                      : (isDark
-                                      ? Theme.of(context).canvasColor
-                                      : Theme.of(context).dividerColor),
-                                  shape: BoxShape.circle,
-                                  boxShadow: (_hasContent && !isLimitReached)
-                                      ? [
-                                    BoxShadow(
-                                      color:
-                                      primaryColor.withOpacity(0.4),
-                                      blurRadius: 16,
-                                      offset: const Offset(0, 4),
-                                    ),
-                                    BoxShadow(
-                                      color:
-                                      primaryColor.withOpacity(0.2),
-                                      blurRadius: 8,
-                                      offset: const Offset(0, 2),
-                                    ),
-                                  ]
-                                      : null,
-                                ),
-                                child: Icon(
-                                  Icons.arrow_upward_rounded,
-                                  color: (_hasContent && !isLimitReached)
-                                      ? Theme.of(context).colorScheme.onPrimary
-                                      : Theme.of(context).hintColor,
-                                  size: 24,
-                                ),
-                              ),
-                            ),
+                          // Send button
+                          ChatSendButton(
+                            onTap: _sendMessage,
+                            isEnabled: (_hasContent && !isLimitReached),
+                            isDark: isDark,
                           ),
                         ],
                       ),

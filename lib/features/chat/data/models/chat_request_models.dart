@@ -62,9 +62,7 @@ class ChatResponse {
   factory ChatResponse.fromJson(Map<String, dynamic> json) {
     return ChatResponse(
       success: json['success'] as bool? ?? true,
-      message: json['message'] as String? ??
-               json['response'] as String? ??
-               '',
+      message: json['message'] as String? ?? json['response'] as String? ?? '',
       userId: json['userId'] as int? ?? 0,
       timestamp: json['timestamp'] as String? ?? '',
       tokenUsage: json['tokenUsage'] != null

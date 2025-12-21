@@ -4,22 +4,22 @@ import 'package:equatable/equatable.dart';
 enum TourStep {
   /// Tour has not started
   notStarted,
-  
+
   /// Step 1: Highlight profile icon on dashboard
   dashboardProfileIcon,
-  
+
   /// Step 2: Highlight email verification banner on profile page
   profileEmailVerify,
-  
+
   /// Step 2b: Show modal to open mail app after verification email sent
   emailSentModal,
-  
+
   /// Step 3: Highlight subscription card on profile page
   profileSubscription,
-  
+
   /// Step 4: Show chat input hint with example message
   chatInputHint,
-  
+
   /// Tour is completed
   completed,
 }
@@ -27,7 +27,7 @@ enum TourStep {
 /// Base class for all product tour states
 abstract class ProductTourState extends Equatable {
   const ProductTourState();
-  
+
   @override
   List<Object?> get props => [];
 }
@@ -41,12 +41,12 @@ class TourInactive extends ProductTourState {
 class TourActive extends ProductTourState {
   final TourStep currentStep;
   final bool isTransitioning;
-  
+
   const TourActive({
     required this.currentStep,
     this.isTransitioning = false,
   });
-  
+
   TourActive copyWith({
     TourStep? currentStep,
     bool? isTransitioning,
@@ -56,7 +56,7 @@ class TourActive extends ProductTourState {
       isTransitioning: isTransitioning ?? this.isTransitioning,
     );
   }
-  
+
   @override
   List<Object?> get props => [currentStep, isTransitioning];
 }

@@ -51,7 +51,8 @@ class SubscriptionRepositoryImpl implements SubscriptionRepository {
         planName: planName,
         autoRenew: autoRenew,
       );
-      final subscriptionDto = await remoteDataSource.createSubscription(request);
+      final subscriptionDto =
+          await remoteDataSource.createSubscription(request);
       final subscription = _mapSubscriptionDtoToEntity(subscriptionDto);
       return Right(subscription);
     } catch (e) {
@@ -107,7 +108,8 @@ class SubscriptionRepositoryImpl implements SubscriptionRepository {
     } else if (errorMessage.contains('No internet') ||
         errorMessage.contains('Connection') ||
         errorMessage.contains('Network error')) {
-      return NetworkFailure('No internet connection. Please check your network.');
+      return NetworkFailure(
+          'No internet connection. Please check your network.');
     } else if (errorMessage.contains('timeout')) {
       return ServerFailure('Request timed out. Please try again.');
     } else if (errorMessage.contains('Conflict') ||

@@ -13,7 +13,8 @@ class ThemeCubit extends Cubit<ThemeState> {
 
   // Load saved theme from SharedPreferences
   void _loadTheme() {
-    final themeModeString = sharedPreferences.getString(AppConstants.keyThemeMode);
+    final themeModeString =
+        sharedPreferences.getString(AppConstants.keyThemeMode);
     final ThemeMode themeMode;
 
     switch (themeModeString) {
@@ -46,7 +47,8 @@ class ThemeCubit extends Cubit<ThemeState> {
         break;
     }
 
-    await sharedPreferences.setString(AppConstants.keyThemeMode, themeModeString);
+    await sharedPreferences.setString(
+        AppConstants.keyThemeMode, themeModeString);
     emit(ThemeLoaded(themeMode));
   }
 
@@ -54,7 +56,8 @@ class ThemeCubit extends Cubit<ThemeState> {
   Future<void> toggleTheme() async {
     if (state is ThemeLoaded) {
       final currentMode = (state as ThemeLoaded).themeMode;
-      final newMode = currentMode == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
+      final newMode =
+          currentMode == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
       await setThemeMode(newMode);
     }
   }

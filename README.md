@@ -278,6 +278,24 @@ balanceIQ/
 
 ## Development
 
+### Pre-commit Hooks
+
+To ensure code quality, we use git hooks to check formatting, analysis, and tests before every commit.
+
+**Setup:**
+```bash
+# 1. Make the hook executable
+chmod +x .githooks/pre-commit
+
+# 2. Configure git to use local hooks
+git config core.hooksPath .githooks
+```
+
+**Checks run:**
+1. `dart format --set-exit-if-changed .`
+2. `flutter analyze --no-fatal-infos` (Switching to `--fatal-infos` recommended once backlog is cleared)
+3. `flutter test`
+
 ### Adding a New Bot
 
 1. Add the bot constants in [lib/core/constants/app_constants.dart](lib/core/constants/app_constants.dart)

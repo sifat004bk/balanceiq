@@ -117,9 +117,8 @@ class InteractiveOnboardingCubit extends Cubit<InteractiveOnboardingState> {
       if (!_isPlayingStory) return;
 
       // Replace typing with actual message
-      final messages = state.messages
-          .where((m) => m.id != 'typing_$_scriptIndex')
-          .toList();
+      final messages =
+          state.messages.where((m) => m.id != 'typing_$_scriptIndex').toList();
       final actualMessage = SimulatedMessage(
         id: 'msg_$_scriptIndex',
         content: content,

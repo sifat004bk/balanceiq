@@ -25,9 +25,12 @@ class ChatRepositoryImpl implements ChatRepository {
   });
 
   @override
-  Future<Either<Failure, List<Message>>> getMessages(String userId, String botId, {int? limit}) async {
+  Future<Either<Failure, List<Message>>> getMessages(
+      String userId, String botId,
+      {int? limit}) async {
     try {
-      final messages = await localDataSource.getMessages(userId, botId, limit: limit);
+      final messages =
+          await localDataSource.getMessages(userId, botId, limit: limit);
       return Right(messages);
     } catch (e) {
       return Left(CacheFailure('Failed to load messages: $e'));
@@ -123,7 +126,8 @@ class ChatRepositoryImpl implements ChatRepository {
   }
 
   @override
-  Future<Either<Failure, void>> clearChatHistory(String userId, String botId) async {
+  Future<Either<Failure, void>> clearChatHistory(
+      String userId, String botId) async {
     try {
       await localDataSource.clearChatHistory(userId, botId);
       return const Right(null);

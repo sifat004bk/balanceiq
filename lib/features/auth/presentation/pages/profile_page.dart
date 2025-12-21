@@ -14,8 +14,10 @@ import '../../../../core/utils/snackbar_utils.dart';
 import '../../../subscription/domain/entities/subscription_status.dart';
 import '../../../subscription/presentation/cubit/subscription_cubit.dart';
 import '../../../subscription/presentation/cubit/subscription_state.dart';
-import '../cubit/auth_cubit.dart';
-import '../cubit/auth_state.dart';
+
+// New Cubits
+import '../cubit/session/session_cubit.dart';
+import '../cubit/signup/signup_cubit.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -36,7 +38,8 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    context.read<AuthCubit>().getUserProfile();
+    // Refresh user profile using SessionCubit
+    context.read<SessionCubit>().refreshUserProfile();
 
     // Check if we should show tour after frame is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -191,11 +194,11 @@ class _ProfilePageState extends State<ProfilePage> {
     _tutorialCoachMark!.show(context: context);
   }
 
-  void _handleEmailVerificationClick() {
+  void _handleEmailVerificationClick(dynamic user) {
     final tourCubit = context.read<ProductTourCubit>();
 
-    // Send verification email
-    context.read<AuthCubit>().sendEmailVerification();
+    // Send verification email using SignupCubit
+    context.read<SignupCubit>().sendEmailVerification(user);
 
     // If tour is active at email verify step, advance to modal
     if (tourCubit.isAtStep(TourStep.profileEmailVerify)) {
@@ -228,14 +231,18 @@ class _ProfilePageState extends State<ProfilePage> {
         BlocProvider(
           create: (_) => sl<SubscriptionCubit>()..loadSubscriptionStatus(),
         ),
+        // Provide SignupCubit locally for verification feature in Profile
+        BlocProvider(
+          create: (_) => sl<SignupCubit>(),
+        ),
       ],
       child: MultiBlocListener(
         listeners: [
-          BlocListener<AuthCubit, AuthState>(
+          BlocListener<SessionCubit, SessionState>(
             listener: (context, state) {
-              if (state is AuthUnauthenticated) {
+              if (state is Unauthenticated) {
                 Navigator.of(context).pushReplacementNamed('/login');
-              } else if (state is AuthError) {
+              } else if (state is SessionError) {
                 SnackbarUtils.showError(context, state.message);
               }
             },
@@ -262,23 +269,13 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ],
         child: Scaffold(
-          body: BlocBuilder<AuthCubit, AuthState>(
-            buildWhen: (previous, current) {
-              // Don't rebuild for intermediate verification states
-              // The banner widget handles those separately
-              if (current is VerificationEmailSending ||
-                  current is VerificationEmailSent ||
-                  current is VerificationEmailError) {
-                return false;
-              }
-              return true;
-            },
+          body: BlocBuilder<SessionCubit, SessionState>(
             builder: (context, state) {
-              if (state is AuthLoading) {
+              if (state is SessionLoading) {
                 return _buildProfileShimmer();
               }
 
-              if (state is AuthAuthenticated) {
+              if (state is Authenticated) {
                 final user = state.user;
                 return _buildProfileContent(context, user, colorScheme);
               }
@@ -360,7 +357,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       title: 'Account Details',
                       onTap: () {
                         // TODO: Navigate to account details
-                        SnackbarUtils.showComingSoon(context, AppStrings.profile.accountDetails);
+                        SnackbarUtils.showComingSoon(
+                            context, AppStrings.profile.accountDetails);
                       },
                     ),
                     const SizedBox(height: 12),
@@ -379,7 +377,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       title: 'Notifications',
                       onTap: () {
                         // TODO: Navigate to notifications
-                        SnackbarUtils.showComingSoon(context, AppStrings.profile.notifications);
+                        SnackbarUtils.showComingSoon(
+                            context, AppStrings.profile.notifications);
                       },
                     ),
                     const SizedBox(height: 12),
@@ -389,7 +388,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       title: 'Appearance',
                       onTap: () {
                         // TODO: Navigate to appearance settings
-                        SnackbarUtils.showComingSoon(context, AppStrings.profile.appearance);
+                        SnackbarUtils.showComingSoon(
+                            context, AppStrings.profile.appearance);
                       },
                     ),
                     const SizedBox(height: 12),
@@ -401,16 +401,19 @@ class _ProfilePageState extends State<ProfilePage> {
                           context,
                           icon: Icons.currency_exchange_outlined,
                           title: AppStrings.profile.currency,
-                          subtitle: '${currencyState.currencySymbol} ${currencyState.currencyName}',
+                          subtitle:
+                              '${currencyState.currencySymbol} ${currencyState.currencyName}',
                           onTap: () {
                             showCurrencyPicker(
                               context: context,
                               theme: CurrencyPickerThemeData(
-                                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                                backgroundColor:
+                                    Theme.of(context).scaffoldBackgroundColor,
                                 titleTextStyle: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 18,
-                                  color: Theme.of(context).colorScheme.onSurface,
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface,
                                 ),
                                 subtitleTextStyle: TextStyle(
                                   fontSize: 14,
@@ -448,7 +451,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       title: 'Help Center',
                       onTap: () {
                         // TODO: Navigate to help center
-                        SnackbarUtils.showComingSoon(context, AppStrings.profile.helpCenter);
+                        SnackbarUtils.showComingSoon(
+                            context, AppStrings.profile.helpCenter);
                       },
                     ),
                     const SizedBox(height: 40),
@@ -496,10 +500,12 @@ class _ProfilePageState extends State<ProfilePage> {
     final titleColor = colorScheme.onSurface;
     final subtitleColor = colorScheme.onSurface.withOpacity(0.7);
 
-    return BlocConsumer<AuthCubit, AuthState>(
+    // Use SignupCubit for verification actions
+    return BlocConsumer<SignupCubit, SignupState>(
       listener: (context, state) {
         if (state is VerificationEmailSent) {
-          SnackbarUtils.showSuccess(context, '${AppStrings.auth.emailSent} ${state.email}');
+          SnackbarUtils.showSuccess(
+              context, '${AppStrings.auth.emailSent} ${state.email}');
         } else if (state is VerificationEmailError) {
           SnackbarUtils.showError(context, state.message);
         }
@@ -569,7 +575,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   onPressed: isSending
                       ? null
                       : () {
-                          _handleEmailVerificationClick();
+                          _handleEmailVerificationClick(user);
                         },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: warningColor,
@@ -664,7 +670,9 @@ class _ProfilePageState extends State<ProfilePage> {
                           errorBuilder: (context, error, stackTrace) {
                             return Center(
                               child: Text(
-                                user.name.isNotEmpty ? user.name[0].toUpperCase() : 'U',
+                                user.name.isNotEmpty
+                                    ? user.name[0].toUpperCase()
+                                    : 'U',
                                 style: TextStyle(
                                   fontSize: 48,
                                   fontWeight: FontWeight.bold,
@@ -686,7 +694,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       )
                     : Center(
                         child: Text(
-                          user.name.isNotEmpty ? user.name[0].toUpperCase() : 'U',
+                          user.name.isNotEmpty
+                              ? user.name[0].toUpperCase()
+                              : 'U',
                           style: TextStyle(
                             fontSize: 48,
                             fontWeight: FontWeight.bold,
@@ -1012,12 +1022,6 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _buildProfileShimmer() {
-    // Assuming context is available or passing it would be better, but since it's used inside build method of State,
-    // we can use context from State if this was an instance method, but it is.
-    // However, to keep it clean, let's use the context passed in build or access via this.context
-    // But better to not rely on implicit context if we can avoid it or pass it.
-    // The previous call was _buildProfileShimmer().
-    // We can use context property of State.
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Shimmer.fromColors(
@@ -1270,7 +1274,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 TextButton(
                   onPressed: () {
                     Navigator.pop(context);
-                    context.read<AuthCubit>().logout();
+                    // Use SessionCubit for logout
+                    context.read<SessionCubit>().logout();
                   },
                   child: Text(
                     'Log Out',

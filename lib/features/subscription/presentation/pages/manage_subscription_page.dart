@@ -514,7 +514,8 @@ class _ManageSubscriptionView extends StatelessWidget {
                   onPressed: () {
                     Navigator.pop(context);
                     // TODO: Implement cancel subscription API call
-                    SnackbarUtils.showComingSoon(context, AppStrings.subscription.cancelSubscription);
+                    SnackbarUtils.showComingSoon(
+                        context, AppStrings.subscription.cancelSubscription);
                   },
                   child: const Text(
                     'Cancel Subscription',

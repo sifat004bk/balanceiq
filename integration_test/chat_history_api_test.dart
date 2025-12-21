@@ -10,13 +10,15 @@ void main() {
     late Dio dio;
     late String chatHistoryUrl;
     late String authToken;
-    final testUserId = '8130001838'; // Use the user ID from the Postman collection
+    final testUserId =
+        '8130001838'; // Use the user ID from the Postman collection
 
     setUpAll(() async {
       // Load environment variables
       await dotenv.load(fileName: '.env');
       chatHistoryUrl = dotenv.get('N8N_CHAT_HISTORY_URL',
-          fallback: 'https://primary-production-7383b.up.railway.app/webhook/get-user-chat-history');
+          fallback:
+              'https://primary-production-7383b.up.railway.app/webhook/get-user-chat-history');
       authToken = dotenv.get('N8N_DASHBOARD_AUTH_TOKEN',
           fallback: 'Dolphin D#-#{Oo"|tC[fHDBpCjwhBfrY?O-56s64R|S,b8D-41eRLd8');
 
@@ -153,7 +155,8 @@ void main() {
       } on DioException catch (e) {
         // Or it might return an error
         expect(e.response?.statusCode, anyOf([400, 404]));
-        print('✅ Invalid user ID correctly rejected with status ${e.response?.statusCode}');
+        print(
+            '✅ Invalid user ID correctly rejected with status ${e.response?.statusCode}');
       }
     });
 
@@ -171,7 +174,8 @@ void main() {
         print('⚠️ API accepted request without page parameter (using default)');
       } on DioException catch (e) {
         expect(e.response?.statusCode, anyOf([400, 422]));
-        print('✅ Missing parameters correctly rejected with status ${e.response?.statusCode}');
+        print(
+            '✅ Missing parameters correctly rejected with status ${e.response?.statusCode}');
       }
     });
 
@@ -200,7 +204,8 @@ void main() {
         print('⚠️ API accepted request with invalid token');
       } on DioException catch (e) {
         expect(e.response?.statusCode, anyOf([401, 403]));
-        print('✅ Invalid token correctly rejected with status ${e.response?.statusCode}');
+        print(
+            '✅ Invalid token correctly rejected with status ${e.response?.statusCode}');
       }
     });
   });

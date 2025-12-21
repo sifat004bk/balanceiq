@@ -10,16 +10,24 @@ import 'core/theme/app_theme.dart';
 import 'core/theme/theme_cubit.dart';
 import 'core/theme/theme_state.dart';
 import 'core/tour/tour.dart';
-import 'features/auth/presentation/cubit/auth_cubit.dart';
-import 'features/auth/presentation/cubit/auth_state.dart';
+
+// Cubits
+import 'features/auth/presentation/cubit/session/session_cubit.dart';
+import 'features/auth/presentation/cubit/session/session_cubit.dart'
+    as session_state; // Alias for states if needed, though usually direct import works
+import 'features/auth/presentation/cubit/login/login_cubit.dart';
+import 'features/auth/presentation/cubit/signup/signup_cubit.dart';
+import 'features/auth/presentation/cubit/password/password_cubit.dart';
+
+// Pages
 import 'features/auth/presentation/pages/change_password_page.dart';
 import 'features/auth/presentation/pages/email_verification_page.dart';
 import 'features/auth/presentation/pages/forgot_password_page.dart';
 import 'features/auth/presentation/pages/loading_page.dart';
-import 'features/auth/presentation/pages/new_login_page.dart';
+import 'features/auth/presentation/pages/login_page.dart';
 import 'features/auth/presentation/pages/splash_page.dart';
-import 'features/auth/presentation/pages/new_onboarding_page.dart';
-import 'features/auth/presentation/pages/new_signup_page.dart';
+import 'features/auth/presentation/pages/onboarding_page.dart';
+import 'features/auth/presentation/pages/signup_page.dart';
 import 'features/auth/presentation/pages/interactive_onboarding/interactive_onboarding_page.dart';
 import 'features/auth/presentation/pages/profile_page.dart';
 import 'features/auth/presentation/pages/reset_password_page.dart';
@@ -97,8 +105,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        // SessionCubit replaces AuthCubit for global auth state
         BlocProvider(
-          create: (context) => di.sl<AuthCubit>(),
+          create: (context) => di.sl<SessionCubit>()..checkAuthStatus(),
         ),
         BlocProvider(
           create: (context) => di.sl<ThemeCubit>(),
@@ -125,17 +134,29 @@ class MyApp extends StatelessWidget {
             themeMode: themeMode,
             home: const SplashPage(),
             routes: {
-              '/onboarding': (context) => const NewOnboardingPage(),
+              '/onboarding': (context) => const OnboardingPage(),
               '/interactive-onboarding': (context) =>
                   const InteractiveOnboardingPage(),
-              '/login': (context) => const NewLoginPage(),
-              '/signup': (context) => const NewSignUpPage(),
+              '/login': (context) => BlocProvider(
+                    create: (context) => di.sl<LoginCubit>(),
+                    child: const LoginPage(),
+                  ),
+              '/signup': (context) => BlocProvider(
+                    create: (context) => di.sl<SignupCubit>(),
+                    child: const SignUpPage(),
+                  ),
               '/verification-success': (context) =>
                   const VerificationSuccessPage(),
               '/loading': (context) => const LoadingPage(),
               '/home': (context) => const HomePage(),
-              '/forgot-password': (context) => const ForgotPasswordPage(),
-              '/change-password': (context) => const ChangePasswordPage(),
+              '/forgot-password': (context) => BlocProvider(
+                    create: (context) => di.sl<PasswordCubit>(),
+                    child: const ForgotPasswordPage(),
+                  ),
+              '/change-password': (context) => BlocProvider(
+                    create: (context) => di.sl<PasswordCubit>(),
+                    child: const ChangePasswordPage(),
+                  ),
               '/profile': (context) => const ProfilePage(),
               '/subscription-plans': (context) => const SubscriptionPlansPage(),
               '/manage-subscription': (context) =>
@@ -147,13 +168,19 @@ class MyApp extends StatelessWidget {
                 final email =
                     settings.arguments as String? ?? 'user@example.com';
                 return MaterialPageRoute(
-                  builder: (context) => EmailVerificationPage(email: email),
+                  builder: (context) => BlocProvider(
+                    create: (context) => di.sl<SignupCubit>(),
+                    child: EmailVerificationPage(email: email),
+                  ),
                 );
               }
               if (settings.name == '/reset-password') {
                 final token = settings.arguments as String? ?? '';
                 return MaterialPageRoute(
-                  builder: (context) => ResetPasswordPage(token: token),
+                  builder: (context) => BlocProvider(
+                    create: (context) => di.sl<PasswordCubit>(),
+                    child: ResetPasswordPage(token: token),
+                  ),
                 );
               }
               return null;
@@ -161,30 +188,6 @@ class MyApp extends StatelessWidget {
           );
         },
       ),
-    );
-  }
-}
-
-// Wrapper widget to handle auth state and navigate accordingly
-class AuthWrapper extends StatelessWidget {
-  const AuthWrapper({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<AuthCubit, AuthState>(
-      builder: (context, state) {
-        if (state is AuthLoading) {
-          return const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
-        } else if (state is AuthAuthenticated) {
-          return const HomePage();
-        } else {
-          return const InteractiveOnboardingPage();
-        }
-      },
     );
   }
 }

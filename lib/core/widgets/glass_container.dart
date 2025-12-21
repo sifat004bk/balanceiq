@@ -85,8 +85,7 @@ class AnimatedGlassContainer extends StatefulWidget {
   });
 
   @override
-  State<AnimatedGlassContainer> createState() =>
-      _AnimatedGlassContainerState();
+  State<AnimatedGlassContainer> createState() => _AnimatedGlassContainerState();
 }
 
 class _AnimatedGlassContainerState extends State<AnimatedGlassContainer>

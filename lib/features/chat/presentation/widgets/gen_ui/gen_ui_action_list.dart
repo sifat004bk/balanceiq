@@ -55,8 +55,8 @@ class GenUIActionList extends StatelessWidget {
                 onPressed: () {
                   SnackbarUtils.showInfo(
                     context,
-                    AppStrings.chat.actionTriggered(
-                        action['action']?.toString() ?? ''),
+                    AppStrings.chat
+                        .actionTriggered(action['action']?.toString() ?? ''),
                   );
                 },
               );

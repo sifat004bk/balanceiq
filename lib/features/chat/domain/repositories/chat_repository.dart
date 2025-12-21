@@ -4,7 +4,9 @@ import '../entities/chat_history_response.dart';
 import '../../../../core/error/failures.dart';
 
 abstract class ChatRepository {
-  Future<Either<Failure, List<Message>>> getMessages(String userId, String botId, {int? limit});
+  Future<Either<Failure, List<Message>>> getMessages(
+      String userId, String botId,
+      {int? limit});
   Future<Either<Failure, Message>> sendMessage({
     required String botId,
     required String content,

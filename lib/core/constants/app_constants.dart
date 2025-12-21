@@ -19,7 +19,8 @@ class AppConstants {
 
   // Local Database
   static const String databaseName = 'balance_iq.db';
-  static const int databaseVersion = 7; // Updated for chart data fields (has_table, table_data, graph_type, graph_data)
+  static const int databaseVersion =
+      7; // Updated for chart data fields (has_table, table_data, graph_type, graph_data)
 
   // Table Names
   static const String messagesTable = 'messages';

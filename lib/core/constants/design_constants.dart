@@ -11,17 +11,17 @@ class DesignConstants {
   static const double spaceUnit = 8.0;
 
   /// Spacing scale based on 8pt grid
-  static const double space0 = 0.0;      // 0dp - No space
-  static const double space1 = 4.0;      // 4dp - Micro spacing
-  static const double space2 = 8.0;      // 8dp - Base unit
-  static const double space3 = 12.0;     // 12dp - Small spacing
-  static const double space4 = 16.0;     // 16dp - Standard spacing
-  static const double space5 = 20.0;     // 20dp - Medium spacing
-  static const double space6 = 24.0;     // 24dp - Large spacing
-  static const double space8 = 32.0;     // 32dp - XL spacing
-  static const double space10 = 40.0;    // 40dp - XXL spacing
-  static const double space12 = 48.0;    // 48dp - XXXL spacing
-  static const double space16 = 64.0;    // 64dp - Huge spacing
+  static const double space0 = 0.0; // 0dp - No space
+  static const double space1 = 4.0; // 4dp - Micro spacing
+  static const double space2 = 8.0; // 8dp - Base unit
+  static const double space3 = 12.0; // 12dp - Small spacing
+  static const double space4 = 16.0; // 16dp - Standard spacing
+  static const double space5 = 20.0; // 20dp - Medium spacing
+  static const double space6 = 24.0; // 24dp - Large spacing
+  static const double space8 = 32.0; // 32dp - XL spacing
+  static const double space10 = 40.0; // 40dp - XXL spacing
+  static const double space12 = 48.0; // 48dp - XXXL spacing
+  static const double space16 = 64.0; // 64dp - Huge spacing
 
   // Chat-specific spacing
   static const double messageBubblePadding = 12.0;
@@ -32,12 +32,12 @@ class DesignConstants {
 
   // ==================== BORDER RADIUS ====================
 
-  static const double radiusSmall = 8.0;      // Small components
-  static const double radiusMedium = 12.0;    // Cards, containers
-  static const double radiusLarge = 16.0;     // Large cards
-  static const double radiusXL = 20.0;        // Modals, sheets
-  static const double radiusXXL = 24.0;       // Hero elements
-  static const double radiusPill = 999.0;     // Pill-shaped (fully rounded)
+  static const double radiusSmall = 8.0; // Small components
+  static const double radiusMedium = 12.0; // Cards, containers
+  static const double radiusLarge = 16.0; // Large cards
+  static const double radiusXL = 20.0; // Modals, sheets
+  static const double radiusXXL = 24.0; // Hero elements
+  static const double radiusPill = 999.0; // Pill-shaped (fully rounded)
 
   // Message bubble specific
   static const double messageBubbleRadius = 20.0;
@@ -55,7 +55,9 @@ class DesignConstants {
   static BoxShadow elevation1(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return BoxShadow(
-      color: isDark ? Colors.black.withValues(alpha: 0.3) : Colors.black.withValues(alpha: 0.08),
+      color: isDark
+          ? Colors.black.withValues(alpha: 0.3)
+          : Colors.black.withValues(alpha: 0.08),
       blurRadius: 4,
       offset: const Offset(0, 1),
     );
@@ -64,7 +66,9 @@ class DesignConstants {
   static BoxShadow elevation2(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return BoxShadow(
-      color: isDark ? Colors.black.withValues(alpha: 0.4) : Colors.black.withValues(alpha: 0.12),
+      color: isDark
+          ? Colors.black.withValues(alpha: 0.4)
+          : Colors.black.withValues(alpha: 0.12),
       blurRadius: 8,
       offset: const Offset(0, 2),
     );
@@ -73,7 +77,9 @@ class DesignConstants {
   static BoxShadow elevation3(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return BoxShadow(
-      color: isDark ? Colors.black.withValues(alpha: 0.5) : Colors.black.withValues(alpha: 0.16),
+      color: isDark
+          ? Colors.black.withValues(alpha: 0.5)
+          : Colors.black.withValues(alpha: 0.16),
       blurRadius: 16,
       offset: const Offset(0, 4),
     );
@@ -82,7 +88,9 @@ class DesignConstants {
   static BoxShadow elevation4(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return BoxShadow(
-      color: isDark ? Colors.black.withValues(alpha: 0.6) : Colors.black.withValues(alpha: 0.20),
+      color: isDark
+          ? Colors.black.withValues(alpha: 0.6)
+          : Colors.black.withValues(alpha: 0.20),
       blurRadius: 24,
       offset: const Offset(0, 8),
     );
@@ -118,15 +126,15 @@ class DesignConstants {
   // ==================== TYPOGRAPHY SCALE ====================
 
   /// Font sizes following Material Design 3
-  static const double fontSizeXS = 10.0;    // Micro text
-  static const double fontSizeS = 12.0;     // Captions, timestamps
-  static const double fontSizeM = 14.0;     // Body text, messages
-  static const double fontSizeL = 16.0;     // Large body, buttons
-  static const double fontSizeXL = 18.0;    // Subtitles
-  static const double fontSize2XL = 20.0;   // Titles
-  static const double fontSize3XL = 24.0;   // Headlines
-  static const double fontSize4XL = 28.0;   // Display
-  static const double fontSize5XL = 32.0;   // Large display
+  static const double fontSizeXS = 10.0; // Micro text
+  static const double fontSizeS = 12.0; // Captions, timestamps
+  static const double fontSizeM = 14.0; // Body text, messages
+  static const double fontSizeL = 16.0; // Large body, buttons
+  static const double fontSizeXL = 18.0; // Subtitles
+  static const double fontSize2XL = 20.0; // Titles
+  static const double fontSize3XL = 24.0; // Headlines
+  static const double fontSize4XL = 28.0; // Display
+  static const double fontSize5XL = 32.0; // Large display
 
   // Line heights
   static const double lineHeightTight = 1.2;
@@ -159,9 +167,9 @@ class DesignConstants {
 
   // ==================== RESPONSIVE BREAKPOINTS ====================
 
-  static const double breakpointMobile = 600;      // 0-599dp
-  static const double breakpointTablet = 840;      // 600-839dp
-  static const double breakpointDesktop = 1240;    // 840+dp
+  static const double breakpointMobile = 600; // 0-599dp
+  static const double breakpointTablet = 840; // 600-839dp
+  static const double breakpointDesktop = 1240; // 840+dp
 
   /// Check if current screen is mobile
   static bool isMobile(BuildContext context) {

@@ -50,7 +50,8 @@ enum ChatFailureType {
 class ChatApiFailure extends Failure {
   final ChatFailureType failureType;
 
-  const ChatApiFailure(super.message, {this.failureType = ChatFailureType.general});
+  const ChatApiFailure(super.message,
+      {this.failureType = ChatFailureType.general});
 
   @override
   List<Object> get props => [message, failureType];

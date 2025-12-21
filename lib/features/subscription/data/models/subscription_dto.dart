@@ -46,7 +46,8 @@ class SubscriptionStatusDto {
     return SubscriptionStatusDto(
       hasActiveSubscription: json['hasActiveSubscription'] as bool? ?? false,
       subscription: json['subscription'] != null
-          ? SubscriptionDto.fromJson(json['subscription'] as Map<String, dynamic>)
+          ? SubscriptionDto.fromJson(
+              json['subscription'] as Map<String, dynamic>)
           : null,
     );
   }

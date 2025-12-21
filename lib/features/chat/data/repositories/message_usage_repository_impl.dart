@@ -42,12 +42,13 @@ class MessageUsageRepositoryImpl implements MessageUsageRepository {
         return Left(AuthFailure('Please login to view message usage'));
       } else if (errorMessage.contains('No internet') ||
           errorMessage.contains('Connection')) {
-        return Left(
-            NetworkFailure('No internet connection. Please check your network.'));
+        return Left(NetworkFailure(
+            'No internet connection. Please check your network.'));
       } else if (errorMessage.contains('timeout')) {
         return Left(ServerFailure('Request timed out. Please try again.'));
       } else {
-        return Left(ServerFailure('Failed to load message usage: $errorMessage'));
+        return Left(
+            ServerFailure('Failed to load message usage: $errorMessage'));
       }
     }
   }

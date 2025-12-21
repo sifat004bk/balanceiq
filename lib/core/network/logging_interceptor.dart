@@ -141,7 +141,8 @@ class LoggingInterceptor extends Interceptor {
       if (bodyString.length > 5000) {
         final lines = bodyString.split('\n');
         final limitedLines = lines.take(50).toList();
-        limitedLines.add('... (${bodyString.length} characters total, truncated for readability)');
+        limitedLines.add(
+            '... (${bodyString.length} characters total, truncated for readability)');
         bodyString = limitedLines.join('\n');
       }
 

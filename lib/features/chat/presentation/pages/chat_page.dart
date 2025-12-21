@@ -414,7 +414,7 @@ class _ChatViewState extends State<ChatView> {
                 top: 0,
                 left: 0,
                 right: 0,
-                height: MediaQuery.of(context).padding.top+10 ,
+                height: MediaQuery.of(context).padding.top + 10,
                 child: ClipRect(
                   child: Container(
                     color: Theme.of(context)
@@ -429,7 +429,7 @@ class _ChatViewState extends State<ChatView> {
                 left: 0,
                 right: 0,
                 bottom: 0,
-                height: MediaQuery.of(context).padding.bottom+16,
+                height: MediaQuery.of(context).padding.bottom + 16,
                 child: ClipRect(
                   child: Container(
                     color: Theme.of(context)
@@ -496,8 +496,6 @@ class _ChatViewState extends State<ChatView> {
                   ),
                 ),
               ),
-
-
             ],
           ),
         ),

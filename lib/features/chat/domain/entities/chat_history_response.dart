@@ -57,7 +57,7 @@ class Conversation extends Equatable {
         tableData,
         graphType,
         graphData,
-  ];
+      ];
 
   /// Helper to check if conversation has feedback
   bool get hasFeedback => feedback != null && feedback!.isNotEmpty;

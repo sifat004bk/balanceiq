@@ -175,7 +175,8 @@ class DatabaseHelper {
   }
 
   Future<void> _migrateToV3(Database db) async {
-    print('🔄 Migrating database from v2 to v3: Adding user_id for user isolation');
+    print(
+        '🔄 Migrating database from v2 to v3: Adding user_id for user isolation');
 
     // Strategy: Delete all existing messages (fresh start)
     // This ensures clean user isolation without orphaned data
@@ -227,10 +228,11 @@ class DatabaseHelper {
 
   Future<void> _migrateToV4(Database db) async {
     print('🔄 Migrating database from v3 to v4: Adding action_type column');
-    
+
     // Add action_type column to existing table
-    await db.execute('ALTER TABLE ${AppConstants.messagesTable} ADD COLUMN action_type TEXT');
-    
+    await db.execute(
+        'ALTER TABLE ${AppConstants.messagesTable} ADD COLUMN action_type TEXT');
+
     print('✅ Migration to v4 completed successfully');
   }
 
@@ -238,7 +240,8 @@ class DatabaseHelper {
     print('🔄 Migrating database from v4 to v5: Adding conversation_id column');
 
     // Add conversation_id column to existing table
-    await db.execute('ALTER TABLE ${AppConstants.messagesTable} ADD COLUMN conversation_id INTEGER');
+    await db.execute(
+        'ALTER TABLE ${AppConstants.messagesTable} ADD COLUMN conversation_id INTEGER');
 
     print('✅ Migration to v5 completed successfully');
   }
@@ -247,7 +250,8 @@ class DatabaseHelper {
     print('🔄 Migrating database from v5 to v6: Adding feedback column');
 
     // Add feedback column to existing table
-    await db.execute('ALTER TABLE ${AppConstants.messagesTable} ADD COLUMN feedback TEXT');
+    await db.execute(
+        'ALTER TABLE ${AppConstants.messagesTable} ADD COLUMN feedback TEXT');
 
     print('✅ Migration to v6 completed successfully');
   }
@@ -256,10 +260,14 @@ class DatabaseHelper {
     print('🔄 Migrating database from v6 to v7: Adding chart data fields');
 
     // Add chart data columns to existing table
-    await db.execute('ALTER TABLE ${AppConstants.messagesTable} ADD COLUMN has_table INTEGER DEFAULT 0');
-    await db.execute('ALTER TABLE ${AppConstants.messagesTable} ADD COLUMN table_data TEXT');
-    await db.execute('ALTER TABLE ${AppConstants.messagesTable} ADD COLUMN graph_type TEXT');
-    await db.execute('ALTER TABLE ${AppConstants.messagesTable} ADD COLUMN graph_data TEXT');
+    await db.execute(
+        'ALTER TABLE ${AppConstants.messagesTable} ADD COLUMN has_table INTEGER DEFAULT 0');
+    await db.execute(
+        'ALTER TABLE ${AppConstants.messagesTable} ADD COLUMN table_data TEXT');
+    await db.execute(
+        'ALTER TABLE ${AppConstants.messagesTable} ADD COLUMN graph_type TEXT');
+    await db.execute(
+        'ALTER TABLE ${AppConstants.messagesTable} ADD COLUMN graph_data TEXT');
 
     print('✅ Migration to v7 completed successfully');
   }

@@ -19,7 +19,8 @@ void main() {
     backendBaseUrl = dotenv.get('BACKEND_BASE_URL',
         fallback: 'https://primary-production-7383b.up.railway.app');
     chatHistoryUrl = dotenv.get('N8N_CHAT_HISTORY_URL',
-        fallback: 'https://primary-production-7383b.up.railway.app/webhook/get-user-chat-history');
+        fallback:
+            'https://primary-production-7383b.up.railway.app/webhook/get-user-chat-history');
     authToken = dotenv.get('N8N_DASHBOARD_AUTH_TOKEN',
         fallback: 'Dolphin D#-#{Oo"|tC[fHDBpCjwhBfrY?O-56s64R|S,b8D-41eRLd8');
 
@@ -49,7 +50,8 @@ void main() {
 
   group('Authentication API Integration Tests', () {
     final testUsername = 'test_user_${DateTime.now().millisecondsSinceEpoch}';
-    final testEmail = 'test_${DateTime.now().millisecondsSinceEpoch}@example.com';
+    final testEmail =
+        'test_${DateTime.now().millisecondsSinceEpoch}@example.com';
     const testPassword = 'Test@123456';
     const testFullName = 'Test User';
     String? userAuthToken;

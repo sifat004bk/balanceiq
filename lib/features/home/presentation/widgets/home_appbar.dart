@@ -89,13 +89,15 @@ class HomeAppbar extends StatelessWidget {
             child: profileUrl.isNotEmpty
                 ? CircleAvatar(
                     radius: 16,
-                    backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                    backgroundColor:
+                        Theme.of(context).colorScheme.primaryContainer,
                     backgroundImage: NetworkImage(profileUrl),
                     onBackgroundImageError: (_, __) {},
                   )
                 : CircleAvatar(
                     radius: 16,
-                    backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                    backgroundColor:
+                        Theme.of(context).colorScheme.primaryContainer,
                     child: Text(
                       _getInitial(),
                       style: TextStyle(

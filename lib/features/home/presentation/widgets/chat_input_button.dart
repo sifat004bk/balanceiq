@@ -48,10 +48,10 @@ class ChatInputButton extends StatelessWidget {
               child: Text(
                 'Chat with AI to track your finance...',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 0.2,
-                ),
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 0.2,
+                    ),
               ),
             ),
             Container(
@@ -65,7 +65,8 @@ class ChatInputButton extends StatelessWidget {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Theme.of(context).colorScheme.shadow.withOpacity(0.4),
+                    color:
+                        Theme.of(context).colorScheme.shadow.withOpacity(0.4),
                     blurRadius: 12,
                     offset: const Offset(0, 2),
                   ),

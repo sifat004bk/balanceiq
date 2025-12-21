@@ -29,7 +29,8 @@ class DashboardRepositoryImpl implements DashboardRepository {
 
       // Fetch dashboard data
       // API uses Bearer token from SharedPreferences, no parameters needed
-      final DashboardSummary dashboard = await remoteDataSource.getDashboardSummary(
+      final DashboardSummary dashboard =
+          await remoteDataSource.getDashboardSummary(
         startDate: startDate,
         endDate: endDate,
       );

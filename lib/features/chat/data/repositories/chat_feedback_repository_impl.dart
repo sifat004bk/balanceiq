@@ -46,8 +46,8 @@ class ChatFeedbackRepositoryImpl implements ChatFeedbackRepository {
         return Left(NotFoundFailure('Chat message not found'));
       } else if (errorMessage.contains('No internet') ||
           errorMessage.contains('Connection')) {
-        return Left(
-            NetworkFailure('No internet connection. Please check your network.'));
+        return Left(NetworkFailure(
+            'No internet connection. Please check your network.'));
       } else if (errorMessage.contains('timeout')) {
         return Left(ServerFailure('Request timed out. Please try again.'));
       } else if (errorMessage.contains('Invalid feedback')) {

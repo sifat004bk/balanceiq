@@ -122,7 +122,8 @@ class AuthMockDataSource implements AuthRemoteDataSource {
     // Return success response matching actual API
     return SignupResponse(
       success: true,
-      message: 'User registered successfully. Please verify your email to activate your account.',
+      message:
+          'User registered successfully. Please verify your email to activate your account.',
       data: SignupData(
         id: userId,
         username: request.username,
@@ -188,23 +189,24 @@ class AuthMockDataSource implements AuthRemoteDataSource {
     await _simulateDelay();
 
     // Validate refresh token
-    if (refreshToken.isEmpty || !refreshToken.startsWith('mock_refresh_token_')) {
+    if (refreshToken.isEmpty ||
+        !refreshToken.startsWith('mock_refresh_token_')) {
       throw Exception('Invalid refresh token');
     }
 
     // Extract user ID from refresh token
     final userId = refreshToken.replaceFirst('mock_refresh_token_', '');
 
-     // Find user
+    // Find user
     final user = _users.values.firstWhere(
       (u) => u.id == userId,
       orElse: () => throw Exception('User not found'),
     );
-    
+
     final newToken = _generateMockToken(userId);
     final newRefreshToken = 'mock_refresh_token_$userId';
 
-      // Store token in SharedPreferences
+    // Store token in SharedPreferences
     await sharedPreferences.setString('auth_token', newToken);
     await sharedPreferences.setString('refresh_token', newRefreshToken);
 
@@ -212,9 +214,9 @@ class AuthMockDataSource implements AuthRemoteDataSource {
       success: true,
       message: 'Token refreshed successfully',
       data: RefreshTokenData(
-        token: newToken,
-        refreshToken: newRefreshToken,
-        user: {
+          token: newToken,
+          refreshToken: newRefreshToken,
+          user: {
             "id": int.tryParse(user.id) ?? 0,
             "email": user.email,
             "username": user.username,
@@ -222,8 +224,7 @@ class AuthMockDataSource implements AuthRemoteDataSource {
             "userRole": user.roles.contains('admin') ? 'SUPER_ADMIN' : 'USER',
             "isActive": true,
             "isEmailVerified": true,
-        }
-      ),
+          }),
       timestamp: DateTime.now().millisecondsSinceEpoch,
     );
   }
@@ -282,10 +283,12 @@ class AuthMockDataSource implements AuthRemoteDataSource {
     final userId = _extractUserIdFromToken(token);
 
     // Find user
-    final username = _users.entries.firstWhere(
-      (entry) => entry.value.id == userId,
-      orElse: () => throw Exception('User not found'),
-    ).key;
+    final username = _users.entries
+        .firstWhere(
+          (entry) => entry.value.id == userId,
+          orElse: () => throw Exception('User not found'),
+        )
+        .key;
 
     final user = _users[username]!;
 
@@ -353,10 +356,12 @@ class AuthMockDataSource implements AuthRemoteDataSource {
     final email = _resetTokens[request.token]!;
 
     // Find user by email
-    final username = _users.entries.firstWhere(
-      (entry) => entry.value.email == email,
-      orElse: () => throw Exception('User not found'),
-    ).key;
+    final username = _users.entries
+        .firstWhere(
+          (entry) => entry.value.email == email,
+          orElse: () => throw Exception('User not found'),
+        )
+        .key;
 
     final user = _users[username]!;
 
@@ -402,7 +407,6 @@ class AuthMockDataSource implements AuthRemoteDataSource {
 
     return mockGoogleUser;
   }
-
 
   @override
   Future<void> signOut() async {
@@ -459,7 +463,8 @@ class AuthMockDataSource implements AuthRemoteDataSource {
 
     // In real implementation, would send email
     print('📧 [MOCK] Verification email sent to: ${user.email}');
-    print('🔗 [MOCK] Verification link: /verify-email?token=mock_verify_${user.id}');
+    print(
+        '🔗 [MOCK] Verification link: /verify-email?token=mock_verify_${user.id}');
   }
 
   @override
@@ -483,7 +488,8 @@ class AuthMockDataSource implements AuthRemoteDataSource {
 
     // In real implementation, would send email
     print('📧 [MOCK] Verification email resent to: $email');
-    print('🔗 [MOCK] Verification link: /verify-email?token=mock_verify_${user.id}');
+    print(
+        '🔗 [MOCK] Verification link: /verify-email?token=mock_verify_${user.id}');
   }
 
   /// Clear all mock data (useful for testing)
@@ -496,13 +502,13 @@ class AuthMockDataSource implements AuthRemoteDataSource {
   /// Returns a map of username to mock user data
   static Map<String, dynamic> getStoredUsers() {
     return _users.map((key, value) => MapEntry(key, {
-      'id': value.id,
-      'username': value.username,
-      'email': value.email,
-      'fullName': value.fullName,
-      'photoUrl': value.photoUrl,
-      'roles': value.roles,
-    }));
+          'id': value.id,
+          'username': value.username,
+          'email': value.email,
+          'fullName': value.fullName,
+          'photoUrl': value.photoUrl,
+          'roles': value.roles,
+        }));
   }
 
   /// Get reset tokens (for debugging)

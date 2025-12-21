@@ -83,7 +83,8 @@ class TransactionSearchResult extends Equatable {
 
   /// Get total amount of all transactions
   double get totalAmount {
-    return transactions.fold(0.0, (sum, transaction) => sum + transaction.amount);
+    return transactions.fold(
+        0.0, (sum, transaction) => sum + transaction.amount);
   }
 
   /// Get transactions filtered by type

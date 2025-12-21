@@ -17,11 +17,12 @@ class ChatLoading extends ChatState {}
 class ChatLoaded extends ChatState {
   final List<Message> messages;
   final bool isSending;
-  final bool hasMore;          // Whether more messages are available to load
-  final bool isLoadingMore;    // Whether currently loading more messages
+  final bool hasMore; // Whether more messages are available to load
+  final bool isLoadingMore; // Whether currently loading more messages
   final int messagesUsedToday;
   final int dailyMessageLimit;
-  final MessageUsage? messageUsage; // Full message usage data including recent activity
+  final MessageUsage?
+      messageUsage; // Full message usage data including recent activity
 
   const ChatLoaded({
     required this.messages,
@@ -34,16 +35,25 @@ class ChatLoaded extends ChatState {
   }) : dailyMessageLimit = dailyMessageLimit ?? AppConstants.dailyMessageLimit;
 
   @override
-  List<Object?> get props => [messages, isSending, hasMore, isLoadingMore, messagesUsedToday, dailyMessageLimit, messageUsage];
+  List<Object?> get props => [
+        messages,
+        isSending,
+        hasMore,
+        isLoadingMore,
+        messagesUsedToday,
+        dailyMessageLimit,
+        messageUsage
+      ];
 
   bool get isMessageLimitReached => messagesUsedToday >= dailyMessageLimit;
 
   /// Returns remaining messages (min 0)
-  int get messagesRemaining => (dailyMessageLimit - messagesUsedToday).clamp(0, dailyMessageLimit);
+  int get messagesRemaining =>
+      (dailyMessageLimit - messagesUsedToday).clamp(0, dailyMessageLimit);
 
   /// Returns usage percentage (0.0 to 1.0)
-  double get usagePercentage => dailyMessageLimit > 0 
-      ? (messagesUsedToday / dailyMessageLimit).clamp(0.0, 1.0) 
+  double get usagePercentage => dailyMessageLimit > 0
+      ? (messagesUsedToday / dailyMessageLimit).clamp(0.0, 1.0)
       : 0.0;
 
   ChatLoaded copyWith({
@@ -87,7 +97,7 @@ enum ChatErrorType {
   emailNotVerified,
   subscriptionRequired,
   subscriptionExpired,
-  messageLimitExceeded,  // Renamed from tokenLimitExceeded
+  messageLimitExceeded, // Renamed from tokenLimitExceeded
   rateLimitExceeded,
   general,
 }

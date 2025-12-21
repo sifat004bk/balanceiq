@@ -46,7 +46,7 @@ class DashboardSummaryModel extends DashboardSummary {
                 day = date.day;
               } catch (_) {}
             }
-            
+
             spendingTrend.add(SpendingTrendPoint(
               day: day,
               amount: _parseDoubleNullable(point['amount']) ?? 0.0,
@@ -102,10 +102,12 @@ class DashboardSummaryModel extends DashboardSummary {
       final String expenseAccount = '';
 
       // Parse biggestCategory (now returns string name only)
-      final String biggestCategoryName = _parseStringNullable(json['biggestCategory']) ?? '';
-      
+      final String biggestCategoryName =
+          _parseStringNullable(json['biggestCategory']) ?? '';
+
       // Find amount for biggest category from categories map
-      final double biggestCategoryAmount = categories[biggestCategoryName] ?? 0.0;
+      final double biggestCategoryAmount =
+          categories[biggestCategoryName] ?? 0.0;
 
       // Parse biggestIncome object
       final dynamic biggestIncome = json['biggestIncome'];

@@ -21,7 +21,8 @@ class Feature extends Equatable {
   });
 
   @override
-  List<Object?> get props => [id, code, name, description, category, requiresPermission, isActive];
+  List<Object?> get props =>
+      [id, code, name, description, category, requiresPermission, isActive];
 }
 
 /// Subscription Plan entity

@@ -63,14 +63,15 @@ class TransactionRepositoryImpl implements TransactionRepository {
         return Left(AuthFailure('Please login to search transactions'));
       } else if (errorMessage.contains('No internet') ||
           errorMessage.contains('Connection')) {
-        return Left(
-            NetworkFailure('No internet connection. Please check your network.'));
+        return Left(NetworkFailure(
+            'No internet connection. Please check your network.'));
       } else if (errorMessage.contains('timeout')) {
         return Left(ServerFailure('Request timed out. Please try again.'));
       } else if (errorMessage.contains('Bad request')) {
         return Left(ServerFailure('Invalid search parameters. $errorMessage'));
       } else {
-        return Left(ServerFailure('Failed to search transactions: $errorMessage'));
+        return Left(
+            ServerFailure('Failed to search transactions: $errorMessage'));
       }
     }
   }

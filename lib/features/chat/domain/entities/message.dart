@@ -3,7 +3,7 @@ import 'chart_data.dart';
 
 class Message extends Equatable {
   final String id;
-  final String userId;  // User isolation - each user sees only their messages
+  final String userId; // User isolation - each user sees only their messages
   final String botId;
   final String sender; // 'user' or 'bot'
   final String content;
@@ -14,19 +14,19 @@ class Message extends Equatable {
   final bool hasError;
 
   // Sync fields for chat history API integration
-  final DateTime? serverCreatedAt;  // Source of truth for ordering
-  final bool isSynced;               // Whether synced with backend
-  final String syncStatus;           // 'pending', 'sent', 'failed'
-  final String? apiMessageId;        // Backend message ID
-  final String? actionType;          // Action type (e.g., balance_query, income_log)
-  final int? conversationId;         // Links to API conversation ID (for feedback)
-  final String? feedback;            // User feedback: 'LIKE', 'DISLIKE', or null
+  final DateTime? serverCreatedAt; // Source of truth for ordering
+  final bool isSynced; // Whether synced with backend
+  final String syncStatus; // 'pending', 'sent', 'failed'
+  final String? apiMessageId; // Backend message ID
+  final String? actionType; // Action type (e.g., balance_query, income_log)
+  final int? conversationId; // Links to API conversation ID (for feedback)
+  final String? feedback; // User feedback: 'LIKE', 'DISLIKE', or null
 
   // Rendering metadata (from API response)
-  final bool hasTable;               // Whether response includes table data
-  final GenUITableData? tableData;        // Table data for rendering
-  final GraphType? graphType;        // Type of graph (line, bar, or null)
-  final GraphData? graphData;        // Graph data for rendering charts
+  final bool hasTable; // Whether response includes table data
+  final GenUITableData? tableData; // Table data for rendering
+  final GraphType? graphType; // Type of graph (line, bar, or null)
+  final GraphData? graphData; // Graph data for rendering charts
 
   const Message({
     required this.id,

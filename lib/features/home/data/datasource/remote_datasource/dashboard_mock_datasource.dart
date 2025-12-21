@@ -16,7 +16,8 @@ class DashboardMockDataSource implements DashboardRemoteDataSource {
     String? startDate,
     String? endDate,
   }) async {
-    print('🏠 [MockDashboard] Fetching dashboard data (startDate: $startDate, endDate: $endDate)');
+    print(
+        '🏠 [MockDashboard] Fetching dashboard data (startDate: $startDate, endDate: $endDate)');
 
     // Simulate network delay
     await _simulateNetworkDelay();

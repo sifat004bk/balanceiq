@@ -26,7 +26,6 @@ class ChatMockDataSource implements ChatRemoteDataSource {
     String? imagePath,
     String? audioPath,
   }) async {
-
     // Get user ID from SharedPreferences
     final userId = sharedPreferences.getString(AppConstants.keyUserId) ?? '';
 

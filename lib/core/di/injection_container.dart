@@ -48,6 +48,7 @@ import '../../features/chat/domain/usecases/submit_feedback.dart';
 import '../../features/chat/presentation/cubit/chat_cubit.dart';
 import '../../features/chat/data/datasources/message_usage_datasource.dart';
 import '../../features/chat/data/datasources/message_usage_mock_datasource.dart';
+import '../../features/chat/data/datasources/chat_feedback_datasource.dart';
 
 import '../../features/chat/data/repositories/message_usage_repository_impl.dart';
 import '../../features/chat/data/repositories/chat_feedback_repository_impl.dart';
@@ -323,8 +324,8 @@ Future<void> init() async {
   );
 
   // Data sources
-  sl.registerLazySingleton<ChatRemoteDataSource>(
-    () => ChatFinanceGuruDataSource(sl(), sl(), sl()),
+  sl.registerLazySingleton<ChatFeedbackDataSource>(
+    () => ChatFeedbackDataSourceImpl(sl(), sl()),
   );
 
   //! Features - Message Usage

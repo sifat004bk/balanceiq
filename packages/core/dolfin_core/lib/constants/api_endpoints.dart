@@ -1,20 +1,21 @@
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-
 class ApiEndpoints {
-  static String get backendBaseUrl => dotenv.get(
-        'BACKEND_BASE_URL',
-        fallback: 'http://localhost:8080',
-      );
+  static String _backendBaseUrl = 'http://localhost:8080';
+  static String _authBaseUrl = 'http://localhost:8080/api/auth';
+  static String _agentBaseUrl = 'http://localhost:8080/api/finance-guru';
 
-  static String get authBaseUrl => dotenv.get(
-        'AUTH_BASE_URL',
-        fallback: '$backendBaseUrl/api/auth',
-      );
+  static void init({
+    required String backendBaseUrl,
+    required String authBaseUrl,
+    required String agentBaseUrl,
+  }) {
+    _backendBaseUrl = backendBaseUrl;
+    _authBaseUrl = authBaseUrl;
+    _agentBaseUrl = agentBaseUrl;
+  }
 
-  static String get financeGuruBaseUrl => dotenv.get(
-        'FINANCE_GURU_BASE_URL',
-        fallback: '$backendBaseUrl/api/finance-guru',
-      );
+  static String get backendBaseUrl => _backendBaseUrl;
+  static String get authBaseUrl => _authBaseUrl;
+  static String get agentBaseUrl => _agentBaseUrl;
 
   // Authentication APIs
   static String get signup => '$authBaseUrl/signup';
@@ -30,15 +31,15 @@ class ApiEndpoints {
   static String get verifyEmail => '$authBaseUrl/verify-email';
 
   // Finance Guru APIs
-  static String get dashboard => '$financeGuruBaseUrl/dashboard';
-  static String get chat => '$financeGuruBaseUrl/chat';
-  static String get chatHistory => '$financeGuruBaseUrl/chat-history';
-  static String get transactions => '$financeGuruBaseUrl/transactions';
-  static String get messageUsage => '$financeGuruBaseUrl/usage';
+  static String get dashboard => '$agentBaseUrl/dashboard';
+  static String get chat => '$agentBaseUrl/chat';
+  static String get chatHistory => '$agentBaseUrl/chat-history';
+  static String get transactions => '$agentBaseUrl/transactions';
+  static String get messageUsage => '$agentBaseUrl/usage';
 
   // Chat feedback endpoint (requires message ID)
   static String chatFeedback(int messageId) =>
-      '$financeGuruBaseUrl/chat-history/$messageId/feedback';
+      '$agentBaseUrl/chat-history/$messageId/feedback';
 
   // Subscription APIs
   static String get subscriptionsBaseUrl => '$backendBaseUrl/api/subscriptions';

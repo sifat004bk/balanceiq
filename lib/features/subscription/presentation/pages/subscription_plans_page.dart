@@ -248,7 +248,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
           boxShadow: isActive
               ? [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withValues(alpha: 0.1),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -290,8 +290,8 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
         boxShadow: [
           BoxShadow(
             color: isPopular
-                ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
-                : Theme.of(context).shadowColor.withOpacity(0.05),
+                ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1)
+                : Theme.of(context).shadowColor.withValues(alpha: 0.05),
             blurRadius: 20,
             spreadRadius: 0,
             offset: const Offset(0, 4),

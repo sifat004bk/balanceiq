@@ -69,18 +69,18 @@ class ThemedGlass {
       padding: padding,
       decoration: BoxDecoration(
         color: (isDark ? Colors.black : Colors.white)
-            .withOpacity(preset.opacity(isDark)),
+            .withValues(alpha: preset.opacity(isDark)),
         borderRadius: BorderRadius.circular(borderRadius),
         border: Border.all(
           color: isDark
-              ? Colors.white.withOpacity(0.1)
-              : Colors.black.withOpacity(0.05),
+              ? Colors.white.withValues(alpha: 0.1)
+              : Colors.black.withValues(alpha: 0.05),
           width: 1.0,
         ),
         boxShadow: [
           BoxShadow(
             color: (isDark ? Colors.black : Colors.grey)
-                .withOpacity(isDark ? 0.2 : 0.08),
+                .withValues(alpha: isDark ? 0.2 : 0.08),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),

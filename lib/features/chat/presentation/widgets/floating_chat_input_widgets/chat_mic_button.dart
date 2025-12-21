@@ -54,14 +54,18 @@ class _ChatMicButtonState extends State<ChatMicButton> {
             boxShadow: widget.isRecording
                 ? [
                     BoxShadow(
-                      color:
-                          Theme.of(context).colorScheme.error.withOpacity(0.4),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .error
+                          .withValues(alpha: 0.4),
                       blurRadius: 16,
                       offset: const Offset(0, 4),
                     ),
                     BoxShadow(
-                      color:
-                          Theme.of(context).colorScheme.error.withOpacity(0.2),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .error
+                          .withValues(alpha: 0.2),
                       blurRadius: 8,
                       spreadRadius: 2,
                     ),
@@ -101,7 +105,7 @@ class _ChatMicButtonState extends State<ChatMicButton> {
                   color: Theme.of(context)
                       .colorScheme
                       .onSurface
-                      .withOpacity(0.6 * (1 - value)),
+                      .withValues(alpha: 0.6 * (1 - value)),
                   width: 2,
                 ),
               ),

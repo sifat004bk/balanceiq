@@ -64,8 +64,8 @@ class HomepageLoadingPage extends StatelessWidget {
         baseColor: Theme.of(context)
             .colorScheme
             .surfaceContainerHighest
-            .withOpacity(0.5),
-        highlightColor: colorScheme.primary.withOpacity(0.1),
+            .withValues(alpha: 0.5),
+        highlightColor: colorScheme.primary.withValues(alpha: 0.1),
         period: Duration(milliseconds: 1500 + (index * 250)),
         child: Padding(
           padding: const EdgeInsets.all(16),

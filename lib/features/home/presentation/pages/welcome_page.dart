@@ -24,7 +24,7 @@ class WelcomePage extends StatelessWidget {
           end: Alignment.bottomCenter,
           colors: [
             Theme.of(context).scaffoldBackgroundColor,
-            Theme.of(context).scaffoldBackgroundColor.withOpacity(0.8),
+            Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.8),
           ],
         ),
       ),
@@ -40,7 +40,7 @@ class WelcomePage extends StatelessWidget {
                   width: 48,
                   height: 48,
                   decoration: BoxDecoration(
-                    color: colorScheme.surface.withOpacity(0.1),
+                    color: colorScheme.surface.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                     border: Border.all(
                       color: Theme.of(context).colorScheme.primary,
@@ -84,7 +84,7 @@ class WelcomePage extends StatelessWidget {
                         color: Theme.of(context)
                             .colorScheme
                             .primary
-                            .withOpacity(0.1),
+                            .withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                       ),
                       child: Center(
@@ -95,7 +95,7 @@ class WelcomePage extends StatelessWidget {
                             color: Theme.of(context)
                                 .colorScheme
                                 .primary
-                                .withOpacity(0.2),
+                                .withValues(alpha: 0.2),
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
@@ -166,7 +166,7 @@ class WelcomePage extends StatelessWidget {
                           shadowColor: Theme.of(context)
                               .colorScheme
                               .primary
-                              .withOpacity(0.3),
+                              .withValues(alpha: 0.3),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                           ),
@@ -205,7 +205,7 @@ class WelcomePage extends StatelessWidget {
           width: 56,
           height: 56,
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(16),
           ),
           child: Icon(

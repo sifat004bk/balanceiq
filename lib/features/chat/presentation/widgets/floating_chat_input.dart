@@ -212,7 +212,7 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                 height: 4,
                 decoration: BoxDecoration(
                   color: isDark
-                      ? Theme.of(context).hintColor.withOpacity(0.6)
+                      ? Theme.of(context).hintColor.withValues(alpha: 0.6)
                       : Theme.of(context).dividerColor,
                   borderRadius: BorderRadius.circular(2),
                 ),
@@ -294,7 +294,7 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
-              color: Theme.of(context).shadowColor.withOpacity(0.2),
+              color: Theme.of(context).shadowColor.withValues(alpha: 0.2),
               blurRadius: 8,
               offset: const Offset(0, 4),
             ),
@@ -374,7 +374,7 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                       height: 4,
                       decoration: BoxDecoration(
                         color: isDark
-                            ? Theme.of(context).hintColor.withOpacity(0.6)
+                            ? Theme.of(context).hintColor.withValues(alpha: 0.6)
                             : Theme.of(context).dividerColor,
                         borderRadius: BorderRadius.circular(2),
                       ),
@@ -399,8 +399,7 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                           color: Theme.of(context)
                               .colorScheme
                               .error
-                              .withOpacity(
-                                  0.9), // Higher opacity for legibility
+                              .withValues(alpha: 0.9),
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
                               color: Theme.of(context).colorScheme.error),
@@ -433,7 +432,7 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                           color: Theme.of(context)
                               .colorScheme
                               .secondary
-                              .withOpacity(0.9),
+                              .withValues(alpha: 0.9),
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
                               color: Theme.of(context).colorScheme.secondary),
@@ -470,14 +469,14 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
                             color: isDark
-                                ? primaryColor.withOpacity(0.2)
-                                : primaryColor.withOpacity(0.15),
+                                ? primaryColor.withValues(alpha: 0.2)
+                                : primaryColor.withValues(alpha: 0.15),
                           ),
                           boxShadow: [
                             BoxShadow(
                               color: Theme.of(context)
                                   .shadowColor
-                                  .withOpacity(0.1),
+                                  .withValues(alpha: 0.1),
                               blurRadius: 10,
                               offset: const Offset(0, 5),
                             ),

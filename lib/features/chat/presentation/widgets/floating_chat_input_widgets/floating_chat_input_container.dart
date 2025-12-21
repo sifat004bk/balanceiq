@@ -30,24 +30,28 @@ class FloatingChatInputContainer extends StatelessWidget {
       decoration: BoxDecoration(
         // Glassmorphic background
         color: isDark
-            ? Theme.of(context).cardColor.withOpacity(hasFocus ? 1.0 : 0.95)
-            : Theme.of(context).cardColor.withOpacity(hasFocus ? 1.0 : 0.95),
+            ? Theme.of(context)
+                .cardColor
+                .withValues(alpha: hasFocus ? 1.0 : 0.95)
+            : Theme.of(context)
+                .cardColor
+                .withValues(alpha: hasFocus ? 1.0 : 0.95),
         borderRadius: BorderRadius.circular(28),
         border: Border.all(
           color: hasFocus
-              ? primaryColor.withOpacity(0.8) // Stronger glow on focus
+              ? primaryColor.withValues(alpha: 0.8) // Stronger glow on focus
               : (hasContent
-                  ? primaryColor.withOpacity(0.6)
+                  ? primaryColor.withValues(alpha: 0.6)
                   : (isDark
-                      ? primaryColor.withOpacity(0.2)
-                      : primaryColor.withOpacity(0.15))),
+                      ? primaryColor.withValues(alpha: 0.2)
+                      : primaryColor.withValues(alpha: 0.15))),
           width: hasFocus ? 2.5 : (hasContent ? 2.0 : 1.5),
         ),
         boxShadow: [
           // Spotlight Glow
           if (hasFocus)
             BoxShadow(
-              color: primaryColor.withOpacity(0.5),
+              color: primaryColor.withValues(alpha: 0.5),
               blurRadius: 16,
               spreadRadius: 4,
               offset: const Offset(0, 4),
@@ -55,8 +59,8 @@ class FloatingChatInputContainer extends StatelessWidget {
           // Primary shadow
           BoxShadow(
             color: hasContent
-                ? primaryColor.withOpacity(0.35)
-                : primaryColor.withOpacity(0.15),
+                ? primaryColor.withValues(alpha: 0.35)
+                : primaryColor.withValues(alpha: 0.15),
             blurRadius: hasContent ? 10 : 5,
             offset: const Offset(0, 4),
           ),

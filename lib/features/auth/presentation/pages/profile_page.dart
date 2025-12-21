@@ -470,7 +470,7 @@ class _ProfilePageState extends State<ProfilePage> {
           left: 16,
           child: Container(
             decoration: BoxDecoration(
-              color: Theme.of(context).cardColor.withOpacity(0.5),
+              color: Theme.of(context).cardColor.withValues(alpha: 0.5),
               shape: BoxShape.circle,
             ),
             child: IconButton(
@@ -494,11 +494,11 @@ class _ProfilePageState extends State<ProfilePage> {
     final colorScheme = Theme.of(context).colorScheme;
     final warningColor = Colors.orange;
 
-    final backgroundColor = warningColor.withOpacity(0.1);
-    final borderColor = warningColor.withOpacity(0.3);
-    final iconBgColor = warningColor.withOpacity(0.15);
+    final backgroundColor = warningColor.withValues(alpha: 0.1);
+    final borderColor = warningColor.withValues(alpha: 0.3);
+    final iconBgColor = warningColor.withValues(alpha: 0.15);
     final titleColor = colorScheme.onSurface;
-    final subtitleColor = colorScheme.onSurface.withOpacity(0.7);
+    final subtitleColor = colorScheme.onSurface.withValues(alpha: 0.7);
 
     // Use SignupCubit for verification actions
     return BlocConsumer<SignupCubit, SignupState>(
@@ -580,7 +580,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: warningColor,
                     foregroundColor: colorScheme.onInverseSurface,
-                    disabledBackgroundColor: warningColor.withOpacity(0.5),
+                    disabledBackgroundColor:
+                        warningColor.withValues(alpha: 0.5),
                     padding:
                         EdgeInsets.symmetric(vertical: DesignConstants.space3),
                     shape: RoundedRectangleBorder(
@@ -631,7 +632,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: colorScheme.primary.withOpacity(0.4),
+                    color: colorScheme.primary.withValues(alpha: 0.4),
                     blurRadius: 40,
                     spreadRadius: 10,
                   ),
@@ -745,7 +746,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
                   color: hasSubscription
-                      ? colorScheme.primary.withOpacity(0.2)
+                      ? colorScheme.primary.withValues(alpha: 0.2)
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
@@ -914,7 +915,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         boxShadow: [
           BoxShadow(
-            color: Theme.of(context).shadowColor.withOpacity(0.05),
+            color: Theme.of(context).shadowColor.withValues(alpha: 0.05),
             blurRadius: 10,
             spreadRadius: 0,
             offset: const Offset(0, 4),
@@ -939,7 +940,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.orange.withOpacity(0.1),
+                    color: Colors.orange.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Row(
@@ -1105,7 +1106,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         boxShadow: [
           BoxShadow(
-            color: Theme.of(context).shadowColor.withOpacity(0.05),
+            color: Theme.of(context).shadowColor.withValues(alpha: 0.05),
             blurRadius: 10,
             spreadRadius: 0,
             offset: const Offset(0, 4),
@@ -1210,7 +1211,10 @@ class _ProfilePageState extends State<ProfilePage> {
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                color: Theme.of(context)
+                    .colorScheme
+                    .primary
+                    .withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(

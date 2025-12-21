@@ -111,7 +111,7 @@ class _OnboardingWelcomeScreenState extends State<OnboardingWelcomeScreen>
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: colorScheme.primary.withOpacity(0.3),
+                    color: colorScheme.primary.withValues(alpha: 0.3),
                     blurRadius: 30,
                     spreadRadius: 5,
                   ),
@@ -183,7 +183,7 @@ class _OnboardingWelcomeScreenState extends State<OnboardingWelcomeScreen>
                     color: colorScheme.surfaceContainerLow,
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: colorScheme.outlineVariant.withOpacity(0.5),
+                      color: colorScheme.outlineVariant.withValues(alpha: 0.5),
                     ),
                   ),
                   child: Column(

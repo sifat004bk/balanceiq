@@ -100,7 +100,8 @@ class _VerificationSuccessPageState extends State<VerificationSuccessPage>
                                 width: 160 * _pulseAnimation.value,
                                 height: 160 * _pulseAnimation.value,
                                 decoration: BoxDecoration(
-                                  color: colorScheme.primary.withOpacity(0.1),
+                                  color: colorScheme.primary
+                                      .withValues(alpha: 0.1),
                                   shape: BoxShape.circle,
                                 ),
                               );
@@ -111,7 +112,7 @@ class _VerificationSuccessPageState extends State<VerificationSuccessPage>
                             width: 120,
                             height: 120,
                             decoration: BoxDecoration(
-                              color: colorScheme.primary.withOpacity(0.3),
+                              color: colorScheme.primary.withValues(alpha: 0.3),
                               shape: BoxShape.circle,
                             ),
                           ),

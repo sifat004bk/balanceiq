@@ -116,7 +116,7 @@ class _TourCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.black.withOpacity(0.7),
+      color: Colors.black.withValues(alpha: 0.7),
       child: SafeArea(
         child: _buildPositionedCard(context),
       ),
@@ -135,7 +135,7 @@ class _TourCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: colorScheme.primary.withOpacity(0.3),
+            color: colorScheme.primary.withValues(alpha: 0.3),
             blurRadius: 20,
             spreadRadius: 5,
           ),

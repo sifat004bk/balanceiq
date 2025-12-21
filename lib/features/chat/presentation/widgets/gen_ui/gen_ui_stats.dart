@@ -46,15 +46,15 @@ class GenUIStats extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            cardColor.withOpacity(0.15),
-            cardColor.withOpacity(0.05),
+            cardColor.withValues(alpha: 0.15),
+            cardColor.withValues(alpha: 0.05),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: cardColor.withOpacity(0.3),
+          color: cardColor.withValues(alpha: 0.3),
           width: 1.5,
         ),
       ),
@@ -92,7 +92,7 @@ class GenUIStats extends StatelessWidget {
                       .textTheme
                       .bodySmall
                       ?.color
-                      ?.withOpacity(0.7),
+                      ?.withValues(alpha: 0.7),
                 ),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,

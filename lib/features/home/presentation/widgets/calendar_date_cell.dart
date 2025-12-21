@@ -73,7 +73,7 @@ class CalendarDateCell extends StatelessWidget {
         return LinearGradient(
           colors: [
             Theme.of(context).primaryColor,
-            Theme.of(context).colorScheme.primary.withOpacity(0.8),
+            Theme.of(context).colorScheme.primary.withValues(alpha: 0.8),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -93,7 +93,7 @@ class CalendarDateCell extends StatelessWidget {
       case DateCellType.endDate:
         return null; // Uses gradient
       case DateCellType.inRange:
-        return Theme.of(context).primaryColor.withOpacity(0.1);
+        return Theme.of(context).primaryColor.withValues(alpha: 0.1);
       case DateCellType.today:
         return Colors.transparent;
       default:
@@ -139,7 +139,7 @@ class CalendarDateCell extends StatelessWidget {
         cellType == DateCellType.endDate) {
       return [
         BoxShadow(
-          color: Theme.of(context).primaryColor.withOpacity(0.3),
+          color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
           blurRadius: 8,
           spreadRadius: 1,
         ),
@@ -149,7 +149,7 @@ class CalendarDateCell extends StatelessWidget {
     if (cellType == DateCellType.today && isDark) {
       return [
         BoxShadow(
-          color: Theme.of(context).primaryColor.withOpacity(0.2),
+          color: Theme.of(context).primaryColor.withValues(alpha: 0.2),
           blurRadius: 6,
           spreadRadius: 0,
         ),
@@ -161,12 +161,20 @@ class CalendarDateCell extends StatelessWidget {
 
   Color _getTextColor(BuildContext context, bool isDark) {
     if (!isCurrentMonth) {
-      return Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.3) ??
+      return Theme.of(context)
+              .textTheme
+              .bodySmall
+              ?.color
+              ?.withValues(alpha: 0.3) ??
           Colors.grey;
     }
 
     if (isDisabled) {
-      return Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.5) ??
+      return Theme.of(context)
+              .textTheme
+              .bodySmall
+              ?.color
+              ?.withValues(alpha: 0.5) ??
           Colors.grey;
     }
 

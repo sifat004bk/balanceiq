@@ -23,7 +23,7 @@ class AiMessageHeader extends StatelessWidget {
               gradient: LinearGradient(
                 colors: [
                   botColor,
-                  botColor.withOpacity(0.8),
+                  botColor.withValues(alpha: 0.8),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -31,7 +31,7 @@ class AiMessageHeader extends StatelessWidget {
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: botColor.withOpacity(0.3),
+                  color: botColor.withValues(alpha: 0.3),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),

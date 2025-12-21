@@ -44,10 +44,15 @@ class GenUIActionList extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                backgroundColor:
-                    Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                backgroundColor: Theme.of(context)
+                    .colorScheme
+                    .primary
+                    .withValues(alpha: 0.1),
                 side: BorderSide(
-                  color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .primary
+                      .withValues(alpha: 0.3),
                 ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),

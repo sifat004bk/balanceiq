@@ -20,7 +20,7 @@ class EmailSentModal extends StatelessWidget {
     return showDialog(
       context: context,
       barrierDismissible: false,
-      barrierColor: Colors.black.withOpacity(0.7),
+      barrierColor: Colors.black.withValues(alpha: 0.7),
       builder: (context) => EmailSentModal(
         onContinue: onContinue,
       ),
@@ -42,7 +42,7 @@ class EmailSentModal extends StatelessWidget {
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: primaryColor.withOpacity(0.15),
+              color: primaryColor.withValues(alpha: 0.15),
               blurRadius: 30,
               spreadRadius: 5,
             ),
@@ -62,8 +62,8 @@ class EmailSentModal extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    AppPalette.success.withOpacity(0.2),
-                    AppPalette.success.withOpacity(0.1),
+                    AppPalette.success.withValues(alpha: 0.2),
+                    AppPalette.success.withValues(alpha: 0.1),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -79,7 +79,7 @@ class EmailSentModal extends StatelessWidget {
                 .animate(onPlay: (controller) => controller.repeat())
                 .shimmer(
                   duration: 2.seconds,
-                  color: AppPalette.success.withOpacity(0.3),
+                  color: AppPalette.success.withValues(alpha: 0.3),
                 )
                 .animate()
                 .scale(
@@ -122,7 +122,7 @@ class EmailSentModal extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
                 color: isDark
-                    ? Colors.grey.shade900.withOpacity(0.5)
+                    ? Colors.grey.shade900.withValues(alpha: 0.5)
                     : Colors.grey.shade100,
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
@@ -166,7 +166,7 @@ class EmailSentModal extends StatelessWidget {
                     borderRadius: BorderRadius.circular(14),
                   ),
                   side: BorderSide(
-                    color: primaryColor.withOpacity(0.5),
+                    color: primaryColor.withValues(alpha: 0.5),
                     width: 1.5,
                   ),
                 ),

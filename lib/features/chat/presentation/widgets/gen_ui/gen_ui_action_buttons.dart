@@ -44,7 +44,7 @@ class GenUIActionButtons extends StatelessWidget {
       color: backgroundColor,
       borderRadius: BorderRadius.circular(12),
       elevation: isPrimary ? 2 : 0,
-      shadowColor: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+      shadowColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
       child: InkWell(
         onTap: () {
           // Show feedback for button tap

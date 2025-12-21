@@ -30,7 +30,7 @@ class ChatSendButton extends StatelessWidget {
                 ? LinearGradient(
                     colors: [
                       primaryColor,
-                      primaryColor.withOpacity(0.85),
+                      primaryColor.withValues(alpha: 0.85),
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -45,12 +45,12 @@ class ChatSendButton extends StatelessWidget {
             boxShadow: isEnabled
                 ? [
                     BoxShadow(
-                      color: primaryColor.withOpacity(0.4),
+                      color: primaryColor.withValues(alpha: 0.4),
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                     ),
                     BoxShadow(
-                      color: primaryColor.withOpacity(0.2),
+                      color: primaryColor.withValues(alpha: 0.2),
                       blurRadius: 6,
                       spreadRadius: 1,
                     ),

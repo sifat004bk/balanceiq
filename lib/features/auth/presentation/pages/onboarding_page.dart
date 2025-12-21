@@ -91,7 +91,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                 controller: _pageController,
                 count: 4,
                 effect: WormEffect(
-                  dotColor: colorScheme.onSurface.withOpacity(0.2),
+                  dotColor: colorScheme.onSurface.withValues(alpha: 0.2),
                   activeDotColor: colorScheme.primary,
                   dotHeight: 8,
                   dotWidth: 8,
@@ -165,7 +165,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
             width: 192,
             height: 192,
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+              color:
+                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
               shape: BoxShape.circle,
             ),
             child: Center(

@@ -27,26 +27,26 @@ void main() {
 
     test('write calls storage.write', () async {
       when(() => mockStorage.write(key: key, value: value))
-          .thenAnswer((_) async => null);
+          .thenAnswer((_) async {});
       await secureStorageService.write(key: key, value: value);
       verify(() => mockStorage.write(key: key, value: value)).called(1);
     });
 
     test('delete calls storage.delete', () async {
-      when(() => mockStorage.delete(key: key)).thenAnswer((_) async => null);
+      when(() => mockStorage.delete(key: key)).thenAnswer((_) async {});
       await secureStorageService.delete(key: key);
       verify(() => mockStorage.delete(key: key)).called(1);
     });
 
     test('deleteAll calls storage.deleteAll', () async {
-      when(() => mockStorage.deleteAll()).thenAnswer((_) async => null);
+      when(() => mockStorage.deleteAll()).thenAnswer((_) async {});
       await secureStorageService.deleteAll();
       verify(() => mockStorage.deleteAll()).called(1);
     });
 
     test('saveToken writes to correct key', () async {
       when(() => mockStorage.write(key: 'access_token', value: value))
-          .thenAnswer((_) async => null);
+          .thenAnswer((_) async {});
       await secureStorageService.saveToken(value);
       verify(() => mockStorage.write(key: 'access_token', value: value))
           .called(1);

@@ -110,7 +110,7 @@ class _TypingIndicatorState extends State<TypingIndicator>
               gradient: LinearGradient(
                 colors: [
                   Theme.of(context).colorScheme.primary,
-                  Theme.of(context).colorScheme.primary.withOpacity(0.8),
+                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.8),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -118,7 +118,10 @@ class _TypingIndicatorState extends State<TypingIndicator>
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .primary
+                      .withValues(alpha: 0.3),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -135,17 +138,17 @@ class _TypingIndicatorState extends State<TypingIndicator>
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
             decoration: BoxDecoration(
-              color: Theme.of(context).cardColor.withOpacity(0.8),
+              color: Theme.of(context).cardColor.withValues(alpha: 0.8),
               borderRadius: const BorderRadius.all(
                 Radius.circular(20),
               ),
               border: Border.all(
-                color: Theme.of(context).dividerColor.withOpacity(0.5),
+                color: Theme.of(context).dividerColor.withValues(alpha: 0.5),
                 width: 1,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Theme.of(context).shadowColor.withOpacity(0.1),
+                  color: Theme.of(context).shadowColor.withValues(alpha: 0.1),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),
@@ -178,12 +181,12 @@ class _TypingIndicatorState extends State<TypingIndicator>
             width: 10,
             height: 10,
             decoration: BoxDecoration(
-              color: color.withOpacity(animation.value),
+              color: color.withValues(alpha: animation.value),
               shape: BoxShape.circle,
               boxShadow: animation.value > 0.7
                   ? [
                       BoxShadow(
-                        color: color.withOpacity(0.4),
+                        color: color.withValues(alpha: 0.4),
                         blurRadius: 4,
                         offset: const Offset(0, 1),
                       ),

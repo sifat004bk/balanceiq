@@ -22,7 +22,7 @@ class FinancialRatiosWidget extends StatelessWidget {
             context,
             title: AppStrings.dashboard.expenseRatio,
             value: expenseRatio,
-            backgroundColor: colorScheme.error.withOpacity(0.15),
+            backgroundColor: colorScheme.error.withValues(alpha: 0.15),
             textColor: colorScheme.onSurface,
           ),
         ),
@@ -33,7 +33,7 @@ class FinancialRatiosWidget extends StatelessWidget {
             title: AppStrings.dashboard.savingsRate,
             value: savingsRate,
             backgroundColor:
-                Theme.of(context).colorScheme.primary.withOpacity(0.4),
+                Theme.of(context).colorScheme.primary.withValues(alpha: 0.4),
             textColor: colorScheme.onSurface,
           ),
         ),

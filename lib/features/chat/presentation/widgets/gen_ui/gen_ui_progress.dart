@@ -24,7 +24,7 @@ class GenUIProgress extends StatelessWidget {
         border: Border.all(color: Theme.of(context).dividerColor),
         boxShadow: [
           BoxShadow(
-            color: Theme.of(context).shadowColor.withOpacity(0.03),
+            color: Theme.of(context).shadowColor.withValues(alpha: 0.03),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -64,7 +64,7 @@ class GenUIProgress extends StatelessWidget {
                 child: LinearProgressIndicator(
                   value: value,
                   minHeight: 12,
-                  backgroundColor: colorScheme.primary.withOpacity(0.1),
+                  backgroundColor: colorScheme.primary.withValues(alpha: 0.1),
                   valueColor: AlwaysStoppedAnimation<Color>(
                     _getProgressColor(percentage, context),
                   ),
@@ -90,7 +90,7 @@ class GenUIProgress extends StatelessWidget {
                             .textTheme
                             .bodySmall
                             ?.color
-                            ?.withOpacity(0.6),
+                            ?.withValues(alpha: 0.6),
                       ),
                 ),
               ],
@@ -105,7 +105,7 @@ class GenUIProgress extends StatelessWidget {
                         .textTheme
                         .bodySmall
                         ?.color
-                        ?.withOpacity(0.8),
+                        ?.withValues(alpha: 0.8),
                   ),
             ),
           ],

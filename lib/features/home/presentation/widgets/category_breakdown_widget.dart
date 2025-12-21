@@ -63,7 +63,7 @@ class CategoryBreakdownWidget extends StatelessWidget {
                       color: Theme.of(context)
                           .colorScheme
                           .primary
-                          .withOpacity(0.3),
+                          .withValues(alpha: 0.3),
                       blurRadius: 8,
                       spreadRadius: 1,
                     ),
@@ -140,8 +140,8 @@ class CategoryBreakdownWidget extends StatelessWidget {
         gradient: isDark
             ? LinearGradient(
                 colors: [
-                  Theme.of(context).cardColor.withOpacity(0.6),
-                  Theme.of(context).cardColor.withOpacity(0.3),
+                  Theme.of(context).cardColor.withValues(alpha: 0.6),
+                  Theme.of(context).cardColor.withValues(alpha: 0.3),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -149,21 +149,21 @@ class CategoryBreakdownWidget extends StatelessWidget {
             : LinearGradient(
                 colors: [
                   Theme.of(context).cardColor,
-                  Theme.of(context).cardColor.withOpacity(0.5),
+                  Theme.of(context).cardColor.withValues(alpha: 0.5),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: Theme.of(context).dividerColor.withOpacity(0.1),
+          color: Theme.of(context).dividerColor.withValues(alpha: 0.1),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
             color: isDark
-                ? Theme.of(context).shadowColor.withOpacity(0.3)
-                : accentColor.withOpacity(0.08),
+                ? Theme.of(context).shadowColor.withValues(alpha: 0.3)
+                : accentColor.withValues(alpha: 0.08),
             offset: const Offset(0, 4),
             blurRadius: 12,
           ),
@@ -189,7 +189,7 @@ class CategoryBreakdownWidget extends StatelessWidget {
                         gradient: LinearGradient(
                           colors: [
                             accentColor,
-                            accentColor.withOpacity(0.7),
+                            accentColor.withValues(alpha: 0.7),
                           ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
@@ -197,7 +197,7 @@ class CategoryBreakdownWidget extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
-                            color: accentColor.withOpacity(0.3),
+                            color: accentColor.withValues(alpha: 0.3),
                             blurRadius: 8,
                             spreadRadius: 1,
                           ),
@@ -213,7 +213,7 @@ class CategoryBreakdownWidget extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
-                        color: accentColor.withOpacity(0.15),
+                        color: accentColor.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(

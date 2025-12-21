@@ -39,13 +39,13 @@ class GenUITable extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Theme.of(context).shadowColor.withOpacity(0.05),
+            color: Theme.of(context).shadowColor.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
         ],
-        border:
-            Border.all(color: Theme.of(context).dividerColor.withOpacity(0.5)),
+        border: Border.all(
+            color: Theme.of(context).dividerColor.withValues(alpha: 0.5)),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
@@ -57,7 +57,8 @@ class GenUITable extends StatelessWidget {
                 // Override DataTable theme to match our custom gradient look if possible,
                 // or just use the available properties of DataTable2
                 data: Theme.of(context).copyWith(
-                  dividerColor: Theme.of(context).dividerColor.withOpacity(0.5),
+                  dividerColor:
+                      Theme.of(context).dividerColor.withValues(alpha: 0.5),
                   dataTableTheme: DataTableThemeData(
                     headingRowColor:
                         WidgetStateProperty.all(Colors.transparent),
@@ -74,8 +75,14 @@ class GenUITable extends StatelessWidget {
                   headingRowDecoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        Theme.of(context).colorScheme.primary.withOpacity(0.15),
-                        Theme.of(context).colorScheme.primary.withOpacity(0.05),
+                        Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withValues(alpha: 0.15),
+                        Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withValues(alpha: 0.05),
                       ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
@@ -107,7 +114,7 @@ class GenUITable extends StatelessWidget {
                             : Theme.of(context)
                                 .colorScheme
                                 .primary
-                                .withOpacity(0.02),
+                                .withValues(alpha: 0.02),
                       ),
                       cells: columns.map((colName) {
                         final cellValue = rowMap[colName]?.toString() ?? '';

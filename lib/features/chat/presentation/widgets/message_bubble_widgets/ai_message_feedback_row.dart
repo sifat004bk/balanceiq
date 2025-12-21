@@ -31,7 +31,7 @@ class AiMessageFeedbackRow extends StatelessWidget {
                 : Icons.thumb_up_outlined,
             color: message.feedback == 'LIKE'
                 ? colorScheme.primary
-                : colorScheme.onSurface.withOpacity(0.6),
+                : colorScheme.onSurface.withValues(alpha: 0.6),
             onPressed: () {
               final newFeedback = message.feedback == 'LIKE'
                   ? FeedbackType.none
@@ -54,7 +54,7 @@ class AiMessageFeedbackRow extends StatelessWidget {
                 : Icons.thumb_down_outlined,
             color: message.feedback == 'DISLIKE'
                 ? colorScheme.error
-                : colorScheme.onSurface.withOpacity(0.6),
+                : colorScheme.onSurface.withValues(alpha: 0.6),
             onPressed: () {
               final newFeedback = message.feedback == 'DISLIKE'
                   ? FeedbackType.none
@@ -77,7 +77,7 @@ class AiMessageFeedbackRow extends StatelessWidget {
           _buildActionButton(
             context,
             icon: Icons.select_all,
-            color: colorScheme.onSurface.withOpacity(0.6),
+            color: colorScheme.onSurface.withValues(alpha: 0.6),
             onPressed: () {
               SnackbarUtils.showInfo(context, AppStrings.common.selectTextMode);
             },
@@ -89,7 +89,7 @@ class AiMessageFeedbackRow extends StatelessWidget {
           _buildActionButton(
             context,
             icon: Icons.content_copy,
-            color: colorScheme.onSurface.withOpacity(0.6),
+            color: colorScheme.onSurface.withValues(alpha: 0.6),
             onPressed: () {
               Clipboard.setData(ClipboardData(text: message.content));
               SnackbarUtils.showInfo(context, AppStrings.common.copied);
@@ -103,7 +103,7 @@ class AiMessageFeedbackRow extends StatelessWidget {
           _buildActionButton(
             context,
             icon: Icons.refresh,
-            color: colorScheme.onSurface.withOpacity(0.6),
+            color: colorScheme.onSurface.withValues(alpha: 0.6),
             onPressed: () {
               SnackbarUtils.showInfo(context, AppStrings.chat.regenerating);
             },

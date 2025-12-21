@@ -35,13 +35,13 @@ class TourTooltipContent extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: primaryColor.withOpacity(0.2),
+            color: primaryColor.withValues(alpha: 0.2),
             blurRadius: 20,
             spreadRadius: 2,
           ),
         ],
         border: Border.all(
-          color: primaryColor.withOpacity(0.3),
+          color: primaryColor.withValues(alpha: 0.3),
           width: 1.5,
         ),
       ),
@@ -54,7 +54,7 @@ class TourTooltipContent extends StatelessWidget {
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: primaryColor.withOpacity(0.15),
+                color: primaryColor.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
@@ -158,13 +158,13 @@ class ChatInputTourTooltip extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: primaryColor.withOpacity(0.2),
+            color: primaryColor.withValues(alpha: 0.2),
             blurRadius: 20,
             spreadRadius: 2,
           ),
         ],
         border: Border.all(
-          color: primaryColor.withOpacity(0.3),
+          color: primaryColor.withValues(alpha: 0.3),
           width: 1.5,
         ),
       ),
@@ -181,7 +181,7 @@ class ChatInputTourTooltip extends StatelessWidget {
                   gradient: LinearGradient(
                     colors: [
                       primaryColor,
-                      primaryColor.withOpacity(0.7),
+                      primaryColor.withValues(alpha: 0.7),
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -228,7 +228,7 @@ class ChatInputTourTooltip extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: isDark
-                  ? Colors.grey.shade900.withOpacity(0.5)
+                  ? Colors.grey.shade900.withValues(alpha: 0.5)
                   : Colors.grey.shade100,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(

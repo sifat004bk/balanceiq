@@ -65,7 +65,7 @@ class _LoadingPageState extends State<LoadingPage>
                   width: 96,
                   height: 96,
                   decoration: BoxDecoration(
-                    color: colorScheme.primary.withOpacity(0.2),
+                    color: colorScheme.primary.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(24),
                   ),
                   child: Center(
@@ -103,7 +103,7 @@ class _LoadingPageState extends State<LoadingPage>
                 width: double.infinity,
                 height: 8,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).dividerColor.withOpacity(0.2),
+                  color: Theme.of(context).dividerColor.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: FractionallySizedBox(

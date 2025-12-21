@@ -26,7 +26,7 @@ class BiggestExpenseWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: colorScheme.surface.withOpacity(0.7),
+        color: colorScheme.surface.withValues(alpha: 0.7),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -36,7 +36,7 @@ class BiggestExpenseWidget extends StatelessWidget {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: colorScheme.error.withOpacity(0.2),
+              color: colorScheme.error.withValues(alpha: 0.2),
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -75,7 +75,7 @@ class BiggestExpenseWidget extends StatelessWidget {
             style: textTheme.titleMedium?.copyWith(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: AppPalette.expense.withOpacity(0.8),
+              color: AppPalette.expense.withValues(alpha: 0.8),
             ),
           ),
         ],

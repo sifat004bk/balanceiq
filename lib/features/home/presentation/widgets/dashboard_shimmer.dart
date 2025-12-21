@@ -121,8 +121,8 @@ class DashboardShimmer extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Shimmer.fromColors(
-      baseColor: colorScheme.onSurface.withOpacity(0.05),
-      highlightColor: colorScheme.onSurface.withOpacity(0.1),
+      baseColor: colorScheme.onSurface.withValues(alpha: 0.05),
+      highlightColor: colorScheme.onSurface.withValues(alpha: 0.1),
       child: Container(
         width: width,
         height: height,
@@ -144,8 +144,8 @@ class DashboardShimmer extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Shimmer.fromColors(
-      baseColor: colorScheme.onSurface.withOpacity(0.05),
-      highlightColor: colorScheme.onSurface.withOpacity(0.1),
+      baseColor: colorScheme.onSurface.withValues(alpha: 0.05),
+      highlightColor: colorScheme.onSurface.withValues(alpha: 0.1),
       child: Container(
         width: width,
         height: height,

@@ -129,7 +129,8 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.error.withOpacity(0.1),
+                color:
+                    Theme.of(context).colorScheme.error.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(Icons.delete_outline,
@@ -323,7 +324,7 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
                               backgroundColor: Theme.of(context)
                                   .colorScheme
                                   .primary
-                                  .withOpacity(0.1),
+                                  .withValues(alpha: 0.1),
                             ),
                           ).animate().fadeIn(delay: 200.ms, duration: 300.ms),
                         ],
@@ -526,7 +527,8 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+              color:
+                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(
@@ -759,7 +761,7 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
           color: isSelected
-              ? color.withOpacity(0.15)
+              ? color.withValues(alpha: 0.15)
               : Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(

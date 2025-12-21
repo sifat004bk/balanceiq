@@ -165,7 +165,7 @@ class _ParticlePainter extends CustomPainter {
       if (opacity <= 0) continue;
 
       final paint = Paint()
-        ..color = particle.color.withOpacity(opacity * 0.8)
+        ..color = particle.color.withValues(alpha: opacity * 0.8)
         ..style = PaintingStyle.fill;
 
       canvas.save();

@@ -132,7 +132,7 @@ class _SalaryDayStoryScreenState extends State<SalaryDayStoryScreen> {
                     color: colorScheme.surfaceContainerLowest,
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                      color: colorScheme.outlineVariant.withOpacity(0.5),
+                      color: colorScheme.outlineVariant.withValues(alpha: 0.5),
                     ),
                   ),
                   child: ClipRRect(

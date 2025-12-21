@@ -98,8 +98,10 @@ class _LoginPageState extends State<LoginPage> {
                   width: 64,
                   height: 64,
                   decoration: BoxDecoration(
-                    color:
-                        Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Icon(
@@ -291,7 +293,8 @@ class _LoginPageState extends State<LoginPage> {
                                     .bodyMedium
                                     ?.copyWith(
                                       fontWeight: FontWeight.w800,
-                                      color: AppPalette.white.withOpacity(0.9),
+                                      color: AppPalette.white
+                                          .withValues(alpha: 0.9),
                                     ),
                               ),
                       );

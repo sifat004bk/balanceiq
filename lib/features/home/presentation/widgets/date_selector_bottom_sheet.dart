@@ -35,7 +35,7 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
         ),
         borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
         border: Border.all(
-          color: Theme.of(context).dividerColor.withOpacity(0.1),
+          color: Theme.of(context).dividerColor.withValues(alpha: 0.1),
           width: 1,
         ),
       ),
@@ -57,8 +57,10 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
                 borderRadius: BorderRadius.circular(3),
                 boxShadow: [
                   BoxShadow(
-                    color:
-                        Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withValues(alpha: 0.3),
                     blurRadius: 8,
                     spreadRadius: 1,
                   ),
@@ -76,7 +78,10 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
               letterSpacing: -0.5,
               shadows: [
                 Shadow(
-                  color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .primary
+                      .withValues(alpha: 0.3),
                   blurRadius: 12,
                 ),
               ],
@@ -151,7 +156,7 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
               gradient: LinearGradient(
                 colors: [
                   Colors.transparent,
-                  Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
                   Colors.transparent,
                 ],
               ),
@@ -184,15 +189,15 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    Theme.of(context).cardColor.withOpacity(0.5),
-                    Theme.of(context).cardColor.withOpacity(0.3),
+                    Theme.of(context).cardColor.withValues(alpha: 0.5),
+                    Theme.of(context).cardColor.withValues(alpha: 0.3),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: Theme.of(context).dividerColor.withOpacity(0.1),
+                  color: Theme.of(context).dividerColor.withValues(alpha: 0.1),
                   width: 1,
                 ),
               ),
@@ -211,7 +216,7 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
                           color: Theme.of(context)
                               .colorScheme
                               .primary
-                              .withOpacity(0.3),
+                              .withValues(alpha: 0.3),
                           blurRadius: 8,
                           spreadRadius: 1,
                         ),
@@ -285,7 +290,7 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
             border: Border.all(
               color: isSelected
                   ? Theme.of(context).colorScheme.primary
-                  : Theme.of(context).dividerColor.withOpacity(0.1),
+                  : Theme.of(context).dividerColor.withValues(alpha: 0.1),
               width: isSelected ? 2 : 1,
             ),
             boxShadow: isSelected
@@ -294,7 +299,7 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
                       color: Theme.of(context)
                           .colorScheme
                           .primary
-                          .withOpacity(0.3),
+                          .withValues(alpha: 0.3),
                       blurRadius: 12,
                       spreadRadius: 2,
                     ),

@@ -19,12 +19,14 @@ class TransactionsShimmer extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Shimmer.fromColors(
-      baseColor: colorScheme.onSurface.withOpacity(0.05),
-      highlightColor: colorScheme.onSurface.withOpacity(0.1),
+      baseColor: colorScheme.onSurface.withValues(alpha: 0.05),
+      highlightColor: colorScheme.onSurface.withValues(alpha: 0.1),
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isDark ? colorScheme.surface.withOpacity(0.05) : Colors.white,
+          color: isDark
+              ? colorScheme.surface.withValues(alpha: 0.05)
+              : Colors.white,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Row(

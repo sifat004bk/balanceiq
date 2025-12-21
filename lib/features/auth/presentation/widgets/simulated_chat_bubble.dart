@@ -110,7 +110,7 @@ class _SimulatedChatBubbleState extends State<SimulatedChatBubble>
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
+                      color: Colors.black.withValues(alpha: 0.05),
                       blurRadius: 5,
                       offset: const Offset(0, 2),
                     ),
@@ -245,7 +245,8 @@ class _TypingDotState extends State<_TypingDot>
               width: 8,
               height: 8,
               decoration: BoxDecoration(
-                color: widget.color.withOpacity(0.4 + 0.6 * _animation.value),
+                color: widget.color
+                    .withValues(alpha: 0.4 + 0.6 * _animation.value),
                 shape: BoxShape.circle,
               ),
             ),

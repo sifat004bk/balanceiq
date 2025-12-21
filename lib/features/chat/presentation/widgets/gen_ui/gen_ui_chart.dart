@@ -29,7 +29,7 @@ class GenUIChart extends StatelessWidget {
           colors: isDark
               ? [
                   Theme.of(context).cardColor,
-                  Theme.of(context).cardColor.withOpacity(0.8),
+                  Theme.of(context).cardColor.withValues(alpha: 0.8),
                 ]
               : [
                   Colors.white,
@@ -40,20 +40,22 @@ class GenUIChart extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: isDark ? Colors.white.withOpacity(0.08) : Colors.grey.shade200,
+          color: isDark
+              ? Colors.white.withValues(alpha: 0.08)
+              : Colors.grey.shade200,
         ),
         boxShadow: [
           BoxShadow(
             color: isDark
-                ? Colors.black.withOpacity(0.3)
-                : Colors.grey.withOpacity(0.15),
+                ? Colors.black.withValues(alpha: 0.3)
+                : Colors.grey.withValues(alpha: 0.15),
             blurRadius: 20,
             offset: const Offset(0, 8),
             spreadRadius: 0,
           ),
           if (!isDark)
             BoxShadow(
-              color: Colors.white.withOpacity(0.8),
+              color: Colors.white.withValues(alpha: 0.8),
               blurRadius: 10,
               offset: const Offset(-2, -2),
               spreadRadius: 0,
@@ -145,7 +147,7 @@ class GenUIChart extends StatelessWidget {
                       color: Theme.of(context)
                           .colorScheme
                           .onSurface
-                          .withOpacity(0.6),
+                          .withValues(alpha: 0.6),
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
                     ),
@@ -180,7 +182,7 @@ class GenUIChart extends StatelessWidget {
                             color: Theme.of(context)
                                 .colorScheme
                                 .onSurface
-                                .withOpacity(0.6),
+                                .withValues(alpha: 0.6),
                             fontWeight: FontWeight.w600,
                           ),
                           textAlign: TextAlign.center,
@@ -206,7 +208,7 @@ class GenUIChart extends StatelessWidget {
               drawVerticalLine: false,
               horizontalInterval: _getMaxValue() / 4,
               getDrawingHorizontalLine: (value) => FlLine(
-                color: Theme.of(context).dividerColor.withOpacity(0.3),
+                color: Theme.of(context).dividerColor.withValues(alpha: 0.3),
                 strokeWidth: 1,
               ),
             ),
@@ -237,7 +239,9 @@ class GenUIChart extends StatelessWidget {
                     backDrawRodData: BackgroundBarChartRodData(
                       show: true,
                       toY: _getMaxValue() * 1.25,
-                      color: Theme.of(context).dividerColor.withOpacity(0.15),
+                      color: Theme.of(context)
+                          .dividerColor
+                          .withValues(alpha: 0.15),
                     ),
                   ),
                 ],
@@ -276,7 +280,7 @@ class GenUIChart extends StatelessWidget {
               drawVerticalLine: false,
               horizontalInterval: _getMaxValue() / 4,
               getDrawingHorizontalLine: (value) => FlLine(
-                color: Theme.of(context).dividerColor.withOpacity(0.3),
+                color: Theme.of(context).dividerColor.withValues(alpha: 0.3),
                 strokeWidth: 1,
               ),
             ),
@@ -296,7 +300,7 @@ class GenUIChart extends StatelessWidget {
                             color: Theme.of(context)
                                 .colorScheme
                                 .onSurface
-                                .withOpacity(0.6),
+                                .withValues(alpha: 0.6),
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -329,7 +333,8 @@ class GenUIChart extends StatelessWidget {
                 barWidth: 4,
                 isStrokeCapRound: true,
                 shadow: Shadow(
-                  color: AppPalette.chartLineGradient.first.withOpacity(0.4),
+                  color:
+                      AppPalette.chartLineGradient.first.withValues(alpha: 0.4),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),
@@ -348,8 +353,9 @@ class GenUIChart extends StatelessWidget {
                   show: true,
                   gradient: LinearGradient(
                     colors: [
-                      AppPalette.chartLineGradient.first.withOpacity(0.25),
-                      AppPalette.chartLineGradient.last.withOpacity(0.05),
+                      AppPalette.chartLineGradient.first
+                          .withValues(alpha: 0.25),
+                      AppPalette.chartLineGradient.last.withValues(alpha: 0.05),
                     ],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
@@ -377,7 +383,7 @@ class GenUIChart extends StatelessWidget {
                         color: Theme.of(context)
                             .colorScheme
                             .onSurface
-                            .withOpacity(0.6),
+                            .withValues(alpha: 0.6),
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                       ),

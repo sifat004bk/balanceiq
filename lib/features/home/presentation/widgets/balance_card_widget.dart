@@ -35,7 +35,10 @@ class BalanceCard extends StatelessWidget {
             decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(
-                  color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .primary
+                      .withValues(alpha: 0.1),
                   blurRadius: 24,
                   spreadRadius: 8,
                 ),
@@ -132,7 +135,7 @@ class BalanceCard extends StatelessWidget {
                   gradient: LinearGradient(
                     colors: [
                       iconColor,
-                      iconColor.withOpacity(0.7),
+                      iconColor.withValues(alpha: 0.7),
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -140,7 +143,7 @@ class BalanceCard extends StatelessWidget {
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: iconColor.withOpacity(0.3),
+                      color: iconColor.withValues(alpha: 0.3),
                       blurRadius: 8,
                       spreadRadius: 1,
                     ),

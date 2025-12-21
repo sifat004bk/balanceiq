@@ -161,13 +161,13 @@ class _SplashPageState extends State<SplashPage>
                           end: Alignment.bottomRight,
                           colors: [
                             colorScheme.primary,
-                            colorScheme.primary.withOpacity(0.7),
+                            colorScheme.primary.withValues(alpha: 0.7),
                           ],
                         ),
                         borderRadius: BorderRadius.circular(32),
                         boxShadow: [
                           BoxShadow(
-                            color: colorScheme.primary.withOpacity(0.3),
+                            color: colorScheme.primary.withValues(alpha: 0.3),
                             blurRadius: 24,
                             offset: const Offset(0, 8),
                           ),

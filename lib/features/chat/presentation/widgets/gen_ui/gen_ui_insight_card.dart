@@ -21,12 +21,12 @@ class GenUIInsightCard extends StatelessWidget {
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: _getTypeColor(type, context).withOpacity(0.3),
+          color: _getTypeColor(type, context).withValues(alpha: 0.3),
           width: 1.5,
         ),
         boxShadow: [
           BoxShadow(
-            color: _getTypeColor(type, context).withOpacity(0.1),
+            color: _getTypeColor(type, context).withValues(alpha: 0.1),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -42,7 +42,7 @@ class GenUIInsightCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: _getTypeColor(type, context).withOpacity(0.15),
+                    color: _getTypeColor(type, context).withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(

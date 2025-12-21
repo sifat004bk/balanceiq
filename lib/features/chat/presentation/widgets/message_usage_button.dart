@@ -36,15 +36,15 @@ class MessageUsageButton extends StatelessWidget {
         if (isLimitReached) {
           progressColor = Theme.of(context).colorScheme.error;
           backgroundColor =
-              Theme.of(context).colorScheme.error.withOpacity(0.15);
+              Theme.of(context).colorScheme.error.withValues(alpha: 0.15);
         } else if (isNearLimit) {
           progressColor = Theme.of(context).colorScheme.secondary;
           backgroundColor =
-              Theme.of(context).colorScheme.secondary.withOpacity(0.15);
+              Theme.of(context).colorScheme.secondary.withValues(alpha: 0.15);
         } else {
           progressColor = Theme.of(context).colorScheme.primary;
           backgroundColor =
-              Theme.of(context).colorScheme.primary.withOpacity(0.15);
+              Theme.of(context).colorScheme.primary.withValues(alpha: 0.15);
         }
 
         return GestureDetector(
@@ -56,13 +56,13 @@ class MessageUsageButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: Theme.of(context).shadowColor.withOpacity(0.1),
+                  color: Theme.of(context).shadowColor.withValues(alpha: 0.1),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
               ],
               border: Border.all(
-                color: progressColor.withOpacity(0.3),
+                color: progressColor.withValues(alpha: 0.3),
                 width: 1,
               ),
             ),

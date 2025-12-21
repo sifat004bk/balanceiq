@@ -62,7 +62,10 @@ class AccountsBreakdownWidget extends StatelessWidget {
                   vertical: 8,
                 ),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .primary
+                      .withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
@@ -125,29 +128,29 @@ class AccountsBreakdownWidget extends StatelessWidget {
       width: 180,
       decoration: BoxDecoration(
         color: isDark
-            ? colorScheme.surface.withOpacity(0.05)
+            ? colorScheme.surface.withValues(alpha: 0.05)
             : colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isDark
-              ? colorScheme.onSurface.withOpacity(0.1)
-              : colorScheme.onSurface.withOpacity(0.05),
+              ? colorScheme.onSurface.withValues(alpha: 0.1)
+              : colorScheme.onSurface.withValues(alpha: 0.05),
           width: 1,
         ),
         boxShadow: [
           // Neumorphism effect
           BoxShadow(
             color: isDark
-                ? Theme.of(context).shadowColor.withOpacity(0.3)
-                : Theme.of(context).shadowColor.withOpacity(0.05),
+                ? Theme.of(context).shadowColor.withValues(alpha: 0.3)
+                : Theme.of(context).shadowColor.withValues(alpha: 0.05),
             offset: const Offset(4, 4),
             blurRadius: 8,
             spreadRadius: 0,
           ),
           BoxShadow(
             color: isDark
-                ? colorScheme.surface.withOpacity(0.05)
-                : colorScheme.surface.withOpacity(0.7),
+                ? colorScheme.surface.withValues(alpha: 0.05)
+                : colorScheme.surface.withValues(alpha: 0.7),
             offset: const Offset(-4, -4),
             blurRadius: 8,
             spreadRadius: 0,
@@ -168,7 +171,7 @@ class AccountsBreakdownWidget extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: accentColor.withOpacity(0.1),
+                    color: accentColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(
@@ -183,10 +186,10 @@ class AccountsBreakdownWidget extends StatelessWidget {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: accentColor.withOpacity(0.1),
+                    color: accentColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
-                      color: accentColor.withOpacity(0.2),
+                      color: accentColor.withValues(alpha: 0.2),
                       width: 1,
                     ),
                   ),

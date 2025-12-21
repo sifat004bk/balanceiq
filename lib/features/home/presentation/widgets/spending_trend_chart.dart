@@ -29,7 +29,7 @@ class SpendingTrendChart extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: colorScheme.surface.withOpacity(0.7),
+        color: colorScheme.surface.withValues(alpha: 0.7),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -112,11 +112,11 @@ class SpendingTrendChart extends StatelessWidget {
                           Theme.of(context)
                               .colorScheme
                               .primary
-                              .withOpacity(0.3),
+                              .withValues(alpha: 0.3),
                           Theme.of(context)
                               .colorScheme
                               .primary
-                              .withOpacity(0.0),
+                              .withValues(alpha: 0.0),
                         ],
                       ),
                     ),
@@ -124,8 +124,10 @@ class SpendingTrendChart extends StatelessWidget {
                 ],
                 lineTouchData: LineTouchData(
                   touchTooltipData: LineTouchTooltipData(
-                    getTooltipColor: (touchedSpot) =>
-                        Theme.of(context).colorScheme.primary.withOpacity(0.9),
+                    getTooltipColor: (touchedSpot) => Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withValues(alpha: 0.9),
                     tooltipRoundedRadius: 8,
                     tooltipPadding: const EdgeInsets.symmetric(
                       horizontal: 12,

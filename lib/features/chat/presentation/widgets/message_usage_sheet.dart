@@ -127,7 +127,7 @@ class MessageUsageSheet extends StatelessWidget {
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: progressColor.withOpacity(0.3),
+          color: progressColor.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -146,7 +146,7 @@ class MessageUsageSheet extends StatelessWidget {
                   child: CircularProgressIndicator(
                     value: percentage,
                     strokeWidth: 10,
-                    backgroundColor: progressColor.withOpacity(0.15),
+                    backgroundColor: progressColor.withValues(alpha: 0.15),
                     valueColor: AlwaysStoppedAnimation<Color>(progressColor),
                   ),
                 ),
@@ -311,7 +311,7 @@ class MessageUsageSheet extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.15),
+              color: color.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(

@@ -100,7 +100,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                             width: 128,
                             height: 128,
                             decoration: BoxDecoration(
-                              color: colorScheme.primary.withOpacity(0.2),
+                              color: colorScheme.primary.withValues(alpha: 0.2),
                               shape: BoxShape.circle,
                             ),
                           ),
@@ -108,7 +108,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                             width: 96,
                             height: 96,
                             decoration: BoxDecoration(
-                              color: colorScheme.primary.withOpacity(0.3),
+                              color: colorScheme.primary.withValues(alpha: 0.3),
                               shape: BoxShape.circle,
                             ),
                           ),

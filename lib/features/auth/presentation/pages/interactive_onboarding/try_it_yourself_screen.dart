@@ -135,7 +135,8 @@ class _TryItYourselfScreenState extends State<TryItYourselfScreen> {
                       color: colorScheme.surfaceContainerLowest,
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
-                        color: colorScheme.outlineVariant.withOpacity(0.5),
+                        color:
+                            colorScheme.outlineVariant.withValues(alpha: 0.5),
                       ),
                     ),
                     child: ClipRRect(
@@ -199,7 +200,7 @@ class _TryItYourselfScreenState extends State<TryItYourselfScreen> {
                                 border: Border(
                                   top: BorderSide(
                                     color: colorScheme.outlineVariant
-                                        .withOpacity(0.3),
+                                        .withValues(alpha: 0.3),
                                   ),
                                 ),
                               ),
@@ -213,7 +214,7 @@ class _TryItYourselfScreenState extends State<TryItYourselfScreen> {
                                         hintText: 'Type your expense...',
                                         hintStyle: TextStyle(
                                           color: colorScheme.onSurfaceVariant
-                                              .withOpacity(0.6),
+                                              .withValues(alpha: 0.6),
                                         ),
                                         filled: true,
                                         fillColor:
@@ -312,7 +313,7 @@ class _TryItYourselfScreenState extends State<TryItYourselfScreen> {
           Icon(
             Icons.keyboard_alt_outlined,
             size: 48,
-            color: colorScheme.onSurfaceVariant.withOpacity(0.5),
+            color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
           ),
           const SizedBox(height: 16),
           Text(

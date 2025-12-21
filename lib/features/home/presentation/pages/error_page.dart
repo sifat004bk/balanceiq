@@ -26,7 +26,7 @@ class Error404Page extends StatelessWidget {
           end: Alignment.bottomCenter,
           colors: [
             Theme.of(context).scaffoldBackgroundColor,
-            Theme.of(context).scaffoldBackgroundColor.withOpacity(0.8),
+            Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.8),
           ],
         ),
       ),
@@ -41,7 +41,7 @@ class Error404Page extends StatelessWidget {
                 width: 200,
                 height: 200,
                 decoration: BoxDecoration(
-                  color: colorScheme.error.withOpacity(0.1),
+                  color: colorScheme.error.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Center(
@@ -49,7 +49,7 @@ class Error404Page extends StatelessWidget {
                     width: 140,
                     height: 140,
                     decoration: BoxDecoration(
-                      color: colorScheme.error.withOpacity(0.2),
+                      color: colorScheme.error.withValues(alpha: 0.2),
                       shape: BoxShape.circle,
                     ),
                     child: Stack(
@@ -65,7 +65,7 @@ class Error404Page extends StatelessWidget {
                           child: Icon(
                             Icons.warning_amber_rounded,
                             size: 40,
-                            color: colorScheme.error.withOpacity(0.8),
+                            color: colorScheme.error.withValues(alpha: 0.8),
                           ),
                         ),
                       ],
@@ -102,10 +102,10 @@ class Error404Page extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: colorScheme.surface.withOpacity(0.5),
+                  color: colorScheme.surface.withValues(alpha: 0.5),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: colorScheme.onSurface.withOpacity(0.1),
+                    color: colorScheme.onSurface.withValues(alpha: 0.1),
                   ),
                 ),
                 child: Text(
@@ -123,12 +123,16 @@ class Error404Page extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color:
-                      Theme.of(context).colorScheme.primary.withOpacity(0.05),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .primary
+                      .withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color:
-                        Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withValues(alpha: 0.2),
                   ),
                 ),
                 child: Column(
@@ -185,8 +189,10 @@ class Error404Page extends StatelessWidget {
                     backgroundColor: Theme.of(context).colorScheme.primary,
                     foregroundColor: Theme.of(context).colorScheme.onPrimary,
                     elevation: 8,
-                    shadowColor:
-                        Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                    shadowColor: Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withValues(alpha: 0.3),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),

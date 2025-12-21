@@ -101,13 +101,13 @@ class _CustomCalendarDateRangePickerState
           borderRadius: BorderRadius.circular(32),
           border: Border.all(
             color: isDark
-                ? Colors.white.withOpacity(0.1)
-                : Colors.black.withOpacity(0.05),
+                ? Colors.white.withValues(alpha: 0.1)
+                : Colors.black.withValues(alpha: 0.05),
             width: 1,
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(isDark ? 0.5 : 0.2),
+              color: Colors.black.withValues(alpha: isDark ? 0.5 : 0.2),
               blurRadius: 24,
               offset: const Offset(0, 8),
             ),
@@ -202,7 +202,7 @@ class _CustomCalendarDateRangePickerState
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Theme.of(context).primaryColor.withOpacity(0.3),
+              color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
               blurRadius: 8,
               spreadRadius: 1,
             ),
@@ -227,7 +227,7 @@ class _CustomCalendarDateRangePickerState
           Container(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
             decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor.withOpacity(0.1),
+              color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
@@ -244,7 +244,10 @@ class _CustomCalendarDateRangePickerState
                   child: Icon(
                     Icons.arrow_forward_rounded,
                     size: 16,
-                    color: Theme.of(context).iconTheme.color?.withOpacity(0.5),
+                    color: Theme.of(context)
+                        .iconTheme
+                        .color
+                        ?.withValues(alpha: 0.5),
                   ),
                 ),
                 Text(
@@ -296,7 +299,7 @@ class _CustomCalendarDateRangePickerState
                             Theme.of(context)
                                 .colorScheme
                                 .primary
-                                .withOpacity(0.8),
+                                .withValues(alpha: 0.8),
                           ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
@@ -307,8 +310,9 @@ class _CustomCalendarDateRangePickerState
                   boxShadow: hasValidRange
                       ? [
                           BoxShadow(
-                            color:
-                                Theme.of(context).primaryColor.withOpacity(0.4),
+                            color: Theme.of(context)
+                                .primaryColor
+                                .withValues(alpha: 0.4),
                             blurRadius: 12,
                             offset: const Offset(0, 4),
                           ),

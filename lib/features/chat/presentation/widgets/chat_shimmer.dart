@@ -44,8 +44,8 @@ class ChatShimmer extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Shimmer.fromColors(
-      baseColor: colorScheme.onSurface.withOpacity(0.05),
-      highlightColor: colorScheme.onSurface.withOpacity(0.1),
+      baseColor: colorScheme.onSurface.withValues(alpha: 0.05),
+      highlightColor: colorScheme.onSurface.withValues(alpha: 0.1),
       child: Column(
         crossAxisAlignment:
             isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,

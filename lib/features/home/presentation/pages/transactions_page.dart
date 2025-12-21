@@ -149,8 +149,9 @@ class _TransactionsViewState extends State<TransactionsView> {
                           label: Text(_selectedCategory!),
                           deleteIcon: const Icon(Icons.close, size: 18),
                           onDeleted: _clearCategoryFilter,
-                          backgroundColor:
-                              Theme.of(context).primaryColor.withOpacity(0.1),
+                          backgroundColor: Theme.of(context)
+                              .primaryColor
+                              .withValues(alpha: 0.1),
                           side:
                               BorderSide(color: Theme.of(context).primaryColor),
                           labelStyle:

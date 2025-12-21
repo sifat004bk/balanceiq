@@ -267,14 +267,14 @@ lib/core/utils/snackbar_helper.dart
 **Description:** Break monolithic injection_container.dart into feature modules.
 
 **Sub-tasks:**
-- [ ] 2.3.1 Create `lib/core/di/modules/` directory
-- [ ] 2.3.2 Create `network_module.dart` (Dio, interceptors)
-- [ ] 2.3.3 Create `storage_module.dart` (DB, secure storage)
-- [ ] 2.3.4 Create `auth_module.dart` (auth feature DI)
-- [ ] 2.3.5 Create `chat_module.dart` (chat feature DI)
-- [ ] 2.3.6 Create `home_module.dart` (home feature DI)
-- [ ] 2.3.7 Refactor `injection_container.dart` to call modules
-- [ ] 2.3.8 Remove conditional mock logic (move to separate mock module)
+- [x] 2.3.1 Create `lib/core/di/modules/` directory
+- [x] 2.3.2 Create `network_module.dart` (Dio, interceptors)
+- [x] 2.3.3 Create `storage_module.dart` (DB, secure storage)
+- [x] 2.3.4 Create `auth_module.dart` (auth feature DI)
+- [x] 2.3.5 Create `chat_module.dart` (chat feature DI)
+- [x] 2.3.6 Create `dashboard_module.dart` (dashboard/home feature DI)
+- [x] 2.3.7 Refactor `injection_container.dart` to call modules
+- [x] 2.3.8 Remove conditional mock logic (Moved to modules)
 
 **Files to Create:**
 ```

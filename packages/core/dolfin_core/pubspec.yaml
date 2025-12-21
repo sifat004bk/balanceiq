@@ -1,0 +1,25 @@
+name: dolfin_core
+description: Core utilities, error handling, network, and storage for Dolfin apps.
+version: 1.0.0
+homepage: https://github.com/sifat004bk/dolfin_workspace
+
+environment:
+  sdk: ">=3.4.0 <4.0.0"
+  flutter: ">=3.24.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  dio: ^5.4.0
+  dartz: ^0.10.1
+  equatable: ^2.0.5
+  flutter_secure_storage: ^9.2.4
+  shared_preferences: ^2.3.3
+  connectivity_plus: ^6.0.5
+  logger: ^2.4.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  mocktail: ^1.0.4

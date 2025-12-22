@@ -208,7 +208,7 @@ class _ChatViewState extends State<ChatView> {
                       final isNearLimit = state.messagesUsedToday >=
                           (state.dailyMessageLimit * 0.8);
                       if (isLimitReached || isNearLimit) {
-                        bottomPadding += 60.0;
+                        bottomPadding += 68.0;
                       }
                     }
 

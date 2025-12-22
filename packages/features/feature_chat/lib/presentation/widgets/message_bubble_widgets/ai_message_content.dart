@@ -124,18 +124,18 @@ class AiMessageContent extends StatelessWidget {
             ),
           ),
 
-        const SizedBox(height: 16),
+        const SizedBox(height: 4),
 
         // GenUI Table
         if (message.hasTable && message.tableData != null) ...[
           GenUITable(data: message.tableData!),
-          const SizedBox(height: 16),
+          const SizedBox(height: 4),
         ],
 
         // GenUI Chart
         if (message.graphType != null && message.graphData != null) ...[
           GenUIChart(data: message.graphData!, type: message.graphType!),
-          const SizedBox(height: 16),
+          const SizedBox(height: 4),
         ],
 
         // Action Type Display & Change Button
@@ -189,7 +189,7 @@ class AiMessageContent extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 4),
         ],
       ],
     );

@@ -41,8 +41,9 @@ class AiMessageBubble extends StatelessWidget {
           ),
 
           // Action Row: Like, Dislike, Select Text, Copy, Regenerate
-          const SizedBox(height: 12),
+          const SizedBox(height: 4),
           AiMessageFeedbackRow(message: message),
+          const SizedBox(height: 8),
 
           // Image logic (if AI sends an image?)
           if (message.imageUrl != null && message.imageUrl!.isNotEmpty) ...[

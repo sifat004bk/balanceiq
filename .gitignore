@@ -36,7 +36,8 @@ migrate_working_dir/
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
-/build/
+build/
+**/build/
 
 # Symbolication related
 app.*.symbols
@@ -45,10 +46,32 @@ app.*.symbols
 app.*.map.json
 
 # Android Studio will place build artifacts here
-/android/app/debug
-/android/app/profile
-/android/app/release
-/.claude
+**/android/app/debug
+**/android/app/profile
+**/android/app/release
+.claude/
+**/.claude/
+
+# Gradle (Android build cache)
+.gradle/
+**/.gradle/
+
+# iOS/Flutter symlinks
+.symlinks/
+**/.symlinks/
+
+# Local properties (machine-specific)
+local.properties
+**/local.properties
+
+# Generated plugin registrant
+**/GeneratedPluginRegistrant.java
+**/GeneratedPluginRegistrant.swift
+
+# Gradle wrapper (often regenerated)
+**/gradle/wrapper/gradle-wrapper.jar
+**/gradlew
+**/gradlew.bat
 
 # AI instruction files
 CLAUDE.md
@@ -56,3 +79,13 @@ GEMINI.md
 
 # FVM Version Cache
 .fvm/
+**/.fvm/
+
+# Pods (CocoaPods)
+**/Pods/
+**/Podfile.lock
+
+# Xcode
+**/*.xcworkspace
+**/xcuserdata/
+**/*.xcuserstate

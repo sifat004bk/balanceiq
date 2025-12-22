@@ -1,0 +1,23 @@
+name: dolfin_ui_kit
+description: Shared design system, theme, and widgets for Dolfin apps.
+version: 1.0.0
+homepage: https://github.com/sifat004bk/dolfin_workspace
+
+environment:
+  sdk: ">=3.4.0 <4.0.0"
+  flutter: ">=3.24.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  google_fonts: ^6.2.1
+  flutter_bloc: ^8.1.6
+  equatable: ^2.0.5
+  shared_preferences: ^2.3.3
+  dolfin_core:
+    path: ../dolfin_core
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0

@@ -1,0 +1,37 @@
+name: dolfin_workspace
+repository: https://github.com/sifat004bk/dolfin_workspace
+
+packages:
+  - apps/*
+  - packages/core/*
+  - packages/features/*
+
+command:
+  bootstrap:
+    usePubspecOverrides: true
+    runPubGetInParallel: true
+
+  version:
+    message: "chore: release %v"
+    linkToCommits: true
+
+scripts:
+  analyze:
+    run: melos exec -- dart analyze .
+    description: Run dart analyze in all packages
+
+  test:
+    run: melos exec -- flutter test
+    description: Run tests in all packages
+
+  format:
+    run: melos exec -- dart format .
+    description: Format all packages
+
+  clean:
+    run: melos exec -- flutter clean
+    description: Clean all packages
+
+  get:
+    run: melos exec -- flutter pub get
+    description: Get dependencies for all packages

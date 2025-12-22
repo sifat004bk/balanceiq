@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:dolfin_core/constants/app_strings.dart';
+import 'package:get_it/get_it.dart';
+import 'package:feature_chat/constants/chat_strings.dart';
+import 'package:dolfin_core/constants/core_strings.dart';
 import '../../../domain/entities/message.dart';
 import '../../cubit/chat_cubit.dart';
 
@@ -177,7 +179,7 @@ class AiMessageContent extends StatelessWidget {
                         ),
                       ),
                       child: Text(
-                        AppStrings.chat.change,
+                        GetIt.I<ChatStrings>().change,
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
                               color: colorScheme.primary,
                               fontWeight: FontWeight.bold,
@@ -198,9 +200,9 @@ class AiMessageContent extends StatelessWidget {
   String _formatActionType(String type) {
     switch (type.toLowerCase()) {
       case 'record_income':
-        return AppStrings.chat.recordedIncome;
+        return GetIt.I<ChatStrings>().recordedIncome;
       case 'record_expense':
-        return AppStrings.chat.recordedExpense;
+        return GetIt.I<ChatStrings>().recordedExpense;
       default:
         return '';
     }
@@ -223,7 +225,7 @@ class AiMessageContent extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  AppStrings.chat.changeActionType,
+                  GetIt.I<ChatStrings>().changeActionType,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -232,7 +234,7 @@ class AiMessageContent extends StatelessWidget {
                 ListTile(
                   leading:
                       const Icon(Icons.arrow_downward, color: Colors.green),
-                  title: Text(AppStrings.dashboard.income),
+                  title: Text(GetIt.I<CoreStrings>().dashboard.income),
                   onTap: () {
                     Navigator.pop(context);
                     _sendCorrectionMessage(chatCubit, 'income');
@@ -240,7 +242,7 @@ class AiMessageContent extends StatelessWidget {
                 ),
                 ListTile(
                   leading: const Icon(Icons.arrow_upward, color: Colors.red),
-                  title: Text(AppStrings.dashboard.expense),
+                  title: Text(GetIt.I<CoreStrings>().dashboard.expense),
                   onTap: () {
                     Navigator.pop(context);
                     _sendCorrectionMessage(chatCubit, 'expense');

@@ -1,7 +1,9 @@
 import 'package:dolfin_core/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:dolfin_core/constants/app_strings.dart';
+
+import 'package:feature_auth/constants/auth_strings.dart';
+import 'package:get_it/get_it.dart';
 
 import "package:feature_auth/presentation/cubit/password/password_cubit.dart";
 
@@ -50,7 +52,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
         if (state is PasswordChanged) {
           // Show success message
           SnackbarUtils.showSuccess(
-              context, AppStrings.auth.passwordChangeSuccess);
+              context, GetIt.I<AuthStrings>().passwordChangeSuccess);
           // Navigate back
           Navigator.of(context).pop();
         } else if (state is PasswordError) {
@@ -59,7 +61,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(AppStrings.auth.changePasswordTitle),
+          title: Text(GetIt.I<AuthStrings>().changePasswordTitle),
           backgroundColor: Colors.transparent,
           elevation: 0,
         ),
@@ -73,14 +75,14 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 children: [
                   const SizedBox(height: 24),
                   Text(
-                    AppStrings.auth.updatePasswordTitle,
+                    GetIt.I<AuthStrings>().updatePasswordTitle,
                     style: textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    AppStrings.auth.updatePasswordHint,
+                    GetIt.I<AuthStrings>().updatePasswordHint,
                     style: textTheme.bodyLarge?.copyWith(
                       color: Theme.of(context).hintColor,
                     ),
@@ -88,7 +90,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                   const SizedBox(height: 40),
                   // Current Password field
                   Text(
-                    AppStrings.auth.currentPasswordLabel,
+                    GetIt.I<AuthStrings>().currentPasswordLabel,
                     style: textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
@@ -98,7 +100,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                     controller: _currentPasswordController,
                     obscureText: !_isCurrentPasswordVisible,
                     decoration: InputDecoration(
-                      hintText: AppStrings.auth.enterCurrentPasswordHint,
+                      hintText: GetIt.I<AuthStrings>().enterCurrentPasswordHint,
                       prefixIcon: const Icon(Icons.lock_outline),
                       suffixIcon: IconButton(
                         icon: Icon(
@@ -137,7 +139,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return AppStrings.auth.currentPasswordRequired;
+                        return GetIt.I<AuthStrings>().currentPasswordRequired;
                       }
                       return null;
                     },
@@ -145,7 +147,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                   const SizedBox(height: 16),
                   // New Password field
                   Text(
-                    AppStrings.auth.newPasswordLabel,
+                    GetIt.I<AuthStrings>().newPasswordLabel,
                     style: textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
@@ -155,7 +157,8 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                     controller: _newPasswordController,
                     obscureText: !_isNewPasswordVisible,
                     decoration: InputDecoration(
-                      hintText: AppStrings.auth.enterNewPasswordPlaceholder,
+                      hintText:
+                          GetIt.I<AuthStrings>().enterNewPasswordPlaceholder,
                       prefixIcon: const Icon(Icons.lock),
                       suffixIcon: IconButton(
                         icon: Icon(
@@ -193,13 +196,13 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return AppStrings.auth.newPasswordRequired;
+                        return GetIt.I<AuthStrings>().newPasswordRequired;
                       }
                       if (value.length < 6) {
-                        return AppStrings.auth.passwordMinLength;
+                        return GetIt.I<AuthStrings>().passwordMinLength;
                       }
                       if (value == _currentPasswordController.text) {
-                        return AppStrings.auth.passwordMustBeDifferent;
+                        return GetIt.I<AuthStrings>().passwordMustBeDifferent;
                       }
                       return null;
                     },
@@ -207,7 +210,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                   const SizedBox(height: 16),
                   // Confirm Password field
                   Text(
-                    AppStrings.auth.confirmNewPasswordLabel,
+                    GetIt.I<AuthStrings>().confirmNewPasswordLabel,
                     style: textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
@@ -217,7 +220,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                     controller: _confirmPasswordController,
                     obscureText: !_isConfirmPasswordVisible,
                     decoration: InputDecoration(
-                      hintText: AppStrings.auth.confirmNewPasswordHint,
+                      hintText: GetIt.I<AuthStrings>().confirmNewPasswordHint,
                       prefixIcon: const Icon(Icons.lock_reset),
                       suffixIcon: IconButton(
                         icon: Icon(
@@ -256,10 +259,11 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return AppStrings.auth.confirmNewPasswordRequired;
+                        return GetIt.I<AuthStrings>()
+                            .confirmNewPasswordRequired;
                       }
                       if (value != _newPasswordController.text) {
-                        return AppStrings.auth.passwordsDoNotMatch;
+                        return GetIt.I<AuthStrings>().passwordsDoNotMatch;
                       }
                       return null;
                     },
@@ -292,7 +296,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                                   ),
                                 )
                               : Text(
-                                  AppStrings.auth.changePasswordButton,
+                                  GetIt.I<AuthStrings>().changePasswordButton,
                                   style: textTheme.labelLarge?.copyWith(
                                     color: colorScheme.onPrimary,
                                     fontWeight: FontWeight.bold,

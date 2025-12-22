@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:dolfin_core/constants/app_strings.dart';
+import 'package:feature_chat/constants/chat_strings.dart';
+import 'package:get_it/get_it.dart';
 import 'package:dolfin_ui_kit/theme/app_typography.dart';
 
 class LimitWarningBanner extends StatelessWidget {
@@ -38,7 +39,7 @@ class LimitWarningBanner extends StatelessWidget {
             const SizedBox(width: 8),
             Flexible(
               child: Text(
-                AppStrings.chat.messageLimitReached,
+                GetIt.I<ChatStrings>().messageLimitReached,
                 textAlign: TextAlign.center,
                 style: AppTypography.captionError.copyWith(
                   color: Theme.of(context).colorScheme.onError,
@@ -71,7 +72,7 @@ class LimitWarningBanner extends StatelessWidget {
             const SizedBox(width: 8),
             Flexible(
               child: Text(
-                AppStrings.chat.nearMessageLimit(remainingMessages),
+                GetIt.I<ChatStrings>().nearMessageLimit(remainingMessages),
                 textAlign: TextAlign.center,
                 style: AppTypography.captionWarning.copyWith(
                   color: Theme.of(context).colorScheme.onSecondary,

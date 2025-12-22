@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:dolfin_core/constants/app_strings.dart';
 import 'package:dolfin_core/utils/snackbar_utils.dart';
+import 'package:feature_auth/constants/auth_strings.dart';
+import 'package:get_it/get_it.dart';
 import "package:feature_auth/presentation/cubit/password/password_cubit.dart";
 
 class ForgotPasswordPage extends StatefulWidget {
@@ -37,7 +38,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           // Show success message
           SnackbarUtils.showSuccess(
             context,
-            AppStrings.auth.resetEmailSent(state.email),
+            GetIt.I<AuthStrings>().resetEmailSent(state.email),
             duration: const Duration(seconds: 5),
           );
           // Navigate back to login
@@ -48,7 +49,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(AppStrings.auth.forgotPasswordTitle),
+          title: Text(GetIt.I<AuthStrings>().forgotPasswordTitle),
           backgroundColor: Colors.transparent,
           elevation: 0,
           iconTheme: IconThemeData(
@@ -65,14 +66,14 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 children: [
                   const SizedBox(height: 24),
                   Text(
-                    AppStrings.auth.resetYourPassword,
+                    GetIt.I<AuthStrings>().resetYourPassword,
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    AppStrings.auth.resetInstructions,
+                    GetIt.I<AuthStrings>().resetInstructions,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           color: Theme.of(context).hintColor,
                         ),
@@ -80,7 +81,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   const SizedBox(height: 40),
                   // Email field
                   Text(
-                    AppStrings.auth.emailAddressLabel,
+                    GetIt.I<AuthStrings>().emailAddressLabel,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.w600,
                         ),
@@ -90,7 +91,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
-                      hintText: AppStrings.auth.enterEmailHint,
+                      hintText: GetIt.I<AuthStrings>().enterEmailHint,
                       prefixIcon: const Icon(Icons.email_outlined),
                       filled: true,
                       fillColor:
@@ -117,10 +118,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return AppStrings.auth.emailRequired;
+                        return GetIt.I<AuthStrings>().emailRequired;
                       }
                       if (!value.contains('@')) {
-                        return AppStrings.auth.emailInvalid;
+                        return GetIt.I<AuthStrings>().emailInvalid;
                       }
                       return null;
                     },
@@ -158,7 +159,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                   ),
                                 )
                               : Text(
-                                  AppStrings.auth.sendResetLink,
+                                  GetIt.I<AuthStrings>().sendResetLink,
                                   style: Theme.of(context)
                                       .textTheme
                                       .labelLarge
@@ -180,7 +181,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     child: TextButton(
                       onPressed: () => Navigator.of(context).pop(),
                       child: Text(
-                        AppStrings.auth.backToLogin,
+                        GetIt.I<AuthStrings>().backToLogin,
                         style: Theme.of(context).textTheme.labelLarge?.copyWith(
                               color: Theme.of(context).colorScheme.primary,
                               fontWeight: FontWeight.w600,

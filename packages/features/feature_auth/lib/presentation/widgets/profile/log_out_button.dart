@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:dolfin_core/constants/app_strings.dart';
+import 'package:dolfin_core/constants/core_strings.dart';
+import 'package:feature_auth/constants/auth_strings.dart';
+import 'package:get_it/get_it.dart';
 import '../../cubit/session/session_cubit.dart';
 
 class LogOutButton extends StatelessWidget {
@@ -17,12 +19,12 @@ class LogOutButton extends StatelessWidget {
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              title: Text(AppStrings.profile.logOut),
-              content: Text(AppStrings.profile.logOutConfirm),
+              title: Text(GetIt.I<AuthStrings>().profile.logOut),
+              content: Text(GetIt.I<AuthStrings>().profile.logOutConfirm),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: Text(AppStrings.common.cancel),
+                  child: Text(GetIt.I<CoreStrings>().common.cancel),
                 ),
                 TextButton(
                   onPressed: () {

@@ -7,6 +7,16 @@ import 'package:balance_iq/core/config/app_chat_config.dart';
 import 'package:dolfin_core/constants/app_constants.dart';
 import 'package:get_it/get_it.dart';
 
+import 'package:dolfin_core/constants/core_strings.dart';
+import 'package:feature_auth/constants/auth_strings.dart';
+import 'package:feature_chat/constants/chat_strings.dart';
+import 'package:feature_subscription/constants/subscription_strings.dart';
+
+import '../strings/core_strings_impl.dart';
+import '../strings/auth_strings_impl.dart';
+import '../strings/chat_strings_impl.dart';
+import '../strings/subscription_strings_impl.dart';
+
 import 'modules/storage_module.dart';
 import 'modules/network_module.dart';
 import 'modules/core_module.dart';
@@ -25,6 +35,13 @@ Future<void> init() async {
 
   //! Core (Theme, Currency, etc.)
   registerCoreModule(sl);
+
+  //! Strings
+  sl.registerLazySingleton<CoreStrings>(() => const CoreStringsImpl());
+  sl.registerLazySingleton<AuthStrings>(() => const AuthStringsImpl());
+  sl.registerLazySingleton<ChatStrings>(() => const ChatStringsImpl());
+  sl.registerLazySingleton<SubscriptionStrings>(
+      () => const SubscriptionStringsImpl());
 
   // Common deps
   final appConstants = sl<AppConstants>();

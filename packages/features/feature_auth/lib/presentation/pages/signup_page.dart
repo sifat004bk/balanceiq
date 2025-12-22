@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:dolfin_core/constants/app_strings.dart';
 import 'package:dolfin_core/utils/snackbar_utils.dart';
+import 'package:feature_auth/constants/auth_strings.dart';
+import 'package:get_it/get_it.dart';
 import 'package:feature_auth/presentation/widgets/signup_body.dart';
 import "package:feature_auth/presentation/cubit/signup/signup_cubit.dart";
 
@@ -58,7 +59,7 @@ class _SignUpPageState extends State<SignUpPage> {
           // Show success message and navigate to email verification
           SnackbarUtils.showSuccess(
             context,
-            '${AppStrings.auth.accountCreated}! ${AppStrings.auth.pleaseLogin}',
+            '${GetIt.I<AuthStrings>().accountCreated}! ${GetIt.I<AuthStrings>().pleaseLogin}',
             duration: const Duration(seconds: 5),
           );
           // Navigate to login page

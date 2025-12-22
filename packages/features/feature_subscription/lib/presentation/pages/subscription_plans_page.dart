@@ -1,9 +1,10 @@
-import 'package:dolfin_core/constants/app_strings.dart';
+import 'package:get_it/get_it.dart';
+import 'package:dolfin_core/constants/core_strings.dart';
+import 'package:feature_subscription/constants/subscription_strings.dart';
 import 'package:dolfin_core/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:get_it/get_it.dart';
 import 'package:dolfin_ui_kit/theme/app_typography.dart';
 import 'package:dolfin_core/tour/product_tour_cubit.dart';
 import 'package:dolfin_core/tour/product_tour_state.dart';
@@ -48,7 +49,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          AppStrings.subscription.choosePlanTitle,
+          GetIt.I<SubscriptionStrings>().choosePlanTitle,
           style: AppTypography.titleXLargeSemiBold.copyWith(
             color: Theme.of(context).textTheme.titleLarge?.color,
           ),
@@ -61,7 +62,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
           if (state is SubscriptionCreated) {
             SnackbarUtils.showSuccess(
               context,
-              '${AppStrings.subscription.subscriptionSuccess} ${state.subscription.plan.displayName}!',
+              '${GetIt.I<SubscriptionStrings>().subscriptionSuccess} ${state.subscription.plan.displayName}!',
             );
 
             // Check if tour is active at subscription step
@@ -99,7 +100,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                 children: [
                   CircularProgressIndicator(),
                   SizedBox(height: 16),
-                  Text(AppStrings.common.processing),
+                  Text(GetIt.I<CoreStrings>().common.processing),
                 ],
               ),
             );
@@ -123,7 +124,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                   ElevatedButton(
                     onPressed: () =>
                         context.read<SubscriptionCubit>().loadPlansAndStatus(),
-                    child: Text(AppStrings.common.retry),
+                    child: Text(GetIt.I<CoreStrings>().common.retry),
                   ),
                 ],
               ),
@@ -151,7 +152,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
           const SizedBox(height: 8),
           // Savings Text
           Text(
-            AppStrings.subscription.yearlySavings,
+            GetIt.I<SubscriptionStrings>().yearlySavings,
             style: AppTypography.bodyMediumSemiBold.copyWith(
               color: Theme.of(context).colorScheme.primary,
             ),
@@ -177,7 +178,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                   // TODO: Show terms of service
                 },
                 child: Text(
-                  AppStrings.subscription.termsOfService,
+                  GetIt.I<SubscriptionStrings>().termsOfService,
                   style: AppTypography.bodyMedium.copyWith(
                     color: Theme.of(context).hintColor,
                   ),
@@ -189,7 +190,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                   // TODO: Show privacy policy
                 },
                 child: Text(
-                  AppStrings.subscription.privacyPolicy,
+                  GetIt.I<SubscriptionStrings>().privacyPolicy,
                   style: AppTypography.bodyMedium.copyWith(
                     color: Theme.of(context).hintColor,
                   ),
@@ -214,7 +215,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
           Expanded(
             child: _buildToggleButton(
               context,
-              AppStrings.subscription.monthly,
+              GetIt.I<SubscriptionStrings>().monthly,
               _isMonthly,
               () => setState(() => _isMonthly = true),
             ),
@@ -222,7 +223,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
           Expanded(
             child: _buildToggleButton(
               context,
-              AppStrings.subscription.yearly,
+              GetIt.I<SubscriptionStrings>().yearly,
               !_isMonthly,
               () => setState(() => _isMonthly = false),
             ),
@@ -342,7 +343,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                     Padding(
                       padding: const EdgeInsets.only(top: 12),
                       child: Text(
-                        AppStrings.subscription.perMonth,
+                        GetIt.I<SubscriptionStrings>().perMonth,
                         style: AppTypography.bodyLarge.copyWith(
                           color: Theme.of(context).hintColor,
                         ),
@@ -410,8 +411,8 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                     ),
                     child: Text(
                       isCurrentPlan
-                          ? AppStrings.subscription.currentPlan
-                          : AppStrings.subscription.subscribeButton,
+                          ? GetIt.I<SubscriptionStrings>().currentPlan
+                          : GetIt.I<SubscriptionStrings>().subscribeButton,
                       style: AppTypography.buttonMedium,
                     ),
                   ),
@@ -435,7 +436,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                   ),
                 ),
                 child: Text(
-                  AppStrings.subscription.mostPopular,
+                  GetIt.I<SubscriptionStrings>().mostPopular,
                   textAlign: TextAlign.center,
                   style: AppTypography.bodyMediumSemiBold.copyWith(
                     color: Colors.white,
@@ -456,7 +457,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
-                  AppStrings.subscription.active,
+                  GetIt.I<SubscriptionStrings>().active,
                   style: AppTypography.captionSemiBold.copyWith(
                     color: Colors.white,
                   ),

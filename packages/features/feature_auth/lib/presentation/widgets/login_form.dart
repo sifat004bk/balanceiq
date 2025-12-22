@@ -1,5 +1,5 @@
-import 'package:dolfin_core/constants/app_strings.dart';
 import 'package:dolfin_ui_kit/theme/app_palette.dart';
+import 'package:feature_auth/constants/auth_strings.dart';
 import 'package:get_it/get_it.dart';
 import 'package:feature_auth/presentation/cubit/login/login_cubit.dart';
 import 'package:flutter/material.dart';
@@ -67,14 +67,14 @@ class _LoginFormState extends State<LoginForm> {
           const SizedBox(height: 32),
           // Title
           Text(
-            AppStrings.auth.loginTitle,
+            GetIt.I<AuthStrings>().loginTitle,
             style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
           ),
           const SizedBox(height: 8),
           Text(
-            AppStrings.auth.loginSubtitle,
+            GetIt.I<AuthStrings>().loginSubtitle,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   color: Theme.of(context).hintColor,
                 ),
@@ -85,7 +85,7 @@ class _LoginFormState extends State<LoginForm> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                AppStrings.auth.emailLabel,
+                GetIt.I<AuthStrings>().emailLabel,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w500,
                       color: Theme.of(context).hintColor,
@@ -96,7 +96,7 @@ class _LoginFormState extends State<LoginForm> {
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
-                  hintText: AppStrings.auth.emailHint,
+                  hintText: GetIt.I<AuthStrings>().emailHint,
                   filled: true,
                   fillColor: Theme.of(context).inputDecorationTheme.fillColor,
                   border: OutlineInputBorder(
@@ -122,7 +122,7 @@ class _LoginFormState extends State<LoginForm> {
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return AppStrings.auth.emailRequired;
+                    return GetIt.I<AuthStrings>().emailRequired;
                   }
                   return null;
                 },
@@ -135,7 +135,7 @@ class _LoginFormState extends State<LoginForm> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                AppStrings.auth.passwordLabel,
+                GetIt.I<AuthStrings>().passwordLabel,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w500,
                       color: Theme.of(context).hintColor,
@@ -146,7 +146,7 @@ class _LoginFormState extends State<LoginForm> {
                 controller: _passwordController,
                 obscureText: !_isPasswordVisible,
                 decoration: InputDecoration(
-                  hintText: AppStrings.auth.passwordHint,
+                  hintText: GetIt.I<AuthStrings>().passwordHint,
                   filled: true,
                   fillColor: Theme.of(context).inputDecorationTheme.fillColor,
                   border: OutlineInputBorder(
@@ -201,7 +201,7 @@ class _LoginFormState extends State<LoginForm> {
                 Navigator.pushNamed(context, '/forgot-password');
               },
               child: Text(
-                AppStrings.auth.forgotPassword,
+                GetIt.I<AuthStrings>().forgotPassword,
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.primary,
                   fontWeight: FontWeight.w600,
@@ -237,7 +237,7 @@ class _LoginFormState extends State<LoginForm> {
                           ),
                         )
                       : Text(
-                          AppStrings.auth.loginButton,
+                          GetIt.I<AuthStrings>().loginButton,
                           style:
                               Theme.of(context).textTheme.bodyMedium?.copyWith(
                                     fontWeight: FontWeight.w800,
@@ -321,7 +321,7 @@ class _LoginFormState extends State<LoginForm> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                AppStrings.auth.noAccount,
+                GetIt.I<AuthStrings>().noAccount,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Theme.of(context).hintColor,
                     ),
@@ -331,7 +331,7 @@ class _LoginFormState extends State<LoginForm> {
                   Navigator.pushReplacementNamed(context, '/signup');
                 },
                 child: Text(
-                  AppStrings.auth.signupLink,
+                  GetIt.I<AuthStrings>().signupLink,
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.primary,
                     fontWeight: FontWeight.w600,

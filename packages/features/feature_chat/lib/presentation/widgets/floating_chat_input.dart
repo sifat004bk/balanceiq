@@ -7,7 +7,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:record/record.dart';
 import 'package:get_it/get_it.dart';
 
-import 'package:dolfin_core/constants/app_strings.dart';
+import 'package:feature_chat/constants/chat_strings.dart';
 import 'package:dolfin_ui_kit/theme/app_typography.dart';
 import 'package:dolfin_core/utils/snackbar_utils.dart';
 import '../cubit/chat_cubit.dart';
@@ -113,7 +113,7 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
         });
       }
     } catch (e) {
-      _showError(AppStrings.chat.imagePickFailed(e.toString()));
+      _showError(GetIt.I<ChatStrings>().imagePickFailed(e.toString()));
     }
   }
 
@@ -131,7 +131,7 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
         });
       }
     } catch (e) {
-      _showError(AppStrings.chat.photoFailed(e.toString()));
+      _showError(GetIt.I<ChatStrings>().photoFailed(e.toString()));
     }
   }
 
@@ -161,7 +161,7 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
           _isRecording = true;
         });
       } else {
-        _showError(AppStrings.chat.micPermissionDenied);
+        _showError(GetIt.I<ChatStrings>().micPermissionDenied);
       }
     }
   }
@@ -175,7 +175,7 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
 
     context.read<ChatCubit>().sendNewMessage(
           botId: widget.botId,
-          content: text.isEmpty ? AppStrings.chat.sentMedia : text,
+          content: text.isEmpty ? GetIt.I<ChatStrings>().sentMedia : text,
           imagePath: _selectedImage?.path,
           audioPath: _recordedAudioPath,
         );
@@ -223,7 +223,7 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                 children: [
                   _buildAttachmentOption(
                     icon: Icons.camera_alt_outlined,
-                    label: AppStrings.chat.camera,
+                    label: GetIt.I<ChatStrings>().camera,
                     onTap: () {
                       Navigator.pop(context);
                       _takePhoto();
@@ -231,7 +231,7 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                   ),
                   _buildAttachmentOption(
                     icon: Icons.photo_library_outlined,
-                    label: AppStrings.chat.gallery,
+                    label: GetIt.I<ChatStrings>().gallery,
                     onTap: () {
                       Navigator.pop(context);
                       _pickImage();
@@ -412,7 +412,7 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                                 size: 18),
                             const SizedBox(width: 8),
                             Text(
-                              AppStrings.chat.messageLimitReached,
+                              GetIt.I<ChatStrings>().messageLimitReached,
                               style: AppTypography.captionError.copyWith(
                                 color: Theme.of(context).colorScheme.onError,
                               ),
@@ -447,7 +447,8 @@ class _FloatingChatInputState extends State<FloatingChatInput> {
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              AppStrings.chat.nearMessageLimit(remainingTokens),
+                              GetIt.I<ChatStrings>()
+                                  .nearMessageLimit(remainingTokens),
                               style: AppTypography.captionWarning.copyWith(
                                 color:
                                     Theme.of(context).colorScheme.onSecondary,

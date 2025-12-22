@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:dolfin_core/constants/app_strings.dart';
+import 'package:feature_chat/constants/chat_strings.dart';
+import 'package:get_it/get_it.dart';
 import 'package:dolfin_core/utils/snackbar_utils.dart';
 
 class GenUIActionButtons extends StatelessWidget {
@@ -50,7 +51,7 @@ class GenUIActionButtons extends StatelessWidget {
           // Show feedback for button tap
           SnackbarUtils.showInfo(
             context,
-            '$label - ${AppStrings.chat.comingSoon}',
+            '$label - ${GetIt.I<ChatStrings>().comingSoon}',
             duration: const Duration(seconds: 2),
           );
         },

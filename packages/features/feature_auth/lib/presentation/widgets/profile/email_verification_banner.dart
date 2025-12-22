@@ -1,8 +1,9 @@
-import 'package:dolfin_core/constants/app_strings.dart';
 import 'package:dolfin_core/constants/design_constants.dart';
 import 'package:dolfin_core/utils/snackbar_utils.dart';
+import 'package:feature_auth/constants/auth_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 
 import '../../cubit/signup/signup_cubit.dart';
 
@@ -31,7 +32,7 @@ class EmailVerificationBanner extends StatelessWidget {
       listener: (context, state) {
         if (state is VerificationEmailSent) {
           SnackbarUtils.showSuccess(
-              context, '${AppStrings.auth.emailSent} ${state.email}');
+              context, '${GetIt.I<AuthStrings>().emailSent} ${state.email}');
         } else if (state is VerificationEmailError) {
           SnackbarUtils.showError(context, state.message);
         }
@@ -60,7 +61,7 @@ class EmailVerificationBanner extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: iconBgColor,
                       borderRadius:
-                      BorderRadius.circular(DesignConstants.radiusSmall),
+                          BorderRadius.circular(DesignConstants.radiusSmall),
                     ),
                     child: Icon(
                       Icons.warning_amber_rounded,
@@ -103,31 +104,31 @@ class EmailVerificationBanner extends StatelessWidget {
                     backgroundColor: warningColor,
                     foregroundColor: colorScheme.onInverseSurface,
                     disabledBackgroundColor:
-                    warningColor.withValues(alpha: 0.5),
+                        warningColor.withValues(alpha: 0.5),
                     padding:
-                    EdgeInsets.symmetric(vertical: DesignConstants.space3),
+                        EdgeInsets.symmetric(vertical: DesignConstants.space3),
                     shape: RoundedRectangleBorder(
                       borderRadius:
-                      BorderRadius.circular(DesignConstants.radiusMedium),
+                          BorderRadius.circular(DesignConstants.radiusMedium),
                     ),
                     elevation: 0,
                   ),
                   child: isSending
                       ? SizedBox(
-                    height: DesignConstants.loadingIndicatorSmall,
-                    width: DesignConstants.loadingIndicatorSmall,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: colorScheme.onInverseSurface,
-                    ),
-                  )
+                          height: DesignConstants.loadingIndicatorSmall,
+                          width: DesignConstants.loadingIndicatorSmall,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: colorScheme.onInverseSurface,
+                          ),
+                        )
                       : Text(
-                    'Send Verification Email',
-                    style: TextStyle(
-                      fontSize: DesignConstants.fontSizeM,
-                      fontWeight: DesignConstants.fontWeightSemiBold,
-                    ),
-                  ),
+                          'Send Verification Email',
+                          style: TextStyle(
+                            fontSize: DesignConstants.fontSizeM,
+                            fontWeight: DesignConstants.fontWeightSemiBold,
+                          ),
+                        ),
                 ),
               ),
             ],

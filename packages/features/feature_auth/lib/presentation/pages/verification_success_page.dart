@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
-import 'package:dolfin_core/constants/app_strings.dart';
+import 'package:feature_auth/constants/auth_strings.dart';
+import 'package:get_it/get_it.dart';
 import "package:feature_auth/presentation/cubit/session/session_cubit.dart";
 import 'package:feature_auth/domain/entities/user.dart';
 
@@ -128,7 +129,7 @@ class _VerificationSuccessPageState extends State<VerificationSuccessPage>
                     const SizedBox(height: 40),
                     // Title
                     Text(
-                      AppStrings.auth.verificationSuccessTitle,
+                      GetIt.I<AuthStrings>().verificationSuccessTitle,
                       style: textTheme.headlineMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -139,7 +140,7 @@ class _VerificationSuccessPageState extends State<VerificationSuccessPage>
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 32),
                       child: Text(
-                        AppStrings.auth.verificationWelcomeMessage,
+                        GetIt.I<AuthStrings>().verificationWelcomeMessage,
                         style: textTheme.bodyLarge?.copyWith(
                           color: Theme.of(context).hintColor,
                         ),
@@ -163,7 +164,7 @@ class _VerificationSuccessPageState extends State<VerificationSuccessPage>
                     ),
                   ),
                   child: Text(
-                    AppStrings.auth.continueToDashboard,
+                    GetIt.I<AuthStrings>().continueToDashboard,
                     style: textTheme.labelLarge?.copyWith(
                       color: colorScheme.onPrimary,
                       fontWeight: FontWeight.bold,

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
-import 'package:dolfin_core/constants/app_strings.dart';
+import 'package:feature_auth/constants/auth_strings.dart';
 import 'package:dolfin_core/currency/currency_cubit.dart';
 import 'package:dolfin_core/tour/product_tour_cubit.dart';
 import 'package:dolfin_core/tour/product_tour_state.dart';
@@ -138,7 +138,7 @@ class _ProfilePageState extends State<ProfilePage>
               }
 
               return Center(
-                child: Text(AppStrings.auth.signingIn),
+                child: Text(GetIt.I<AuthStrings>().signingIn),
               );
             },
           ),
@@ -213,8 +213,8 @@ class _ProfilePageState extends State<ProfilePage>
                       icon: Icons.person_outline,
                       title: 'Account Details',
                       onTap: () {
-                        SnackbarUtils.showComingSoon(
-                            context, AppStrings.profile.accountDetails);
+                        SnackbarUtils.showComingSoon(context,
+                            GetIt.I<AuthStrings>().profile.accountDetails);
                       },
                     ),
                     const SizedBox(height: 12),
@@ -230,8 +230,8 @@ class _ProfilePageState extends State<ProfilePage>
                       icon: Icons.notifications_outlined,
                       title: 'Notifications',
                       onTap: () {
-                        SnackbarUtils.showComingSoon(
-                            context, AppStrings.profile.notifications);
+                        SnackbarUtils.showComingSoon(context,
+                            GetIt.I<AuthStrings>().profile.notifications);
                       },
                     ),
                     const SizedBox(height: 12),
@@ -240,7 +240,7 @@ class _ProfilePageState extends State<ProfilePage>
                       title: 'Appearance',
                       onTap: () {
                         SnackbarUtils.showComingSoon(
-                            context, AppStrings.profile.appearance);
+                            context, GetIt.I<AuthStrings>().profile.appearance);
                       },
                     ),
                     const SizedBox(height: 12),
@@ -250,7 +250,7 @@ class _ProfilePageState extends State<ProfilePage>
                       builder: (context, currencyState) {
                         return ProfileMenuItem(
                           icon: Icons.currency_exchange_outlined,
-                          title: AppStrings.profile.currency,
+                          title: GetIt.I<AuthStrings>().profile.currency,
                           subtitle:
                               '${currencyState.currencySymbol} ${currencyState.currencyName}',
                           onTap: () {
@@ -301,7 +301,7 @@ class _ProfilePageState extends State<ProfilePage>
                       title: 'Help Center',
                       onTap: () {
                         SnackbarUtils.showComingSoon(
-                            context, AppStrings.profile.helpCenter);
+                            context, GetIt.I<AuthStrings>().profile.helpCenter);
                       },
                     ),
                     const SizedBox(height: 40),

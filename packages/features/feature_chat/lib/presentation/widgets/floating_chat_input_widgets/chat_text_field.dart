@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:dolfin_core/constants/app_strings.dart';
+import 'package:feature_chat/constants/chat_strings.dart';
+import 'package:get_it/get_it.dart';
 import 'package:dolfin_ui_kit/theme/app_typography.dart';
 
 class ChatTextField extends StatelessWidget {
@@ -27,8 +28,8 @@ class ChatTextField extends StatelessWidget {
         minLines: 1,
         decoration: InputDecoration(
           hintText: isLimitReached
-              ? AppStrings.chat.limitReached
-              : AppStrings.chat.inputPlaceholderGeneral,
+              ? GetIt.I<ChatStrings>().limitReached
+              : GetIt.I<ChatStrings>().inputPlaceholderGeneral,
           hintStyle: AppTypography.inputLarge.copyWith(
             color: isLimitReached
                 ? Theme.of(context).hintColor

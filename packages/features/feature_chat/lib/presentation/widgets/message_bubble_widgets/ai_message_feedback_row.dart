@@ -3,7 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
-import 'package:dolfin_core/constants/app_strings.dart';
+import 'package:feature_chat/constants/chat_strings.dart';
+import 'package:dolfin_core/constants/core_strings.dart';
 import 'package:dolfin_core/utils/snackbar_utils.dart';
 import '../../../domain/entities/message.dart';
 import '../../../domain/entities/chat_feedback.dart';
@@ -45,7 +46,8 @@ class AiMessageFeedbackRow extends StatelessWidget {
                   .submitMessageFeedback(message.id, newFeedback);
 
               if (newFeedback == FeedbackType.like) {
-                SnackbarUtils.showInfo(context, AppStrings.chat.feedbackThanks);
+                SnackbarUtils.showInfo(
+                    context, GetIt.I<ChatStrings>().feedbackThanks);
               }
             },
           ),
@@ -68,7 +70,8 @@ class AiMessageFeedbackRow extends StatelessWidget {
                   .submitMessageFeedback(message.id, newFeedback);
 
               if (newFeedback == FeedbackType.dislike) {
-                SnackbarUtils.showInfo(context, AppStrings.chat.feedbackThanks);
+                SnackbarUtils.showInfo(
+                    context, GetIt.I<ChatStrings>().feedbackThanks);
               }
             },
           ),
@@ -82,7 +85,8 @@ class AiMessageFeedbackRow extends StatelessWidget {
             icon: Icons.select_all,
             color: colorScheme.onSurface.withValues(alpha: 0.6),
             onPressed: () {
-              SnackbarUtils.showInfo(context, AppStrings.common.selectTextMode);
+              SnackbarUtils.showInfo(
+                  context, GetIt.I<CoreStrings>().common.selectTextMode);
             },
           ),
           const SizedBox(width: 4),
@@ -95,7 +99,8 @@ class AiMessageFeedbackRow extends StatelessWidget {
             color: colorScheme.onSurface.withValues(alpha: 0.6),
             onPressed: () {
               Clipboard.setData(ClipboardData(text: message.content));
-              SnackbarUtils.showInfo(context, AppStrings.common.copied);
+              SnackbarUtils.showInfo(
+                  context, GetIt.I<CoreStrings>().common.copied);
             },
           ),
           const SizedBox(width: 4),
@@ -108,7 +113,8 @@ class AiMessageFeedbackRow extends StatelessWidget {
             icon: Icons.refresh,
             color: colorScheme.onSurface.withValues(alpha: 0.6),
             onPressed: () {
-              SnackbarUtils.showInfo(context, AppStrings.chat.regenerating);
+              SnackbarUtils.showInfo(
+                  context, GetIt.I<ChatStrings>().regenerating);
             },
           ),
         // Disclaimer

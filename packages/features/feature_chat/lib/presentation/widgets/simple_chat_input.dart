@@ -7,7 +7,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:record/record.dart';
 import 'package:get_it/get_it.dart';
 
-import 'package:dolfin_core/constants/app_strings.dart';
+import 'package:feature_chat/constants/chat_strings.dart';
 import 'package:dolfin_ui_kit/theme/app_typography.dart';
 import 'package:dolfin_core/utils/snackbar_utils.dart';
 import '../cubit/chat_cubit.dart';
@@ -96,7 +96,7 @@ class _SimpleChatInputState extends State<SimpleChatInput> {
         });
       }
     } catch (e) {
-      _showError(AppStrings.chat.imagePickFailed(e.toString()));
+      _showError(GetIt.I<ChatStrings>().imagePickFailed(e.toString()));
     }
   }
 
@@ -113,7 +113,7 @@ class _SimpleChatInputState extends State<SimpleChatInput> {
         });
       }
     } catch (e) {
-      _showError(AppStrings.chat.photoFailed(e.toString()));
+      _showError(GetIt.I<ChatStrings>().photoFailed(e.toString()));
     }
   }
 
@@ -136,7 +136,7 @@ class _SimpleChatInputState extends State<SimpleChatInput> {
         await _audioRecorder.start(const RecordConfig(), path: path);
         setState(() => _isRecording = true);
       } else {
-        _showError(AppStrings.chat.micPermissionDenied);
+        _showError(GetIt.I<ChatStrings>().micPermissionDenied);
       }
     }
   }
@@ -149,7 +149,7 @@ class _SimpleChatInputState extends State<SimpleChatInput> {
 
     context.read<ChatCubit>().sendNewMessage(
           botId: widget.botId,
-          content: text.isEmpty ? AppStrings.chat.sentMedia : text,
+          content: text.isEmpty ? GetIt.I<ChatStrings>().sentMedia : text,
           imagePath: _selectedImage?.path,
           audioPath: _recordedAudioPath,
         );

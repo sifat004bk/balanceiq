@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:dolfin_core/constants/app_strings.dart';
+import 'package:dolfin_core/constants/core_strings.dart';
+import 'package:feature_chat/constants/chat_strings.dart';
+import 'package:get_it/get_it.dart';
 import 'package:dolfin_ui_kit/theme/app_typography.dart';
 import '../../cubit/chat_cubit.dart';
 import '../../cubit/chat_state.dart';
@@ -48,64 +50,64 @@ class ChatErrorWidget extends StatelessWidget {
     switch (state.errorType) {
       case ChatErrorType.emailNotVerified:
         return _ErrorConfig(
-          title: AppStrings.chat.emailVerificationRequired,
-          description: AppStrings.chat.emailVerificationMessage,
+          title: GetIt.I<ChatStrings>().emailVerificationRequired,
+          description: GetIt.I<ChatStrings>().emailVerificationMessage,
           icon: Icons.email_outlined,
           iconColor: colorScheme.tertiary,
-          buttonText: AppStrings.chat.verifyEmailButton,
+          buttonText: GetIt.I<ChatStrings>().verifyEmailButton,
           onButtonPressed: () => Navigator.pushNamed(context, '/profile'),
         );
       case ChatErrorType.subscriptionRequired:
         return _ErrorConfig(
-          title: AppStrings.chat.subscriptionRequired,
-          description: AppStrings.chat.subscriptionRequiredMessage,
+          title: GetIt.I<ChatStrings>().subscriptionRequired,
+          description: GetIt.I<ChatStrings>().subscriptionRequiredMessage,
           icon: Icons.card_membership_outlined,
           iconColor: colorScheme.primary,
-          buttonText: AppStrings.chat.viewPlans,
+          buttonText: GetIt.I<ChatStrings>().viewPlans,
           onButtonPressed: () =>
               Navigator.pushNamed(context, '/subscription-plans'),
         );
       case ChatErrorType.subscriptionExpired:
         return _ErrorConfig(
-          title: AppStrings.chat.subscriptionExpired,
-          description: AppStrings.chat.subscriptionExpiredMessage,
+          title: GetIt.I<ChatStrings>().subscriptionExpired,
+          description: GetIt.I<ChatStrings>().subscriptionExpiredMessage,
           icon: Icons.timer_off_outlined,
           iconColor: colorScheme.error,
-          buttonText: AppStrings.chat.renewSubscription,
+          buttonText: GetIt.I<ChatStrings>().renewSubscription,
           onButtonPressed: () =>
               Navigator.pushNamed(context, '/manage-subscription'),
         );
       case ChatErrorType.messageLimitExceeded:
         return _ErrorConfig(
-          title: AppStrings.chat.messageLimitExceeded,
+          title: GetIt.I<ChatStrings>().messageLimitExceeded,
           description: state.message.isNotEmpty
               ? state.message
-              : AppStrings.chat.messageLimitExceededMessage,
+              : GetIt.I<ChatStrings>().messageLimitExceededMessage,
           icon: Icons.token_outlined,
           iconColor: colorScheme.secondary,
-          buttonText: AppStrings.chat.upgradePlan,
+          buttonText: GetIt.I<ChatStrings>().upgradePlan,
           onButtonPressed: () =>
               Navigator.pushNamed(context, '/subscription-plans'),
         );
       case ChatErrorType.rateLimitExceeded:
         return _ErrorConfig(
-          title: AppStrings.chat.tooManyRequests,
-          description: AppStrings.chat.rateLimitMessage,
+          title: GetIt.I<ChatStrings>().tooManyRequests,
+          description: GetIt.I<ChatStrings>().rateLimitMessage,
           icon: Icons.schedule_outlined,
           iconColor: colorScheme.primary,
-          buttonText: AppStrings.common.gotIt,
+          buttonText: GetIt.I<CoreStrings>().common.gotIt,
           onButtonPressed: () =>
               context.read<ChatCubit>().loadChatHistory(botId),
         );
       default:
         return _ErrorConfig(
-          title: AppStrings.errors.somethingWentWrong,
+          title: GetIt.I<CoreStrings>().errors.somethingWentWrong,
           description: state.message.isNotEmpty
               ? state.message
-              : AppStrings.errors.tryAgainLater,
+              : GetIt.I<CoreStrings>().errors.tryAgainLater,
           icon: Icons.error_outline,
           iconColor: colorScheme.error,
-          buttonText: AppStrings.common.retry,
+          buttonText: GetIt.I<CoreStrings>().common.retry,
           onButtonPressed: () =>
               context.read<ChatCubit>().loadChatHistory(botId),
         );
@@ -177,7 +179,7 @@ class ChatErrorWidget extends StatelessWidget {
         TextButton(
           onPressed: () => context.read<ChatCubit>().loadChatHistory(botId),
           child: Text(
-            AppStrings.chat.backToChat,
+            GetIt.I<ChatStrings>().backToChat,
             style: AppTypography.bodyMedium.copyWith(
               color: colorScheme.primary,
               fontWeight: FontWeight.w500,

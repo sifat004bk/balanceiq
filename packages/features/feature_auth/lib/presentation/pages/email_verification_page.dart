@@ -1,7 +1,9 @@
-import 'package:dolfin_core/constants/app_strings.dart';
+import 'package:dolfin_core/constants/core_strings.dart';
 import 'package:dolfin_core/utils/snackbar_utils.dart';
+import 'package:feature_auth/constants/auth_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'dart:async';
 
 import "package:feature_auth/presentation/cubit/signup/signup_cubit.dart";
@@ -49,7 +51,8 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
 
   void _openEmailApp() {
     // In a real app, you would use url_launcher to open email app
-    SnackbarUtils.showInfo(context, '${AppStrings.common.loading}...');
+    SnackbarUtils.showInfo(
+        context, '${GetIt.I<CoreStrings>().common.loading}...');
   }
 
   void _mockVerifyAndContinue() {
@@ -67,7 +70,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
         if (state is VerificationEmailSent) {
           SnackbarUtils.showSuccess(
             context,
-            '${AppStrings.auth.emailSent} ${state.email}',
+            '${GetIt.I<AuthStrings>().emailSent} ${state.email}',
           );
           _startCooldown();
         } else if (state is VerificationEmailError) {
@@ -80,7 +83,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
             icon: const Icon(Icons.arrow_back),
             onPressed: () => Navigator.pop(context),
           ),
-          title: Text(AppStrings.auth.verifyEmailTitle),
+          title: Text(GetIt.I<AuthStrings>().verifyEmailTitle),
           centerTitle: true,
         ),
         body: SafeArea(
@@ -122,7 +125,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                       const SizedBox(height: 40),
                       // Title
                       Text(
-                        AppStrings.auth.checkInbox,
+                        GetIt.I<AuthStrings>().checkInbox,
                         style: textTheme.headlineMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -139,7 +142,8 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                             ),
                             children: [
                               TextSpan(
-                                text: AppStrings.auth.verificationLinkSent,
+                                text:
+                                    GetIt.I<AuthStrings>().verificationLinkSent,
                               ),
                               TextSpan(
                                 text: widget.email,
@@ -149,7 +153,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                                 ),
                               ),
                               TextSpan(
-                                text: AppStrings.auth.checkSpamFolder,
+                                text: GetIt.I<AuthStrings>().checkSpamFolder,
                               ),
                             ],
                           ),
@@ -174,7 +178,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                           ),
                         ),
                         child: Text(
-                          AppStrings.auth.openEmailApp,
+                          GetIt.I<AuthStrings>().openEmailApp,
                           style: textTheme.labelLarge?.copyWith(
                             color: colorScheme.onPrimary,
                             fontWeight: FontWeight.bold,
@@ -188,7 +192,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          AppStrings.auth.didntReceive,
+                          GetIt.I<AuthStrings>().didntReceive,
                           style: textTheme.bodyMedium?.copyWith(
                             color: Theme.of(context).hintColor,
                           ),
@@ -216,8 +220,10 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                                   _resendCooldown == 0 ? _resendEmail : null,
                               child: Text(
                                 _resendCooldown > 0
-                                    ? AppStrings.auth.resendIn(_resendCooldown)
-                                    : AppStrings.auth.sendVerificationEmail,
+                                    ? GetIt.I<AuthStrings>()
+                                        .resendIn(_resendCooldown)
+                                    : GetIt.I<AuthStrings>()
+                                        .sendVerificationEmail,
                                 style: TextStyle(
                                   color: _resendCooldown > 0
                                       ? Theme.of(context).hintColor
@@ -235,7 +241,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                     TextButton(
                       onPressed: _mockVerifyAndContinue,
                       child: Text(
-                        AppStrings.auth.skipVerificationDevOnly,
+                        GetIt.I<AuthStrings>().skipVerificationDevOnly,
                         style: textTheme.bodySmall?.copyWith(
                           color: Theme.of(context).hintColor,
                         ),

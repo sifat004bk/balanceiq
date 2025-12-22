@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:dolfin_core/constants/app_strings.dart';
 import 'package:dolfin_core/utils/snackbar_utils.dart';
+import 'package:feature_auth/constants/auth_strings.dart';
+import 'package:get_it/get_it.dart';
 
 import 'package:feature_auth/presentation/cubit/password/password_cubit.dart';
 
@@ -50,7 +51,8 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
       listener: (context, state) {
         if (state is PasswordResetSuccess) {
           // Show success message
-          SnackbarUtils.showSuccess(context, AppStrings.auth.resetSuccess);
+          SnackbarUtils.showSuccess(
+              context, GetIt.I<AuthStrings>().resetSuccess);
           // Navigate to login
           Navigator.of(context).pushReplacementNamed('/login');
         } else if (state is PasswordError) {
@@ -59,7 +61,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(AppStrings.auth.resetPasswordTitle),
+          title: Text(GetIt.I<AuthStrings>().resetPasswordTitle),
           backgroundColor: Colors.transparent,
           elevation: 0,
         ),
@@ -73,14 +75,14 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 children: [
                   const SizedBox(height: 24),
                   Text(
-                    AppStrings.auth.createNewPassword,
+                    GetIt.I<AuthStrings>().createNewPassword,
                     style: textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    AppStrings.auth.enterNewPasswordHint,
+                    GetIt.I<AuthStrings>().enterNewPasswordHint,
                     style: textTheme.bodyLarge?.copyWith(
                       color: Theme.of(context).hintColor,
                     ),
@@ -88,7 +90,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   const SizedBox(height: 40),
                   // New Password field
                   Text(
-                    AppStrings.auth.newPasswordLabel,
+                    GetIt.I<AuthStrings>().newPasswordLabel,
                     style: textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
@@ -98,7 +100,8 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                     controller: _passwordController,
                     obscureText: !_isPasswordVisible,
                     decoration: InputDecoration(
-                      hintText: AppStrings.auth.enterNewPasswordPlaceholder,
+                      hintText:
+                          GetIt.I<AuthStrings>().enterNewPasswordPlaceholder,
                       prefixIcon: const Icon(Icons.lock_outline),
                       suffixIcon: IconButton(
                         icon: Icon(
@@ -136,10 +139,10 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return AppStrings.auth.passwordRequired;
+                        return GetIt.I<AuthStrings>().passwordRequired;
                       }
                       if (value.length < 6) {
-                        return AppStrings.auth.passwordMinLength;
+                        return GetIt.I<AuthStrings>().passwordMinLength;
                       }
                       return null;
                     },
@@ -147,7 +150,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   const SizedBox(height: 16),
                   // Confirm Password field
                   Text(
-                    AppStrings.auth.confirmPasswordLabel,
+                    GetIt.I<AuthStrings>().confirmPasswordLabel,
                     style: textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
@@ -157,7 +160,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                     controller: _confirmPasswordController,
                     obscureText: !_isConfirmPasswordVisible,
                     decoration: InputDecoration(
-                      hintText: AppStrings.auth.confirmNewPasswordHint,
+                      hintText: GetIt.I<AuthStrings>().confirmNewPasswordHint,
                       prefixIcon: const Icon(Icons.lock_reset),
                       suffixIcon: IconButton(
                         icon: Icon(
@@ -196,10 +199,10 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return AppStrings.auth.confirmPasswordRequired;
+                        return GetIt.I<AuthStrings>().confirmPasswordRequired;
                       }
                       if (value != _passwordController.text) {
-                        return AppStrings.auth.passwordsDoNotMatch;
+                        return GetIt.I<AuthStrings>().passwordsDoNotMatch;
                       }
                       return null;
                     },
@@ -232,7 +235,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                                   ),
                                 )
                               : Text(
-                                  AppStrings.auth.resetPasswordButton,
+                                  GetIt.I<AuthStrings>().resetPasswordButton,
                                   style: textTheme.labelLarge?.copyWith(
                                     color: colorScheme.onPrimary,
                                     fontWeight: FontWeight.bold,

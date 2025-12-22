@@ -1,6 +1,6 @@
 import 'package:dolfin_core/constants/app_constants.dart';
 import 'package:get_it/get_it.dart';
-import 'package:dolfin_core/constants/app_strings.dart';
+import 'package:feature_chat/constants/chat_strings.dart';
 import 'package:flutter/material.dart';
 
 /// Gemini-style suggested prompts shown in empty chat state
@@ -21,105 +21,105 @@ class SuggestedPrompts extends StatelessWidget {
       return [
         PromptChip(
           icon: Icons.receipt_long,
-          label: AppStrings.chatPrompts.trackExpenseLabel,
-          prompt: AppStrings.chatPrompts.trackExpensePrompt,
+          label: GetIt.I<ChatStrings>().prompts.trackExpenseLabel,
+          prompt: GetIt.I<ChatStrings>().prompts.trackExpensePrompt,
         ),
         PromptChip(
           icon: Icons.account_balance_wallet,
-          label: AppStrings.chatPrompts.checkBalanceLabel,
-          prompt: AppStrings.chatPrompts.checkBalancePrompt,
+          label: GetIt.I<ChatStrings>().prompts.checkBalanceLabel,
+          prompt: GetIt.I<ChatStrings>().prompts.checkBalancePrompt,
         ),
         PromptChip(
           icon: Icons.trending_up,
-          label: AppStrings.chatPrompts.monthlySummaryLabel,
-          prompt: AppStrings.chatPrompts.monthlySummaryPrompt,
+          label: GetIt.I<ChatStrings>().prompts.monthlySummaryLabel,
+          prompt: GetIt.I<ChatStrings>().prompts.monthlySummaryPrompt,
         ),
         PromptChip(
           icon: Icons.savings,
-          label: AppStrings.chatPrompts.addIncomeLabel,
-          prompt: AppStrings.chatPrompts.addIncomePrompt,
+          label: GetIt.I<ChatStrings>().prompts.addIncomeLabel,
+          prompt: GetIt.I<ChatStrings>().prompts.addIncomePrompt,
         ),
       ];
     } else if (botId == constants.investmentGuruID) {
       return [
         PromptChip(
           icon: Icons.show_chart,
-          label: AppStrings.chatPrompts.investmentTipsLabel,
-          prompt: AppStrings.chatPrompts.investmentTipsPrompt,
+          label: GetIt.I<ChatStrings>().prompts.investmentTipsLabel,
+          prompt: GetIt.I<ChatStrings>().prompts.investmentTipsPrompt,
         ),
         PromptChip(
           icon: Icons.account_balance,
-          label: AppStrings.chatPrompts.stockAdviceLabel,
-          prompt: AppStrings.chatPrompts.stockAdvicePrompt,
+          label: GetIt.I<ChatStrings>().prompts.stockAdviceLabel,
+          prompt: GetIt.I<ChatStrings>().prompts.stockAdvicePrompt,
         ),
         PromptChip(
           icon: Icons.pie_chart,
-          label: AppStrings.chatPrompts.portfolioReviewLabel,
-          prompt: AppStrings.chatPrompts.portfolioReviewPrompt,
+          label: GetIt.I<ChatStrings>().prompts.portfolioReviewLabel,
+          prompt: GetIt.I<ChatStrings>().prompts.portfolioReviewPrompt,
         ),
         PromptChip(
           icon: Icons.trending_up,
-          label: AppStrings.chatPrompts.marketTrendsLabel,
-          prompt: AppStrings.chatPrompts.marketTrendsPrompt,
+          label: GetIt.I<ChatStrings>().prompts.marketTrendsLabel,
+          prompt: GetIt.I<ChatStrings>().prompts.marketTrendsPrompt,
         ),
       ];
     } else if (botId == constants.budgetPlannerID) {
       return [
         PromptChip(
           icon: Icons.calendar_today,
-          label: AppStrings.chatPrompts.createBudgetLabel,
-          prompt: AppStrings.chatPrompts.createBudgetPrompt,
+          label: GetIt.I<ChatStrings>().prompts.createBudgetLabel,
+          prompt: GetIt.I<ChatStrings>().prompts.createBudgetPrompt,
         ),
         PromptChip(
           icon: Icons.category,
-          label: AppStrings.chatPrompts.budgetCategoriesLabel,
-          prompt: AppStrings.chatPrompts.budgetCategoriesPrompt,
+          label: GetIt.I<ChatStrings>().prompts.budgetCategoriesLabel,
+          prompt: GetIt.I<ChatStrings>().prompts.budgetCategoriesPrompt,
         ),
         PromptChip(
           icon: Icons.savings,
-          label: AppStrings.chatPrompts.saveMoneyLabel,
-          prompt: AppStrings.chatPrompts.saveMoneyPrompt,
+          label: GetIt.I<ChatStrings>().prompts.saveMoneyLabel,
+          prompt: GetIt.I<ChatStrings>().prompts.saveMoneyPrompt,
         ),
         PromptChip(
           icon: Icons.warning,
-          label: AppStrings.chatPrompts.budgetAlertsLabel,
-          prompt: AppStrings.chatPrompts.budgetAlertsPrompt,
+          label: GetIt.I<ChatStrings>().prompts.budgetAlertsLabel,
+          prompt: GetIt.I<ChatStrings>().prompts.budgetAlertsPrompt,
         ),
       ];
     } else if (botId == constants.finTipsID) {
       return [
         PromptChip(
           icon: Icons.lightbulb,
-          label: AppStrings.chatPrompts.moneyTipsLabel,
-          prompt: AppStrings.chatPrompts.moneyTipsPrompt,
+          label: GetIt.I<ChatStrings>().prompts.moneyTipsLabel,
+          prompt: GetIt.I<ChatStrings>().prompts.moneyTipsPrompt,
         ),
         PromptChip(
           icon: Icons.school,
-          label: AppStrings.chatPrompts.learnFinanceLabel,
-          prompt: AppStrings.chatPrompts.learnFinancePrompt,
+          label: GetIt.I<ChatStrings>().prompts.learnFinanceLabel,
+          prompt: GetIt.I<ChatStrings>().prompts.learnFinancePrompt,
         ),
         PromptChip(
           icon: Icons.security,
-          label: AppStrings.chatPrompts.emergencyFundLabel,
-          prompt: AppStrings.chatPrompts.emergencyFundPrompt,
+          label: GetIt.I<ChatStrings>().prompts.emergencyFundLabel,
+          prompt: GetIt.I<ChatStrings>().prompts.emergencyFundPrompt,
         ),
         PromptChip(
           icon: Icons.credit_card,
-          label: AppStrings.chatPrompts.creditAdviceLabel,
-          prompt: AppStrings.chatPrompts.creditAdvicePrompt,
+          label: GetIt.I<ChatStrings>().prompts.creditAdviceLabel,
+          prompt: GetIt.I<ChatStrings>().prompts.creditAdvicePrompt,
         ),
       ];
     } else {
       return [
         PromptChip(
           icon: Icons.help,
-          label: AppStrings.chatPrompts.getStartedLabel,
-          prompt: AppStrings.chatPrompts.getStartedPrompt,
+          label: GetIt.I<ChatStrings>().prompts.getStartedLabel,
+          prompt: GetIt.I<ChatStrings>().prompts.getStartedPrompt,
         ),
         PromptChip(
           icon: Icons.info,
-          label: AppStrings.chatPrompts.learnMoreLabel,
-          prompt: AppStrings.chatPrompts.learnMorePrompt,
+          label: GetIt.I<ChatStrings>().prompts.learnMoreLabel,
+          prompt: GetIt.I<ChatStrings>().prompts.learnMorePrompt,
         ),
       ];
     }
@@ -192,7 +192,7 @@ class SuggestedPrompts extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  AppStrings.chatPrompts.howCanIHelp,
+                  GetIt.I<ChatStrings>().prompts.howCanIHelp,
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                         fontWeight: FontWeight.w600,
                         color: Theme.of(context).colorScheme.onSurface,
@@ -202,7 +202,7 @@ class SuggestedPrompts extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  AppStrings.chatPrompts.choosePrompt,
+                  GetIt.I<ChatStrings>().prompts.choosePrompt,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Theme.of(context).hintColor,
                         fontSize: 14,

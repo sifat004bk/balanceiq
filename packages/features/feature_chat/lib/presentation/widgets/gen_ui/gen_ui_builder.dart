@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:dolfin_core/constants/app_strings.dart';
+import 'package:feature_chat/constants/chat_strings.dart';
+import 'package:get_it/get_it.dart';
 
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:markdown/markdown.dart' as md;
@@ -46,7 +47,7 @@ class GenUIChartBuilder extends MarkdownElementBuilder {
       final title = jsonMap['title'] as String?;
 
       if (graphType == null) {
-        return Text(AppStrings.chat.errorMissingChartType,
+        return Text(GetIt.I<ChatStrings>().errorMissingChartType,
             style: TextStyle(color: Theme.of(context).colorScheme.error));
       }
 
@@ -59,7 +60,7 @@ class GenUIChartBuilder extends MarkdownElementBuilder {
         ),
       );
     } catch (e) {
-      return Text(AppStrings.chat.errorRenderingChart(e.toString()),
+      return Text(GetIt.I<ChatStrings>().errorRenderingChart(e.toString()),
           style: TextStyle(color: Theme.of(context).colorScheme.error));
     }
   }
@@ -86,7 +87,7 @@ class GenUITableBuilder extends MarkdownElementBuilder {
       );
     } catch (e) {
       // Fallback for potential legacy format or errors
-      return Text(AppStrings.chat.errorRenderingTable(e.toString()),
+      return Text(GetIt.I<ChatStrings>().errorRenderingTable(e.toString()),
           style: TextStyle(color: Theme.of(context).colorScheme.error));
     }
   }
@@ -108,7 +109,7 @@ class GenUISummaryCardBuilder extends MarkdownElementBuilder {
         child: GenUISummaryCard(data: jsonMap),
       );
     } catch (e) {
-      return Text(AppStrings.chat.errorRenderingSummary(e.toString()),
+      return Text(GetIt.I<ChatStrings>().errorRenderingSummary(e.toString()),
           style: TextStyle(color: Theme.of(context).colorScheme.error));
     }
   }
@@ -130,7 +131,7 @@ class GenUIActionListBuilder extends MarkdownElementBuilder {
         child: GenUIActionList(data: jsonMap),
       );
     } catch (e) {
-      return Text(AppStrings.chat.errorRenderingActionList(e.toString()),
+      return Text(GetIt.I<ChatStrings>().errorRenderingActionList(e.toString()),
           style: TextStyle(color: Theme.of(context).colorScheme.error));
     }
   }
@@ -152,7 +153,7 @@ class GenUIMetricCardBuilder extends MarkdownElementBuilder {
         child: GenUIMetricCard(data: jsonMap),
       );
     } catch (e) {
-      return Text(AppStrings.chat.errorRenderingMetric(e.toString()),
+      return Text(GetIt.I<ChatStrings>().errorRenderingMetric(e.toString()),
           style: TextStyle(color: Theme.of(context).colorScheme.error));
     }
   }
@@ -174,7 +175,7 @@ class GenUIProgressBuilder extends MarkdownElementBuilder {
         child: GenUIProgress(data: jsonMap),
       );
     } catch (e) {
-      return Text(AppStrings.chat.errorRenderingProgress(e.toString()),
+      return Text(GetIt.I<ChatStrings>().errorRenderingProgress(e.toString()),
           style: TextStyle(color: Theme.of(context).colorScheme.error));
     }
   }
@@ -196,7 +197,8 @@ class GenUIActionButtonsBuilder extends MarkdownElementBuilder {
         child: GenUIActionButtons(data: jsonMap),
       );
     } catch (e) {
-      return Text(AppStrings.chat.errorRenderingActionButtons(e.toString()),
+      return Text(
+          GetIt.I<ChatStrings>().errorRenderingActionButtons(e.toString()),
           style: TextStyle(color: Theme.of(context).colorScheme.error));
     }
   }
@@ -218,7 +220,7 @@ class GenUIStatsBuilder extends MarkdownElementBuilder {
         child: GenUIStats(data: jsonMap),
       );
     } catch (e) {
-      return Text(AppStrings.chat.errorRenderingStats(e.toString()),
+      return Text(GetIt.I<ChatStrings>().errorRenderingStats(e.toString()),
           style: TextStyle(color: Theme.of(context).colorScheme.error));
     }
   }
@@ -240,7 +242,7 @@ class GenUIInsightCardBuilder extends MarkdownElementBuilder {
         child: GenUIInsightCard(data: jsonMap),
       );
     } catch (e) {
-      return Text(AppStrings.chat.errorRenderingInsight(e.toString()),
+      return Text(GetIt.I<ChatStrings>().errorRenderingInsight(e.toString()),
           style: TextStyle(color: Theme.of(context).colorScheme.error));
     }
   }

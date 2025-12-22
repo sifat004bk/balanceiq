@@ -1,4 +1,5 @@
-import 'package:dolfin_core/constants/app_strings.dart';
+import 'package:get_it/get_it.dart';
+import 'package:feature_chat/constants/chat_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:feature_chat/presentation/pages/chat_page.dart';
 
@@ -96,7 +97,7 @@ class FloatingChatButton extends StatelessWidget {
             // Placeholder text
             Expanded(
               child: Text(
-                AppStrings.chat.inputPlaceholder,
+                GetIt.I<ChatStrings>().inputPlaceholder,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Theme.of(context).hintColor,
                       fontSize: 15,

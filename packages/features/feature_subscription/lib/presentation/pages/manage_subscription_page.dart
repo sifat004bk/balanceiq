@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:dolfin_core/constants/app_strings.dart';
+import 'package:feature_subscription/constants/subscription_strings.dart';
+import 'package:dolfin_core/constants/core_strings.dart';
 
 import 'package:get_it/get_it.dart';
 import 'package:dolfin_ui_kit/theme/app_typography.dart';
@@ -38,7 +39,7 @@ class _ManageSubscriptionView extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          AppStrings.subscription.manageSubscriptionTitle,
+          GetIt.I<SubscriptionStrings>().manageSubscriptionTitle,
           style: AppTypography.titleXLargeSemiBold.copyWith(
             color: Theme.of(context).textTheme.titleLarge?.color,
           ),
@@ -83,7 +84,7 @@ class _ManageSubscriptionView extends StatelessWidget {
                     onPressed: () => context
                         .read<SubscriptionCubit>()
                         .loadSubscriptionStatus(),
-                    child: Text(AppStrings.common.retry),
+                    child: Text(GetIt.I<CoreStrings>().common.retry),
                   ),
                 ],
               ),
@@ -110,14 +111,14 @@ class _ManageSubscriptionView extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Text(
-              AppStrings.subscription.noActiveSubscription,
+              GetIt.I<SubscriptionStrings>().noActiveSubscription,
               style: AppTypography.headlineMediumBold.copyWith(
                 color: Theme.of(context).textTheme.headlineMedium?.color,
               ),
             ),
             const SizedBox(height: 12),
             Text(
-              AppStrings.subscription.subscribeMessage,
+              GetIt.I<SubscriptionStrings>().subscribeMessage,
               textAlign: TextAlign.center,
               style: AppTypography.bodyLarge.copyWith(
                 color: Theme.of(context).hintColor,
@@ -144,7 +145,7 @@ class _ManageSubscriptionView extends StatelessWidget {
                 ),
               ),
               child: Text(
-                AppStrings.subscription.viewPlans,
+                GetIt.I<SubscriptionStrings>().viewPlans,
                 style: AppTypography.buttonMedium,
               ),
             ),
@@ -167,7 +168,7 @@ class _ManageSubscriptionView extends StatelessWidget {
 
           // Billing Info
           _buildSectionTitle(
-              context, AppStrings.subscription.subscriptionDetails),
+              context, GetIt.I<SubscriptionStrings>().subscriptionDetails),
           const SizedBox(height: 16),
           _buildSubscriptionDetailsCard(context, subscription),
           const SizedBox(height: 32),
@@ -230,8 +231,8 @@ class _ManageSubscriptionView extends StatelessWidget {
                     const SizedBox(width: 4),
                     Text(
                       subscription.isActive
-                          ? AppStrings.subscription.activePlan
-                          : AppStrings.subscription.inactive,
+                          ? GetIt.I<SubscriptionStrings>().activePlan
+                          : GetIt.I<SubscriptionStrings>().inactive,
                       style: AppTypography.captionSemiBold.copyWith(
                         color: Colors.white,
                       ),
@@ -272,7 +273,7 @@ class _ManageSubscriptionView extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            AppStrings.subscription
+            GetIt.I<SubscriptionStrings>()
                 .nextBillingDate(subscription.formattedEndDate),
             style: AppTypography.bodyMedium.copyWith(
               color: Theme.of(context).hintColor,
@@ -293,7 +294,7 @@ class _ManageSubscriptionView extends StatelessWidget {
                       size: 16, color: Theme.of(context).colorScheme.error),
                   const SizedBox(width: 4),
                   Text(
-                    AppStrings.subscription
+                    GetIt.I<SubscriptionStrings>()
                         .expiresIn(subscription.daysRemaining),
                     style: AppTypography.captionSemiBold.copyWith(
                       color: Theme.of(context).colorScheme.error,
@@ -325,7 +326,7 @@ class _ManageSubscriptionView extends StatelessWidget {
                 elevation: 0,
               ),
               child: Text(
-                AppStrings.subscription.changePlan,
+                GetIt.I<SubscriptionStrings>().changePlan,
                 style: AppTypography.buttonMedium,
               ),
             ),
@@ -358,20 +359,20 @@ class _ManageSubscriptionView extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _buildDetailRow(AppStrings.subscription.startDate,
+          _buildDetailRow(GetIt.I<SubscriptionStrings>().startDate,
               _formatDate(subscription.startDate), context),
           Divider(color: Theme.of(context).dividerColor),
-          _buildDetailRow(AppStrings.subscription.endDate,
+          _buildDetailRow(GetIt.I<SubscriptionStrings>().endDate,
               _formatDate(subscription.endDate), context),
           Divider(color: Theme.of(context).dividerColor),
-          _buildDetailRow(AppStrings.subscription.daysRemaining,
+          _buildDetailRow(GetIt.I<SubscriptionStrings>().daysRemaining,
               '${subscription.daysRemaining} days', context),
           Divider(color: Theme.of(context).dividerColor),
           _buildDetailRow(
-              AppStrings.subscription.status,
+              GetIt.I<SubscriptionStrings>().status,
               subscription.isActive
-                  ? AppStrings.subscription.active
-                  : AppStrings.subscription.inactive,
+                  ? GetIt.I<SubscriptionStrings>().active
+                  : GetIt.I<SubscriptionStrings>().inactive,
               context,
               valueColor: subscription.isActive
                   ? Colors.green

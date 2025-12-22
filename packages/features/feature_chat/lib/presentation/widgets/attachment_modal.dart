@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:dolfin_core/constants/app_strings.dart';
+import 'package:feature_chat/constants/chat_strings.dart';
+import 'package:get_it/get_it.dart';
 import 'package:dolfin_ui_kit/theme/app_typography.dart';
 
 class AttachmentModal extends StatelessWidget {
@@ -45,25 +46,25 @@ class AttachmentModal extends StatelessWidget {
                 _buildOption(
                   context,
                   icon: Icons.camera_alt_outlined,
-                  label: AppStrings.chat.camera,
+                  label: GetIt.I<ChatStrings>().camera,
                   onTap: onCameraTap,
                 ),
                 _buildOption(
                   context,
                   icon: Icons.photo_library_outlined,
-                  label: AppStrings.chat.gallery,
+                  label: GetIt.I<ChatStrings>().gallery,
                   onTap: onGalleryTap,
                 ),
                 _buildOption(
                   context,
                   icon: Icons.insert_drive_file_outlined,
-                  label: AppStrings.chat.files,
+                  label: GetIt.I<ChatStrings>().files,
                   onTap: onFilesTap,
                 ),
                 _buildOption(
                   context,
                   icon: Icons.add_to_drive_outlined,
-                  label: AppStrings.chat.drive,
+                  label: GetIt.I<ChatStrings>().drive,
                   onTap: onDriveTap,
                 ),
               ],

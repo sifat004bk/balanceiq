@@ -1,4 +1,5 @@
-import 'package:dolfin_core/constants/app_strings.dart';
+import 'package:feature_chat/constants/chat_strings.dart';
+import 'package:get_it/get_it.dart';
 import 'package:dolfin_core/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -60,7 +61,7 @@ class GenUIActionList extends StatelessWidget {
                 onPressed: () {
                   SnackbarUtils.showInfo(
                     context,
-                    AppStrings.chat
+                    GetIt.I<ChatStrings>()
                         .actionTriggered(action['action']?.toString() ?? ''),
                   );
                 },

@@ -1,9 +1,9 @@
-import 'package:dolfin_core/constants/app_strings.dart';
+import 'package:dolfin_core/constants/core_strings.dart';
+import 'package:get_it/get_it.dart';
 import 'package:feature_subscription/presentation/cubit/subscription_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
-
 
 class SubscriptionCardLoading extends StatelessWidget {
   const SubscriptionCardLoading({super.key});
@@ -113,7 +113,7 @@ class SubscriptionCardError extends StatelessWidget {
           TextButton(
             onPressed: () =>
                 context.read<SubscriptionCubit>().loadSubscriptionStatus(),
-            child: Text(AppStrings.common.retry),
+            child: Text(GetIt.I<CoreStrings>().common.retry),
           ),
         ],
       ),

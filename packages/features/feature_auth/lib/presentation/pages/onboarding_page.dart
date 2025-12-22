@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:dolfin_core/constants/app_strings.dart';
+import 'package:get_it/get_it.dart';
+import 'package:feature_auth/constants/auth_strings.dart';
+import 'package:dolfin_core/constants/core_strings.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -47,7 +49,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    AppStrings.appName,
+                    GetIt.I<CoreStrings>().appName,
                     style: textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -62,23 +64,27 @@ class _OnboardingPageState extends State<OnboardingPage> {
                 children: [
                   _buildSlide(
                     icon: Icons.auto_awesome,
-                    title: AppStrings.onboarding.slide1Title,
-                    description: AppStrings.onboarding.slide1Description,
+                    title: GetIt.I<AuthStrings>().onboarding.slide1Title,
+                    description:
+                        GetIt.I<AuthStrings>().onboarding.slide1Description,
                   ),
                   _buildSlide(
                     icon: Icons.account_tree,
-                    title: AppStrings.onboarding.slide2Title,
-                    description: AppStrings.onboarding.slide2Description,
+                    title: GetIt.I<AuthStrings>().onboarding.slide2Title,
+                    description:
+                        GetIt.I<AuthStrings>().onboarding.slide2Description,
                   ),
                   _buildSlide(
                     icon: Icons.smart_toy,
-                    title: AppStrings.onboarding.slide3Title,
-                    description: AppStrings.onboarding.slide3Description,
+                    title: GetIt.I<AuthStrings>().onboarding.slide3Title,
+                    description:
+                        GetIt.I<AuthStrings>().onboarding.slide3Description,
                   ),
                   _buildSlide(
                     icon: Icons.dashboard,
-                    title: AppStrings.onboarding.slide4Title,
-                    description: AppStrings.onboarding.slide4Description,
+                    title: GetIt.I<AuthStrings>().onboarding.slide4Title,
+                    description:
+                        GetIt.I<AuthStrings>().onboarding.slide4Description,
                     isLast: true,
                   ),
                 ],
@@ -117,7 +123,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                         ),
                       ),
                       child: Text(
-                        AppStrings.onboarding.getStarted,
+                        GetIt.I<AuthStrings>().onboarding.getStarted,
                         style: textTheme.labelLarge?.copyWith(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -133,7 +139,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     child: TextButton(
                       onPressed: _navigateToLogin,
                       child: Text(
-                        AppStrings.onboarding.loginButton,
+                        GetIt.I<AuthStrings>().onboarding.loginButton,
                         style: textTheme.labelLarge?.copyWith(
                           color: colorScheme.onSurface,
                           fontWeight: FontWeight.w600,

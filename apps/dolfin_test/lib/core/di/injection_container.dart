@@ -4,6 +4,16 @@ import 'package:feature_auth/feature_auth.dart';
 import 'package:feature_chat/feature_chat.dart';
 import 'package:feature_subscription/feature_subscription.dart';
 
+import 'package:dolfin_core/constants/core_strings.dart';
+import 'package:feature_auth/constants/auth_strings.dart';
+import 'package:feature_chat/constants/chat_strings.dart';
+import 'package:feature_subscription/constants/subscription_strings.dart';
+
+import '../strings/core_strings_impl.dart';
+import '../strings/auth_strings_impl.dart';
+import '../strings/chat_strings_impl.dart';
+import '../strings/subscription_strings_impl.dart';
+
 import 'app_auth_config.dart';
 import 'app_chat_config.dart';
 import 'modules/storage_module.dart';
@@ -26,6 +36,13 @@ Future<void> init() async {
 
   //! Core (Theme, Currency, etc.)
   registerCoreModule(sl);
+
+  //! Strings (Must be registered before features)
+  sl.registerLazySingleton<CoreStrings>(() => const CoreStringsImpl());
+  sl.registerLazySingleton<AuthStrings>(() => const AuthStringsImpl());
+  sl.registerLazySingleton<ChatStrings>(() => const ChatStringsImpl());
+  sl.registerLazySingleton<SubscriptionStrings>(
+      () => const SubscriptionStringsImpl());
 
   //! Features - Auth
   await initAuthFeature(

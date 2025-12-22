@@ -53,10 +53,13 @@ dependencies:
     path: ../../packages/features/feature_auth
   feature_chat:
     path: ../../packages/features/feature_chat
+  feature_subscription:
+    path: ../../packages/features/feature_subscription
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  mocktail: ^1.0.3
   flutter_lints: ^5.0.0
 
 flutter:

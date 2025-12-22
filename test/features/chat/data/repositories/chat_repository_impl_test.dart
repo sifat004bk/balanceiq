@@ -6,14 +6,14 @@ import 'package:feature_chat/data/repositories/chat_repository_impl.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart'; // Standard Flutter Test
 import 'package:mocktail/mocktail.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:dolfin_core/storage/secure_storage_service.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../mocks/mock_datasources.dart';
 
 import 'package:get_it/get_it.dart';
 
-class MockSharedPreferences extends Mock implements SharedPreferences {}
+class MockSecureStorageService extends Mock implements SecureStorageService {}
 
 class MockAppConstants extends Mock implements AppConstants {}
 
@@ -26,7 +26,7 @@ void main() {
   late ChatRepositoryImpl repository;
   late MockChatRemoteDataSource mockRemoteDataSource;
   late MockChatLocalDataSource mockLocalDataSource;
-  late MockSharedPreferences mockSharedPreferences;
+  late MockSecureStorageService mockSecureStorageService;
   late MockUuid mockUuid;
   late MockAppConstants mockAppConstants;
 
@@ -37,8 +37,7 @@ void main() {
   setUp(() {
     mockRemoteDataSource = MockChatRemoteDataSource();
     mockLocalDataSource = MockChatLocalDataSource();
-    mockSharedPreferences = MockSharedPreferences();
-    mockSharedPreferences = MockSharedPreferences();
+    mockSecureStorageService = MockSecureStorageService();
     mockUuid = MockUuid();
     mockAppConstants = MockAppConstants();
 
@@ -50,7 +49,7 @@ void main() {
     repository = ChatRepositoryImpl(
       remoteDataSource: mockRemoteDataSource,
       localDataSource: mockLocalDataSource,
-      sharedPreferences: mockSharedPreferences,
+      secureStorage: mockSecureStorageService,
       uuid: mockUuid,
     );
   });
@@ -65,15 +64,6 @@ void main() {
     const tContent = 'Hello';
     const tMessageId = 'msg1';
 
-    // final tUserMessage = MessageModel(
-    //   id: tMessageId,
-    //   userId: tUserId,
-    //   botId: tBotId,
-    //   sender: GetIt.instance<AppConstants>().senderUser,
-    //   content: tContent,
-    //   timestamp: DateTime(2023, 1, 1),
-    // );
-
     test('should send message successfully', () async {
       // Arrange
       final tBotMessage = MessageModel(
@@ -84,8 +74,9 @@ void main() {
         content: 'Hi there',
         timestamp: DateTime(2023, 1, 1),
       );
-      when(() => mockSharedPreferences.getString(
-          GetIt.instance<AppConstants>().keyUserId)).thenReturn(tUserId);
+
+      when(() => mockSecureStorageService.getUserId())
+          .thenAnswer((_) async => tUserId);
       when(() => mockUuid.v4()).thenReturn(tMessageId);
 
       // Stub saveMessage for user message
@@ -100,9 +91,6 @@ void main() {
             audioPath: any(named: 'audioPath'),
           )).thenAnswer((_) async => tBotMessage);
 
-      // The repository saves user message, calls remote, then saves bot message.
-      // We already stubbed saveMessage (it will be called twice)
-
       // Act
       final result = await repository.sendMessage(
         botId: tBotId,
@@ -111,8 +99,7 @@ void main() {
 
       // Assert
       expect(result, Right(tBotMessage));
-      verify(() => mockSharedPreferences
-          .getString(GetIt.instance<AppConstants>().keyUserId));
+      verify(() => mockSecureStorageService.getUserId());
       verify(() => mockLocalDataSource.saveMessage(any())).called(2);
       verify(() => mockRemoteDataSource.sendMessage(
             botId: tBotId,
@@ -125,8 +112,8 @@ void main() {
     test('should return ChatApiFailure when remote throws ChatApiException',
         () async {
       // Arrange
-      when(() => mockSharedPreferences.getString(
-          GetIt.instance<AppConstants>().keyUserId)).thenReturn(tUserId);
+      when(() => mockSecureStorageService.getUserId())
+          .thenAnswer((_) async => tUserId);
       when(() => mockUuid.v4()).thenReturn(tMessageId);
       when(() => mockLocalDataSource.saveMessage(any()))
           .thenAnswer((_) => Future.value());
@@ -180,8 +167,6 @@ void main() {
       final result = await repository.getMessages(tUserId, tBotId);
 
       // Assert
-      // We need to compare entities, but Equatable should handle it if Message extends Equatable
-
       result.fold((l) => fail('Should returns Right'), (r) {
         expect(r.length, tMessages.length);
         expect(r.first.id, tMessages.first.id);

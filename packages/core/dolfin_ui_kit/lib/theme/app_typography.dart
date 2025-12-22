@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:get_it/get_it.dart';
+
 import 'app_palette.dart';
 
 /// Fluid Typography System for 2026.
@@ -41,14 +43,14 @@ class AppTypography {
   static TextStyle get detail => textTheme.bodySmall!.copyWith(
         fontSize: 13,
         fontWeight: FontWeight.w500, // Medium for readability at small sizes
-        color: AppPalette.textSecondaryLight,
+        color: GetIt.instance<AppPalette>().textSecondaryLight,
         letterSpacing: 0.1,
         height: 1.4,
       );
 
   /// Link: For clickable text
   static TextStyle get link => body.copyWith(
-        color: AppPalette.primaryLight,
+        color: GetIt.instance<AppPalette>().primaryLight,
         fontWeight: FontWeight.w600,
       );
 
@@ -202,7 +204,7 @@ class AppTypography {
   /// Caption Subtle: For secondary captions (12px)
   static TextStyle get captionSubtle => textTheme.bodySmall!.copyWith(
         fontSize: 12,
-        color: AppPalette.textSecondaryLight,
+        color: GetIt.instance<AppPalette>().textSecondaryLight,
         letterSpacing: 0.1,
         height: 1.4,
       );
@@ -219,14 +221,14 @@ class AppTypography {
   static TextStyle get captionError => textTheme.bodySmall!.copyWith(
         fontSize: 13,
         fontWeight: FontWeight.bold,
-        color: AppPalette.expense,
+        color: GetIt.instance<AppPalette>().expense,
         letterSpacing: 0.1,
       );
 
   /// Caption Warning: For warning messages (12px, orange)
   static TextStyle get captionWarning => textTheme.bodySmall!.copyWith(
         fontSize: 12,
-        color: AppPalette.secondaryLight,
+        color: GetIt.instance<AppPalette>().secondaryLight,
         letterSpacing: 0.1,
       );
 

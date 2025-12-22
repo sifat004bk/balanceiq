@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:dolfin_core/constants/app_constants.dart';
+import 'package:get_it/get_it.dart';
 import '../../domain/entities/message_usage.dart';
 import '../cubit/chat_cubit.dart';
 import '../cubit/chat_state.dart';
@@ -20,7 +21,7 @@ class MessageUsageSheet extends StatelessWidget {
       child: BlocBuilder<ChatCubit, ChatState>(
         builder: (context, state) {
           int messagesUsed = 0;
-          int limit = AppConstants.dailyMessageLimit;
+          int limit = GetIt.instance<AppConstants>().dailyMessageLimit;
           MessageUsage? messageUsage;
 
           if (state is ChatLoaded) {

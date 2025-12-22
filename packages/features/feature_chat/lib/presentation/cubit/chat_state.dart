@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import '../../domain/entities/message.dart';
 import '../../domain/entities/message_usage.dart';
 import 'package:dolfin_core/constants/app_constants.dart';
+import 'package:get_it/get_it.dart';
 
 abstract class ChatState extends Equatable {
   const ChatState();
@@ -24,7 +25,7 @@ class ChatLoaded extends ChatState {
   final MessageUsage?
       messageUsage; // Full message usage data including recent activity
 
-  const ChatLoaded({
+  ChatLoaded({
     required this.messages,
     this.isSending = false,
     this.hasMore = false,
@@ -32,7 +33,8 @@ class ChatLoaded extends ChatState {
     this.messagesUsedToday = 0,
     int? dailyMessageLimit,
     this.messageUsage,
-  }) : dailyMessageLimit = dailyMessageLimit ?? AppConstants.dailyMessageLimit;
+  }) : dailyMessageLimit = dailyMessageLimit ??
+            GetIt.instance<AppConstants>().dailyMessageLimit;
 
   @override
   List<Object?> get props => [

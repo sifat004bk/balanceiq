@@ -1,4 +1,5 @@
 import 'package:dolfin_core/constants/app_constants.dart';
+import 'package:get_it/get_it.dart';
 import 'package:dolfin_core/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 
@@ -14,112 +15,113 @@ class SuggestedPrompts extends StatelessWidget {
   });
 
   List<PromptChip> _getPromptsForBot(String botId) {
-    switch (botId) {
-      case AppConstants.balanceTrackerID:
-        return [
-          PromptChip(
-            icon: Icons.receipt_long,
-            label: AppStrings.chatPrompts.trackExpenseLabel,
-            prompt: AppStrings.chatPrompts.trackExpensePrompt,
-          ),
-          PromptChip(
-            icon: Icons.account_balance_wallet,
-            label: AppStrings.chatPrompts.checkBalanceLabel,
-            prompt: AppStrings.chatPrompts.checkBalancePrompt,
-          ),
-          PromptChip(
-            icon: Icons.trending_up,
-            label: AppStrings.chatPrompts.monthlySummaryLabel,
-            prompt: AppStrings.chatPrompts.monthlySummaryPrompt,
-          ),
-          PromptChip(
-            icon: Icons.savings,
-            label: AppStrings.chatPrompts.addIncomeLabel,
-            prompt: AppStrings.chatPrompts.addIncomePrompt,
-          ),
-        ];
-      case AppConstants.investmentGuruID:
-        return [
-          PromptChip(
-            icon: Icons.show_chart,
-            label: AppStrings.chatPrompts.investmentTipsLabel,
-            prompt: AppStrings.chatPrompts.investmentTipsPrompt,
-          ),
-          PromptChip(
-            icon: Icons.account_balance,
-            label: AppStrings.chatPrompts.stockAdviceLabel,
-            prompt: AppStrings.chatPrompts.stockAdvicePrompt,
-          ),
-          PromptChip(
-            icon: Icons.pie_chart,
-            label: AppStrings.chatPrompts.portfolioReviewLabel,
-            prompt: AppStrings.chatPrompts.portfolioReviewPrompt,
-          ),
-          PromptChip(
-            icon: Icons.trending_up,
-            label: AppStrings.chatPrompts.marketTrendsLabel,
-            prompt: AppStrings.chatPrompts.marketTrendsPrompt,
-          ),
-        ];
-      case AppConstants.budgetPlannerID:
-        return [
-          PromptChip(
-            icon: Icons.calendar_today,
-            label: AppStrings.chatPrompts.createBudgetLabel,
-            prompt: AppStrings.chatPrompts.createBudgetPrompt,
-          ),
-          PromptChip(
-            icon: Icons.category,
-            label: AppStrings.chatPrompts.budgetCategoriesLabel,
-            prompt: AppStrings.chatPrompts.budgetCategoriesPrompt,
-          ),
-          PromptChip(
-            icon: Icons.savings,
-            label: AppStrings.chatPrompts.saveMoneyLabel,
-            prompt: AppStrings.chatPrompts.saveMoneyPrompt,
-          ),
-          PromptChip(
-            icon: Icons.warning,
-            label: AppStrings.chatPrompts.budgetAlertsLabel,
-            prompt: AppStrings.chatPrompts.budgetAlertsPrompt,
-          ),
-        ];
-      case AppConstants.finTipsID:
-        return [
-          PromptChip(
-            icon: Icons.lightbulb,
-            label: AppStrings.chatPrompts.moneyTipsLabel,
-            prompt: AppStrings.chatPrompts.moneyTipsPrompt,
-          ),
-          PromptChip(
-            icon: Icons.school,
-            label: AppStrings.chatPrompts.learnFinanceLabel,
-            prompt: AppStrings.chatPrompts.learnFinancePrompt,
-          ),
-          PromptChip(
-            icon: Icons.security,
-            label: AppStrings.chatPrompts.emergencyFundLabel,
-            prompt: AppStrings.chatPrompts.emergencyFundPrompt,
-          ),
-          PromptChip(
-            icon: Icons.credit_card,
-            label: AppStrings.chatPrompts.creditAdviceLabel,
-            prompt: AppStrings.chatPrompts.creditAdvicePrompt,
-          ),
-        ];
-      default:
-        return [
-          PromptChip(
-            icon: Icons.help,
-            label: AppStrings.chatPrompts.getStartedLabel,
-            prompt: AppStrings.chatPrompts.getStartedPrompt,
-          ),
-          PromptChip(
-            icon: Icons.info,
-            label: AppStrings.chatPrompts.learnMoreLabel,
-            prompt: AppStrings.chatPrompts.learnMorePrompt,
-          ),
-        ];
+    final constants = GetIt.instance<AppConstants>();
+
+    if (botId == constants.balanceTrackerID) {
+      return [
+        PromptChip(
+          icon: Icons.receipt_long,
+          label: AppStrings.chatPrompts.trackExpenseLabel,
+          prompt: AppStrings.chatPrompts.trackExpensePrompt,
+        ),
+        PromptChip(
+          icon: Icons.account_balance_wallet,
+          label: AppStrings.chatPrompts.checkBalanceLabel,
+          prompt: AppStrings.chatPrompts.checkBalancePrompt,
+        ),
+        PromptChip(
+          icon: Icons.trending_up,
+          label: AppStrings.chatPrompts.monthlySummaryLabel,
+          prompt: AppStrings.chatPrompts.monthlySummaryPrompt,
+        ),
+        PromptChip(
+          icon: Icons.savings,
+          label: AppStrings.chatPrompts.addIncomeLabel,
+          prompt: AppStrings.chatPrompts.addIncomePrompt,
+        ),
+      ];
+    } else if (botId == constants.investmentGuruID) {
+      return [
+        PromptChip(
+          icon: Icons.show_chart,
+          label: AppStrings.chatPrompts.investmentTipsLabel,
+          prompt: AppStrings.chatPrompts.investmentTipsPrompt,
+        ),
+        PromptChip(
+          icon: Icons.account_balance,
+          label: AppStrings.chatPrompts.stockAdviceLabel,
+          prompt: AppStrings.chatPrompts.stockAdvicePrompt,
+        ),
+        PromptChip(
+          icon: Icons.pie_chart,
+          label: AppStrings.chatPrompts.portfolioReviewLabel,
+          prompt: AppStrings.chatPrompts.portfolioReviewPrompt,
+        ),
+        PromptChip(
+          icon: Icons.trending_up,
+          label: AppStrings.chatPrompts.marketTrendsLabel,
+          prompt: AppStrings.chatPrompts.marketTrendsPrompt,
+        ),
+      ];
+    } else if (botId == constants.budgetPlannerID) {
+      return [
+        PromptChip(
+          icon: Icons.calendar_today,
+          label: AppStrings.chatPrompts.createBudgetLabel,
+          prompt: AppStrings.chatPrompts.createBudgetPrompt,
+        ),
+        PromptChip(
+          icon: Icons.category,
+          label: AppStrings.chatPrompts.budgetCategoriesLabel,
+          prompt: AppStrings.chatPrompts.budgetCategoriesPrompt,
+        ),
+        PromptChip(
+          icon: Icons.savings,
+          label: AppStrings.chatPrompts.saveMoneyLabel,
+          prompt: AppStrings.chatPrompts.saveMoneyPrompt,
+        ),
+        PromptChip(
+          icon: Icons.warning,
+          label: AppStrings.chatPrompts.budgetAlertsLabel,
+          prompt: AppStrings.chatPrompts.budgetAlertsPrompt,
+        ),
+      ];
+    } else if (botId == constants.finTipsID) {
+      return [
+        PromptChip(
+          icon: Icons.lightbulb,
+          label: AppStrings.chatPrompts.moneyTipsLabel,
+          prompt: AppStrings.chatPrompts.moneyTipsPrompt,
+        ),
+        PromptChip(
+          icon: Icons.school,
+          label: AppStrings.chatPrompts.learnFinanceLabel,
+          prompt: AppStrings.chatPrompts.learnFinancePrompt,
+        ),
+        PromptChip(
+          icon: Icons.security,
+          label: AppStrings.chatPrompts.emergencyFundLabel,
+          prompt: AppStrings.chatPrompts.emergencyFundPrompt,
+        ),
+        PromptChip(
+          icon: Icons.credit_card,
+          label: AppStrings.chatPrompts.creditAdviceLabel,
+          prompt: AppStrings.chatPrompts.creditAdvicePrompt,
+        ),
+      ];
+    } else {
+      return [
+        PromptChip(
+          icon: Icons.help,
+          label: AppStrings.chatPrompts.getStartedLabel,
+          prompt: AppStrings.chatPrompts.getStartedPrompt,
+        ),
+        PromptChip(
+          icon: Icons.info,
+          label: AppStrings.chatPrompts.learnMoreLabel,
+          prompt: AppStrings.chatPrompts.learnMorePrompt,
+        ),
+      ];
     }
   }
 

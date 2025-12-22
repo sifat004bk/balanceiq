@@ -1,4 +1,5 @@
 import 'package:dolfin_core/constants/app_constants.dart';
+import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,8 +14,8 @@ class ThemeCubit extends Cubit<ThemeState> {
 
   // Load saved theme from SharedPreferences
   void _loadTheme() {
-    final themeModeString =
-        sharedPreferences.getString(AppConstants.keyThemeMode);
+    final themeModeString = sharedPreferences
+        .getString(GetIt.instance<AppConstants>().keyThemeMode);
     final ThemeMode themeMode;
 
     switch (themeModeString) {
@@ -48,7 +49,7 @@ class ThemeCubit extends Cubit<ThemeState> {
     }
 
     await sharedPreferences.setString(
-        AppConstants.keyThemeMode, themeModeString);
+        GetIt.instance<AppConstants>().keyThemeMode, themeModeString);
     emit(ThemeLoaded(themeMode));
   }
 

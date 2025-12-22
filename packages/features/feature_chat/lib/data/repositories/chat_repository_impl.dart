@@ -5,6 +5,7 @@ import '../../domain/entities/message.dart';
 import '../../domain/entities/chat_history_response.dart';
 import '../../domain/repositories/chat_repository.dart';
 import 'package:dolfin_core/constants/app_constants.dart';
+import 'package:get_it/get_it.dart';
 import 'package:dolfin_core/error/failures.dart';
 import '../datasources/chat_local_datasource.dart';
 import '../datasources/chat_remote_datasource.dart';
@@ -46,14 +47,16 @@ class ChatRepositoryImpl implements ChatRepository {
   }) async {
     try {
       // Get user ID from SharedPreferences
-      final userId = sharedPreferences.getString(AppConstants.keyUserId) ?? '';
+      final userId = sharedPreferences
+              .getString(GetIt.instance<AppConstants>().keyUserId) ??
+          '';
 
       // Create user message
       final userMessage = MessageModel(
         id: uuid.v4(),
         userId: userId,
         botId: botId,
-        sender: AppConstants.senderUser,
+        sender: GetIt.instance<AppConstants>().senderUser,
         content: content,
         imageUrl: imagePath,
         audioUrl: audioPath,

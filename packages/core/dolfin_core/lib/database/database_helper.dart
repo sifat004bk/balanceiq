@@ -2,6 +2,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../constants/app_constants.dart';
 import '../utils/app_logger.dart';
+import 'package:get_it/get_it.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._init();
@@ -11,7 +12,7 @@ class DatabaseHelper {
 
   Future<Database> get database async {
     if (_database != null) return _database!;
-    _database = await _initDB(AppConstants.databaseName);
+    _database = await _initDB(GetIt.instance<AppConstants>().databaseName);
     return _database!;
   }
 
@@ -21,7 +22,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: AppConstants.databaseVersion,
+      version: GetIt.instance<AppConstants>().databaseVersion,
       onCreate: _createDB,
       onUpgrade: _upgradeDB,
     );
@@ -30,7 +31,7 @@ class DatabaseHelper {
   Future<void> _createDB(Database db, int version) async {
     // Create users table
     await db.execute('''
-      CREATE TABLE ${AppConstants.usersTable} (
+      CREATE TABLE ${GetIt.instance<AppConstants>().usersTable} (
         id TEXT PRIMARY KEY,
         email TEXT NOT NULL,
         name TEXT NOT NULL,
@@ -42,7 +43,7 @@ class DatabaseHelper {
 
     // Create messages table (v3 schema with user_id for isolation)
     await db.execute('''
-      CREATE TABLE ${AppConstants.messagesTable} (
+      CREATE TABLE ${GetIt.instance<AppConstants>().messagesTable} (
         id TEXT PRIMARY KEY,
         user_id TEXT NOT NULL,
         bot_id TEXT NOT NULL,
@@ -77,12 +78,12 @@ class DatabaseHelper {
     // Create indexes for efficient queries (v3: includes user_id)
     await db.execute('''
       CREATE INDEX idx_messages_user_bot_server_time
-      ON ${AppConstants.messagesTable}(user_id, bot_id, server_created_at DESC)
+      ON ${GetIt.instance<AppConstants>().messagesTable}(user_id, bot_id, server_created_at DESC)
     ''');
 
     await db.execute('''
       CREATE INDEX idx_messages_user_bot_timestamp
-      ON ${AppConstants.messagesTable}(user_id, bot_id, timestamp DESC)
+      ON ${GetIt.instance<AppConstants>().messagesTable}(user_id, bot_id, timestamp DESC)
     ''');
   }
 
@@ -124,7 +125,7 @@ class DatabaseHelper {
 
     // Create new messages table with sync fields and UNIQUE constraint
     await db.execute('''
-      CREATE TABLE ${AppConstants.messagesTable}_new (
+      CREATE TABLE ${GetIt.instance<AppConstants>().messagesTable}_new (
         id TEXT PRIMARY KEY,
         bot_id TEXT NOT NULL,
         sender TEXT NOT NULL,
@@ -148,29 +149,30 @@ class DatabaseHelper {
 
     // Copy existing data to new table
     await db.execute('''
-      INSERT OR IGNORE INTO ${AppConstants.messagesTable}_new
+      INSERT OR IGNORE INTO ${GetIt.instance<AppConstants>().messagesTable}_new
         (id, bot_id, sender, content, image_url, audio_url, timestamp, is_sending, has_error)
       SELECT id, bot_id, sender, content, image_url, audio_url, timestamp, is_sending, has_error
-      FROM ${AppConstants.messagesTable}
+      FROM ${GetIt.instance<AppConstants>().messagesTable}
     ''');
 
     // Drop old table
-    await db.execute('DROP TABLE ${AppConstants.messagesTable}');
+    await db
+        .execute('DROP TABLE ${GetIt.instance<AppConstants>().messagesTable}');
 
     // Rename new table to original name
     await db.execute(
-        'ALTER TABLE ${AppConstants.messagesTable}_new RENAME TO ${AppConstants.messagesTable}');
+        'ALTER TABLE ${GetIt.instance<AppConstants>().messagesTable}_new RENAME TO ${GetIt.instance<AppConstants>().messagesTable}');
 
     // Create new index for efficient queries (ordered by server_created_at)
     await db.execute('''
       CREATE INDEX idx_messages_bot_server_time
-      ON ${AppConstants.messagesTable}(bot_id, server_created_at DESC)
+      ON ${GetIt.instance<AppConstants>().messagesTable}(bot_id, server_created_at DESC)
     ''');
 
     // Keep old index for backward compatibility
     await db.execute('''
       CREATE INDEX idx_messages_bot_timestamp
-      ON ${AppConstants.messagesTable}(bot_id, timestamp)
+      ON ${GetIt.instance<AppConstants>().messagesTable}(bot_id, timestamp)
     ''');
 
     AppLogger.info('Migration to v2 completed successfully', name: 'Database');
@@ -185,14 +187,15 @@ class DatabaseHelper {
     // This ensures clean user isolation without orphaned data
     AppLogger.warning('Clearing all existing messages for fresh start...',
         name: 'Database');
-    await db.delete(AppConstants.messagesTable);
+    await db.delete(GetIt.instance<AppConstants>().messagesTable);
 
     // Drop old table
-    await db.execute('DROP TABLE ${AppConstants.messagesTable}');
+    await db
+        .execute('DROP TABLE ${GetIt.instance<AppConstants>().messagesTable}');
 
     // Create new messages table with user_id column
     await db.execute('''
-      CREATE TABLE ${AppConstants.messagesTable} (
+      CREATE TABLE ${GetIt.instance<AppConstants>().messagesTable} (
         id TEXT PRIMARY KEY,
         user_id TEXT NOT NULL,
         bot_id TEXT NOT NULL,
@@ -218,12 +221,12 @@ class DatabaseHelper {
     // Create new indexes for efficient user-specific queries
     await db.execute('''
       CREATE INDEX idx_messages_user_bot_server_time
-      ON ${AppConstants.messagesTable}(user_id, bot_id, server_created_at DESC)
+      ON ${GetIt.instance<AppConstants>().messagesTable}(user_id, bot_id, server_created_at DESC)
     ''');
 
     await db.execute('''
       CREATE INDEX idx_messages_user_bot_timestamp
-      ON ${AppConstants.messagesTable}(user_id, bot_id, timestamp DESC)
+      ON ${GetIt.instance<AppConstants>().messagesTable}(user_id, bot_id, timestamp DESC)
     ''');
 
     AppLogger.info('Migration to v3 completed successfully', name: 'Database');
@@ -238,7 +241,7 @@ class DatabaseHelper {
 
     // Add action_type column to existing table
     await db.execute(
-        'ALTER TABLE ${AppConstants.messagesTable} ADD COLUMN action_type TEXT');
+        'ALTER TABLE ${GetIt.instance<AppConstants>().messagesTable} ADD COLUMN action_type TEXT');
 
     AppLogger.info('Migration to v4 completed successfully', name: 'Database');
   }
@@ -250,7 +253,7 @@ class DatabaseHelper {
 
     // Add conversation_id column to existing table
     await db.execute(
-        'ALTER TABLE ${AppConstants.messagesTable} ADD COLUMN conversation_id INTEGER');
+        'ALTER TABLE ${GetIt.instance<AppConstants>().messagesTable} ADD COLUMN conversation_id INTEGER');
 
     AppLogger.info('Migration to v5 completed successfully', name: 'Database');
   }
@@ -261,7 +264,7 @@ class DatabaseHelper {
 
     // Add feedback column to existing table
     await db.execute(
-        'ALTER TABLE ${AppConstants.messagesTable} ADD COLUMN feedback TEXT');
+        'ALTER TABLE ${GetIt.instance<AppConstants>().messagesTable} ADD COLUMN feedback TEXT');
 
     AppLogger.info('Migration to v6 completed successfully', name: 'Database');
   }
@@ -272,13 +275,13 @@ class DatabaseHelper {
 
     // Add chart data columns to existing table
     await db.execute(
-        'ALTER TABLE ${AppConstants.messagesTable} ADD COLUMN has_table INTEGER DEFAULT 0');
+        'ALTER TABLE ${GetIt.instance<AppConstants>().messagesTable} ADD COLUMN has_table INTEGER DEFAULT 0');
     await db.execute(
-        'ALTER TABLE ${AppConstants.messagesTable} ADD COLUMN table_data TEXT');
+        'ALTER TABLE ${GetIt.instance<AppConstants>().messagesTable} ADD COLUMN table_data TEXT');
     await db.execute(
-        'ALTER TABLE ${AppConstants.messagesTable} ADD COLUMN graph_type TEXT');
+        'ALTER TABLE ${GetIt.instance<AppConstants>().messagesTable} ADD COLUMN graph_type TEXT');
     await db.execute(
-        'ALTER TABLE ${AppConstants.messagesTable} ADD COLUMN graph_data TEXT');
+        'ALTER TABLE ${GetIt.instance<AppConstants>().messagesTable} ADD COLUMN graph_data TEXT');
 
     AppLogger.info('Migration to v7 completed successfully', name: 'Database');
   }
@@ -291,7 +294,7 @@ class DatabaseHelper {
 
   Future<void> deleteDatabase() async {
     final dbPath = await getDatabasesPath();
-    final path = join(dbPath, AppConstants.databaseName);
+    final path = join(dbPath, GetIt.instance<AppConstants>().databaseName);
     await databaseFactory.deleteDatabase(path);
     _database = null;
   }

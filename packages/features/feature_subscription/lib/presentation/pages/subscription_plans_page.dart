@@ -1,14 +1,13 @@
 import 'package:dolfin_core/constants/app_strings.dart';
+import 'package:dolfin_core/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:get_it/get_it.dart';
 import 'package:dolfin_ui_kit/theme/app_typography.dart';
-import 'package:dolfin_core/tour/tour_content_widgets.dart';
 import 'package:dolfin_core/tour/product_tour_cubit.dart';
 import 'package:dolfin_core/tour/product_tour_state.dart';
 
-import 'package:dolfin_core/utils/snackbar_utils.dart';
 import 'package:feature_chat/presentation/pages/chat_page.dart';
 import 'package:feature_subscription/domain/entities/plan.dart';
 import 'package:feature_subscription/presentation/cubit/subscription_cubit.dart';

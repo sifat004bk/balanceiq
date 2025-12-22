@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get_it/get_it.dart';
 import 'app_palette.dart';
 import 'app_typography.dart';
 
@@ -11,48 +12,55 @@ class AppTheme {
       brightness: Brightness.light,
 
       // Core Palette
-      primaryColor: AppPalette.primaryLight,
-      scaffoldBackgroundColor: AppPalette.backgroundLight,
+      primaryColor: GetIt.instance<AppPalette>().primaryLight,
+      scaffoldBackgroundColor: GetIt.instance<AppPalette>().backgroundLight,
 
       // Color Scheme
       colorScheme: ColorScheme.light(
-        primary: AppPalette.primaryLight,
-        onPrimary: AppPalette.white,
-        primaryContainer: AppPalette.primaryLight.withValues(alpha: 0.1),
-        onPrimaryContainer: AppPalette.primaryLight,
-        secondary: AppPalette.secondaryLight,
-        onSecondary: AppPalette.white,
-        secondaryContainer: AppPalette.secondaryLight.withValues(alpha: 0.1),
-        onSecondaryContainer: AppPalette.secondaryLight,
-        surface: AppPalette.surfaceLight,
-        onSurface: AppPalette.textPrimaryLight,
-        surfaceContainerHighest:
-            AppPalette.textSecondaryLight.withValues(alpha: 0.05),
-        error: AppPalette.expense,
-        onError: AppPalette.white,
-        outline: AppPalette.textSecondaryLight.withValues(alpha: 0.2),
-        outlineVariant: AppPalette.textSecondaryLight.withValues(alpha: 0.1),
+        primary: GetIt.instance<AppPalette>().primaryLight,
+        onPrimary: GetIt.instance<AppPalette>().white,
+        primaryContainer:
+            GetIt.instance<AppPalette>().primaryLight.withValues(alpha: 0.1),
+        onPrimaryContainer: GetIt.instance<AppPalette>().primaryLight,
+        secondary: GetIt.instance<AppPalette>().secondaryLight,
+        onSecondary: GetIt.instance<AppPalette>().white,
+        secondaryContainer:
+            GetIt.instance<AppPalette>().secondaryLight.withValues(alpha: 0.1),
+        onSecondaryContainer: GetIt.instance<AppPalette>().secondaryLight,
+        surface: GetIt.instance<AppPalette>().surfaceLight,
+        onSurface: GetIt.instance<AppPalette>().textPrimaryLight,
+        surfaceContainerHighest: GetIt.instance<AppPalette>()
+            .textSecondaryLight
+            .withValues(alpha: 0.05),
+        error: GetIt.instance<AppPalette>().expense,
+        onError: GetIt.instance<AppPalette>().white,
+        outline: GetIt.instance<AppPalette>()
+            .textSecondaryLight
+            .withValues(alpha: 0.2),
+        outlineVariant: GetIt.instance<AppPalette>()
+            .textSecondaryLight
+            .withValues(alpha: 0.1),
       ),
 
       // Typography
       fontFamily: 'Manrope',
       textTheme: AppTypography.textTheme.copyWith(
-        displayLarge:
-            AppTypography.hero.copyWith(color: AppPalette.textPrimaryLight),
-        titleLarge:
-            AppTypography.heading.copyWith(color: AppPalette.textPrimaryLight),
-        bodyLarge:
-            AppTypography.body.copyWith(color: AppPalette.textPrimaryLight),
-        bodyMedium:
-            AppTypography.body.copyWith(color: AppPalette.textPrimaryLight),
+        displayLarge: AppTypography.hero
+            .copyWith(color: GetIt.instance<AppPalette>().textPrimaryLight),
+        titleLarge: AppTypography.heading
+            .copyWith(color: GetIt.instance<AppPalette>().textPrimaryLight),
+        bodyLarge: AppTypography.body
+            .copyWith(color: GetIt.instance<AppPalette>().textPrimaryLight),
+        bodyMedium: AppTypography.body
+            .copyWith(color: GetIt.instance<AppPalette>().textPrimaryLight),
         bodySmall: AppTypography.detail,
         headlineSmall: AppTypography.detail,
       ),
 
       // App Bar
       appBarTheme: AppBarTheme(
-        backgroundColor: AppPalette.surfaceLight,
-        foregroundColor: AppPalette.textPrimaryLight,
+        backgroundColor: GetIt.instance<AppPalette>().surfaceLight,
+        foregroundColor: GetIt.instance<AppPalette>().textPrimaryLight,
         elevation: 0,
         centerTitle: true,
         systemOverlayStyle: SystemUiOverlayStyle.dark,
@@ -62,23 +70,31 @@ class AppTheme {
       // Input Decoration
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: AppPalette.textSecondaryLight.withValues(alpha: 0.05),
+        fillColor: GetIt.instance<AppPalette>()
+            .textSecondaryLight
+            .withValues(alpha: 0.05),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(24),
           borderSide: BorderSide(
-              color: AppPalette.textSecondaryLight.withValues(alpha: 0.2),
+              color: GetIt.instance<AppPalette>()
+                  .textSecondaryLight
+                  .withValues(alpha: 0.2),
               width: 0.5),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(24),
           borderSide: BorderSide(
-              color: AppPalette.textSecondaryLight.withValues(alpha: 0.2),
+              color: GetIt.instance<AppPalette>()
+                  .textSecondaryLight
+                  .withValues(alpha: 0.2),
               width: 0.5),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(24),
           borderSide: BorderSide(
-              color: AppPalette.primaryLight.withValues(alpha: 0.5),
+              color: GetIt.instance<AppPalette>()
+                  .primaryLight
+                  .withValues(alpha: 0.5),
               width: 0.5),
         ),
         contentPadding:
@@ -88,8 +104,8 @@ class AppTheme {
       // Buttons
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppPalette.primaryLight,
-          foregroundColor: AppPalette.white,
+          backgroundColor: GetIt.instance<AppPalette>().primaryLight,
+          foregroundColor: GetIt.instance<AppPalette>().white,
           elevation: 0,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
@@ -106,57 +122,63 @@ class AppTheme {
       brightness: Brightness.dark,
 
       // Core Palette
-      primaryColor: AppPalette.primaryDark,
-      scaffoldBackgroundColor: AppPalette.backgroundDark,
+      primaryColor: GetIt.instance<AppPalette>().primaryDark,
+      scaffoldBackgroundColor: GetIt.instance<AppPalette>().backgroundDark,
 
       // Color Scheme
       colorScheme: ColorScheme.dark(
-        primary: AppPalette.primaryDark,
-        onPrimary: AppPalette.white,
-        primaryContainer: AppPalette.primaryDark.withValues(alpha: 0.1),
-        onPrimaryContainer: AppPalette.primaryDark,
-        secondary: AppPalette.secondaryDark,
-        onSecondary: AppPalette.white,
-        secondaryContainer: AppPalette.secondaryDark.withValues(alpha: 0.1),
-        onSecondaryContainer: AppPalette.secondaryDark,
-        surface: AppPalette.surfaceDark,
-        onSurface: AppPalette.textPrimaryDark,
-        surfaceContainer: AppPalette.surfaceContainerDark,
-        error: AppPalette.expense,
-        onError: AppPalette.white,
-        outline: AppPalette.textSecondaryDark.withValues(alpha: 0.2),
-        outlineVariant: AppPalette.textSecondaryDark.withValues(alpha: 0.1),
+        primary: GetIt.instance<AppPalette>().primaryDark,
+        onPrimary: GetIt.instance<AppPalette>().white,
+        primaryContainer:
+            GetIt.instance<AppPalette>().primaryDark.withValues(alpha: 0.1),
+        onPrimaryContainer: GetIt.instance<AppPalette>().primaryDark,
+        secondary: GetIt.instance<AppPalette>().secondaryDark,
+        onSecondary: GetIt.instance<AppPalette>().white,
+        secondaryContainer:
+            GetIt.instance<AppPalette>().secondaryDark.withValues(alpha: 0.1),
+        onSecondaryContainer: GetIt.instance<AppPalette>().secondaryDark,
+        surface: GetIt.instance<AppPalette>().surfaceDark,
+        onSurface: GetIt.instance<AppPalette>().textPrimaryDark,
+        surfaceContainer: GetIt.instance<AppPalette>().surfaceContainerDark,
+        error: GetIt.instance<AppPalette>().expense,
+        onError: GetIt.instance<AppPalette>().white,
+        outline: GetIt.instance<AppPalette>()
+            .textSecondaryDark
+            .withValues(alpha: 0.2),
+        outlineVariant: GetIt.instance<AppPalette>()
+            .textSecondaryDark
+            .withValues(alpha: 0.1),
       ),
 
       // Typography
       fontFamily: 'Manrope',
       textTheme: AppTypography.textTheme.copyWith(
-        displayLarge:
-            AppTypography.hero.copyWith(color: AppPalette.textPrimaryDark),
-        titleLarge:
-            AppTypography.heading.copyWith(color: AppPalette.textPrimaryDark),
-        bodyLarge:
-            AppTypography.body.copyWith(color: AppPalette.textPrimaryDark),
-        bodyMedium:
-            AppTypography.body.copyWith(color: AppPalette.textPrimaryDark),
-        bodySmall:
-            AppTypography.detail.copyWith(color: AppPalette.textSecondaryDark),
-        headlineSmall:
-            AppTypography.heading.copyWith(color: AppPalette.textSecondaryDark),
-        headlineLarge:
-            AppTypography.heading.copyWith(color: AppPalette.textSecondaryDark),
-        headlineMedium:
-            AppTypography.heading.copyWith(color: AppPalette.textSecondaryDark),
-        titleMedium:
-            AppTypography.body.copyWith(color: AppPalette.textSecondaryDark),
-        titleSmall:
-            AppTypography.detail.copyWith(color: AppPalette.textSecondaryDark),
+        displayLarge: AppTypography.hero
+            .copyWith(color: GetIt.instance<AppPalette>().textPrimaryDark),
+        titleLarge: AppTypography.heading
+            .copyWith(color: GetIt.instance<AppPalette>().textPrimaryDark),
+        bodyLarge: AppTypography.body
+            .copyWith(color: GetIt.instance<AppPalette>().textPrimaryDark),
+        bodyMedium: AppTypography.body
+            .copyWith(color: GetIt.instance<AppPalette>().textPrimaryDark),
+        bodySmall: AppTypography.detail
+            .copyWith(color: GetIt.instance<AppPalette>().textSecondaryDark),
+        headlineSmall: AppTypography.heading
+            .copyWith(color: GetIt.instance<AppPalette>().textSecondaryDark),
+        headlineLarge: AppTypography.heading
+            .copyWith(color: GetIt.instance<AppPalette>().textSecondaryDark),
+        headlineMedium: AppTypography.heading
+            .copyWith(color: GetIt.instance<AppPalette>().textSecondaryDark),
+        titleMedium: AppTypography.body
+            .copyWith(color: GetIt.instance<AppPalette>().textSecondaryDark),
+        titleSmall: AppTypography.detail
+            .copyWith(color: GetIt.instance<AppPalette>().textSecondaryDark),
       ),
 
       // App Bar
       appBarTheme: AppBarTheme(
-        backgroundColor: AppPalette.backgroundDark,
-        foregroundColor: AppPalette.textPrimaryDark,
+        backgroundColor: GetIt.instance<AppPalette>().backgroundDark,
+        foregroundColor: GetIt.instance<AppPalette>().textPrimaryDark,
         elevation: 0,
         centerTitle: true,
         systemOverlayStyle: SystemUiOverlayStyle.light,
@@ -166,23 +188,29 @@ class AppTheme {
       // Input Decoration
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: AppPalette.surfaceDark,
+        fillColor: GetIt.instance<AppPalette>().surfaceDark,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(24),
           borderSide: BorderSide(
-              color: AppPalette.textSecondaryDark.withValues(alpha: 0.2),
+              color: GetIt.instance<AppPalette>()
+                  .textSecondaryDark
+                  .withValues(alpha: 0.2),
               width: 0.5),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(24),
           borderSide: BorderSide(
-              color: AppPalette.textSecondaryDark.withValues(alpha: 0.2),
+              color: GetIt.instance<AppPalette>()
+                  .textSecondaryDark
+                  .withValues(alpha: 0.2),
               width: 0.5),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(24),
           borderSide: BorderSide(
-              color: AppPalette.secondaryDark.withValues(alpha: 0.5),
+              color: GetIt.instance<AppPalette>()
+                  .secondaryDark
+                  .withValues(alpha: 0.5),
               width: 0.5),
         ),
         contentPadding:
@@ -192,8 +220,8 @@ class AppTheme {
       // Buttons
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppPalette.secondaryDark,
-          foregroundColor: AppPalette.white,
+          backgroundColor: GetIt.instance<AppPalette>().secondaryDark,
+          foregroundColor: GetIt.instance<AppPalette>().white,
           elevation: 0,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
@@ -206,15 +234,15 @@ class AppTheme {
   static Color getBotColor(String botId) {
     switch (botId) {
       case 'balance_tracker':
-        return AppPalette.income;
+        return GetIt.instance<AppPalette>().income;
       case 'investment_guru':
-        return AppPalette.primaryLight;
+        return GetIt.instance<AppPalette>().primaryLight;
       case 'budget_planner':
-        return AppPalette.secondaryLight;
+        return GetIt.instance<AppPalette>().secondaryLight;
       case 'fin_tips':
-        return AppPalette.warning;
+        return GetIt.instance<AppPalette>().warning;
       default:
-        return AppPalette.primaryLight;
+        return GetIt.instance<AppPalette>().primaryLight;
     }
   }
 

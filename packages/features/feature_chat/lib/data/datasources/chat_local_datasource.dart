@@ -1,5 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:dolfin_core/constants/app_constants.dart';
+import 'package:get_it/get_it.dart';
 import 'package:dolfin_core/database/database_helper.dart';
 import '../models/message_model.dart';
 
@@ -24,7 +25,7 @@ class ChatLocalDataSourceImpl implements ChatLocalDataSource {
       {int? limit}) async {
     final db = await databaseHelper.database;
     final List<Map<String, dynamic>> maps = await db.query(
-      AppConstants.messagesTable,
+      GetIt.instance<AppConstants>().messagesTable,
       where: 'user_id = ? AND bot_id = ?',
       whereArgs: [userId, botId],
       // Order by server_created_at DESC for reverse ListView (newest first in data)
@@ -43,7 +44,7 @@ class ChatLocalDataSourceImpl implements ChatLocalDataSource {
   Future<void> saveMessage(MessageModel message) async {
     final db = await databaseHelper.database;
     await db.insert(
-      AppConstants.messagesTable,
+      GetIt.instance<AppConstants>().messagesTable,
       message.toJson(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
@@ -61,7 +62,7 @@ class ChatLocalDataSourceImpl implements ChatLocalDataSource {
         // to prevent duplicates.
         if (message.serverCreatedAt != null) {
           await txn.delete(
-            AppConstants.messagesTable,
+            GetIt.instance<AppConstants>().messagesTable,
             where: '''
               user_id = ? AND 
               bot_id = ? AND 
@@ -79,7 +80,7 @@ class ChatLocalDataSourceImpl implements ChatLocalDataSource {
         }
 
         await txn.insert(
-          AppConstants.messagesTable,
+          GetIt.instance<AppConstants>().messagesTable,
           message.toJson(),
           // Use replace to ensure updates (like feedback) are applied
           conflictAlgorithm: ConflictAlgorithm.replace,
@@ -92,7 +93,7 @@ class ChatLocalDataSourceImpl implements ChatLocalDataSource {
   Future<void> updateMessage(MessageModel message) async {
     final db = await databaseHelper.database;
     await db.update(
-      AppConstants.messagesTable,
+      GetIt.instance<AppConstants>().messagesTable,
       message.toJson(),
       where: 'id = ?',
       whereArgs: [message.id],
@@ -103,7 +104,7 @@ class ChatLocalDataSourceImpl implements ChatLocalDataSource {
   Future<void> deleteMessage(String messageId) async {
     final db = await databaseHelper.database;
     await db.delete(
-      AppConstants.messagesTable,
+      GetIt.instance<AppConstants>().messagesTable,
       where: 'id = ?',
       whereArgs: [messageId],
     );
@@ -113,7 +114,7 @@ class ChatLocalDataSourceImpl implements ChatLocalDataSource {
   Future<void> clearChatHistory(String userId, String botId) async {
     final db = await databaseHelper.database;
     await db.delete(
-      AppConstants.messagesTable,
+      GetIt.instance<AppConstants>().messagesTable,
       where: 'user_id = ? AND bot_id = ?',
       whereArgs: [userId, botId],
     );
@@ -123,7 +124,7 @@ class ChatLocalDataSourceImpl implements ChatLocalDataSource {
   Future<void> clearAllUserMessages(String userId) async {
     final db = await databaseHelper.database;
     await db.delete(
-      AppConstants.messagesTable,
+      GetIt.instance<AppConstants>().messagesTable,
       where: 'user_id = ?',
       whereArgs: [userId],
     );

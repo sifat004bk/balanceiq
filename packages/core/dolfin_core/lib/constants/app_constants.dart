@@ -1,62 +1,60 @@
 abstract class AppConstants {
   // App Info
-  static const String appName = 'Donfin AI';
-  static const String appVersion = '1.0.0';
+  String get appName;
+  String get appVersion;
 
   // Bot Types
-  static const String balanceTracker = 'Balance Tracker';
-  static const String investmentGuru = 'Investment Guru';
-  static const String budgetPlanner = 'Budget Planner';
-  static const String finTips = 'Fin Tips';
+  String get balanceTracker;
+  String get investmentGuru;
+  String get budgetPlanner;
+  String get finTips;
 
   // Bot IDs for API
-  static const String balanceTrackerID = 'balance_tracker';
-  static const String investmentGuruID = 'investment_guru';
-  static const String budgetPlannerID = 'budget_planner';
-  static const String finTipsID = 'fin_tips';
+  String get balanceTrackerID;
+  String get investmentGuruID;
+  String get budgetPlannerID;
+  String get finTipsID;
 
   // Local Database
-  static const String databaseName = 'balance_iq.db';
-  static const int databaseVersion =
-      7; // Updated for chart data fields (has_table, table_data, graph_type, graph_data)
+  String get databaseName;
+  int get databaseVersion;
 
   // Table Names
-  static const String messagesTable = 'messages';
-  static const String usersTable = 'users';
+  String get messagesTable;
+  String get usersTable;
 
   // Shared Preferences Keys
-  static const String keyUserId = 'user_id';
-  static const String keyUserEmail = 'user_email';
-  static const String keyUserName = 'user_name';
-  static const String keyUserPhotoUrl = 'user_photo_url';
-  static const String keyUserAuthProvider = 'user_auth_provider';
-  static const String keyIsLoggedIn = 'is_logged_in';
-  static const String keyIsEmailVerified = 'is_email_verified';
-  static const String keyThemeMode = 'theme_mode';
+  String get keyUserId;
+  String get keyUserEmail;
+  String get keyUserName;
+  String get keyUserPhotoUrl;
+  String get keyUserAuthProvider;
+  String get keyIsLoggedIn;
+  String get keyIsEmailVerified;
+  String get keyThemeMode;
 
-  // Mock Mode
-  // When true, uses mock data instead of real API calls
+  // Mock Mode - Already done
   bool get isMockMode;
 
   // Message Types
-  static const String messageTypeText = 'text';
-  static const String messageTypeImage = 'image';
-  static const String messageTypeAudio = 'audio';
+  String get messageTypeText;
+  String get messageTypeImage;
+  String get messageTypeAudio;
 
   // Message Sender Types
-  static const String senderUser = 'user';
-  static const String senderBot = 'bot';
+  String get senderUser;
+  String get senderBot;
 
   // Timeouts
-  static const Duration apiTimeout = Duration(seconds: 30);
-  static const Duration recordingTimeout = Duration(minutes: 5);
+  Duration get apiTimeout;
+  Duration get recordingTimeout;
 
   // File Size Limits (in bytes)
-  static const int maxImageSize = 10 * 1024 * 1024; // 10 MB
-  static const int maxAudioSize = 25 * 1024 * 1024; // 25 MB
+  int get maxImageSize;
+  int get maxAudioSize;
 
   // Message Usage Limits (per day, resets at 00:00 UTC)
-  static const int dailyMessageLimit = 10;
+  int get dailyMessageLimit;
 
   // Auth
   String get serverClientId;

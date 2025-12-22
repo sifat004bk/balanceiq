@@ -1,5 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dolfin_core/constants/app_constants.dart';
+import 'package:get_it/get_it.dart';
 import 'package:dolfin_core/storage/secure_storage_service.dart';
 import '../models/user_model.dart';
 
@@ -19,32 +20,40 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   @override
   Future<void> saveUser(UserModel user) async {
     await secureStorage.saveUserId(user.id);
-    await sharedPreferences.setString(AppConstants.keyUserEmail, user.email);
-    await sharedPreferences.setString(AppConstants.keyUserName, user.name);
+    await sharedPreferences.setString(
+        GetIt.instance<AppConstants>().keyUserEmail, user.email);
+    await sharedPreferences.setString(
+        GetIt.instance<AppConstants>().keyUserName, user.name);
     if (user.photoUrl != null) {
       await sharedPreferences.setString(
-          AppConstants.keyUserPhotoUrl, user.photoUrl!);
+          GetIt.instance<AppConstants>().keyUserPhotoUrl, user.photoUrl!);
     }
     await sharedPreferences.setString(
-        AppConstants.keyUserAuthProvider, user.authProvider);
-    await sharedPreferences.setBool(AppConstants.keyIsLoggedIn, true);
+        GetIt.instance<AppConstants>().keyUserAuthProvider, user.authProvider);
     await sharedPreferences.setBool(
-        AppConstants.keyIsEmailVerified, user.isEmailVerified);
+        GetIt.instance<AppConstants>().keyIsLoggedIn, true);
+    await sharedPreferences.setBool(
+        GetIt.instance<AppConstants>().keyIsEmailVerified,
+        user.isEmailVerified);
   }
 
   @override
   Future<UserModel?> getCachedUser() async {
-    final isLoggedIn = sharedPreferences.getBool(AppConstants.keyIsLoggedIn);
+    final isLoggedIn =
+        sharedPreferences.getBool(GetIt.instance<AppConstants>().keyIsLoggedIn);
     if (isLoggedIn == true) {
       final userId = await secureStorage.getUserId();
-      final email = sharedPreferences.getString(AppConstants.keyUserEmail);
-      final name = sharedPreferences.getString(AppConstants.keyUserName);
-      final photoUrl =
-          sharedPreferences.getString(AppConstants.keyUserPhotoUrl);
-      final authProvider =
-          sharedPreferences.getString(AppConstants.keyUserAuthProvider);
-      final isEmailVerified =
-          sharedPreferences.getBool(AppConstants.keyIsEmailVerified) ?? false;
+      final email = sharedPreferences
+          .getString(GetIt.instance<AppConstants>().keyUserEmail);
+      final name = sharedPreferences
+          .getString(GetIt.instance<AppConstants>().keyUserName);
+      final photoUrl = sharedPreferences
+          .getString(GetIt.instance<AppConstants>().keyUserPhotoUrl);
+      final authProvider = sharedPreferences
+          .getString(GetIt.instance<AppConstants>().keyUserAuthProvider);
+      final isEmailVerified = sharedPreferences
+              .getBool(GetIt.instance<AppConstants>().keyIsEmailVerified) ??
+          false;
 
       if (userId != null && email != null && name != null) {
         return UserModel(
@@ -64,16 +73,22 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   @override
   Future<void> clearUser() async {
     await secureStorage.delete(key: 'user_id');
-    await sharedPreferences.remove(AppConstants.keyUserEmail);
-    await sharedPreferences.remove(AppConstants.keyUserName);
-    await sharedPreferences.remove(AppConstants.keyUserPhotoUrl);
-    await sharedPreferences.remove(AppConstants.keyUserAuthProvider);
-    await sharedPreferences.remove(AppConstants.keyIsEmailVerified);
-    await sharedPreferences.setBool(AppConstants.keyIsLoggedIn, false);
+    await sharedPreferences.remove(GetIt.instance<AppConstants>().keyUserEmail);
+    await sharedPreferences.remove(GetIt.instance<AppConstants>().keyUserName);
+    await sharedPreferences
+        .remove(GetIt.instance<AppConstants>().keyUserPhotoUrl);
+    await sharedPreferences
+        .remove(GetIt.instance<AppConstants>().keyUserAuthProvider);
+    await sharedPreferences
+        .remove(GetIt.instance<AppConstants>().keyIsEmailVerified);
+    await sharedPreferences.setBool(
+        GetIt.instance<AppConstants>().keyIsLoggedIn, false);
   }
 
   @override
   Future<bool> isSignedIn() async {
-    return sharedPreferences.getBool(AppConstants.keyIsLoggedIn) ?? false;
+    return sharedPreferences
+            .getBool(GetIt.instance<AppConstants>().keyIsLoggedIn) ??
+        false;
   }
 }

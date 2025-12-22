@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../theme/app_palette.dart';
+import 'package:get_it/get_it.dart';
+import 'package:dolfin_ui_kit/theme/app_palette.dart';
 import '../constants/design_constants.dart';
 
 /// Centralized Snackbar Utility for Donfin AI
@@ -44,7 +45,7 @@ class SnackbarUtils {
     _showSnackbar(
       context,
       message: message,
-      backgroundColor: AppPalette.success,
+      backgroundColor: GetIt.instance<AppPalette>().success,
       duration: duration ?? _defaultDuration,
       action: action,
     );
@@ -65,7 +66,7 @@ class SnackbarUtils {
     _showSnackbar(
       context,
       message: message,
-      backgroundColor: AppPalette.error,
+      backgroundColor: GetIt.instance<AppPalette>().error,
       duration: duration ?? _defaultDuration,
       action: action,
     );
@@ -86,7 +87,7 @@ class SnackbarUtils {
     _showSnackbar(
       context,
       message: message,
-      backgroundColor: AppPalette.info,
+      backgroundColor: GetIt.instance<AppPalette>().info,
       duration: duration ?? _shortDuration,
       action: action,
     );
@@ -107,7 +108,7 @@ class SnackbarUtils {
     _showSnackbar(
       context,
       message: message,
-      backgroundColor: AppPalette.warning,
+      backgroundColor: GetIt.instance<AppPalette>().warning,
       duration: duration ?? _defaultDuration,
       action: action,
     );

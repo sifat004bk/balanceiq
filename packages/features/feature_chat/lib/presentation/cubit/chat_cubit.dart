@@ -12,6 +12,7 @@ import '../../domain/usecases/submit_feedback.dart';
 import '../../domain/entities/chat_feedback.dart';
 import 'chat_state.dart';
 import 'package:dolfin_core/constants/app_constants.dart';
+import 'package:get_it/get_it.dart';
 import 'package:dolfin_core/error/failures.dart';
 import 'package:dolfin_core/storage/secure_storage_service.dart';
 
@@ -79,6 +80,8 @@ class ChatCubit extends Cubit<ChatState> {
             hasMore: true,
             messagesUsedToday: _cachedMessageUsage?.messagesUsedToday ?? 0,
             messageUsage: _cachedMessageUsage,
+            dailyMessageLimit: _cachedMessageUsage?.dailyLimit ??
+                GetIt.instance<AppConstants>().dailyMessageLimit,
           ));
         }
       },
@@ -116,6 +119,8 @@ class ChatCubit extends Cubit<ChatState> {
                 hasMore: _hasMore,
                 messagesUsedToday: _cachedMessageUsage?.messagesUsedToday ?? 0,
                 messageUsage: _cachedMessageUsage,
+                dailyMessageLimit: _cachedMessageUsage?.dailyLimit ??
+                    GetIt.instance<AppConstants>().dailyMessageLimit,
               ));
             },
           );
@@ -171,6 +176,7 @@ class ChatCubit extends Cubit<ChatState> {
                 messagesUsedToday: _cachedMessageUsage?.messagesUsedToday ??
                     currentState.messagesUsedToday,
                 messageUsage: _cachedMessageUsage ?? currentState.messageUsage,
+                dailyMessageLimit: currentState.dailyMessageLimit,
               ));
             },
           );
@@ -200,7 +206,7 @@ class ChatCubit extends Cubit<ChatState> {
           id: uuid.v4(),
           userId: userId,
           botId: botId,
-          sender: AppConstants.senderUser,
+          sender: GetIt.instance<AppConstants>().senderUser,
           content: content,
           imageUrl: imagePath,
           audioUrl: audioPath,
@@ -304,7 +310,10 @@ class ChatCubit extends Cubit<ChatState> {
 
   void clearChat() {
     if (currentBotId != null) {
-      emit(const ChatLoaded(messages: []));
+      emit(ChatLoaded(
+        messages: const [],
+        dailyMessageLimit: GetIt.instance<AppConstants>().dailyMessageLimit,
+      ));
     }
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:dolfin_ui_kit/theme/app_palette.dart';
+import 'package:get_it/get_it.dart';
 
 /// Modal dialog shown after verification email is sent.
 /// Provides option to open mail app and instructions to return.
@@ -62,24 +63,26 @@ class EmailSentModal extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    AppPalette.success.withValues(alpha: 0.2),
-                    AppPalette.success.withValues(alpha: 0.1),
+                    GetIt.instance<AppPalette>().success.withValues(alpha: 0.2),
+                    GetIt.instance<AppPalette>().success.withValues(alpha: 0.1),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.mark_email_read_rounded,
                 size: 40,
-                color: AppPalette.success,
+                color: GetIt.instance<AppPalette>().success,
               ),
             )
                 .animate(onPlay: (controller) => controller.repeat())
                 .shimmer(
                   duration: 2.seconds,
-                  color: AppPalette.success.withValues(alpha: 0.3),
+                  color: GetIt.instance<AppPalette>()
+                      .success
+                      .withValues(alpha: 0.3),
                 )
                 .animate()
                 .scale(

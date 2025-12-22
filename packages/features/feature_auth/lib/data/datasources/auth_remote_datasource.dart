@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:dolfin_core/constants/api_endpoints.dart';
 import 'package:dolfin_core/constants/app_constants.dart';
+import 'package:get_it/get_it.dart';
 import 'package:dolfin_core/error/app_exception.dart';
 import 'package:dolfin_core/error/error_handler.dart';
 import 'package:dolfin_core/storage/secure_storage_service.dart';
@@ -66,8 +67,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         data: {'idToken': idToken},
         options: Options(
           headers: {'Content-Type': 'application/json'},
-          sendTimeout: AppConstants.apiTimeout,
-          receiveTimeout: AppConstants.apiTimeout,
+          sendTimeout: GetIt.instance<AppConstants>().apiTimeout,
+          receiveTimeout: GetIt.instance<AppConstants>().apiTimeout,
         ),
       );
 
@@ -133,8 +134,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         data: request.toJson(),
         options: Options(
           headers: {'Content-Type': 'application/json'},
-          sendTimeout: AppConstants.apiTimeout,
-          receiveTimeout: AppConstants.apiTimeout,
+          sendTimeout: GetIt.instance<AppConstants>().apiTimeout,
+          receiveTimeout: GetIt.instance<AppConstants>().apiTimeout,
         ),
       );
 
@@ -152,8 +153,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         data: request.toJson(),
         options: Options(
           headers: {'Content-Type': 'application/json'},
-          sendTimeout: AppConstants.apiTimeout,
-          receiveTimeout: AppConstants.apiTimeout,
+          sendTimeout: GetIt.instance<AppConstants>().apiTimeout,
+          receiveTimeout: GetIt.instance<AppConstants>().apiTimeout,
         ),
       );
 
@@ -181,8 +182,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         data: RefreshTokenRequest(refreshToken: refreshToken).toJson(),
         options: Options(
           headers: {'Content-Type': 'application/json'},
-          sendTimeout: AppConstants.apiTimeout,
-          receiveTimeout: AppConstants.apiTimeout,
+          sendTimeout: GetIt.instance<AppConstants>().apiTimeout,
+          receiveTimeout: GetIt.instance<AppConstants>().apiTimeout,
         ),
       );
 
@@ -210,8 +211,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $token',
           },
-          sendTimeout: AppConstants.apiTimeout,
-          receiveTimeout: AppConstants.apiTimeout,
+          sendTimeout: GetIt.instance<AppConstants>().apiTimeout,
+          receiveTimeout: GetIt.instance<AppConstants>().apiTimeout,
         ),
       );
 
@@ -233,8 +234,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $token',
           },
-          sendTimeout: AppConstants.apiTimeout,
-          receiveTimeout: AppConstants.apiTimeout,
+          sendTimeout: GetIt.instance<AppConstants>().apiTimeout,
+          receiveTimeout: GetIt.instance<AppConstants>().apiTimeout,
         ),
       );
     } catch (e) {
@@ -250,8 +251,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         data: request.toJson(),
         options: Options(
           headers: {'Content-Type': 'application/json'},
-          sendTimeout: AppConstants.apiTimeout,
-          receiveTimeout: AppConstants.apiTimeout,
+          sendTimeout: GetIt.instance<AppConstants>().apiTimeout,
+          receiveTimeout: GetIt.instance<AppConstants>().apiTimeout,
         ),
       );
     } catch (e) {
@@ -267,8 +268,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         data: request.toJson(),
         options: Options(
           headers: {'Content-Type': 'application/json'},
-          sendTimeout: AppConstants.apiTimeout,
-          receiveTimeout: AppConstants.apiTimeout,
+          sendTimeout: GetIt.instance<AppConstants>().apiTimeout,
+          receiveTimeout: GetIt.instance<AppConstants>().apiTimeout,
         ),
       );
     } catch (e) {
@@ -286,8 +287,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           headers: {
             'Content-Type': 'application/json',
           },
-          sendTimeout: AppConstants.apiTimeout,
-          receiveTimeout: AppConstants.apiTimeout,
+          sendTimeout: GetIt.instance<AppConstants>().apiTimeout,
+          receiveTimeout: GetIt.instance<AppConstants>().apiTimeout,
         ),
       );
     } catch (e) {
@@ -303,8 +304,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         data: {'email': email},
         options: Options(
           headers: {'Content-Type': 'application/json'},
-          sendTimeout: AppConstants.apiTimeout,
-          receiveTimeout: AppConstants.apiTimeout,
+          sendTimeout: GetIt.instance<AppConstants>().apiTimeout,
+          receiveTimeout: GetIt.instance<AppConstants>().apiTimeout,
         ),
       );
     } catch (e) {

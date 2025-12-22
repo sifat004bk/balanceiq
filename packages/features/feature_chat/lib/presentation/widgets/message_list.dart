@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import '../../domain/entities/message.dart';
 import 'package:dolfin_core/constants/app_constants.dart';
 import 'package:dolfin_ui_kit/theme/app_theme.dart';
@@ -84,7 +85,8 @@ class MessageList extends StatelessWidget {
                   final messageIndex = index - 1;
                   if (messageIndex < messages.length) {
                     final message = messages[messageIndex];
-                    final isUser = message.sender == AppConstants.senderUser;
+                    final isUser = message.sender ==
+                        GetIt.instance<AppConstants>().senderUser;
                     // When sending, the first message (index 0) is typing indicator,
                     // so index 1 (messageIndex 0) is the last message.
                     final isLastMessage = messageIndex == 0;
@@ -103,7 +105,8 @@ class MessageList extends StatelessWidget {
                 // Normal behavior (not sending)
                 if (index < messages.length) {
                   final message = messages[index];
-                  final isUser = message.sender == AppConstants.senderUser;
+                  final isUser = message.sender ==
+                      GetIt.instance<AppConstants>().senderUser;
                   // In reversed list, index 0 is the last message
                   final isLastMessage = index == 0;
 
@@ -158,17 +161,17 @@ class MessageList extends StatelessWidget {
   }
 
   String _getWelcomeMessage(String botId) {
-    switch (botId) {
-      case AppConstants.balanceTrackerID:
-        return 'I can help you track your expenses and monitor your financial position.';
-      case AppConstants.investmentGuruID:
-        return 'I can provide insights and tips on investment options and strategies.';
-      case AppConstants.budgetPlannerID:
-        return 'I can assist you in creating budgets and managing your finances.';
-      case AppConstants.finTipsID:
-        return 'I can share financial literacy tips and smart money habits.';
-      default:
-        return 'How can I help you today?';
+    final constants = GetIt.instance<AppConstants>();
+    if (botId == constants.balanceTrackerID) {
+      return 'I can help you track your expenses and monitor your financial position.';
+    } else if (botId == constants.investmentGuruID) {
+      return 'I can provide insights and tips on investment options and strategies.';
+    } else if (botId == constants.budgetPlannerID) {
+      return 'I can assist you in creating budgets and managing your finances.';
+    } else if (botId == constants.finTipsID) {
+      return 'I can share financial literacy tips and smart money habits.';
+    } else {
+      return 'How can I help you today?';
     }
   }
 }

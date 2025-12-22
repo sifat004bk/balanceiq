@@ -1,6 +1,7 @@
+import 'package:dolfin_ui_kit/theme/app_palette.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:dolfin_ui_kit/theme/app_palette.dart';
+import 'package:get_it/get_it.dart';
 import '../../../domain/entities/chart_data.dart';
 
 class GenUIChart extends StatelessWidget {
@@ -74,8 +75,8 @@ class GenUIChart extends StatelessWidget {
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: type == GraphType.bar
-                          ? AppPalette.chartBarColors[0]
-                          : AppPalette.chartLineGradient,
+                          ? GetIt.instance<AppPalette>().chartBarColors[0]
+                          : GetIt.instance<AppPalette>().chartLineGradient,
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                     ),
@@ -131,7 +132,8 @@ class GenUIChart extends StatelessWidget {
             barTouchData: BarTouchData(
               enabled: true,
               touchTooltipData: BarTouchTooltipData(
-                getTooltipColor: (group) => AppPalette.getTooltipColor(isDark),
+                getTooltipColor: (group) =>
+                    GetIt.instance<AppPalette>().getTooltipColor(isDark),
                 tooltipPadding: const EdgeInsets.symmetric(
                   horizontal: 16,
                   vertical: 10,
@@ -219,8 +221,8 @@ class GenUIChart extends StatelessWidget {
               final val = dataset.data[index].toDouble();
               final animatedValue = val * animationValue;
 
-              final barColors = AppPalette
-                  .chartBarColors[index % AppPalette.chartBarColors.length];
+              final barColors = GetIt.instance<AppPalette>().chartBarColors[
+                  index % GetIt.instance<AppPalette>().chartBarColors.length];
 
               return BarChartGroupData(
                 x: index,
@@ -328,13 +330,15 @@ class GenUIChart extends StatelessWidget {
                 isCurved: true,
                 curveSmoothness: 0.35,
                 gradient: LinearGradient(
-                  colors: AppPalette.chartLineGradient,
+                  colors: GetIt.instance<AppPalette>().chartLineGradient,
                 ),
                 barWidth: 4,
                 isStrokeCapRound: true,
                 shadow: Shadow(
-                  color:
-                      AppPalette.chartLineGradient.first.withValues(alpha: 0.4),
+                  color: GetIt.instance<AppPalette>()
+                      .chartLineGradient
+                      .first
+                      .withValues(alpha: 0.4),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),
@@ -345,7 +349,8 @@ class GenUIChart extends StatelessWidget {
                       radius: 6,
                       color: Colors.white,
                       strokeWidth: 3,
-                      strokeColor: AppPalette.chartLineGradient.first,
+                      strokeColor:
+                          GetIt.instance<AppPalette>().chartLineGradient.first,
                     );
                   },
                 ),
@@ -353,9 +358,14 @@ class GenUIChart extends StatelessWidget {
                   show: true,
                   gradient: LinearGradient(
                     colors: [
-                      AppPalette.chartLineGradient.first
+                      GetIt.instance<AppPalette>()
+                          .chartLineGradient
+                          .first
                           .withValues(alpha: 0.25),
-                      AppPalette.chartLineGradient.last.withValues(alpha: 0.05),
+                      GetIt.instance<AppPalette>()
+                          .chartLineGradient
+                          .last
+                          .withValues(alpha: 0.05),
                     ],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
@@ -366,7 +376,7 @@ class GenUIChart extends StatelessWidget {
             lineTouchData: LineTouchData(
               touchTooltipData: LineTouchTooltipData(
                 getTooltipColor: (touchedSpot) =>
-                    AppPalette.getTooltipColor(isDark),
+                    GetIt.instance<AppPalette>().getTooltipColor(isDark),
                 tooltipPadding: const EdgeInsets.symmetric(
                   horizontal: 16,
                   vertical: 10,

@@ -41,8 +41,8 @@ class SubscriptionCard extends StatelessWidget {
 
   Widget _buildActiveCard(BuildContext context) {
     final sub = status.subscription!;
-    final date = DateTime.tryParse(sub.endDate ?? '');
-    final dateStr = date != null ? DateFormat.yMMMd().format(date) : 'N/A';
+    final date = sub.endDate;
+    final dateStr = DateFormat.yMMMd().format(date);
 
     return Card(
       elevation: 0,

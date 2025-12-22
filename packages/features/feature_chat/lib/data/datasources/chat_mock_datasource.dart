@@ -1,4 +1,5 @@
 import 'package:dolfin_core/constants/app_constants.dart';
+import 'package:get_it/get_it.dart';
 import 'package:dolfin_core/mock/mock_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/chat_history_response_model.dart';
@@ -27,7 +28,9 @@ class ChatMockDataSource implements ChatRemoteDataSource {
     String? audioPath,
   }) async {
     // Get user ID from SharedPreferences
-    final userId = sharedPreferences.getString(AppConstants.keyUserId) ?? '';
+    final userId =
+        sharedPreferences.getString(GetIt.instance<AppConstants>().keyUserId) ??
+            '';
 
     // Simulate network delay
     await _simulateNetworkDelay();
@@ -40,7 +43,7 @@ class ChatMockDataSource implements ChatRemoteDataSource {
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       userId: userId,
       botId: botId,
-      sender: AppConstants.senderBot,
+      sender: GetIt.instance<AppConstants>().senderBot,
       content: responseText,
       imageUrl: null,
       audioUrl: null,

@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dolfin_core/constants/app_constants.dart';
+import 'package:get_it/get_it.dart';
 import 'package:dolfin_core/constants/api_endpoints.dart';
 import 'package:dolfin_core/storage/secure_storage_service.dart';
 import '../../domain/entities/chart_data.dart';
@@ -55,10 +56,12 @@ class ChatFinanceGuruDataSource implements ChatRemoteDataSource {
     try {
       // Get user info
       final userId = await secureStorage.getUserId() ?? '';
-      final userEmail =
-          sharedPreferences.getString(AppConstants.keyUserEmail) ?? '';
-      final userName =
-          sharedPreferences.getString(AppConstants.keyUserName) ?? 'User';
+      final userEmail = sharedPreferences
+              .getString(GetIt.instance<AppConstants>().keyUserEmail) ??
+          '';
+      final userName = sharedPreferences
+              .getString(GetIt.instance<AppConstants>().keyUserName) ??
+          'User';
 
       // Use username from email or full name
       final username = userEmail.split('@').first.isNotEmpty
@@ -84,8 +87,8 @@ class ChatFinanceGuruDataSource implements ChatRemoteDataSource {
             'Content-Type': 'application/json',
             if (token != null) 'Authorization': 'Bearer $token',
           },
-          sendTimeout: AppConstants.apiTimeout,
-          receiveTimeout: AppConstants.apiTimeout,
+          sendTimeout: GetIt.instance<AppConstants>().apiTimeout,
+          receiveTimeout: GetIt.instance<AppConstants>().apiTimeout,
         ),
       );
 
@@ -105,7 +108,7 @@ class ChatFinanceGuruDataSource implements ChatRemoteDataSource {
           id: DateTime.now().millisecondsSinceEpoch.toString(),
           userId: userId,
           botId: botId,
-          sender: AppConstants.senderBot,
+          sender: GetIt.instance<AppConstants>().senderBot,
           content: chatResponse.message,
           timestamp: DateTime.now(),
           isSending: false,
@@ -198,8 +201,8 @@ class ChatFinanceGuruDataSource implements ChatRemoteDataSource {
             'Content-Type': 'application/json',
             if (token != null) 'Authorization': 'Bearer $token',
           },
-          sendTimeout: AppConstants.apiTimeout,
-          receiveTimeout: AppConstants.apiTimeout,
+          sendTimeout: GetIt.instance<AppConstants>().apiTimeout,
+          receiveTimeout: GetIt.instance<AppConstants>().apiTimeout,
         ),
       );
 

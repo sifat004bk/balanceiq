@@ -5,7 +5,7 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:get_it/get_it.dart';
 import 'package:dolfin_core/tour/product_tour_cubit.dart';
 import 'package:dolfin_core/tour/product_tour_state.dart';
-import 'package:dolfin_core/tour/tour_content_widgets.dart';
+import 'package:dolfin_core/tour/tour_widget_factory.dart';
 import 'package:feature_chat/presentation/cubit/chat_cubit.dart';
 import 'package:feature_chat/presentation/cubit/chat_state.dart';
 import 'package:feature_chat/presentation/widgets/chat_shimmer.dart';
@@ -107,7 +107,7 @@ class _ChatViewState extends State<ChatView> {
           TargetContent(
             align: ContentAlign.top,
             builder: (context, controller) {
-              return ChatInputTourTooltip(
+              return GetIt.instance<TourWidgetFactory>().createChatInputHint(
                 onDismiss: () {
                   controller.next();
                   tourCubit.completeTour();

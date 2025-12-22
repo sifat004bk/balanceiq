@@ -4,8 +4,9 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import 'package:dolfin_core/tour/product_tour_cubit.dart';
 import 'package:dolfin_core/tour/product_tour_state.dart';
-import 'package:dolfin_core/tour/tour_content_widgets.dart';
+import 'package:dolfin_core/tour/tour_widget_factory.dart';
 import 'package:feature_auth/presentation/pages/profile_page.dart';
+import 'package:get_it/get_it.dart';
 
 mixin ProfileTourMixin on State<ProfilePage> {
   TutorialCoachMark? _tutorialCoachMark;
@@ -55,7 +56,7 @@ mixin ProfileTourMixin on State<ProfilePage> {
           TargetContent(
             align: ContentAlign.bottom,
             builder: (context, controller) {
-              return TourTooltipContent(
+              return GetIt.instance<TourWidgetFactory>().createTooltip(
                 icon: Icons.email_outlined,
                 title: 'Verify Your Email',
                 description:
@@ -104,7 +105,7 @@ mixin ProfileTourMixin on State<ProfilePage> {
           TargetContent(
             align: ContentAlign.bottom,
             builder: (context, controller) {
-              return TourTooltipContent(
+              return GetIt.instance<TourWidgetFactory>().createTooltip(
                 icon: Icons.card_membership_outlined,
                 title: 'Choose a Plan',
                 description:

@@ -43,11 +43,11 @@ class _ProfilePageState extends State<ProfilePage> with ProfileTourMixin {
     super.dispose();
   }
 
-  void _handleEmailVerificationClick(dynamic user) {
-    final tourCubit = context.read<ProductTourCubit>();
+  void _handleEmailVerificationClick(BuildContext ctx, dynamic user) {
+    final tourCubit = ctx.read<ProductTourCubit>();
 
     // Send verification email using SignupCubit
-    context.read<SignupCubit>().sendEmailVerification(user);
+    ctx.read<SignupCubit>().sendEmailVerification(user);
 
     // If tour is active at email verify step, advance to modal
     if (tourCubit.isAtStep(TourStep.profileEmailVerify)) {
@@ -163,7 +163,7 @@ class _ProfilePageState extends State<ProfilePage> with ProfileTourMixin {
                         child: EmailVerificationBanner(
                           user: user,
                           onVerificationClick: () =>
-                              _handleEmailVerificationClick(user),
+                              _handleEmailVerificationClick(context, user),
                         ),
                       ),
                     // Profile Header with dynamic subscription badge

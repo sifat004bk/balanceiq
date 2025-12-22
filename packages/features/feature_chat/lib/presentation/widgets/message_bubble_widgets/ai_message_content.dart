@@ -234,7 +234,7 @@ class AiMessageContent extends StatelessWidget {
                 ListTile(
                   leading:
                       const Icon(Icons.arrow_downward, color: Colors.green),
-                  title: Text(GetIt.I<CoreStrings>().dashboard.income),
+                  title: Text(GetIt.I<CoreStrings>().common.income),
                   onTap: () {
                     Navigator.pop(context);
                     _sendCorrectionMessage(chatCubit, 'income');
@@ -242,7 +242,7 @@ class AiMessageContent extends StatelessWidget {
                 ),
                 ListTile(
                   leading: const Icon(Icons.arrow_upward, color: Colors.red),
-                  title: Text(GetIt.I<CoreStrings>().dashboard.expense),
+                  title: Text(GetIt.I<CoreStrings>().common.expense),
                   onTap: () {
                     Navigator.pop(context);
                     _sendCorrectionMessage(chatCubit, 'expense');

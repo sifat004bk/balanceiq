@@ -1,6 +1,6 @@
-import 'package:dolfin_core/constants/app_strings.dart';
 import 'package:dolfin_core/currency/currency_cubit.dart';
 import 'package:balance_iq/core/di/injection_container.dart';
+import 'package:balance_iq/core/strings/dashboard_strings.dart';
 import 'package:dolfin_ui_kit/theme/app_palette.dart';
 import 'package:dolfin_ui_kit/widgets/glass_presets.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +48,7 @@ class BalanceCard extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  AppStrings.dashboard.netBalance,
+                  GetIt.I<DashboardStrings>().netBalance,
                   style: textTheme.bodySmall?.copyWith(
                     fontWeight: FontWeight.w500,
                     letterSpacing: 0.5,
@@ -86,7 +86,7 @@ class BalanceCard extends StatelessWidget {
                   context,
                   currencyCubit: currencyCubit,
                   icon: Icons.arrow_downward_rounded,
-                  label: AppStrings.dashboard.totalIncome,
+                  label: GetIt.I<DashboardStrings>().totalIncome,
                   amount: totalIncome,
                   isIncome: true,
                 ),
@@ -97,7 +97,7 @@ class BalanceCard extends StatelessWidget {
                   context,
                   currencyCubit: currencyCubit,
                   icon: Icons.arrow_upward_rounded,
-                  label: AppStrings.dashboard.totalExpense,
+                  label: GetIt.I<DashboardStrings>().totalExpense,
                   amount: totalExpense,
                   isIncome: false,
                 ),

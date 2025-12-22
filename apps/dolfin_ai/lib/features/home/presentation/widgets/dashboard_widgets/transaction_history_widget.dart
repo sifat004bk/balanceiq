@@ -5,6 +5,8 @@ import 'package:balance_iq/features/home/domain/entities/transaction.dart';
 import 'package:balance_iq/features/home/presentation/cubit/transactions_cubit.dart';
 import 'package:balance_iq/features/home/presentation/cubit/transactions_state.dart';
 import 'package:balance_iq/features/home/presentation/widgets/transaction_detail_widgets/transaction_detail_modal.dart';
+import 'package:balance_iq/core/strings/dashboard_strings.dart';
+import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -28,7 +30,7 @@ class TransactionHistoryWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                AppStrings.dashboard.recentTransactions,
+                GetIt.I<DashboardStrings>().recentTransactions,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
@@ -72,7 +74,7 @@ class TransactionHistoryWidget extends StatelessWidget {
               if (state.transactions.isEmpty) {
                 return Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: Text(AppStrings.dashboard.noTransactions),
+                  child: Text(GetIt.I<DashboardStrings>().noTransactions),
                 );
               }
 

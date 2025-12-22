@@ -1,7 +1,8 @@
-import 'package:dolfin_core/constants/app_strings.dart';
 import 'package:dolfin_core/currency/currency_cubit.dart';
 import 'package:balance_iq/core/di/injection_container.dart';
 import 'package:balance_iq/features/home/domain/entities/dashbaord_summary.dart';
+import 'package:balance_iq/core/strings/dashboard_strings.dart';
+import 'package:get_it/get_it.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -36,7 +37,7 @@ class SpendingTrendChart extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            AppStrings.dashboard.spendingTrend,
+            GetIt.I<DashboardStrings>().spendingTrend,
             style: textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w500,
             ),

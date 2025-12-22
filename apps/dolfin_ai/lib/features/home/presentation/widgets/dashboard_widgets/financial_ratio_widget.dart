@@ -1,4 +1,5 @@
-import 'package:dolfin_core/constants/app_strings.dart';
+import 'package:balance_iq/core/strings/dashboard_strings.dart';
+import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 
 class FinancialRatiosWidget extends StatelessWidget {
@@ -20,7 +21,7 @@ class FinancialRatiosWidget extends StatelessWidget {
         Expanded(
           child: _buildRatioCard(
             context,
-            title: AppStrings.dashboard.expenseRatio,
+            title: GetIt.I<DashboardStrings>().expenseRatio,
             value: expenseRatio,
             backgroundColor: colorScheme.error.withValues(alpha: 0.15),
             textColor: colorScheme.onSurface,
@@ -30,7 +31,7 @@ class FinancialRatiosWidget extends StatelessWidget {
         Expanded(
           child: _buildRatioCard(
             context,
-            title: AppStrings.dashboard.savingsRate,
+            title: GetIt.I<DashboardStrings>().savingsRate,
             value: savingsRate,
             backgroundColor:
                 Theme.of(context).colorScheme.primary.withValues(alpha: 0.4),

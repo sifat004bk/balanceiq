@@ -1,4 +1,5 @@
-import 'package:dolfin_core/constants/app_strings.dart';
+import 'package:balance_iq/core/strings/dashboard_strings.dart';
+import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 
 /// Minimalist Neumorphism Style - Clean and Modern
@@ -40,7 +41,7 @@ class AccountsBreakdownWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    AppStrings.dashboard.accounts,
+                    GetIt.I<DashboardStrings>().accounts,
                     style: textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                       fontSize: 22,

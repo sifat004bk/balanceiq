@@ -19,7 +19,7 @@ class AppStrings {
   static SyncStrings get sync => core.sync;
 
   // Temporary: Expose these until they move to their own features
-  static DashboardStrings get dashboard => core.dashboard;
+
   static TransactionsStrings get transactions => core.transactions;
   static AccountStrings get accounts => core.accounts;
 }

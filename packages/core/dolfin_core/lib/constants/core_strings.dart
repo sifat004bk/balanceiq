@@ -5,7 +5,6 @@ abstract class CoreStrings {
   AccessibilityStrings get accessibility;
   SyncStrings get sync;
   // Keeping these in Core until their features are split into packages
-  DashboardStrings get dashboard;
   TransactionsStrings get transactions;
   AccountStrings get accounts;
 }
@@ -62,8 +61,11 @@ abstract class CommonStrings {
   String get takaShort;
   String get noData;
   String get noDataYet;
-  String get comingSoon;
+
   String get selectTextMode;
+  String get comingSoon;
+  String get income;
+  String get expense;
 }
 
 abstract class ErrorStrings {
@@ -160,59 +162,6 @@ abstract class SyncStrings {
   String get importSuccess;
   String get importFailed;
   String get noDataToExport;
-}
-
-abstract class DashboardStrings {
-  String get welcome;
-  String get goodMorning;
-  String get goodAfternoon;
-  String get goodEvening;
-  String get yourBalance;
-  String get netBalance;
-  String get totalIncome;
-  String get totalExpense;
-  String get totalIncomeThisMonth;
-  String get totalExpenseThisMonth;
-  String get income;
-  String get expense;
-  String get spendingTrend;
-  String get spendingByCategory;
-  String get financialRatios;
-  String get accounts;
-  String get biggestIncome;
-  String get biggestExpense;
-  String get categories;
-  String get categoryBreakdown;
-  String get recentTransactions;
-  String get expenseRatio;
-  String get expenseRatioHelp;
-  String get savingsRate;
-  String get savingsRateHelp;
-  String get incomeExpenseRatio;
-  String get selectDateRange;
-  String get selectDate;
-  String get customRange;
-  String get apply;
-  String get noTransactions;
-  String get noTransactionsMessage;
-  String get noDataForPeriod;
-  String get welcomeToApp;
-  String get welcomeSubtitle;
-  String get trackExpenses;
-  String get trackExpensesDesc;
-  String get smartInsights;
-  String get smartInsightsDesc;
-  String get reachGoals;
-  String get reachGoalsDesc;
-  String get errorTitle;
-  String get commonIssues;
-  String get checkInternet;
-  String get serverDown;
-  String get tryAgainMoments;
-  String get goToLogin;
-  String get backToLoginPage;
-  String get completeProfile;
-  String get verifyEmailSetup;
 }
 
 abstract class TransactionsStrings {

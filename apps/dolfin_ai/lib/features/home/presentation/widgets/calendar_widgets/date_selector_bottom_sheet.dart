@@ -1,7 +1,7 @@
-import 'package:dolfin_core/constants/app_strings.dart';
 import 'package:dolfin_ui_kit/theme/app_palette.dart';
 import 'package:get_it/get_it.dart';
 import 'package:balance_iq/features/home/presentation/widgets/calendar_widgets/custom_calendar_date_range_picker.dart';
+import 'package:balance_iq/core/strings/dashboard_strings.dart';
 import 'package:flutter/material.dart';
 
 class DateSelectorBottomSheet extends StatefulWidget {
@@ -72,7 +72,7 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
 
           // Title with text shadow
           Text(
-            AppStrings.dashboard.selectDateRange,
+            GetIt.I<DashboardStrings>().selectDateRange,
             style: theme.textTheme.headlineMedium?.copyWith(
               fontWeight: FontWeight.w800,
               fontSize: 28,
@@ -232,7 +232,7 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
                   const SizedBox(width: 16),
                   Expanded(
                     child: Text(
-                      AppStrings.dashboard.customRange,
+                      GetIt.I<DashboardStrings>().customRange,
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
                         letterSpacing: 0.2,

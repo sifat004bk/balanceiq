@@ -1,4 +1,6 @@
 import 'package:dolfin_core/constants/app_strings.dart';
+import 'package:balance_iq/core/strings/dashboard_strings.dart';
+import 'package:get_it/get_it.dart';
 
 import 'package:flutter/material.dart';
 
@@ -89,7 +91,7 @@ class Error404Page extends StatelessWidget {
 
               // Error title
               Text(
-                AppStrings.dashboard.errorTitle,
+                GetIt.I<DashboardStrings>().errorTitle,
                 style: textTheme.headlineMedium?.copyWith(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -147,7 +149,7 @@ class Error404Page extends StatelessWidget {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          AppStrings.dashboard.commonIssues,
+                          GetIt.I<DashboardStrings>().commonIssues,
                           style: textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
@@ -156,10 +158,11 @@ class Error404Page extends StatelessWidget {
                     ),
                     const SizedBox(height: 12),
                     _buildIssueItem(
-                        context, AppStrings.dashboard.checkInternet),
-                    _buildIssueItem(context, AppStrings.dashboard.serverDown),
+                        context, GetIt.I<DashboardStrings>().checkInternet),
                     _buildIssueItem(
-                        context, AppStrings.dashboard.tryAgainMoments),
+                        context, GetIt.I<DashboardStrings>().serverDown),
+                    _buildIssueItem(
+                        context, GetIt.I<DashboardStrings>().tryAgainMoments),
                   ],
                 ),
               ),
@@ -177,7 +180,7 @@ class Error404Page extends StatelessWidget {
                   ),
                   label: Text(
                     isAuthError
-                        ? AppStrings.dashboard.goToLogin
+                        ? GetIt.I<DashboardStrings>().goToLogin
                         : AppStrings.common.retry,
                     style: textTheme.titleMedium?.copyWith(
                       fontSize: 18,
@@ -208,7 +211,7 @@ class Error404Page extends StatelessWidget {
                   );
                 },
                 child: Text(
-                  AppStrings.dashboard.backToLoginPage,
+                  GetIt.I<DashboardStrings>().backToLoginPage,
                   style: textTheme.titleMedium?.copyWith(
                     color: Theme.of(context).colorScheme.primary,
                     fontWeight: FontWeight.w600,

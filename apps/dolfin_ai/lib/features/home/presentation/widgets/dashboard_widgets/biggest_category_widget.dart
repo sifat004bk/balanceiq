@@ -1,4 +1,5 @@
-import 'package:dolfin_core/constants/app_strings.dart';
+import 'package:balance_iq/core/strings/dashboard_strings.dart';
+import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 
 class BiggestCategoryWidget extends StatelessWidget {
@@ -47,7 +48,7 @@ class BiggestCategoryWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  AppStrings.dashboard.categories,
+                  GetIt.I<DashboardStrings>().categories,
                   style: textTheme.bodyMedium,
                 ),
                 const SizedBox(height: 4),

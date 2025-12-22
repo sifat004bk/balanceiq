@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
-import 'package:dolfin_core/constants/app_strings.dart';
 import 'package:dolfin_core/tour/product_tour_cubit.dart';
 import 'package:dolfin_core/tour/product_tour_state.dart';
 import 'package:dolfin_core/tour/tour_widget_factory.dart';
 import 'package:get_it/get_it.dart';
+import 'package:balance_iq/core/strings/dashboard_strings.dart';
 
 /// Controller for managing the dashboard tour.
 ///
@@ -51,8 +51,8 @@ class DashboardTourController {
             builder: (context, controller) {
               return GetIt.instance<TourWidgetFactory>().createTooltip(
                 icon: Icons.person_outline_rounded,
-                title: AppStrings.dashboard.completeProfile,
-                description: AppStrings.dashboard.verifyEmailSetup,
+                title: GetIt.I<DashboardStrings>().completeProfile,
+                description: GetIt.I<DashboardStrings>().verifyEmailSetup,
                 buttonText: 'Got it',
                 onButtonPressed: () {
                   controller.next();

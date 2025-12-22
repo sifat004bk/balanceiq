@@ -1,4 +1,4 @@
-import 'package:dolfin_core/constants/app_strings.dart';
+import 'package:balance_iq/core/strings/dashboard_strings.dart';
 import 'package:dolfin_core/currency/currency_cubit.dart';
 import 'package:balance_iq/core/di/injection_container.dart';
 import 'package:dolfin_ui_kit/theme/app_palette.dart';
@@ -53,7 +53,7 @@ class BiggestIncomeWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  AppStrings.dashboard.biggestIncome,
+                  GetIt.I<DashboardStrings>().biggestIncome,
                   style: textTheme.bodyMedium,
                 ),
                 const SizedBox(height: 4),

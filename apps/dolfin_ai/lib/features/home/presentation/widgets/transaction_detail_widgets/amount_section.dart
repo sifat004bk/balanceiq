@@ -44,9 +44,7 @@ class AmountSection extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            isIncome
-                ? AppStrings.dashboard.income
-                : AppStrings.dashboard.expense,
+            isIncome ? AppStrings.common.income : AppStrings.common.expense,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: isIncome ? Colors.green : Colors.red,
                   fontWeight: FontWeight.w500,

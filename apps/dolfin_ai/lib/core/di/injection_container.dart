@@ -16,6 +16,8 @@ import '../strings/core_strings_impl.dart';
 import '../strings/auth_strings_impl.dart';
 import '../strings/chat_strings_impl.dart';
 import '../strings/subscription_strings_impl.dart';
+import '../strings/dashboard_strings_impl.dart';
+import 'package:balance_iq/core/strings/dashboard_strings.dart';
 
 import 'modules/storage_module.dart';
 import 'modules/network_module.dart';
@@ -42,6 +44,8 @@ Future<void> init() async {
   sl.registerLazySingleton<ChatStrings>(() => const ChatStringsImpl());
   sl.registerLazySingleton<SubscriptionStrings>(
       () => const SubscriptionStringsImpl());
+  sl.registerLazySingleton<DashboardStrings>(
+      () => const DashboardStringsImpl());
 
   // Common deps
   final appConstants = sl<AppConstants>();

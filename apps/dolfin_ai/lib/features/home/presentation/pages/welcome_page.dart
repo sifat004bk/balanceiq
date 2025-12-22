@@ -1,4 +1,6 @@
 import 'package:dolfin_core/constants/app_strings.dart';
+import 'package:balance_iq/core/strings/dashboard_strings.dart';
+import 'package:get_it/get_it.dart';
 
 import 'package:flutter/material.dart';
 
@@ -110,7 +112,7 @@ class WelcomePage extends StatelessWidget {
 
                     // Welcome text
                     Text(
-                      AppStrings.dashboard.welcomeToApp,
+                      GetIt.I<DashboardStrings>().welcomeToApp,
                       style: textTheme.displayMedium?.copyWith(
                         fontSize: 32,
                         fontWeight: FontWeight.bold,
@@ -119,7 +121,7 @@ class WelcomePage extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      AppStrings.dashboard.welcomeSubtitle,
+                      GetIt.I<DashboardStrings>().welcomeSubtitle,
                       style: textTheme.bodyLarge?.copyWith(
                         color: Theme.of(context).hintColor,
                         height: 1.5,
@@ -132,22 +134,24 @@ class WelcomePage extends StatelessWidget {
                     _buildFeatureItem(
                       context,
                       icon: Icons.attach_money,
-                      title: AppStrings.dashboard.trackExpenses,
-                      description: AppStrings.dashboard.trackExpensesDesc,
+                      title: GetIt.I<DashboardStrings>().trackExpenses,
+                      description:
+                          GetIt.I<DashboardStrings>().trackExpensesDesc,
                     ),
                     const SizedBox(height: 24),
                     _buildFeatureItem(
                       context,
                       icon: Icons.trending_up,
-                      title: AppStrings.dashboard.smartInsights,
-                      description: AppStrings.dashboard.smartInsightsDesc,
+                      title: GetIt.I<DashboardStrings>().smartInsights,
+                      description:
+                          GetIt.I<DashboardStrings>().smartInsightsDesc,
                     ),
                     const SizedBox(height: 24),
                     _buildFeatureItem(
                       context,
                       icon: Icons.savings_outlined,
-                      title: AppStrings.dashboard.reachGoals,
-                      description: AppStrings.dashboard.reachGoalsDesc,
+                      title: GetIt.I<DashboardStrings>().reachGoals,
+                      description: GetIt.I<DashboardStrings>().reachGoalsDesc,
                     ),
                     const SizedBox(height: 64),
 

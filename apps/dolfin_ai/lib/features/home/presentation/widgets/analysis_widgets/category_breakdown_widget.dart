@@ -1,9 +1,10 @@
 import 'dart:ui';
 
-import 'package:dolfin_core/constants/app_strings.dart';
 import 'package:dolfin_core/currency/currency_cubit.dart';
 import 'package:balance_iq/core/di/injection_container.dart';
 import 'package:balance_iq/features/home/presentation/pages/transactions_page.dart';
+import 'package:balance_iq/core/strings/dashboard_strings.dart';
+import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 
 class CategoryBreakdownWidget extends StatelessWidget {
@@ -40,7 +41,7 @@ class CategoryBreakdownWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                AppStrings.dashboard.spendingByCategory,
+                GetIt.I<DashboardStrings>().spendingByCategory,
                 style: textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.w800,
                   fontSize: 22,

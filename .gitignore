@@ -16,6 +16,10 @@ migrate_working_dir/
 #.env
 .env.local
 .env.*.local
+local.properties
+**/local.properties
+key.properties
+**/key.properties
 
 # IntelliJ related
 *.iml
@@ -38,6 +42,8 @@ migrate_working_dir/
 .pub/
 build/
 **/build/
+coverage/
+test/coverage/
 
 # Symbolication related
 app.*.symbols
@@ -72,6 +78,19 @@ local.properties
 **/gradle/wrapper/gradle-wrapper.jar
 **/gradlew
 **/gradlew.bat
+
+# Android
+android/app/libs/
+
+# iOS
+ios/Flutter/App.framework
+ios/Flutter/Flutter.framework
+ios/Flutter/Generated.xcconfig
+ios/Flutter/app.flx
+ios/Flutter/app.zip
+ios/Flutter/flutter_assets/
+ios/ServiceDefinitions.json
+ios/Runner/GeneratedPluginRegistrant.*
 
 # AI instruction files
 CLAUDE.md

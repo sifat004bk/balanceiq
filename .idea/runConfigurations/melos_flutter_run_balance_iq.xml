@@ -1,6 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Flutter Run -&gt; 'balance_iq'" type="FlutterRunConfigurationType" factoryName="Flutter">
-    <option name="filePath" value="$PROJECT_DIR$/apps/dolfin_ai/lib/main.dart" />
-    <method v="2" />
-  </configuration>
-</component>

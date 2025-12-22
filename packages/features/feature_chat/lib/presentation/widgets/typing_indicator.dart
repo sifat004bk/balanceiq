@@ -102,36 +102,57 @@ class _TypingIndicatorState extends State<TypingIndicator>
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Bot avatar with gradient (2025 redesign)
-          Container(
-            width: 28,
-            height: 28,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Theme.of(context).colorScheme.primary,
-                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.8),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .primary
-                      .withValues(alpha: 0.3),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
+          // Animated Dolfin logo with rotating beam while AI is responding
+          AnimatedBuilder(
+            animation: _animationController,
+            builder: (context, child) {
+              final isDark = Theme.of(context).brightness == Brightness.dark;
+              // Beam color: opposite of theme (white in dark, primary in light)
+              final beamColor =
+                  isDark ? Colors.white : Theme.of(context).colorScheme.primary;
+
+              return SizedBox(
+                width: 36,
+                height: 36,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    // Rotating beam arc around the logo
+                    Transform.rotate(
+                      angle: _animationController.value * 2 * 3.14159,
+                      child: CustomPaint(
+                        size: const Size(36, 36),
+                        painter: _BeamPainter(
+                          color: beamColor,
+                          strokeWidth: 2.5,
+                        ),
+                      ),
+                    ),
+                    // Logo in the center - always blue on white background
+                    Container(
+                      width: 28,
+                      height: 28,
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                      ),
+                      child: ClipOval(
+                        child: Padding(
+                          padding: const EdgeInsets.all(2),
+                          child: Image.asset(
+                            'assets/icons/app_icon.png',
+                            width: 24,
+                            height: 24,
+                            fit: BoxFit.contain,
+                            // No color tinting - keep original blue logo
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            child: Icon(
-              Icons.auto_awesome,
-              color: Theme.of(context).colorScheme.onPrimary,
-              size: 16,
-            ),
+              );
+            },
           ),
           const SizedBox(width: 12),
           // Glassmorphic typing indicator container (2025 redesign)
@@ -197,5 +218,48 @@ class _TypingIndicatorState extends State<TypingIndicator>
         );
       },
     );
+  }
+}
+
+/// Custom painter for the rotating beam arc around the logo
+class _BeamPainter extends CustomPainter {
+  final Color color;
+  final double strokeWidth;
+
+  _BeamPainter({
+    required this.color,
+    this.strokeWidth = 2.5,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rect = Rect.fromLTWH(0, 0, size.width, size.height);
+    final paint = Paint()
+      ..shader = SweepGradient(
+        colors: [
+          color.withValues(alpha: 0.0),
+          color.withValues(alpha: 0.1),
+          color,
+          color.withValues(alpha: 0.1),
+          color.withValues(alpha: 0.0),
+        ],
+        stops: const [0.0, 0.3, 0.5, 0.7, 1.0],
+      ).createShader(rect)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth
+      ..strokeCap = StrokeCap.round;
+
+    canvas.drawArc(
+      rect.deflate(strokeWidth / 2),
+      0,
+      3.14159 * 2,
+      false,
+      paint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant _BeamPainter oldDelegate) {
+    return oldDelegate.color != color || oldDelegate.strokeWidth != strokeWidth;
   }
 }

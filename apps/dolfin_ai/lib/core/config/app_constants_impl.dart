@@ -4,7 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 class AppConstantsImpl implements AppConstants {
   // App Info
   @override
-  String get appName => 'Donfin AI';
+  String get appName => 'Dolfin AI';
   @override
   String get appVersion => '1.0.0';
 

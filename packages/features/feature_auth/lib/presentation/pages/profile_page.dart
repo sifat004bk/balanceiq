@@ -24,14 +24,14 @@ class ProfilePage extends StatefulWidget {
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> with ProfileTourMixin {
+class _ProfilePageState extends State<ProfilePage>
+    with ProfileTourMixin, WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    // Refresh user profile using SessionCubit
+    WidgetsBinding.instance.addObserver(this);
     context.read<SessionCubit>().refreshUserProfile();
 
-    // Check if we should show tour after frame is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
       checkAndShowTour();
     });
@@ -39,8 +39,17 @@ class _ProfilePageState extends State<ProfilePage> with ProfileTourMixin {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     disposeTour();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // Refresh user profile when app resumes to check if email was verified
+    if (state == AppLifecycleState.resumed) {
+      context.read<SessionCubit>().refreshUserProfile();
+    }
   }
 
   void _handleEmailVerificationClick(BuildContext ctx, dynamic user) {

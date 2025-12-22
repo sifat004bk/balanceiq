@@ -59,6 +59,7 @@ class SessionCubit extends Cubit<SessionState> {
       (user) {
         if (user != null) {
           emit(Authenticated(user));
+          refreshUserProfile();
         } else {
           emit(Unauthenticated());
         }
@@ -78,38 +79,41 @@ class SessionCubit extends Cubit<SessionState> {
 
   /// Refresh user profile from backend
   Future<void> refreshUserProfile() async {
-    // Only refresh if currently authenticated
+    User? currentUser;
     if (state is Authenticated) {
-      final currentUser = (state as Authenticated).user;
-
-      // Get token from storage
-      final token = await secureStorage.getToken() ?? '';
-      final result = await getProfile(token);
-
-      result.fold(
-        (failure) {
-          // Keep current user state but maybe show error?
-          // For now, just logging or emitting error might disrupt the session.
-          // We'll emit error only if it's critical, otherwise maybe just stay authenticated.
-          // Let's emit error for visibility.
-          emit(SessionError(failure.message));
-          // Restore state
-          emit(Authenticated(currentUser));
-        },
-        (userInfo) {
-          final updatedUser = User(
-            id: userInfo.id.toString(),
-            email: userInfo.email,
-            name: userInfo.fullName,
-            photoUrl: userInfo.photoUrl,
-            authProvider: 'email',
-            createdAt: DateTime.now(),
-            isEmailVerified: userInfo.isEmailVerified,
-          );
-          emit(Authenticated(updatedUser));
-        },
-      );
+      currentUser = (state as Authenticated).user;
+    } else {
+      return;
     }
+
+    emit(SessionLoading());
+
+    final token = await secureStorage.getToken() ?? '';
+
+    if (token.isEmpty) {
+      emit(Authenticated(currentUser));
+      return;
+    }
+
+    final result = await getProfile(token);
+
+    result.fold(
+      (failure) {
+        emit(Authenticated(currentUser!));
+      },
+      (userInfo) {
+        final updatedUser = User(
+          id: userInfo.id.toString(),
+          email: userInfo.email,
+          name: userInfo.fullName,
+          photoUrl: userInfo.photoUrl,
+          authProvider: 'email',
+          createdAt: DateTime.now(),
+          isEmailVerified: userInfo.isEmailVerified,
+        );
+        emit(Authenticated(updatedUser));
+      },
+    );
   }
 
   void updateUser(User user) {

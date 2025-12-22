@@ -37,10 +37,18 @@ class AiMessageHeader extends StatelessWidget {
                 ),
               ],
             ),
-            child: const Icon(
-              Icons.auto_awesome,
-              color: Colors.white,
-              size: 16,
+            child: ClipOval(
+              child: Padding(
+                padding: const EdgeInsets.all(4),
+                child: Image.asset(
+                  'assets/icons/app_icon.png',
+                  width: 20,
+                  height: 20,
+                  fit: BoxFit.contain,
+                  color: Colors.white,
+                  colorBlendMode: BlendMode.srcIn,
+                ),
+              ),
             ),
           ),
           const SizedBox(width: 8),

@@ -201,7 +201,16 @@ class _ChatViewState extends State<ChatView> {
                   },
                   builder: (context, state) {
                     final topPadding = MediaQuery.of(context).padding.top + 60;
-                    const bottomPadding = 80.0;
+                    double bottomPadding = 80.0;
+
+                    if (state is ChatLoaded) {
+                      final isLimitReached = state.isMessageLimitReached;
+                      final isNearLimit = state.messagesUsedToday >=
+                          (state.dailyMessageLimit * 0.8);
+                      if (isLimitReached || isNearLimit) {
+                        bottomPadding += 60.0;
+                      }
+                    }
 
                     if (state is ChatLoading) {
                       return Padding(

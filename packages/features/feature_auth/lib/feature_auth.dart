@@ -1,7 +1,15 @@
+import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
+
+import 'package:dolfin_core/storage/secure_storage_service.dart';
+
 import 'package:feature_auth/domain/auth_config.dart';
 import 'package:feature_auth/data/datasources/auth_remote_datasource.dart';
-import 'package:feature_auth/data/datasources/auth_local_datasource.dart'; // Need this
+import 'package:feature_auth/data/datasources/auth_mock_datasource.dart';
+import 'package:feature_auth/data/datasources/auth_local_datasource.dart';
 import 'package:feature_auth/data/repositories/auth_repository_impl.dart';
 import 'package:feature_auth/domain/repositories/auth_repository.dart';
 import 'package:feature_auth/domain/usecases/signup.dart';
@@ -12,42 +20,110 @@ import 'package:feature_auth/domain/usecases/reset_password.dart';
 import 'package:feature_auth/domain/usecases/change_password.dart';
 import 'package:feature_auth/domain/usecases/send_verification_email.dart';
 import 'package:feature_auth/domain/usecases/resend_verification_email.dart';
-// import 'package:feature_auth/domain/usecases/check_user_session.dart'; // Does not exist, used GetCurrentUser in SessionCubit
 import 'package:feature_auth/domain/usecases/get_current_user.dart';
-import 'package:feature_auth/domain/usecases/sign_out.dart'; // Correct name
-import 'package:feature_auth/domain/usecases/get_profile.dart'; // Needed for SessionCubit
+import 'package:feature_auth/domain/usecases/sign_out.dart';
+import 'package:feature_auth/domain/usecases/get_profile.dart';
 
 import 'package:feature_auth/presentation/cubit/signup/signup_cubit.dart';
 import 'package:feature_auth/presentation/cubit/login/login_cubit.dart';
 import 'package:feature_auth/presentation/cubit/session/session_cubit.dart';
 import 'package:feature_auth/presentation/cubit/password/password_cubit.dart';
-import 'package:feature_auth/presentation/cubit/interactive_onboarding/interactive_onboarding_cubit.dart'; // Correct path
+import 'package:feature_auth/presentation/cubit/interactive_onboarding/interactive_onboarding_cubit.dart';
 
-Future<void> initAuthFeature(GetIt sl, AuthConfig config) async {
+// Re-export common types for convenience
+export 'package:feature_auth/domain/auth_config.dart';
+export 'package:feature_auth/presentation/cubit/session/session_cubit.dart';
+export 'package:feature_auth/presentation/cubit/login/login_cubit.dart';
+export 'package:feature_auth/presentation/cubit/signup/signup_cubit.dart';
+export 'package:feature_auth/presentation/cubit/password/password_cubit.dart';
+export 'package:feature_auth/presentation/pages/login_page.dart';
+export 'package:feature_auth/presentation/pages/signup_page.dart';
+export 'package:feature_auth/presentation/pages/splash_page.dart';
+export 'package:feature_auth/presentation/pages/profile_page.dart';
+export 'package:feature_auth/presentation/pages/forgot_password_page.dart';
+export 'package:feature_auth/presentation/pages/onboarding_page.dart';
+
+/// Configuration for initializing the Auth feature.
+///
+/// All [required] parameters must be provided by the host app.
+/// Optional parameters have sensible defaults.
+///
+/// Example:
+/// ```dart
+/// await initAuthFeature(sl, AuthFeatureConfig(
+///   authConfig: MyAuthConfig(),
+///   secureStorage: sl(),
+///   sharedPreferences: sl(),
+///   dio: sl(),
+///   googleSignIn: sl(),
+///   useMockDataSource: true, // For testing
+/// ));
+/// ```
+class AuthFeatureConfig {
+  /// App-specific auth configuration (navigation callbacks, etc.)
+  final AuthConfig authConfig;
+
+  /// Secure storage for tokens and sensitive data
+  final SecureStorageService secureStorage;
+
+  /// Shared preferences for user preferences
+  final SharedPreferences sharedPreferences;
+
+  /// HTTP client for API calls
+  final Dio dio;
+
+  /// Google Sign-In instance for OAuth
+  final GoogleSignIn googleSignIn;
+
+  /// UUID generator (required for mock data source)
+  /// If null, a default Uuid() will be used
+  final Uuid? uuid;
+
+  /// Use mock data source instead of real API (for testing)
+  /// Default: false
+  final bool useMockDataSource;
+
+  const AuthFeatureConfig({
+    required this.authConfig,
+    required this.secureStorage,
+    required this.sharedPreferences,
+    required this.dio,
+    required this.googleSignIn,
+    this.uuid,
+    this.useMockDataSource = false,
+  });
+}
+
+/// Initialize the Auth feature with explicit configuration.
+///
+/// This registers all auth-related dependencies in GetIt.
+/// The caller must ensure all required dependencies are available.
+Future<void> initAuthFeature(GetIt sl, AuthFeatureConfig config) async {
   // Config
-  sl.registerSingleton<AuthConfig>(config);
+  sl.registerSingleton<AuthConfig>(config.authConfig);
 
   // Data Sources
-  // Note: AuthRemoteDataSourceImpl needs to be instantiated.
-  // Checking constructor of AuthRemoteDataSourceImpl (needs googleSignIn, dio, secureStorage)
-  // But wait, the previous code used `sl()` for these. I assume `dolfin_core` provides them.
-
-  // Correction: RemoteDataSource seems to be abstract or impl in one file?
-  // I need to check if AuthRemoteDataSourceImpl exists and what it needs.
-  // Assuming it stays as is in the package.
-
-  sl.registerLazySingleton<AuthRemoteDataSource>(
-    () => AuthRemoteDataSourceImpl(
-      googleSignIn: sl(), // From core/module
-      dio: sl(), // From core/network
-      secureStorage: sl(), // From core/storage
-    ),
-  );
+  if (config.useMockDataSource) {
+    sl.registerLazySingleton<AuthRemoteDataSource>(
+      () => AuthMockDataSource(
+        sharedPreferences: config.sharedPreferences,
+        uuid: config.uuid ?? const Uuid(),
+      ),
+    );
+  } else {
+    sl.registerLazySingleton<AuthRemoteDataSource>(
+      () => AuthRemoteDataSourceImpl(
+        googleSignIn: config.googleSignIn,
+        dio: config.dio,
+        secureStorage: config.secureStorage,
+      ),
+    );
+  }
 
   sl.registerLazySingleton<AuthLocalDataSource>(
     () => AuthLocalDataSourceImpl(
-      sl(), // SharedPreferences
-      sl(), // SecureStorage
+      config.sharedPreferences,
+      config.secureStorage,
     ),
   );
 
@@ -62,8 +138,7 @@ Future<void> initAuthFeature(GetIt sl, AuthConfig config) async {
   // Use Cases
   sl.registerLazySingleton(() => Signup(sl()));
   sl.registerLazySingleton(() => Login(sl()));
-  sl.registerLazySingleton(
-      () => SignInWithGoogle(sl())); // Constructor takes repo
+  sl.registerLazySingleton(() => SignInWithGoogle(sl()));
   sl.registerLazySingleton(() => ForgotPassword(sl()));
   sl.registerLazySingleton(() => ResetPassword(sl()));
   sl.registerLazySingleton(() => ChangePassword(sl()));
@@ -79,7 +154,7 @@ Future<void> initAuthFeature(GetIt sl, AuthConfig config) async {
         signInWithGoogle: sl(),
         sendVerificationEmail: sl(),
         resendVerificationEmail: sl(),
-        secureStorage: sl(),
+        secureStorage: config.secureStorage,
       ));
 
   sl.registerFactory(() => LoginCubit(
@@ -91,14 +166,14 @@ Future<void> initAuthFeature(GetIt sl, AuthConfig config) async {
         getCurrentUser: sl(),
         signOutUseCase: sl(),
         getProfile: sl(),
-        secureStorage: sl(),
+        secureStorage: config.secureStorage,
       ));
 
   sl.registerFactory(() => PasswordCubit(
         changePassword: sl(),
         forgotPassword: sl(),
         resetPassword: sl(),
-        secureStorage: sl(),
+        secureStorage: config.secureStorage,
       ));
 
   sl.registerFactory(() => InteractiveOnboardingCubit());

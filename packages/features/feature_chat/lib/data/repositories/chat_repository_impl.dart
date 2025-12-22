@@ -1,12 +1,12 @@
 import 'package:dartz/dartz.dart';
 import 'package:uuid/uuid.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../domain/entities/message.dart';
 import '../../domain/entities/chat_history_response.dart';
 import '../../domain/repositories/chat_repository.dart';
 import 'package:dolfin_core/constants/app_constants.dart';
 import 'package:get_it/get_it.dart';
 import 'package:dolfin_core/error/failures.dart';
+import 'package:dolfin_core/storage/secure_storage_service.dart';
 import '../datasources/chat_local_datasource.dart';
 import '../datasources/chat_remote_datasource.dart';
 import '../datasources/chat_finance_guru_datasource.dart';
@@ -15,13 +15,13 @@ import '../models/message_model.dart';
 class ChatRepositoryImpl implements ChatRepository {
   final ChatLocalDataSource localDataSource;
   final ChatRemoteDataSource remoteDataSource;
-  final SharedPreferences sharedPreferences;
+  final SecureStorageService secureStorage;
   final Uuid uuid;
 
   ChatRepositoryImpl({
     required this.localDataSource,
     required this.remoteDataSource,
-    required this.sharedPreferences,
+    required this.secureStorage,
     required this.uuid,
   });
 
@@ -46,10 +46,8 @@ class ChatRepositoryImpl implements ChatRepository {
     String? audioPath,
   }) async {
     try {
-      // Get user ID from SharedPreferences
-      final userId = sharedPreferences
-              .getString(GetIt.instance<AppConstants>().keyUserId) ??
-          '';
+      // Get user ID from SecureStorage
+      final userId = await secureStorage.getUserId() ?? '';
 
       // Create user message
       final userMessage = MessageModel(
@@ -174,6 +172,10 @@ class ChatRepositoryImpl implements ChatRepository {
       // Return domain entity
       return Right(responseModel.toEntity());
     } catch (e) {
+      // If server fails (e.g. offline), we might want to return local cache?
+      // Use cases should handle this override if needed, here we report server failure.
+      // Or we could try catch block and fallback to local?
+      // For now keeping existing behavior.
       return Left(ServerFailure('Failed to get chat history: $e'));
     }
   }

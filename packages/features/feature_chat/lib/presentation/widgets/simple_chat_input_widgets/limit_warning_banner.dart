@@ -36,10 +36,13 @@ class LimitWarningBanner extends StatelessWidget {
               size: 18,
             ),
             const SizedBox(width: 8),
-            Text(
-              AppStrings.chat.messageLimitReached,
-              style: AppTypography.captionError.copyWith(
-                color: Theme.of(context).colorScheme.onError,
+            Flexible(
+              child: Text(
+                AppStrings.chat.messageLimitReached,
+                textAlign: TextAlign.center,
+                style: AppTypography.captionError.copyWith(
+                  color: Theme.of(context).colorScheme.onError,
+                ),
               ),
             ),
           ],
@@ -66,10 +69,13 @@ class LimitWarningBanner extends StatelessWidget {
               size: 16,
             ),
             const SizedBox(width: 8),
-            Text(
-              AppStrings.chat.nearMessageLimit(remainingMessages),
-              style: AppTypography.captionWarning.copyWith(
-                color: Theme.of(context).colorScheme.onSecondary,
+            Flexible(
+              child: Text(
+                AppStrings.chat.nearMessageLimit(remainingMessages),
+                textAlign: TextAlign.center,
+                style: AppTypography.captionWarning.copyWith(
+                  color: Theme.of(context).colorScheme.onSecondary,
+                ),
               ),
             ),
           ],

@@ -1,14 +1,19 @@
-import 'package:feature_chat/presentation/chat_config.dart';
 import 'package:get_it/get_it.dart';
+
+import 'package:feature_auth/feature_auth.dart';
+import 'package:feature_chat/feature_chat.dart';
+import 'package:feature_subscription/feature_subscription.dart';
 
 import 'app_auth_config.dart';
 import 'app_chat_config.dart';
 import 'modules/storage_module.dart';
 import 'modules/network_module.dart';
 import 'modules/core_module.dart';
-import 'modules/chat_module.dart';
-import 'modules/auth_module.dart';
-import 'modules/subscription_module.dart';
+
+// Old modules are now obsolete
+// import 'modules/auth_module.dart';
+// import 'modules/chat_module.dart';
+// import 'modules/subscription_module.dart';
 
 final sl = GetIt.instance;
 
@@ -22,13 +27,40 @@ Future<void> init() async {
   //! Core (Theme, Currency, etc.)
   registerCoreModule(sl);
 
-  //! Features - Auth with MOCK data source
-  await initAuthFeatureWithMock(sl, TestAuthConfig());
+  //! Features - Auth
+  await initAuthFeature(
+    sl,
+    AuthFeatureConfig(
+      authConfig: TestAuthConfig(),
+      secureStorage: sl(),
+      sharedPreferences: sl(),
+      dio: sl(),
+      googleSignIn: sl(),
+      uuid: sl(),
+      useMockDataSource: true, // Test app uses mock
+    ),
+  );
 
   //! Features - Subscription
-  registerSubscriptionModule(sl);
+  await initSubscriptionFeature(
+      sl,
+      SubscriptionFeatureConfig(
+        dio: sl(),
+        secureStorage: sl(),
+      ));
 
   //! Features - Chat
-  sl.registerLazySingleton<ChatConfig>(() => TestChatConfig());
-  registerChatModule(sl);
+  await initChatFeature(
+    sl,
+    ChatFeatureConfig(
+      chatConfig: TestChatConfig(),
+      dio: sl(),
+      secureStorage: sl(),
+      sharedPreferences: sl(),
+      databaseHelper: sl(),
+      appConstants: sl(),
+      uuid: sl(),
+      useMockDataSource: true, // Test app uses mock
+    ),
+  );
 }

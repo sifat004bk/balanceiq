@@ -15,6 +15,7 @@ import "package:feature_auth/presentation/cubit/session/session_cubit.dart";
 import "package:feature_auth/presentation/cubit/signup/signup_cubit.dart";
 import '../widgets/profile/profile_widgets.dart';
 import '../mixins/profile_tour_mixin.dart';
+import '../widgets/profile/subscription_card_states.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});

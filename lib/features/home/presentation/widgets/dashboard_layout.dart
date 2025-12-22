@@ -18,6 +18,7 @@ class DashboardLayout extends StatelessWidget {
   final Future<void> Function() onRefresh;
   final VoidCallback onTapProfileIcon;
   final VoidCallback onTapDateRange;
+  final VoidCallback? onChatReturn;
   final String profileUrl;
   final String userName;
   final String displayDate;
@@ -29,6 +30,7 @@ class DashboardLayout extends StatelessWidget {
     required this.onRefresh,
     required this.onTapProfileIcon,
     required this.onTapDateRange,
+    this.onChatReturn,
     required this.profileUrl,
     required this.userName,
     required this.displayDate,
@@ -242,9 +244,9 @@ class DashboardLayout extends StatelessWidget {
           left: 0,
           right: 0,
           bottom: 0,
-          child: const Hero(
+          child: Hero(
             tag: 'chat_input',
-            child: FloatingChatButton(),
+            child: FloatingChatButton(onReturn: onChatReturn),
           ),
         ),
       ],

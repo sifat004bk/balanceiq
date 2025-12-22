@@ -288,6 +288,7 @@ class _DashboardViewState extends State<DashboardView> {
                       }
                       Navigator.pushNamed(context, '/profile');
                     },
+                    onChatReturn: _loadDashboard,
                     profileUrl: _profileUrl ?? '',
                     userName: _userName,
                     displayDate: _getFormattedDateRange(),

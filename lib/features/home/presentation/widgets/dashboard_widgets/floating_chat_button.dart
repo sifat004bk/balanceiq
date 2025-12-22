@@ -6,8 +6,9 @@ import 'package:feature_chat/presentation/pages/chat_page.dart';
 /// Matches the chat input design but acts as a navigation button
 class FloatingChatButton extends StatelessWidget {
   final GlobalKey? targetKey;
+  final VoidCallback? onReturn;
 
-  const FloatingChatButton({super.key, this.targetKey});
+  const FloatingChatButton({super.key, this.targetKey, this.onReturn});
 
   @override
   Widget build(BuildContext context) {
@@ -15,8 +16,8 @@ class FloatingChatButton extends StatelessWidget {
 
     return GestureDetector(
       key: targetKey,
-      onTap: () {
-        Navigator.push(
+      onTap: () async {
+        await Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => const ChatPage(
@@ -25,6 +26,8 @@ class FloatingChatButton extends StatelessWidget {
             ),
           ),
         );
+        // Refresh dashboard when returning from chat
+        onReturn?.call();
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),

@@ -322,6 +322,7 @@
         "equatable",
         "flutter",
         "flutter_bloc",
+        "get_it",
         "google_fonts",
         "shared_preferences"
       ]

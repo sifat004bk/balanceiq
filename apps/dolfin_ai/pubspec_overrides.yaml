@@ -1,0 +1,12 @@
+# melos_managed_dependency_overrides: dolfin_core,dolfin_ui_kit,feature_auth,feature_chat,feature_subscription
+dependency_overrides:
+  dolfin_core:
+    path: ../../packages/core/dolfin_core
+  dolfin_ui_kit:
+    path: ../../packages/core/dolfin_ui_kit
+  feature_auth:
+    path: ../../packages/features/feature_auth
+  feature_chat:
+    path: ../../packages/features/feature_chat
+  feature_subscription:
+    path: ../../packages/features/feature_subscription

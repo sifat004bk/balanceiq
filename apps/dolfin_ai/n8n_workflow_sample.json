@@ -1,0 +1,73 @@
+{
+  "name": "BalanceIQ Chatbot Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "balance-iq",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "your-webhook-id"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract request data\nconst botId = $input.item.json.body.bot_id;\nconst message = $input.item.json.body.message;\nconst timestamp = $input.item.json.body.timestamp;\nconst hasImage = !!$input.item.json.body.image;\nconst hasAudio = !!$input.item.json.body.audio;\n\n// Log the request\nconsole.log('Bot ID:', botId);\nconsole.log('Message:', message);\nconsole.log('Has Image:', hasImage);\nconsole.log('Has Audio:', hasAudio);\n\n// TODO: Add your AI/LLM logic here\n// For now, return a simple response based on bot type\n\nlet response = '';\n\nswitch(botId) {\n  case 'balance_tracker':\n    response = `I'm your Balance Tracker bot. You asked: \"${message}\". I can help you track your expenses and monitor your spending.`;\n    break;\n  case 'investment_guru':\n    response = `I'm your Investment Guru. Regarding \"${message}\", I recommend diversifying your portfolio and considering long-term growth strategies.`;\n    break;\n  case 'budget_planner':\n    response = `I'm your Budget Planner. About \"${message}\", let me help you create a budget plan that works for your financial goals.`;\n    break;\n  case 'fin_tips':\n    response = `I'm your Fin Tips bot. Here's a tip related to \"${message}\": Always save at least 20% of your income for emergencies and future goals.`;\n    break;\n  default:\n    response = `Hello! I received your message: \"${message}\". How can I assist you today?`;\n}\n\nreturn {\n  id: `msg_${Date.now()}`,\n  message: response,\n  bot_id: botId,\n  timestamp: new Date().toISOString()\n};"
+      },
+      "name": "Process Message",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [650, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Process Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Message": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-10-25T00:00:00.000Z",
+  "versionId": "1"
+}

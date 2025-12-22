@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>General Settings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#13ec80",
+              "background-light": "#f6f8f7",
+              "background-dark": "#102219",
+              "surface-light": "#ffffff",
+              "surface-dark": "#172b21",
+              "text-primary-light": "#111827",
+              "text-primary-dark": "#f9fafb",
+              "text-secondary-light": "#6b7280",
+              "text-secondary-dark": "#9ca3af",
+              "icon-bg-light": "#e7f1eb",
+              "icon-bg-dark": "#234836",
+              "danger": "#ef4444"
+            },
+            fontFamily: {
+              "display": ["Manrope", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.5rem", "lg": "0.75rem", "xl": "1rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            font-size: 24px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="relative flex min-h-screen w-full flex-col">
+<!-- Top App Bar -->
+<header class="flex shrink-0 items-center justify-between p-4 bg-surface-light dark:bg-surface-dark/50 sticky top-0 backdrop-blur-sm z-10 border-b border-white/5">
+<button class="flex size-10 items-center justify-center text-text-primary-light dark:text-text-primary-dark">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="text-lg font-bold leading-tight tracking-[-0.015em] text-text-primary-light dark:text-text-primary-dark">General Settings</h1>
+<div class="size-10"></div>
+</header>
+<main class="flex-1 px-4 py-6">
+<div class="flex flex-col gap-8">
+<!-- Appearance Section -->
+<section>
+<h2 class="px-4 pb-3 text-sm font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark">Appearance</h2>
+<div class="flex flex-col overflow-hidden rounded-xl bg-surface-light dark:bg-surface-dark">
+<!-- Theme Setting -->
+<div class="flex min-h-16 items-center gap-4 px-4">
+<div class="flex items-center gap-4 flex-1">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-icon-bg-light dark:bg-icon-bg-dark text-primary">
+<span class="material-symbols-outlined">contrast</span>
+</div>
+<p class="flex-1 truncate text-base font-medium text-text-primary-light dark:text-text-primary-dark">Theme</p>
+</div>
+<div class="shrink-0">
+<div class="flex rounded-lg bg-background-light p-1 dark:bg-background-dark">
+<button class="px-3 py-1 rounded-md text-sm font-semibold text-text-secondary-light dark:text-text-secondary-dark">Light</button>
+<button class="bg-primary px-3 py-1 rounded-md text-sm font-semibold text-background-dark">Dark</button>
+</div>
+</div>
+</div>
+<div class="mx-4 border-b border-gray-200 dark:border-gray-700/50"></div>
+<!-- App Icon Setting -->
+<div class="flex min-h-16 items-center justify-between gap-4 px-4">
+<div class="flex items-center gap-4">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-icon-bg-light dark:bg-icon-bg-dark text-primary">
+<span class="material-symbols-outlined">app_badging</span>
+</div>
+<p class="flex-1 truncate text-base font-medium text-text-primary-light dark:text-text-primary-dark">App Icon</p>
+</div>
+<div class="shrink-0">
+<div class="flex size-7 items-center justify-center text-text-secondary-light dark:text-text-secondary-dark">
+<span class="material-symbols-outlined">chevron_right</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Notifications Section -->
+<section>
+<h2 class="px-4 pb-3 text-sm font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark">Notifications</h2>
+<div class="flex flex-col overflow-hidden rounded-xl bg-surface-light dark:bg-surface-dark">
+<!-- Push Notifications Toggle -->
+<div class="flex min-h-16 items-center justify-between gap-4 px-4">
+<div class="flex items-center gap-4">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-icon-bg-light dark:bg-icon-bg-dark text-primary">
+<span class="material-symbols-outlined">notifications</span>
+</div>
+<p class="flex-1 truncate text-base font-medium text-text-primary-light dark:text-text-primary-dark">Push Notifications</p>
+</div>
+<div class="shrink-0">
+<div class="relative inline-flex h-6 w-11 cursor-pointer items-center rounded-full bg-primary">
+<span class="inline-block h-4 w-4 translate-x-6 transform rounded-full bg-white transition"></span>
+</div>
+</div>
+</div>
+<div class="mx-4 border-b border-gray-200 dark:border-gray-700/50"></div>
+<!-- Notification Preferences -->
+<div class="flex min-h-16 items-center justify-between gap-4 px-4">
+<div class="flex items-center gap-4">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-icon-bg-light dark:bg-icon-bg-dark text-primary">
+<span class="material-symbols-outlined">tune</span>
+</div>
+<p class="flex-1 truncate text-base font-medium text-text-primary-light dark:text-text-primary-dark">Notification Preferences</p>
+</div>
+<div class="shrink-0">
+<div class="flex size-7 items-center justify-center text-text-secondary-light dark:text-text-secondary-dark">
+<span class="material-symbols-outlined">chevron_right</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Account Section -->
+<section>
+<h2 class="px-4 pb-3 text-sm font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark">Account</h2>
+<div class="flex flex-col overflow-hidden rounded-xl bg-surface-light dark:bg-surface-dark">
+<!-- Profile -->
+<div class="flex min-h-16 items-center justify-between gap-4 px-4">
+<div class="flex items-center gap-4">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-icon-bg-light dark:bg-icon-bg-dark text-primary">
+<span class="material-symbols-outlined">person</span>
+</div>
+<p class="flex-1 truncate text-base font-medium text-text-primary-light dark:text-text-primary-dark">Profile</p>
+</div>
+<div class="shrink-0">
+<div class="flex size-7 items-center justify-center text-text-secondary-light dark:text-text-secondary-dark">
+<span class="material-symbols-outlined">chevron_right</span>
+</div>
+</div>
+</div>
+<div class="mx-4 border-b border-gray-200 dark:border-gray-700/50"></div>
+<!-- Security -->
+<div class="flex min-h-16 items-center justify-between gap-4 px-4">
+<div class="flex items-center gap-4">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-icon-bg-light dark:bg-icon-bg-dark text-primary">
+<span class="material-symbols-outlined">shield</span>
+</div>
+<p class="flex-1 truncate text-base font-medium text-text-primary-light dark:text-text-primary-dark">Security</p>
+</div>
+<div class="shrink-0">
+<div class="flex size-7 items-center justify-center text-text-secondary-light dark:text-text-secondary-dark">
+<span class="material-symbols-outlined">chevron_right</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- About Section -->
+<section>
+<h2 class="px-4 pb-3 text-sm font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark">About</h2>
+<div class="flex flex-col overflow-hidden rounded-xl bg-surface-light dark:bg-surface-dark">
+<!-- Version -->
+<div class="flex min-h-16 items-center justify-between gap-4 px-4">
+<div class="flex items-center gap-4">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-icon-bg-light dark:bg-icon-bg-dark text-primary">
+<span class="material-symbols-outlined">info</span>
+</div>
+<p class="flex-1 truncate text-base font-medium text-text-primary-light dark:text-text-primary-dark">Version</p>
+</div>
+<div class="shrink-0">
+<p class="text-base font-normal text-text-secondary-light dark:text-text-secondary-dark">1.0.0</p>
+</div>
+</div>
+<div class="mx-4 border-b border-gray-200 dark:border-gray-700/50"></div>
+<!-- Privacy Policy -->
+<div class="flex min-h-16 items-center justify-between gap-4 px-4">
+<div class="flex items-center gap-4">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-icon-bg-light dark:bg-icon-bg-dark text-primary">
+<span class="material-symbols-outlined">privacy_tip</span>
+</div>
+<p class="flex-1 truncate text-base font-medium text-text-primary-light dark:text-text-primary-dark">Privacy Policy</p>
+</div>
+<div class="shrink-0">
+<div class="flex size-7 items-center justify-center text-text-secondary-light dark:text-text-secondary-dark">
+<span class="material-symbols-outlined">chevron_right</span>
+</div>
+</div>
+</div>
+<div class="mx-4 border-b border-gray-200 dark:border-gray-700/50"></div>
+<!-- Terms of Service -->
+<div class="flex min-h-16 items-center justify-between gap-4 px-4">
+<div class="flex items-center gap-4">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-icon-bg-light dark:bg-icon-bg-dark text-primary">
+<span class="material-symbols-outlined">gavel</span>
+</div>
+<p class="flex-1 truncate text-base font-medium text-text-primary-light dark:text-text-primary-dark">Terms of Service</p>
+</div>
+<div class="shrink-0">
+<div class="flex size-7 items-center justify-center text-text-secondary-light dark:text-text-secondary-dark">
+<span class="material-symbols-outlined">chevron_right</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Log Out Button -->
+<section class="pt-4">
+<div class="flex flex-col overflow-hidden rounded-xl bg-surface-light dark:bg-surface-dark">
+<button class="flex min-h-16 w-full items-center justify-center gap-4 px-4 text-danger">
+<span class="text-base font-bold">Log Out</span>
+</button>
+</div>
+</section>
+</div>
+</main>
+</div>
+</body></html>

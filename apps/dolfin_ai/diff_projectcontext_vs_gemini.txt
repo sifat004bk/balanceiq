@@ -1,0 +1,299 @@
+Only in projectcontext: .DS_Store
+Only in projectcontext: API_INTEGRATION.md
+Only in projectcontext: ARCHITECTURE.md
+Only in projectcontext: DEVELOPMENT_GUIDE.md
+Only in projectcontext: IMPLEMENTATION_STATUS.md
+Only in projectcontext: PROJECT_OVERVIEW.md
+diff -r projectcontext/README.md projectcontextgemini/README.md
+1c1
+< # BalanceIQ - Project Context for Developers & AI Agents
+---
+> # BalanceIQ
+3c3
+< Welcome to the BalanceIQ project context! This directory contains concise, essential documentation for developers and AI agents working on this project.
+---
+> **BalanceIQ** is an AI-powered personal finance chatbot application built with Flutter. It helps users manage their finances through an intuitive chat interface with a specialized financial bot.
+5c5
+< ## Quick Start
+---
+> ## Key Features
+7,11c7,13
+< 1. **New to the project?** Start with [PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md)
+< 2. **Want to understand the code?** Read [ARCHITECTURE.md](ARCHITECTURE.md)
+< 3. **Ready to develop?** Check [DEVELOPMENT_GUIDE.md](DEVELOPMENT_GUIDE.md)
+< 4. **Need to know what's done?** See [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md)
+< 5. **Planning next steps?** Review [ROADMAP.md](ROADMAP.md) and [TASKS.md](TASKS.md)
+---
+> - **Balance Tracker Bot**: Monitor expenses and track spending patterns.
+> - **Rich Media Support**: Text, image, and audio messages.
+> - **Persistent History**: Chat history stored in a local SQLite database.
+> - **Secure Authentication**: Google and Apple sign-in.
+> - **User-Friendly Interface**: Includes dark mode support.
+> - **AI-Powered Responses**: Integrated with an n8n workflow for intelligent replies.
+> - **Clean Architecture**: Follows clean architecture principles with Cubit for state management.
+13c15
+< ## Document Guide
+---
+> ## Tech Stack
+15,39c17
+< | Document | Purpose | Read Time |
+< |----------|---------|-----------|
+< | [PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md) | High-level project summary, tech stack, features | 10 min |
+< | [ARCHITECTURE.md](ARCHITECTURE.md) | Clean architecture, folder structure, design patterns | 15 min |
+< | [DEVELOPMENT_GUIDE.md](DEVELOPMENT_GUIDE.md) | How to add features, modify code, best practices | 20 min |
+< | [API_INTEGRATION.md](API_INTEGRATION.md) | n8n webhooks, API contracts, data flow | 10 min |
+< | [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md) | What's implemented, what's missing, known issues | 10 min |
+< | [ROADMAP.md](ROADMAP.md) | Development phases, priorities, timeline | 10 min |
+< | [TASKS.md](TASKS.md) | Actionable task list with priorities | 5 min |
+< 
+< ## Specialized Documentation
+< 
+< | Directory | Contents | Purpose |
+< |-----------|----------|---------|
+< | [implementation/](implementation/) | API implementation summaries, UI layer evaluations | Backend integration and synchronization analysis |
+< | [design_docs/](design_docs/) | Gemini UI specifications, implementation checklists | UI/UX design guidelines and references |
+< | [progress/](progress/) | Weekly progress reports, UI update reports | Development tracking and sprint summaries |
+< | [project_summary/](project_summary/) | Business plans, product specs, tech architecture | Comprehensive project documentation |
+< 
+< ## Project At a Glance
+< 
+< **BalanceIQ** is an AI-powered personal finance app for Bangladesh market, built with Flutter.
+< 
+< - **Platform**: Flutter 3.27.0 (iOS & Android)
+< - **Architecture**: Clean Architecture (Domain, Data, Presentation)
+---
+> - **Framework**: Flutter
+41,47c19,22
+< - **Backend**: n8n workflows + PostgreSQL
+< - **Key Features**:
+<   - Dashboard with financial metrics
+<   - AI chat assistant for expense tracking
+<   - Receipt scanning (OCR)
+<   - Voice commands
+<   - Multi-provider authentication
+---
+> - **Database**: SQLite
+> - **Dependency Injection**: GetIt
+> - **HTTP Client**: Dio
+> - **AI Workflow**: n8n
+49c24
+< ## Current Status
+---
+> ## Getting Started
+51,56c26,35
+< - **Development Stage**: Beta (65% complete)
+< - **Total Code**: ~10,000 lines of Dart
+< - **Features Implemented**: Auth (OAuth + Backend APIs), Dashboard, Chat, SQLite persistence
+< - **Recent Updates**: Backend authentication APIs, chat history pagination, integration tests
+< - **Critical Missing**: UI/API sync, Bank integration, Budgets, Bangla language
+< - **Next Priority**: UI layer fixes to integrate with backend APIs
+---
+> 1.  **Prerequisites**: Flutter SDK (3.27.0), FVM, and an n8n workflow instance.
+> 2.  **Clone & Install**:
+>     ```bash
+>     git clone <repository-url>
+>     cd balanceIQ
+>     fvm install 3.27.0
+>     fvm use 3.27.0
+>     fvm flutter pub get
+>     ```
+> 3.  **Configure**: Set up Firebase for Google Sign-In and configure the n8n webhook URL.
+58,148c37
+< ## Development Workflow
+< 
+< ```bash
+< # Setup
+< flutter pub get
+< cp .env.example .env  # Configure API URLs
+< 
+< # Run
+< flutter run
+< 
+< # Test
+< flutter test
+< flutter analyze
+< 
+< # Build
+< flutter build apk --release
+< flutter build ios --release
+< ```
+< 
+< ## Key Technologies
+< 
+< | Layer | Technologies |
+< |-------|-------------|
+< | **Frontend** | Flutter, Dart, Cubit |
+< | **Local DB** | SQLite (sqflite) |
+< | **Auth** | Google Sign-In, Apple Sign-In |
+< | **API** | Dio, n8n webhooks |
+< | **DI** | GetIt service locator |
+< | **UI** | Material Design, Dark/Light themes |
+< 
+< ## Project Structure
+< 
+< ```
+< lib/
+< ├── core/              # Shared utilities, DI, database
+< │   ├── constants/     # App constants, config
+< │   ├── database/      # SQLite helper
+< │   ├── di/           # Dependency injection
+< │   └── theme/        # App themes
+< │
+< ├── features/          # Feature modules
+< │   ├── auth/         # Authentication
+< │   ├── chat/         # AI chat assistant
+< │   └── home/         # Dashboard
+< ```
+< 
+< ## Getting Help
+< 
+< 1. **Architecture questions?** → [ARCHITECTURE.md](ARCHITECTURE.md)
+< 2. **How to add a feature?** → [DEVELOPMENT_GUIDE.md](DEVELOPMENT_GUIDE.md)
+< 3. **API not working?** → [API_INTEGRATION.md](API_INTEGRATION.md)
+< 4. **What needs to be built?** → [TASKS.md](TASKS.md)
+< 
+< ## Document Philosophy
+< 
+< These documents are:
+< - **Concise**: Only essential information
+< - **Practical**: Real code examples and actionable guidance
+< - **Current**: Reflects actual codebase state
+< - **Focused**: For developers and AI agents, not business stakeholders
+< 
+< ## Contributing
+< 
+< When updating these docs:
+< 1. Keep them short and actionable
+< 2. Use code examples from actual codebase
+< 3. Update IMPLEMENTATION_STATUS.md when features change
+< 4. Add new tasks to TASKS.md
+< 
+< ---
+< 
+< ## Recent Updates (2025-11-22)
+< 
+< **API Integration Sprint Completed:**
+< - ✅ Implemented 6 authentication backend APIs (signup, login, profile, password management)
+< - ✅ Added chat history API with pagination
+< - ✅ Created 22 comprehensive integration tests
+< - ✅ Organized documentation structure under projectcontext/
+< - 🔴 **Critical**: UI layer not yet synced with new backend APIs (see [implementation/UI_LAYER_EVALUATION.md](implementation/UI_LAYER_EVALUATION.md))
+< 
+< **Documentation Reorganized:**
+< - All API implementation docs → `implementation/`
+< - All design specifications → `design_docs/`
+< - Progress tracking → `progress/`
+< - See directory READMEs for details
+< 
+< ---
+< 
+< **Last Updated**: 2025-11-22
+< **Project Version**: 1.0.0+1
+< **Documentation Version**: 1.1
+\ No newline at end of file
+---
+> For detailed setup and troubleshooting, refer to the `development_guide.md`.
+Only in projectcontext: ROADMAP.md
+Only in projectcontext: TASKS.md
+Only in projectcontextgemini: app_overview.md
+Only in projectcontext: design_docs
+Only in projectcontext/design_files: .DS_Store
+Only in projectcontext/design_files/chat_interface: .DS_Store
+Only in projectcontext/design_files/chat_interface/chat_interface_with_table: .DS_Store
+Only in projectcontext/design_files/chat_interface/chat_loading: .DS_Store
+Only in projectcontext/design_files/onboarding: .DS_Store
+Only in projectcontextgemini: development_guide.md
+Only in projectcontext: implementation
+Only in projectcontext/progress: README.md
+Only in projectcontext/progress: UI_UPDATE_REPORT.md
+diff -r projectcontext/progress/progress.md projectcontextgemini/progress/progress.md
+101,158d100
+< ---
+< 
+< ## 2025-11-22 - Friday
+< 
+< **Backend API Integration:**
+< - Implemented complete user authentication API layer (6 endpoints)
+<   - Signup API with user registration
+<   - Login API with JWT token authentication
+<   - Get Profile API for user data retrieval
+<   - Change Password API for authenticated users
+<   - Forgot Password API with email flow
+<   - Reset Password API with token validation
+< - Implemented chat history API with pagination support
+<   - Remote chat history endpoint integration
+<   - Page and limit parameters for efficient data loading
+<   - Response parsing for both array and object formats
+< 
+< **Architecture & Code:**
+< - Created comprehensive authentication request/response models (7 model classes)
+< - Updated auth and chat remote data sources with backend integration
+< - Added 7 new use cases following clean architecture pattern
+< - Enhanced dependency injection with proper constructor injection
+< - Configured environment variables for backend and n8n URLs
+< - Added SharedPreferences token storage for JWT authentication
+< 
+< **Testing:**
+< - Implemented comprehensive integration test suite
+<   - 7 auth API test cases (signup, login, profile, password management)
+<   - 6 chat history test cases (pagination, limits, authorization)
+<   - 9 lightweight tests compatible with headless CI/CD execution
+< - All tests demonstrate proper API functionality and error handling
+< 
+< **UI Layer Evaluation:**
+< - Conducted comprehensive gap analysis between backend APIs and UI layer
+< - Identified critical synchronization issues in AuthCubit and ChatCubit
+< - Documented required changes with before/after code examples
+< - Created 3-phase implementation roadmap (14.5 hours total)
+<   - P0 Critical: 4.5 hours (AuthCubit, login/signup page fixes)
+<   - P1 High: 5.5 hours (password management pages, profile)
+<   - P2 Medium: 4.5 hours (remote chat history integration)
+< 
+< **Documentation Organization:**
+< - Restructured project documentation under `projectcontext/`
+< - Created two new documentation directories:
+<   - `projectcontext/implementation/` - API and UI integration docs
+<   - `projectcontext/design_docs/` - All Gemini UI design specifications
+< - Moved 9 documentation files using git to preserve history
+< - Created README files for each documentation directory
+< - Updated cross-references in IMPLEMENTATION_STATUS.md
+< 
+< **Files Created:** 11 new files (models, use cases, tests, documentation)
+< **Files Modified:** 18 files (data sources, repositories, DI, status docs)
+< **Commits:** 2 commits (API implementation, documentation organization)
+< 
+< **Project Completion:** 60% → 65% (+5% progress)
+< 
+< ---
+< 
+161c103
+< **Total Development Period Tracked:** November 14-22, 2025 (9 days)
+---
+> **Total Development Period Tracked:** November 14-18, 2025 (5 days)
+168,172d109
+< - **NEW: Implemented complete backend authentication API layer (6 endpoints)**
+< - **NEW: Added chat history API with pagination**
+< - **NEW: Created comprehensive integration test suite (22 test cases)**
+< - **NEW: Evaluated UI layer and documented synchronization gaps**
+< - **NEW: Organized project documentation structure**
+181,182d117
+< - **NEW: Backend API integration and testing**
+< - **NEW: UI/API synchronization analysis**
+186,190d120
+< - **IMMEDIATE: Implement UI layer fixes to sync with backend APIs**
+<   - Update AuthCubit with 6 backend API methods
+<   - Fix login/signup pages to use real APIs (remove mocks)
+<   - Create password management pages (forgot, reset, change)
+<   - Integrate remote chat history with pagination
+193c123
+< - Develop missing P0 features (bank integration, budgets)
+---
+> - Develop missing P0 features (bank integration, budgets, email auth)
+199c129
+< *Last updated: 2025-11-22*
+---
+> *Last updated: 2025-11-18*
+Only in projectcontext/project_summary/tech: Business.postman_collection.json
+Only in projectcontext/project_summary/tech: MOCK_ENVIRONMENT_GUIDE.md
+Only in projectcontextgemini: roadmap.md
+Only in projectcontextgemini: task_list.md

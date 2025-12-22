@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Payment Method Selection</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#13ec80",
+              "background-light": "#f6f8f7",
+              "background-dark": "#102219",
+              // Project specific colors from prompt
+              "brand-green": "#00A96E",
+              "brand-green-dark": "#2D5A3D",
+              "light-bg": "#FFFFFF",
+              "light-surface": "#F7F7F7",
+              "light-text-primary": "#1C1C1E",
+              "light-text-secondary": "#8A8A8E",
+              "dark-bg": "#121212",
+              "dark-surface": "#1E1E1E",
+              "dark-text-primary": "#FFFFFF",
+              "dark-text-secondary": "#A0A0A0",
+              "error": "#ff3b30"
+            },
+            fontFamily: {
+              "display": ["Manrope", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "1.25rem", "xl": "2rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-display bg-light-bg dark:bg-dark-bg">
+<div class="relative flex h-auto min-h-screen w-full flex-col">
+<!-- Top App Bar -->
+<div class="flex items-center p-4 pb-2 justify-between bg-light-bg dark:bg-dark-bg sticky top-0 z-10">
+<div class="text-light-text-primary dark:text-dark-text-primary flex size-12 shrink-0 items-center justify-start">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</div>
+<h2 class="text-light-text-primary dark:text-dark-text-primary text-lg font-bold leading-tight tracking-[-0.015em] absolute left-1/2 -translate-x-1/2">Payment Method</h2>
+</div>
+<main class="flex-1 px-4 pt-4 pb-6">
+<!-- Order Summary Section -->
+<section class="mb-6">
+<h3 class="text-light-text-primary dark:text-dark-text-primary text-base font-bold leading-tight tracking-[-0.015em] mb-3">Order Summary</h3>
+<div class="rounded-lg bg-light-surface dark:bg-dark-surface p-4">
+<div class="flex justify-between gap-x-6 py-2 border-b border-light-surface-darker dark:border-dark-bg">
+<p class="text-light-text-secondary dark:text-dark-text-secondary text-sm font-normal leading-normal">Premium Plan</p>
+<p class="text-light-text-primary dark:text-dark-text-primary text-sm font-medium leading-normal text-right">Billed Monthly</p>
+</div>
+<div class="flex justify-between gap-x-6 pt-3">
+<p class="text-light-text-secondary dark:text-dark-text-secondary text-sm font-normal leading-normal">Total</p>
+<p class="text-light-text-primary dark:text-dark-text-primary text-sm font-bold leading-normal text-right">$9.99</p>
+</div>
+</div>
+</section>
+<!-- Payment Method Selection -->
+<section>
+<h3 class="text-light-text-primary dark:text-dark-text-primary text-base font-bold leading-tight tracking-[-0.015em] mb-3">Select Payment Method</h3>
+<div class="flex flex-col gap-3">
+<!-- Credit Card Option -->
+<div class="rounded-lg bg-light-surface dark:bg-dark-surface">
+<div class="flex items-center gap-4 px-4 py-3 justify-between">
+<div class="flex items-center gap-4">
+<div class="text-white flex items-center justify-center rounded-lg bg-gray-800 dark:bg-gray-700 shrink-0 size-10">
+<span class="material-symbols-outlined text-2xl">credit_card</span>
+</div>
+<p class="text-light-text-primary dark:text-dark-text-primary text-base font-medium leading-normal flex-1 truncate">Credit or Debit Card</p>
+</div>
+<div class="shrink-0">
+<div class="flex size-7 items-center justify-center">
+<input checked="" class="h-5 w-5 rounded-full border-gray-300 dark:border-gray-600 bg-transparent text-brand-green checked:bg-brand-green border-2 focus:ring-brand-green focus:ring-offset-0 focus:ring-2 focus:ring-offset-light-surface dark:focus:ring-offset-dark-surface" id="credit-card-radio" name="payment_method" type="radio"/>
+</div>
+</div>
+</div>
+<!-- Dynamic Input Form for Credit Card -->
+<div class="border-t border-gray-200 dark:border-gray-800 p-4 space-y-4">
+<input class="w-full rounded-md border-gray-300 dark:border-gray-700 bg-light-bg dark:bg-dark-bg text-light-text-primary dark:text-dark-text-primary placeholder:text-light-text-secondary dark:placeholder:text-dark-text-secondary focus:border-brand-green focus:ring-brand-green" placeholder="Card Number" type="text"/>
+<div class="flex gap-4">
+<input class="w-1/2 rounded-md border-gray-300 dark:border-gray-700 bg-light-bg dark:bg-dark-bg text-light-text-primary dark:text-dark-text-primary placeholder:text-light-text-secondary dark:placeholder:text-dark-text-secondary focus:border-brand-green focus:ring-brand-green" placeholder="MM/YY" type="text"/>
+<input class="w-1/2 rounded-md border-gray-300 dark:border-gray-700 bg-light-bg dark:bg-dark-bg text-light-text-primary dark:text-dark-text-primary placeholder:text-light-text-secondary dark:placeholder:text-dark-text-secondary focus:border-brand-green focus:ring-brand-green" placeholder="CVC" type="text"/>
+</div>
+<input class="w-full rounded-md border-gray-300 dark:border-gray-700 bg-light-bg dark:bg-dark-bg text-light-text-primary dark:text-dark-text-primary placeholder:text-light-text-secondary dark:placeholder:text-dark-text-secondary focus:border-brand-green focus:ring-brand-green" placeholder="Name on Card" type="text"/>
+<div class="flex items-center pt-2">
+<input class="h-4 w-4 rounded border-gray-300 dark:border-gray-600 text-brand-green focus:ring-brand-green" id="save-card-checkbox" type="checkbox"/>
+<label class="ml-2 block text-sm text-light-text-secondary dark:text-dark-text-secondary" for="save-card-checkbox">Save for future use</label>
+</div>
+</div>
+</div>
+<!-- PayPal Option -->
+<div class="rounded-lg bg-light-surface dark:bg-dark-surface">
+<div class="flex items-center gap-4 px-4 py-3 justify-between">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center rounded-lg bg-transparent shrink-0 size-10">
+<img class="h-6" data-alt="PayPal logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9LUaE3aiFbDrQEQ5mxST5qJQSm-7bX5c_VSrjkB5UfG84pMjefBvh0isb1yMAC_nj0qNYriNi0BjgX-VjJzvQROOnDMLAhFyb-et1v7omDWR7DTQbcSmy70AAZNBhxC_ZE-BYNv-XjGylKDM3qZaOWCDQl5_svUgA5uM206g95qzJgo5ZBu2U9Qck-xxLexRpt6BedxaBy6Gnft61AEwAgH2JhnUmRyuoT3_dfFx9a9S3ev1PKcHKCdHxxbzDgOk4dDZ_LTY1bi4"/>
+</div>
+<p class="text-light-text-primary dark:text-dark-text-primary text-base font-medium leading-normal flex-1 truncate">PayPal</p>
+</div>
+<div class="shrink-0">
+<div class="flex size-7 items-center justify-center">
+<input class="h-5 w-5 rounded-full border-gray-300 dark:border-gray-600 bg-transparent text-brand-green checked:bg-brand-green border-2 focus:ring-brand-green focus:ring-offset-0 focus:ring-2 focus:ring-offset-light-surface dark:focus:ring-offset-dark-surface" id="paypal-radio" name="payment_method" type="radio"/>
+</div>
+</div>
+</div>
+</div>
+<!-- Google Pay Option -->
+<div class="rounded-lg bg-light-surface dark:bg-dark-surface">
+<div class="flex items-center gap-4 px-4 py-3 justify-between">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center rounded-lg bg-transparent shrink-0 size-10">
+<img class="h-8" data-alt="Google Pay logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCN6rLc6AvYWBpgJS9ORNx5IYXjQWepHdRDrp11-WgZM12rJE559eVZfICZCDWAlp1aow2iWAzMpvIDC-2LFS6-MJIgkqYgM5J6y04Ck0uoH6cBOrK6CQedqnN8uAImdV0nQt1vjbVn2BfdtmmxwNOTnphteQiqgyQbs4eC6HqanNOUDKA6ZxsfBMkEaomX7mdE74_E6cINONF7y3vxHqBP6uKq1xEYeu_1uzrrL89Y5wplD6XzubuXlXq_rVb3lKVB96q0_39IbBs"/>
+</div>
+<p class="text-light-text-primary dark:text-dark-text-primary text-base font-medium leading-normal flex-1 truncate">Google Pay</p>
+</div>
+<div class="shrink-0">
+<div class="flex size-7 items-center justify-center">
+<input class="h-5 w-5 rounded-full border-gray-300 dark:border-gray-600 bg-transparent text-brand-green checked:bg-brand-green border-2 focus:ring-brand-green focus:ring-offset-0 focus:ring-2 focus:ring-offset-light-surface dark:focus:ring-offset-dark-surface" id="gpay-radio" name="payment_method" type="radio"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer with CTA and Security Text -->
+<footer class="sticky bottom-0 bg-light-bg dark:bg-dark-bg p-4 pt-2 border-t border-gray-200 dark:border-gray-800">
+<button class="w-full bg-brand-green hover:bg-opacity-90 text-black dark:text-black font-bold py-4 px-4 rounded-lg text-base transition-colors disabled:opacity-50 disabled:cursor-not-allowed">Pay $9.99</button>
+<div class="flex items-center justify-center mt-4 gap-2">
+<span class="material-symbols-outlined text-sm text-light-text-secondary dark:text-dark-text-secondary">lock</span>
+<p class="text-light-text-secondary dark:text-dark-text-secondary text-xs text-center">Your payment is secure and encrypted. <a class="font-medium underline" href="#">Terms &amp; Privacy</a>.</p>
+</div>
+</footer>
+</div>
+</body></html>

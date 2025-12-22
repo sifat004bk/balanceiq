@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Login - Super App</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#00DC82",
+              "background-light": "#F9FAFB",
+              "background-dark": "#111827",
+            },
+            fontFamily: {
+              "display": ["Manrope", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-display bg-background-light dark:bg-background-dark">
+<div class="relative flex min-h-screen w-full flex-col items-center justify-center overflow-x-hidden p-4 sm:p-6">
+<div class="w-full max-w-sm">
+<!-- App Logo -->
+<div class="mb-8 flex justify-center">
+<div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/20">
+<svg class="text-primary" fill="none" height="40" viewbox="0 0 24 24" width="40" xmlns="http://www.w3.org/2000/svg">
+<path d="M12 2L2 7V17L12 22L22 17V7L12 2Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M2 7L12 12L22 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M12 22V12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+</div>
+<!-- Welcome Message -->
+<h1 class="text-center text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-50">Welcome Back</h1>
+<p class="mt-2 text-center text-base font-normal text-gray-600 dark:text-gray-400">Log in to your account</p>
+<!-- Input Form -->
+<div class="mt-8 space-y-6">
+<!-- Email or Username Field -->
+<div class="flex flex-col">
+<label class="mb-2 text-sm font-medium text-gray-700 dark:text-gray-300" for="email">Email or Username</label>
+<input class="form-input h-12 w-full rounded-lg border border-gray-300 bg-gray-50 p-3 text-base text-gray-900 placeholder-gray-500 focus:border-primary focus:ring-2 focus:ring-primary/50 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-primary dark:focus:ring-primary/50" id="email" placeholder="Enter your email or username" type="email"/>
+</div>
+<!-- Password Field -->
+<div class="flex flex-col">
+<label class="mb-2 text-sm font-medium text-gray-700 dark:text-gray-300" for="password">Password</label>
+<div class="relative flex w-full items-stretch">
+<input class="form-input h-12 w-full rounded-lg border border-gray-300 bg-gray-50 p-3 text-base text-gray-900 placeholder-gray-500 focus:border-primary focus:ring-2 focus:ring-primary/50 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-primary dark:focus:ring-primary/50" id="password" placeholder="Enter your password" type="password"/>
+<button aria-label="Toggle password visibility" class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+<span class="material-symbols-outlined text-xl">visibility_off</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Action Area -->
+<div class="mt-6 flex flex-col items-center gap-4">
+<a class="w-full text-right text-sm font-medium text-primary hover:underline" href="#">Forgot Password?</a>
+<button class="w-full rounded-lg bg-primary py-3 text-base font-bold text-gray-900 transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-background-dark">Login</button>
+</div>
+<!-- Divider with Social Logins -->
+<div class="relative my-8 flex items-center justify-center">
+<div class="absolute inset-x-0 h-px bg-gray-200 dark:bg-gray-700"></div>
+<span class="relative bg-background-light px-2 text-sm text-gray-500 dark:bg-background-dark dark:text-gray-400">Or continue with</span>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<button class="flex h-12 w-full items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700">
+<svg class="h-5 w-5" fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><path d="M47.52 24.54C47.52 22.86 47.34 21.3 47.04 19.8H24V28.62H37.38C36.84 31.44 35.28 33.78 32.94 35.28V41.04H40.62C45 36.6 47.52 31.14 47.52 24.54Z" fill="#4285F4"></path><path d="M24 48C30.48 48 35.94 45.9 40.62 42.06L32.94 36.3C30.72 37.8 27.66 38.7 24 38.7C17.4 38.7 11.76 34.5 9.96 28.74H2.1V34.62C6.54 42.84 14.58 48 24 48Z" fill="#34A853"></path><path d="M9.96 28.74C9.54 27.42 9.3 26.04 9.3 24.6C9.3 23.16 9.54 21.78 9.96 20.46V14.58H2.1C0.78 17.46 0 20.88 0 24.6C0 28.32 0.78 31.74 2.1 34.62L9.96 28.74Z" fill="#FBBC05"></path><path d="M24 9.9C27.12 9.9 29.82 10.92 32.1 13.02L40.74 4.38C35.94 0.18 30.48 0 24 0C14.58 0 6.54 5.16 2.1 13.38L9.96 19.26C11.76 13.5 17.4 9.9 24 9.9Z" fill="#EA4335"></path></svg>
+<span class="text-sm font-medium">Google</span>
+</button>
+<button class="flex h-12 w-full items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700">
+<svg class="h-5 w-5 text-gray-900 dark:text-white" fill="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12.032,0A12.032,12.032,0,0,0,8.275,23.324a.885.885,0,0,0,.616.292.83.83,0,0,0,.6-.248c.07-.084.148-.224.22-.38.076-.164.148-.316.22-.488.08-.18.156-.356.232-.54.072-.18.14-.352.208-.528a3.17,3.17,0,0,1,.132-.3c.012-.044.024-.092.036-.14s.024-.092.04-.14c.012-.06.028-.116.04-.176.016-.06.032-.124.048-.184.02-.072.04-.144.06-.216.02-.076.04-.156.064-.236.024-.084.048-.168.072-.252.024-.088.048-.172.076-.26.028-.088.056-.176.084-.264.028-.092.056-.184.084-.276.024-.084.052-.164.08-.248a8.21,8.21,0,0,1,3.424-6.3c.068-.052.124-.088.168-.124a1.05,1.05,0,0,0,.464-1.124,1.1,1.1,0,0,0-1.036-.788,1.016,1.016,0,0,0-.8.368,4.246,4.246,0,0,0-2.8,3.952,4.35,4.35,0,0,0,4.42,4.384,4.252,4.252,0,0,0,2.94-1.284,1.12,1.12,0,0,0-.036-1.54,1.025,1.025,0,0,0-1.464-.1,2.079,2.079,0,0,1-1.44.52,2.179,2.179,0,0,1-2.228-2.2,2.17,2.17,0,0,1,2.228-2.18,2.059,2.059,0,0,1,1.5.58,3.141,3.141,0,0,1,.844,2.032,3.22,3.22,0,0,1-1.9,3.016,9.88,9.88,0,0,0-5.228-1.5,10,10,0,1,1,9.976,10,9.9,9.9,0,0,1-1.684.18Z"></path></svg>
+<span class="text-sm font-medium">Apple</span>
+</button>
+</div>
+<!-- Footer -->
+<div class="mt-8 text-center text-sm text-gray-600 dark:text-gray-400">
+                Don't have an account?
+                <a class="font-semibold text-primary hover:underline" href="#">Sign Up</a>
+</div>
+</div>
+</div>
+</body></html>

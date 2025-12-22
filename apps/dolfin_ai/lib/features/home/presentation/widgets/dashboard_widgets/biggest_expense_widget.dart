@@ -1,0 +1,87 @@
+import 'package:dolfin_core/constants/app_strings.dart';
+import 'package:dolfin_core/currency/currency_cubit.dart';
+import 'package:balance_iq/core/di/injection_container.dart';
+import 'package:dolfin_ui_kit/theme/app_palette.dart';
+import 'package:get_it/get_it.dart';
+import 'package:flutter/material.dart';
+
+class BiggestExpenseWidget extends StatelessWidget {
+  final double amount;
+  final String description;
+  final String category;
+  final String account;
+
+  const BiggestExpenseWidget({
+    super.key,
+    required this.amount,
+    required this.description,
+    required this.category,
+    required this.account,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: colorScheme.surface.withValues(alpha: 0.7),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          // Icon
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: colorScheme.error.withValues(alpha: 0.2),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.arrow_upward,
+              color: GetIt.instance<AppPalette>().expense,
+              size: 24,
+            ),
+          ),
+          const SizedBox(width: 16),
+
+          // Content
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  AppStrings.dashboard.biggestExpense,
+                  style: textTheme.bodyMedium,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  description,
+                  style: textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+
+          // Amount
+          Text(
+            sl<CurrencyCubit>().formatAmountWithSign(amount, isIncome: false),
+            style: textTheme.titleMedium?.copyWith(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color:
+                  GetIt.instance<AppPalette>().expense.withValues(alpha: 0.8),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

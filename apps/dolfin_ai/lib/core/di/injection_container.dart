@@ -1,0 +1,68 @@
+import 'package:feature_auth/feature_auth.dart';
+import 'package:feature_chat/feature_chat.dart';
+import 'package:feature_subscription/feature_subscription.dart';
+
+import 'package:balance_iq/core/config/app_auth_config.dart';
+import 'package:balance_iq/core/config/app_chat_config.dart';
+import 'package:dolfin_core/constants/app_constants.dart';
+import 'package:get_it/get_it.dart';
+
+import 'modules/storage_module.dart';
+import 'modules/network_module.dart';
+import 'modules/core_module.dart';
+import 'modules/dashboard_module.dart';
+// import 'modules/chat_module.dart';
+// import 'modules/subscription_module.dart';
+
+final sl = GetIt.instance;
+
+Future<void> init() async {
+  //! External & Storage (Must be first)
+  await registerStorageModule(sl);
+
+  //! Network (Depends on Storage)
+  registerNetworkModule(sl);
+
+  //! Core (Theme, Currency, etc.)
+  registerCoreModule(sl);
+
+  // Common deps
+  final appConstants = sl<AppConstants>();
+
+  //! Features
+  await initAuthFeature(
+    sl,
+    AuthFeatureConfig(
+      authConfig: AppAuthConfig(),
+      secureStorage: sl(),
+      sharedPreferences: sl(),
+      dio: sl(),
+      googleSignIn: sl(),
+      uuid: sl(),
+      useMockDataSource: appConstants.isMockMode,
+    ),
+  );
+
+  await initSubscriptionFeature(
+      sl,
+      SubscriptionFeatureConfig(
+        dio: sl(),
+        secureStorage: sl(),
+      ));
+
+  await initChatFeature(
+    sl,
+    ChatFeatureConfig(
+      chatConfig: AppChatConfig(),
+      dio: sl(),
+      secureStorage: sl(),
+      sharedPreferences: sl(),
+      databaseHelper: sl(), // From storage module
+      appConstants: appConstants,
+      uuid: sl(),
+      useMockDataSource: appConstants.isMockMode,
+    ),
+  );
+
+  registerDashboardModule(sl);
+}

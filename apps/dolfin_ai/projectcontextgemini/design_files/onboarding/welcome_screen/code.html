@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Onboarding Screen</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#00DC82",
+              "background-light": "#F9FAFB",
+              "background-dark": "#121212",
+              "text-light": "#111827",
+              "text-dark": "#E5E7EB",
+              "indicator-inactive-light": "#E5E7EB",
+              "indicator-inactive-dark": "#374151" 
+            },
+            fontFamily: {
+              "display": ["Manrope", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark">
+<div class="relative flex h-auto min-h-screen w-full flex-col font-display group/design-root overflow-x-hidden">
+<!-- TopAppBar -->
+<div class="flex items-center p-4 pb-2 justify-between">
+<div class="flex size-12 shrink-0 items-center justify-start">
+<!-- Placeholder for potential icon -->
+</div>
+<div class="flex items-center justify-end">
+<button class="text-text-light dark:text-text-dark text-base font-bold leading-normal tracking-wide shrink-0">Skip</button>
+</div>
+</div>
+<div class="flex-grow flex flex-col justify-between">
+<div class="w-full">
+<!-- HeaderImage -->
+<div class="@container">
+<div class="@[480px]:px-4 @[480px]:py-3 px-4 py-3">
+<div class="w-full bg-center bg-no-repeat bg-cover flex flex-col justify-end overflow-hidden @[480px]:rounded-xl rounded-lg aspect-[4/3]" data-alt="Abstract illustration of interconnected nodes and digital interfaces, symbolizing automation and effortless control." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBlOiOdXA3o7GMbDdroJrHk5t5fNr6a_N4QGgJCLvi4pr7n8OvOVVr2GG2xzFFgRn1o7mj_DClnPHlusMOyqNlHg56twAtYrlO9-SiXPlsSsYpUmKGg9HQiuO1trv3xJgETDSkyFeXo6JNJ9w3XqG1bTQxE5UCwfCA9dX1eZVHpZdDed8awHNUSFxR_sWh54Sd-bzT5GpRUr0Pw-9N1v6m1iMfqXakB_CSfooMwBzaawGSFr6XopnhdI6wQNkvM4oea5QhQYV_zwp8");'></div>
+</div>
+</div>
+<!-- HeadlineText -->
+<h1 class="text-text-light dark:text-text-dark tracking-tight text-[32px] font-bold leading-tight px-4 text-center pb-3 pt-6">Welcome to Your Automated World</h1>
+<!-- BodyText -->
+<p class="text-text-light/80 dark:text-text-dark/80 text-base font-normal leading-normal pb-3 pt-1 px-6 text-center">
+                    Integrate AI, finance, and e-commerce into a single, simple experience to save time and boost productivity.
+                </p>
+</div>
+<div class="w-full p-4 pt-8">
+<!-- PageIndicators -->
+<div class="flex w-full flex-row items-center justify-center gap-3 py-5">
+<div class="h-2 w-6 rounded-full bg-primary"></div>
+<div class="h-2 w-2 rounded-full bg-indicator-inactive-light dark:bg-indicator-inactive-dark"></div>
+<div class="h-2 w-2 rounded-full bg-indicator-inactive-light dark:bg-indicator-inactive-dark"></div>
+</div>
+<!-- Primary CTA Button -->
+<div class="flex flex-col items-center gap-4 px-4 pb-4 pt-2">
+<button class="flex h-14 w-full items-center justify-center gap-2 rounded-full bg-primary px-6 font-bold text-text-light transition-colors hover:bg-primary/90">Continue</button>
+</div>
+</div>
+</div>
+</div>
+</body></html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Chat Loading...</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#28D39A",
+            "background-light": "#FFFFFF",
+            "background-dark": "#121212",
+            "skeleton-light": "#EAEAEA",
+            "skeleton-dark": "#2A2A2A",
+          },
+          fontFamily: {
+            "display": ["Manrope", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "1rem",
+            "lg": "2rem",
+            "xl": "3rem",
+            "full": "9999px"
+          },
+          keyframes: {
+            shimmer: {
+              '100%': {
+                transform: 'translateX(100%)',
+              },
+            },
+            typing: {
+              '0%, 100%': {
+                opacity: '0.2'
+              },
+              '50%': {
+                opacity: '1'
+              },
+            }
+          },
+          animation: {
+            shimmer: 'shimmer 1.5s infinite',
+            typing1: 'typing 1.2s infinite ease-in-out',
+            typing2: 'typing 1.2s infinite ease-in-out 0.2s',
+            typing3: 'typing 1.2s infinite ease-in-out 0.4s',
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="relative flex h-screen w-full flex-col group/design-root overflow-hidden">
+<!-- Skeleton Header -->
+<div class="flex items-center p-4 pb-2 justify-between shrink-0 relative overflow-hidden">
+<div class="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/10 dark:via-white/5 to-transparent"></div>
+<div class="flex items-center gap-3">
+<div class="size-12 shrink-0 rounded-full bg-skeleton-light dark:bg-skeleton-dark"></div>
+<div class="flex flex-col gap-2">
+<div class="h-4 w-24 rounded bg-skeleton-light dark:bg-skeleton-dark"></div>
+<div class="h-3 w-16 rounded bg-skeleton-light dark:bg-skeleton-dark"></div>
+</div>
+</div>
+<div class="flex size-12 shrink-0 items-center justify-end">
+<div class="size-8 rounded-full bg-skeleton-light dark:bg-skeleton-dark"></div>
+</div>
+</div>
+<!-- Main Chat Body -->
+<div class="flex-1 flex flex-col justify-end p-4 space-y-4 overflow-y-auto">
+<!-- Skeleton Message 1 (User) -->
+<div class="flex items-end gap-3 justify-end relative overflow-hidden">
+<div class="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/10 dark:via-white/5 to-transparent"></div>
+<div class="flex flex-1 flex-col gap-1 items-end max-w-[70%]">
+<div class="h-12 w-48 rounded-xl bg-skeleton-light dark:bg-skeleton-dark"></div>
+</div>
+<div class="size-10 shrink-0 rounded-full bg-skeleton-light dark:bg-skeleton-dark"></div>
+</div>
+<!-- Skeleton Message 2 (AI) -->
+<div class="flex items-end gap-3 relative overflow-hidden">
+<div class="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/10 dark:via-white/5 to-transparent"></div>
+<div class="size-10 shrink-0 rounded-full bg-skeleton-light dark:bg-skeleton-dark"></div>
+<div class="flex flex-1 flex-col gap-2 items-start max-w-[70%]">
+<div class="h-10 w-56 rounded-xl bg-skeleton-light dark:bg-skeleton-dark"></div>
+<div class="h-10 w-32 rounded-xl bg-skeleton-light dark:bg-skeleton-dark"></div>
+</div>
+</div>
+<!-- Skeleton Message 3 (User) -->
+<div class="flex items-end gap-3 justify-end relative overflow-hidden">
+<div class="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/10 dark:via-white/5 to-transparent"></div>
+<div class="flex flex-1 flex-col gap-1 items-end max-w-[70%]">
+<div class="h-10 w-28 rounded-xl bg-skeleton-light dark:bg-skeleton-dark"></div>
+</div>
+<div class="size-10 shrink-0 rounded-full bg-skeleton-light dark:bg-skeleton-dark"></div>
+</div>
+<!-- Skeleton Message 4 (AI Typing) -->
+<div class="flex items-end gap-3">
+<div class="size-10 shrink-0 rounded-full bg-skeleton-light dark:bg-skeleton-dark"></div>
+<div class="flex items-center justify-center max-w-[360px] rounded-xl px-4 py-3 h-12 bg-skeleton-light dark:bg-skeleton-dark">
+<div class="flex gap-1.5">
+<div class="size-2 rounded-full bg-primary/40 animate-typing1"></div>
+<div class="size-2 rounded-full bg-primary/40 animate-typing2"></div>
+<div class="size-2 rounded-full bg-primary/40 animate-typing3"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Skeleton Composer -->
+<div class="flex items-center px-4 py-3 gap-3 shrink-0 relative overflow-hidden">
+<div class="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/10 dark:via-white/5 to-transparent"></div>
+<div class="size-10 shrink-0 rounded-full bg-skeleton-light dark:bg-skeleton-dark"></div>
+<div class="flex-1 h-12 rounded-xl bg-skeleton-light dark:bg-skeleton-dark"></div>
+<div class="size-10 shrink-0 rounded-full bg-skeleton-light dark:bg-skeleton-dark"></div>
+</div>
+</div>
+</body></html>

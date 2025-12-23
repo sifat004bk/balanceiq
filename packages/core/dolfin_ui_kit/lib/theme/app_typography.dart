@@ -7,7 +7,7 @@ import 'app_palette.dart';
 /// Fluid Typography System for 2026.
 /// Simplified hierarchy: Hero, Heading, Body, Detail.
 class AppTypography {
-  const AppTypography._();
+  const AppTypography._(); // coverage:ignore-line
 
   // We use Google Sans (Open Sans / Product Sans logic) if available,
   // otherwise we can fallback to Manrope or Inter.

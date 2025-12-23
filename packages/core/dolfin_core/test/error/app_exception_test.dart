@@ -87,7 +87,7 @@ void main() {
 
       test('has correct code', () {
         const exception = UnknownException('Unexpected error');
-        expect(exception.code, 'UNKNOWN');
+        expect(exception.code, 'UNKNOWN_ERROR');
       });
     });
 

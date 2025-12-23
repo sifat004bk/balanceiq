@@ -50,7 +50,7 @@ enum GlassPreset {
 
 /// Helper class to create theme-aware glass containers
 class ThemedGlass {
-  const ThemedGlass._();
+  const ThemedGlass._(); // coverage:ignore-line
 
   /// Create a theme-aware glass-style container (optimized - no blur)
   static Widget container({

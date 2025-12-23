@@ -1,3 +1,4 @@
+import 'package:dolfin_core/error/failures.dart';
 import 'package:dolfin_core/storage/secure_storage_service.dart';
 import 'package:feature_chat/domain/entities/chat_history_response.dart';
 import 'package:feature_chat/domain/entities/message.dart';
@@ -12,9 +13,14 @@ import 'package:uuid/uuid.dart';
 
 import '../../mocks.dart';
 
+import 'package:dolfin_core/constants/app_constants.dart';
+import 'package:get_it/get_it.dart';
+
 class MockSecureStorageService extends Mock implements SecureStorageService {}
 
 class MockUuid extends Mock implements Uuid {}
+
+class MockAppConstants extends Mock implements AppConstants {}
 
 void main() {
   late ChatCubit chatCubit;
@@ -26,6 +32,7 @@ void main() {
   late MockSubmitFeedback mockSubmitFeedback;
   late MockSecureStorageService mockSecureStorage;
   late MockUuid mockUuid;
+  late MockAppConstants mockAppConstants;
 
   setUp(() {
     mockGetMessages = MockGetMessages();
@@ -36,6 +43,12 @@ void main() {
     mockSubmitFeedback = MockSubmitFeedback();
     mockSecureStorage = MockSecureStorageService();
     mockUuid = MockUuid();
+    mockAppConstants = MockAppConstants();
+
+    GetIt.instance.registerSingleton<AppConstants>(mockAppConstants);
+    when(() => mockAppConstants.senderBot).thenReturn('bot');
+    when(() => mockAppConstants.senderUser).thenReturn('user');
+    when(() => mockAppConstants.dailyMessageLimit).thenReturn(20);
 
     chatCubit = ChatCubit(
       getMessages: mockGetMessages,
@@ -47,6 +60,10 @@ void main() {
       secureStorage: mockSecureStorage,
       uuid: mockUuid,
     );
+  });
+
+  tearDown(() {
+    GetIt.instance.reset();
   });
 
   group('ChatCubit', () {
@@ -120,6 +137,42 @@ void main() {
         isA<ChatLoading>(),
         isA<ChatLoaded>(),
         isA<ChatLoaded>(),
+      ],
+    );
+
+    blocTest<ChatCubit, ChatState>(
+      'emits ChatError with currencyRequired when sendMessage fails with currencyRequired',
+      seed: () => ChatLoaded(
+        messages: [],
+        isSending: false,
+      ),
+      build: () {
+        when(() => mockSecureStorage.getUserId())
+            .thenAnswer((_) async => testUserId);
+        when(() => mockUuid.v4()).thenReturn('temp_msg_id');
+        when(() => mockGetMessageUsage())
+            .thenAnswer((_) async => Right(testMessageUsage));
+
+        when(() => mockSendMessage(
+              botId: any(named: 'botId'),
+              content: any(named: 'content'),
+              imagePath: any(named: 'imagePath'),
+              audioPath: any(named: 'audioPath'),
+            )).thenAnswer((_) async => const Left(ChatApiFailure(
+              'Currency required',
+              failureType: ChatFailureType.currencyRequired,
+            )));
+
+        return chatCubit;
+      },
+      act: (cubit) => cubit.sendNewMessage(
+        botId: testBotId,
+        content: 'Hello',
+      ),
+      expect: () => [
+        isA<ChatLoaded>().having((s) => s.isSending, 'isSending', true),
+        isA<ChatError>().having(
+            (s) => s.errorType, 'errorType', ChatErrorType.currencyRequired),
       ],
     );
   });

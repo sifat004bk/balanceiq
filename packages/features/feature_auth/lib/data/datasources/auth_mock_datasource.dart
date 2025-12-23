@@ -497,6 +497,22 @@ class AuthMockDataSource implements AuthRemoteDataSource {
         name: 'MockAuth');
   }
 
+  @override
+  Future<void> updateCurrency(String currency) async {
+    await _simulateDelay();
+    // In mock, we can assume currency updates are always successful
+    // We don't store currency in _MockUser yet, but we could if needed.
+    // For now, just logging.
+    AppLogger.debug('Currency updated to: $currency', name: 'MockAuth');
+  }
+
+  @override
+  Future<void> logout() async {
+    await _simulateDelay();
+    AppLogger.debug('Logout called on backend', name: 'MockAuth');
+    // Actual session clearing is handled by signOut/localDataSource
+  }
+
   /// Clear all mock data (useful for testing)
   static void clearAllData() {
     _users.clear();

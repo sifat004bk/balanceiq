@@ -91,6 +91,11 @@ abstract class ChatStrings {
   String get tooManyRequests;
   String get rateLimitMessage;
   String get backToChat;
+
+  // Currency
+  String get currencyRequired;
+  String get currencyRequiredMessage;
+  String get setCurrency;
 }
 
 abstract class ChatBotPrompts {

@@ -4,6 +4,7 @@ import '../../../domain/entities/user.dart';
 import '../../../domain/usecases/get_current_user.dart';
 import '../../../domain/usecases/get_profile.dart';
 import '../../../domain/usecases/sign_out.dart';
+import '../../../domain/usecases/update_currency.dart';
 import 'package:dolfin_core/storage/secure_storage_service.dart';
 
 // States
@@ -41,12 +42,14 @@ class SessionCubit extends Cubit<SessionState> {
   final GetCurrentUser getCurrentUser;
   final SignOut signOutUseCase;
   final GetProfile getProfile;
+  final UpdateCurrency updateCurrencyUseCase;
   final SecureStorageService secureStorage;
 
   SessionCubit({
     required this.getCurrentUser,
     required this.signOutUseCase,
     required this.getProfile,
+    required this.updateCurrencyUseCase,
     required this.secureStorage,
   }) : super(SessionInitial());
 
@@ -118,5 +121,27 @@ class SessionCubit extends Cubit<SessionState> {
 
   void updateUser(User user) {
     emit(Authenticated(user));
+  }
+
+  /// Update user currency preference
+  Future<void> updateUserCurrency(String currency) async {
+    // We don't emit loading here to avoid disrupting the UI
+    // The UI (ProfilePage) handles the local state update immediately
+    // This is just to sync with backend
+    try {
+      final result = await updateCurrencyUseCase(currency);
+      result.fold(
+        (failure) {
+          // Optionally emit error or just log
+          // emit(SessionError(failure.message));
+          // Better to not break session for this background sync
+        },
+        (_) {
+          // Success
+        },
+      );
+    } catch (_) {
+      // Ignore
+    }
   }
 }

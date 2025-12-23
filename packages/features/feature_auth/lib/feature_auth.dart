@@ -23,6 +23,7 @@ import 'package:feature_auth/domain/usecases/resend_verification_email.dart';
 import 'package:feature_auth/domain/usecases/get_current_user.dart';
 import 'package:feature_auth/domain/usecases/sign_out.dart';
 import 'package:feature_auth/domain/usecases/get_profile.dart';
+import 'package:feature_auth/domain/usecases/update_currency.dart';
 
 import 'package:feature_auth/presentation/cubit/signup/signup_cubit.dart';
 import 'package:feature_auth/presentation/cubit/login/login_cubit.dart';
@@ -146,7 +147,9 @@ Future<void> initAuthFeature(GetIt sl, AuthFeatureConfig config) async {
   sl.registerLazySingleton(() => ResendVerificationEmail(sl()));
   sl.registerLazySingleton(() => GetCurrentUser(sl()));
   sl.registerLazySingleton(() => SignOut(sl()));
+
   sl.registerLazySingleton(() => GetProfile(sl()));
+  sl.registerLazySingleton(() => UpdateCurrency(sl()));
 
   // Cubits
   sl.registerFactory(() => SignupCubit(
@@ -166,6 +169,7 @@ Future<void> initAuthFeature(GetIt sl, AuthFeatureConfig config) async {
         getCurrentUser: sl(),
         signOutUseCase: sl(),
         getProfile: sl(),
+        updateCurrencyUseCase: sl(),
         secureStorage: config.secureStorage,
       ));
 

@@ -271,6 +271,8 @@ class ChatCubit extends Cubit<ChatState> {
         return ChatErrorType.messageLimitExceeded;
       case ChatFailureType.rateLimitExceeded:
         return ChatErrorType.rateLimitExceeded;
+      case ChatFailureType.currencyRequired:
+        return ChatErrorType.currencyRequired;
       case ChatFailureType.general:
         return ChatErrorType.general;
     }

@@ -16,14 +16,16 @@
    - [Forgot Password](#4-forgot-password)
    - [Reset Password](#5-reset-password)
    - [Change Password](#6-change-password)
+   - [Update Currency](#7-update-currency)
+   - [Logout](#8-logout)
 2. [Finance Guru APIs](#finance-guru-apis)
-   - [Dashboard](#7-dashboard)
-   - [Chat](#8-chat)
-   - [Chat History](#9-chat-history)
-   - [Transaction Search](#10-transaction-search)
-   - [Chat Feedback](#11-chat-feedback)
-   - [Token Usage](#12-token-usage)
-   - [Action Types](#13-action-types)
+   - [Dashboard](#9-dashboard)
+   - [Chat](#10-chat)
+   - [Chat History](#11-chat-history)
+   - [Transaction Search](#12-transaction-search)
+   - [Chat Feedback](#13-chat-feedback)
+   - [Token Usage](#14-token-usage)
+   - [Action Types](#15-action-types)
 3. [Response Format](#response-format)
 4. [Error Codes](#error-codes)
 5. [Status Summary](#status-summary)
@@ -423,9 +425,86 @@ Expected response format:
 
 ---
 
+### 7. Update Currency
+
+Update the authenticated user's currency preference. Required before using `/chat`.
+
+**Endpoint**: `PATCH /api/auth/currency`
+**Authentication**: Required (Bearer Token)
+**Content-Type**: `application/json`
+
+#### Request Body
+
+```json
+{
+  "currency": "string (required, 3-letter currency code, e.g., 'EUR')"
+}
+```
+
+#### Request Example
+
+```json
+{
+  "currency": "EUR"
+}
+```
+
+#### Success Response (200 OK)
+
+```json
+{
+  "success": true,
+  "message": "Currency updated successfully",
+  "data": {
+    "id": 1,
+    "email": "user@example.com",
+    "currency": "EUR",
+    "fullName": "Test User",
+    "userRole": "USER",
+    "isActive": true,
+    "isEmailVerified": false
+  }
+}
+```
+
+#### Error Responses
+
+**400 Bad Request** - Invalid currency code
+**401 Unauthorized** - Missing or invalid token
+
+**Status**: ⚠️ **Under Development**
+
+---
+
+### 8. Logout
+
+Securely logout the user by invalidating their refresh token.
+
+**Endpoint**: `POST /api/auth/logout`
+**Authentication**: Required (Bearer Token)
+**Content-Type**: `application/json`
+
+#### Success Response (200 OK)
+
+```json
+{
+  "success": true,
+  "message": "Logged out successfully",
+  "data": null
+}
+```
+
+#### Error Responses
+
+**401 Unauthorized** - Missing or invalid token
+
+**Status**: ⚠️ **Under Development**
+
+---
+
 ## Finance Guru APIs
 
-### 7. Dashboard
+### 9. Dashboard
 
 Retrieve a comprehensive financial dashboard for the authenticated user. This endpoint aggregates transaction data to provide summaries, trends, and top income/expense items for a specified date range.
 
@@ -558,9 +637,11 @@ Authorization: Bearer <JWT_TOKEN>
 
 ---
 
-### 8. Chat
+### 10. Chat
 
 Send message to AI finance assistant and get response.
+
+**Validation**: If user has not set their currency, the endpoint returns an error. The user must update their currency via `PATCH /api/auth/currency` first.
 
 **Endpoint**: `POST /api/finance-guru/v1/chat`
 **Authentication**: Required (Bearer Token)
@@ -694,13 +775,13 @@ When `graphType` is not null, the `graphData` field contains Chart.js compatible
 #### Error Responses
 
 **401 Unauthorized** - Missing or invalid token
-**400 Bad Request** - Invalid request format
+**400 Bad Request** - Invalid request format or **Currency not set** (returns message: "Please set your preferred currency in your profile settings before using the chat feature.")
 
 **Status**: ✅ **Working**
 
 ---
 
-### 9. Chat History
+### 11. Chat History
 
 Retrieve paginated chat conversation history.
 
@@ -793,7 +874,7 @@ GET /api/finance-guru/v1/chat-history?page=1&size=20
 
 ---
 
-### 10. Transaction Search
+### 12. Transaction Search
 
 Retrieve a list of transactions with flexible filtering capabilities.
 

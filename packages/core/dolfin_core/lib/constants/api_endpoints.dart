@@ -29,6 +29,8 @@ class ApiEndpoints {
   static String get sendVerification => '$authBaseUrl/send-verification';
   static String get resendVerification => '$authBaseUrl/resend-verification';
   static String get verifyEmail => '$authBaseUrl/verify-email';
+  static String get updateCurrency => '$authBaseUrl/currency';
+  static String get logout => '$authBaseUrl/logout';
 
   // Finance Guru APIs
   static String get dashboard => '$agentBaseUrl/dashboard';

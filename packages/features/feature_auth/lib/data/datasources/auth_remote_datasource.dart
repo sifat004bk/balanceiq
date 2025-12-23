@@ -26,6 +26,10 @@ abstract class AuthRemoteDataSource {
   // Email Verification Methods
   Future<void> sendVerificationEmail(String token);
   Future<void> resendVerificationEmail(String email);
+
+  // New Methods
+  Future<void> updateCurrency(String currency);
+  Future<void> logout();
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -118,6 +122,13 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     try {
       // Sign out from Google
       await googleSignIn.signOut();
+
+      // Call Backend Logout API
+      try {
+        await logout();
+      } catch (_) {
+        // Ignore backend logout errors during local sign out
+      }
 
       // Clear all cached tokens
       await secureStorage.clearAllTokens();
@@ -310,6 +321,39 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
     } catch (e) {
       throw ErrorHandler.handle(e, source: 'resendVerificationEmail');
+    }
+  }
+
+  @override
+  Future<void> updateCurrency(String currency) async {
+    try {
+      await dio.patch(
+        ApiEndpoints.updateCurrency,
+        data: {'currency': currency},
+        options: Options(
+          headers: {'Content-Type': 'application/json'},
+          sendTimeout: GetIt.instance<AppConstants>().apiTimeout,
+          receiveTimeout: GetIt.instance<AppConstants>().apiTimeout,
+        ),
+      );
+    } catch (e) {
+      throw ErrorHandler.handle(e, source: 'updateCurrency');
+    }
+  }
+
+  @override
+  Future<void> logout() async {
+    try {
+      await dio.post(
+        ApiEndpoints.logout,
+        options: Options(
+          headers: {'Content-Type': 'application/json'},
+          sendTimeout: GetIt.instance<AppConstants>().apiTimeout,
+          receiveTimeout: GetIt.instance<AppConstants>().apiTimeout,
+        ),
+      );
+    } catch (e) {
+      throw ErrorHandler.handle(e, source: 'logout');
     }
   }
 }

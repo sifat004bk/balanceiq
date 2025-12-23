@@ -100,6 +100,8 @@ class ChatRepositoryImpl implements ChatRepository {
         return ChatFailureType.tokenLimitExceeded;
       case ChatApiErrorType.rateLimitExceeded:
         return ChatFailureType.rateLimitExceeded;
+      case ChatApiErrorType.currencyRequired:
+        return ChatFailureType.currencyRequired;
       case ChatApiErrorType.general:
         return ChatFailureType.general;
     }

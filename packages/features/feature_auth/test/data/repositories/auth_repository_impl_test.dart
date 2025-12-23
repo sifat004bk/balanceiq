@@ -177,4 +177,36 @@ void main() {
       verify(() => mockLocalDataSource.clearUser()).called(1);
     });
   });
+
+  group('updateCurrency', () {
+    const tCurrency = 'USD';
+
+    test('should call remote data source updateCurrency', () async {
+      // Arrange
+      when(() => mockRemoteDataSource.updateCurrency(any()))
+          .thenAnswer((_) async {});
+      when(() => mockLocalDataSource.getCachedUser())
+          .thenAnswer((_) async => null);
+
+      // Act
+      final result = await repository.updateCurrency(tCurrency);
+
+      // Assert
+      expect(result, const Right(null));
+      verify(() => mockRemoteDataSource.updateCurrency(tCurrency)).called(1);
+    });
+
+    test('should return ServerFailure when remote call fails', () async {
+      // Arrange
+      when(() => mockRemoteDataSource.updateCurrency(any()))
+          .thenThrow(const ServerException('Failed'));
+
+      // Act
+      final result = await repository.updateCurrency(tCurrency);
+
+      // Assert
+      expect(result, const Left(ServerFailure('Failed')));
+      verify(() => mockRemoteDataSource.updateCurrency(tCurrency)).called(1);
+    });
+  });
 }

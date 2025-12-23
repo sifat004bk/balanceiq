@@ -140,6 +140,39 @@ void main() {
           const Left(ChatApiFailure('Limit exceeded',
               failureType: ChatFailureType.tokenLimitExceeded)));
     });
+
+    test(
+        'should return ChatFailureType.currencyRequired when remote throws currencyRequired error',
+        () async {
+      // Arrange
+      when(() => mockSecureStorageService.getUserId())
+          .thenAnswer((_) async => tUserId);
+      when(() => mockUuid.v4()).thenReturn(tMessageId);
+      when(() => mockLocalDataSource.saveMessage(any()))
+          .thenAnswer((_) => Future.value());
+
+      when(() => mockRemoteDataSource.sendMessage(
+            botId: any(named: 'botId'),
+            content: any(named: 'content'),
+            imagePath: any(named: 'imagePath'),
+            audioPath: any(named: 'audioPath'),
+          )).thenThrow(ChatApiException(
+        message: 'Currency required',
+        errorType: ChatApiErrorType.currencyRequired,
+      ));
+
+      // Act
+      final result = await repository.sendMessage(
+        botId: tBotId,
+        content: tContent,
+      );
+
+      // Assert
+      expect(
+          result,
+          const Left(ChatApiFailure('Currency required',
+              failureType: ChatFailureType.currencyRequired)));
+    });
   });
 
   group('getMessages', () {

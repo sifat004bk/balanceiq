@@ -101,5 +101,6 @@ enum ChatErrorType {
   subscriptionExpired,
   messageLimitExceeded, // Renamed from tokenLimitExceeded
   rateLimitExceeded,
+  currencyRequired,
   general,
 }

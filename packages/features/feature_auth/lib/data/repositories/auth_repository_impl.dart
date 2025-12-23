@@ -212,6 +212,27 @@ class AuthRepositoryImpl implements AuthRepository {
     }
   }
 
+  @override
+  Future<Either<Failure, void>> updateCurrency(String currency) async {
+    try {
+      await remoteDataSource.updateCurrency(currency);
+      // Also update local user cache if needed, but SessionCubit usually reloads or updates state
+      // We can update the cached user's currency here if we want to be consistent
+      final currentUser = await localDataSource.getCachedUser();
+      if (currentUser != null) {
+        // Assuming UserModel doesn't have currency field yet?
+        // Based on previous reads, UserModel has id, email, name, etc.
+        // Currency is handled by CurrencyCubit separately in dolfin_core.
+        // So we don't need to update UserModel here.
+      }
+      return const Right(null);
+    } on AppException catch (e) {
+      return Left(_mapExceptionToFailure(e));
+    } catch (e) {
+      return Left(ServerFailure('Failed to update currency: $e'));
+    }
+  }
+
   Failure _mapExceptionToFailure(AppException exception) {
     if (exception is NetworkException) {
       return NetworkFailure(exception.message);

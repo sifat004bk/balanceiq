@@ -284,6 +284,11 @@ class _ProfilePageState extends State<ProfilePage>
                               onSelect: (Currency currency) {
                                 GetIt.instance<CurrencyCubit>()
                                     .setCurrency(currency);
+                                // Sync with backend
+                                context
+                                    .read<SessionCubit>()
+                                    .updateUserCurrency(currency.code);
+
                                 SnackbarUtils.showSuccess(
                                   context,
                                   'Currency changed to ${currency.symbol} ${currency.name}',

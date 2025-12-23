@@ -177,6 +177,14 @@ class ChatStringsImpl implements ChatStrings {
       'Please wait a moment before sending more messages.';
   @override
   String get backToChat => 'Back to Chat';
+
+  @override
+  String get currencyRequired => 'Currency Required';
+  @override
+  String get currencyRequiredMessage =>
+      'Please set your preferred currency in your profile settings before using the chat feature.';
+  @override
+  String get setCurrency => 'Set Currency';
 }
 
 class ChatBotPromptsImpl implements ChatBotPrompts {

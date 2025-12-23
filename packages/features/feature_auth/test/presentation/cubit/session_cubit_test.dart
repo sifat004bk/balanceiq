@@ -4,6 +4,7 @@ import 'package:dolfin_core/error/failures.dart';
 import 'package:dolfin_core/storage/secure_storage_service.dart';
 import 'package:feature_auth/data/models/auth_request_models.dart';
 import 'package:feature_auth/domain/entities/user.dart';
+import 'package:feature_auth/domain/usecases/update_currency.dart';
 import 'package:feature_auth/presentation/cubit/session/session_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -12,23 +13,28 @@ import '../../mocks.dart';
 
 class MockSecureStorageService extends Mock implements SecureStorageService {}
 
+class MockUpdateCurrency extends Mock implements UpdateCurrency {}
+
 void main() {
   late SessionCubit sessionCubit;
   late MockGetCurrentUser mockGetCurrentUser;
   late MockSignOut mockSignOut;
   late MockGetProfile mockGetProfile;
   late MockSecureStorageService mockSecureStorage;
+  late MockUpdateCurrency mockUpdateCurrency;
 
   setUp(() {
     mockGetCurrentUser = MockGetCurrentUser();
     mockSignOut = MockSignOut();
     mockGetProfile = MockGetProfile();
     mockSecureStorage = MockSecureStorageService();
+    mockUpdateCurrency = MockUpdateCurrency();
 
     sessionCubit = SessionCubit(
       getCurrentUser: mockGetCurrentUser,
       signOutUseCase: mockSignOut,
       getProfile: mockGetProfile,
+      updateCurrencyUseCase: mockUpdateCurrency,
       secureStorage: mockSecureStorage,
     );
   });
@@ -121,8 +127,7 @@ void main() {
       blocTest<SessionCubit, SessionState>(
         'emits [SessionLoading, Unauthenticated] when logout succeeds',
         build: () {
-          when(() => mockSignOut())
-              .thenAnswer((_) async => const Right(null));
+          when(() => mockSignOut()).thenAnswer((_) async => const Right(null));
           return sessionCubit;
         },
         act: (cubit) => cubit.logout(),
@@ -234,6 +239,24 @@ void main() {
         expect: () => [
           isA<Authenticated>().having((s) => s.user, 'user', updatedUser),
         ],
+      );
+    });
+
+    group('updateUserCurrency', () {
+      const tCurrency = 'EUR';
+
+      blocTest<SessionCubit, SessionState>(
+        'calls updateCurrencyUseCase',
+        build: () {
+          when(() => mockUpdateCurrency(any()))
+              .thenAnswer((_) async => const Right(null));
+          return sessionCubit;
+        },
+        act: (cubit) => cubit.updateUserCurrency(tCurrency),
+        expect: () => [],
+        verify: (_) {
+          verify(() => mockUpdateCurrency(tCurrency)).called(1);
+        },
       );
     });
   });

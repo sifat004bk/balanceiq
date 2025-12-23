@@ -17,6 +17,7 @@ enum ChatApiErrorType {
   subscriptionExpired,
   tokenLimitExceeded,
   rateLimitExceeded,
+  currencyRequired,
   general,
 }
 
@@ -166,6 +167,13 @@ class ChatFinanceGuruDataSource implements ChatRemoteDataSource {
             message: message.toString(),
             errorType: ChatApiErrorType.rateLimitExceeded,
           );
+        } else if (statusCode == 400) {
+          if (message.toString().toLowerCase().contains('currency')) {
+            throw ChatApiException(
+              message: message.toString(),
+              errorType: ChatApiErrorType.currencyRequired,
+            );
+          }
         }
         throw Exception(
             'Server error ($statusCode): ${message ?? 'Unknown error'}');

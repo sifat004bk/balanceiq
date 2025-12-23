@@ -99,6 +99,15 @@ class ChatErrorWidget extends StatelessWidget {
           onButtonPressed: () =>
               context.read<ChatCubit>().loadChatHistory(botId),
         );
+      case ChatErrorType.currencyRequired:
+        return _ErrorConfig(
+          title: GetIt.I<ChatStrings>().currencyRequired,
+          description: GetIt.I<ChatStrings>().currencyRequiredMessage,
+          icon: Icons.currency_exchange,
+          iconColor: colorScheme.secondary,
+          buttonText: GetIt.I<ChatStrings>().setCurrency,
+          onButtonPressed: () => Navigator.pushNamed(context, '/profile'),
+        );
       default:
         return _ErrorConfig(
           title: GetIt.I<CoreStrings>().errors.somethingWentWrong,

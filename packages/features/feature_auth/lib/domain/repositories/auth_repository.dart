@@ -43,4 +43,5 @@ abstract class AuthRepository {
   // Email Verification Methods
   Future<Either<Failure, void>> sendVerificationEmail(String token);
   Future<Either<Failure, void>> resendVerificationEmail(String email);
+  Future<Either<Failure, void>> updateCurrency(String currency);
 }

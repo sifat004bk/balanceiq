@@ -44,6 +44,7 @@ enum ChatFailureType {
   subscriptionExpired,
   tokenLimitExceeded,
   rateLimitExceeded,
+  currencyRequired,
   general,
 }
 

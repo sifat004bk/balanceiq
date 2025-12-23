@@ -1,6 +1,7 @@
 name: feature_auth
-description: Authentication feature package - Login, Signup, Session management.
+description: Authentication and user profile management for Dolfin apps.
 version: 1.0.0
+publish_to: none
 homepage: https://github.com/sifat004bk/dolfin_workspace
 
 environment:

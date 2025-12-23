@@ -1,8 +1,7 @@
-import 'package:dartz/dartz.dart';
 import 'package:feature_auth/data/datasources/auth_remote_datasource.dart';
 import 'package:feature_auth/data/models/auth_request_models.dart';
+import 'package:feature_auth/data/models/user_model.dart';
 import 'package:feature_auth/data/repositories/auth_repository_impl.dart';
-import 'package:feature_auth/domain/entities/user.dart';
 import 'package:feature_auth/domain/usecases/login.dart';
 import 'package:feature_auth/domain/usecases/signup.dart';
 import 'package:feature_auth/domain/usecases/sign_out.dart';
@@ -37,6 +36,15 @@ void main() {
     registerFallbackValue(
       ResetPasswordRequest(token: '', newPassword: '', confirmPassword: ''),
     );
+    registerFallbackValue(
+      UserModel(
+        id: '',
+        email: '',
+        name: '',
+        authProvider: 'email',
+        createdAt: DateTime.now(),
+      ),
+    );
   });
 
   setUp(() {
@@ -63,6 +71,7 @@ void main() {
                   success: true,
                   message: 'Signup successful',
                   data: null,
+                  timestamp: DateTime.now().millisecondsSinceEpoch,
                 ));
 
         final signupResult = await signupUseCase(
@@ -80,15 +89,21 @@ void main() {
             .thenAnswer((_) async => LoginResponse(
                   success: true,
                   message: 'Login successful',
+                  timestamp: DateTime.now().millisecondsSinceEpoch,
                   data: LoginData(
                     userId: 123,
                     username: 'testuser',
                     email: 'test@example.com',
-                    accessToken: 'token',
+                    token: 'token',
                     refreshToken: 'refresh',
+                    role: 'USER',
                     isEmailVerified: true,
                   ),
                 ));
+
+        // Stub localDataSource.saveUser for login
+        when(() => repository.localDataSource.saveUser(any()))
+            .thenAnswer((_) async => {});
 
         final loginResult = await loginUseCase(
           username: 'testuser',
@@ -184,6 +199,8 @@ void main() {
       test('should handle signout successfully', () async {
         // Arrange
         when(() => remoteDataSource.signOut()).thenAnswer((_) async => {});
+        when(() => repository.localDataSource.clearUser())
+            .thenAnswer((_) async => {});
 
         // Act
         final result = await signOutUseCase();
@@ -191,6 +208,7 @@ void main() {
         // Assert
         expect(result.isRight(), true);
         verify(() => remoteDataSource.signOut()).called(1);
+        verify(() => repository.localDataSource.clearUser()).called(1);
       });
     });
   });

@@ -1,4 +1,3 @@
-import 'package:dartz/dartz.dart';
 import 'package:feature_subscription/data/datasources/subscription_datasource.dart';
 import 'package:feature_subscription/data/models/create_subscription_request.dart';
 import 'package:feature_subscription/data/models/plan_dto.dart';

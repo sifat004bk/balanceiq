@@ -61,11 +61,11 @@ class SubscriptionCard extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.warning, size: 14, color: Colors.orange),
+                      const Icon(Icons.warning, size: 14, color: Colors.orange),
                       const SizedBox(width: 4),
                       Text(
                         '${subscription.daysRemaining} days left',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
                           color: Colors.orange,

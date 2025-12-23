@@ -64,7 +64,7 @@ void main() {
         () async {
       // Arrange
       when(() => mockRemoteDataSource.signInWithGoogle())
-          .thenThrow(ServerException('Server Error'));
+          .thenThrow(const ServerException('Server Error'));
 
       // Act
       final result = await repository.signInWithGoogle();
@@ -116,7 +116,7 @@ void main() {
     test('should return ServerFailure when call fails', () async {
       // Arrange
       when(() => mockRemoteDataSource.login(any()))
-          .thenThrow(ServerException('Failed'));
+          .thenThrow(const ServerException('Failed'));
 
       // Act
       final result = await repository.login(

@@ -20,7 +20,7 @@ class EmailVerificationBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final warningColor = Colors.orange;
+    const warningColor = Colors.orange;
 
     final backgroundColor = warningColor.withValues(alpha: 0.1);
     final borderColor = warningColor.withValues(alpha: 0.3);
@@ -41,8 +41,8 @@ class EmailVerificationBanner extends StatelessWidget {
         final isSending = state is VerificationEmailSending;
 
         return Container(
-          margin: EdgeInsets.only(bottom: DesignConstants.space6),
-          padding: EdgeInsets.all(DesignConstants.space4),
+          margin: const EdgeInsets.only(bottom: DesignConstants.space6),
+          padding: const EdgeInsets.all(DesignConstants.space4),
           decoration: BoxDecoration(
             color: backgroundColor,
             borderRadius: BorderRadius.circular(DesignConstants.radiusLarge),
@@ -57,19 +57,19 @@ class EmailVerificationBanner extends StatelessWidget {
               Row(
                 children: [
                   Container(
-                    padding: EdgeInsets.all(DesignConstants.space2),
+                    padding: const EdgeInsets.all(DesignConstants.space2),
                     decoration: BoxDecoration(
                       color: iconBgColor,
                       borderRadius:
                           BorderRadius.circular(DesignConstants.radiusSmall),
                     ),
-                    child: Icon(
+                    child: const Icon(
                       Icons.warning_amber_rounded,
                       color: warningColor,
                       size: DesignConstants.iconSizeLarge,
                     ),
                   ),
-                  SizedBox(width: DesignConstants.space3),
+                  const SizedBox(width: DesignConstants.space3),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -82,7 +82,7 @@ class EmailVerificationBanner extends StatelessWidget {
                             color: titleColor,
                           ),
                         ),
-                        SizedBox(height: DesignConstants.space1),
+                        const SizedBox(height: DesignConstants.space1),
                         Text(
                           'Please verify your email to access all features',
                           style: TextStyle(
@@ -95,7 +95,7 @@ class EmailVerificationBanner extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: DesignConstants.space4),
+              const SizedBox(height: DesignConstants.space4),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -106,7 +106,7 @@ class EmailVerificationBanner extends StatelessWidget {
                     disabledBackgroundColor:
                         warningColor.withValues(alpha: 0.5),
                     padding:
-                        EdgeInsets.symmetric(vertical: DesignConstants.space3),
+                        const EdgeInsets.symmetric(vertical: DesignConstants.space3),
                     shape: RoundedRectangleBorder(
                       borderRadius:
                           BorderRadius.circular(DesignConstants.radiusMedium),
@@ -122,7 +122,7 @@ class EmailVerificationBanner extends StatelessWidget {
                             color: colorScheme.onInverseSurface,
                           ),
                         )
-                      : Text(
+                      : const Text(
                           'Send Verification Email',
                           style: TextStyle(
                             fontSize: DesignConstants.fontSizeM,

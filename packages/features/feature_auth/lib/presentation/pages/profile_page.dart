@@ -153,7 +153,7 @@ class _ProfilePageState extends State<ProfilePage>
         CustomScrollView(
           physics: const BouncingScrollPhysics(),
           slivers: [
-            SliverSafeArea(
+            const SliverSafeArea(
               bottom: false,
               sliver: SliverToBoxAdapter(
                 child: SizedBox(height: 5),

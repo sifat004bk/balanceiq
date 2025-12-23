@@ -83,7 +83,7 @@ class ProfileAvatar extends StatelessWidget {
                 color: Theme.of(context).canvasColor,
                 shape: BoxShape.circle,
               ),
-              child: Icon(
+              child: const Icon(
                 Icons.verified_rounded,
                 color: Colors.green,
                 size: 24,

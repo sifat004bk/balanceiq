@@ -1,6 +1,7 @@
 name: feature_chat
 description: AI Chat engine - Generic chat interface with configurable persona.
 version: 1.0.0
+publish_to: none
 homepage: https://github.com/sifat004bk/dolfin_workspace
 
 environment:
@@ -29,6 +30,14 @@ dependencies:
   fl_chart: ^0.68.0
   data_table_2: ^2.5.15
   flutter_markdown_plus: ^1.0.3
+  equatable: ^2.0.5
+  dio: ^5.4.3+1
+  shared_preferences: ^2.5.3
+  tutorial_coach_mark: ^1.2.11
+  shimmer: ^3.0.0
+  markdown: ^7.2.2
+  intl: ^0.20.2
+  cached_network_image: ^3.4.1
 
 
 

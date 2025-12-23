@@ -39,13 +39,14 @@ class MessageUsageRepositoryImpl implements MessageUsageRepository {
 
       if (errorMessage.contains('Authentication required') ||
           errorMessage.contains('Unauthorized')) {
-        return Left(AuthFailure('Please login to view message usage'));
+        return const Left(AuthFailure('Please login to view message usage'));
       } else if (errorMessage.contains('No internet') ||
           errorMessage.contains('Connection')) {
-        return Left(NetworkFailure(
+        return const Left(NetworkFailure(
             'No internet connection. Please check your network.'));
       } else if (errorMessage.contains('timeout')) {
-        return Left(ServerFailure('Request timed out. Please try again.'));
+        return const Left(
+            ServerFailure('Request timed out. Please try again.'));
       } else {
         return Left(
             ServerFailure('Failed to load message usage: $errorMessage'));

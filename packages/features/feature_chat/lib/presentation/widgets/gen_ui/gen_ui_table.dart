@@ -22,8 +22,8 @@ class GenUITable extends StatelessWidget {
     final minWidth = columns.length * 120.0;
 
     // Calculate required height: Header (48) + Rows (count * 48) + minimal buffer
-    final double rowHeight = 48.0;
-    final double headingRowHeight = 48.0;
+    const double rowHeight = 48.0;
+    const double headingRowHeight = 48.0;
     final double requiredHeight = headingRowHeight + (rows.length * rowHeight);
 
     // Cap height at 400 or use required height if smaller

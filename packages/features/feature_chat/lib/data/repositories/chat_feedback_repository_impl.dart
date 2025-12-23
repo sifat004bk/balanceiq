@@ -38,20 +38,21 @@ class ChatFeedbackRepositoryImpl implements ChatFeedbackRepository {
 
       if (errorMessage.contains('Authentication required') ||
           errorMessage.contains('Unauthorized')) {
-        return Left(AuthFailure('Please login to submit feedback'));
+        return const Left(AuthFailure('Please login to submit feedback'));
       } else if (errorMessage.contains('own messages')) {
-        return Left(PermissionFailure(
+        return const Left(PermissionFailure(
             'You can only provide feedback on your own messages'));
       } else if (errorMessage.contains('not found')) {
-        return Left(NotFoundFailure('Chat message not found'));
+        return const Left(NotFoundFailure('Chat message not found'));
       } else if (errorMessage.contains('No internet') ||
           errorMessage.contains('Connection')) {
-        return Left(NetworkFailure(
+        return const Left(NetworkFailure(
             'No internet connection. Please check your network.'));
       } else if (errorMessage.contains('timeout')) {
-        return Left(ServerFailure('Request timed out. Please try again.'));
+        return const Left(
+            ServerFailure('Request timed out. Please try again.'));
       } else if (errorMessage.contains('Invalid feedback')) {
-        return Left(ServerFailure('Invalid feedback value'));
+        return const Left(ServerFailure('Invalid feedback value'));
       } else {
         return Left(ServerFailure('Failed to submit feedback: $errorMessage'));
       }

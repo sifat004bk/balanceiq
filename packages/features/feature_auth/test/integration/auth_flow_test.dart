@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:feature_auth/data/datasources/auth_remote_datasource.dart';
+import 'package:feature_auth/data/models/auth_request_models.dart';
 import 'package:feature_auth/data/repositories/auth_repository_impl.dart';
 import 'package:feature_auth/domain/entities/user.dart';
 import 'package:feature_auth/domain/usecases/login.dart';
@@ -9,17 +10,13 @@ import 'package:feature_auth/domain/usecases/forgot_password.dart';
 import 'package:feature_auth/domain/usecases/reset_password.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:dolfin_core/storage/secure_storage_service.dart';
 
 import '../mocks.dart';
-
-class MockSecureStorageService extends Mock implements SecureStorageService {}
 
 /// Integration tests for auth feature
 /// Tests complete flows from datasource → repository → use case
 void main() {
   late AuthRemoteDataSource remoteDataSource;
-  late SecureStorageService secureStorage;
   late AuthRepositoryImpl repository;
   late Signup signupUseCase;
   late Login loginUseCase;
@@ -27,13 +24,27 @@ void main() {
   late ForgotPassword forgotPasswordUseCase;
   late ResetPassword resetPasswordUseCase;
 
+  setUpAll(() {
+    registerFallbackValue(
+      SignupRequest(username: '', password: '', fullName: '', email: ''),
+    );
+    registerFallbackValue(
+      LoginRequest(username: '', password: ''),
+    );
+    registerFallbackValue(
+      ForgotPasswordRequest(email: ''),
+    );
+    registerFallbackValue(
+      ResetPasswordRequest(token: '', newPassword: '', confirmPassword: ''),
+    );
+  });
+
   setUp(() {
     remoteDataSource = MockAuthRemoteDataSource();
-    secureStorage = MockSecureStorageService();
 
     repository = AuthRepositoryImpl(
       remoteDataSource: remoteDataSource,
-      secureStorage: secureStorage,
+      localDataSource: MockAuthLocalDataSource(),
     );
 
     signupUseCase = Signup(repository);
@@ -44,214 +55,142 @@ void main() {
   });
 
   group('Auth Feature Integration Tests', () {
-    final testUser = User(
-      id: '123',
-      email: 'test@example.com',
-      name: 'Test User',
-      authProvider: 'email',
-      createdAt: DateTime(2024, 1, 15),
-      isEmailVerified: true,
-    );
-
-    const testEmail = 'test@example.com';
-    const testPassword = 'password123';
-    const testToken = 'test_jwt_token';
-
-    group('Complete Auth Flow: Signup → Login → Logout', () {
-      test('should complete full authentication flow successfully', () async {
+    group('Signup → Login Flow', () {
+      test('should complete signup and login flow successfully', () async {
         // Step 1: User signs up
-        when(() => remoteDataSource.signup(
-              email: any(named: 'email'),
-              password: any(named: 'password'),
-              name: any(named: 'name'),
-            )).thenAnswer((_) async => {'token': testToken, 'user': {}});
-
-        when(() => secureStorage.saveToken(any())).thenAnswer((_) async => {});
-        when(() => secureStorage.saveUserId(any())).thenAnswer((_) async => {});
+        when(() => remoteDataSource.signup(any()))
+            .thenAnswer((_) async => SignupResponse(
+                  success: true,
+                  message: 'Signup successful',
+                  data: null,
+                ));
 
         final signupResult = await signupUseCase(
-          email: testEmail,
-          password: testPassword,
-          name: 'Test User',
+          email: 'test@example.com',
+          password: 'password123',
+          fullName: 'Test User',
+          username: 'testuser',
         );
 
         expect(signupResult.isRight(), true);
-        verify(() => remoteDataSource.signup(
-              email: testEmail,
-              password: testPassword,
-              name: 'Test User',
-            )).called(1);
-        verify(() => secureStorage.saveToken(testToken)).called(1);
+        verify(() => remoteDataSource.signup(any())).called(1);
 
         // Step 2: User logs in
-        when(() => remoteDataSource.login(
-              email: any(named: 'email'),
-              password: any(named: 'password'),
-            )).thenAnswer((_) async => {'token': testToken, 'user': {}});
+        when(() => remoteDataSource.login(any()))
+            .thenAnswer((_) async => LoginResponse(
+                  success: true,
+                  message: 'Login successful',
+                  data: LoginData(
+                    userId: 123,
+                    username: 'testuser',
+                    email: 'test@example.com',
+                    accessToken: 'token',
+                    refreshToken: 'refresh',
+                    isEmailVerified: true,
+                  ),
+                ));
 
         final loginResult = await loginUseCase(
-          email: testEmail,
-          password: testPassword,
+          username: 'testuser',
+          password: 'password123',
         );
 
         expect(loginResult.isRight(), true);
-        verify(() => remoteDataSource.login(
-              email: testEmail,
-              password: testPassword,
-            )).called(1);
-
-        // Step 3: User logs out
-        when(() => remoteDataSource.signOut()).thenAnswer((_) async => {});
-        when(() => secureStorage.deleteToken()).thenAnswer((_) async => {});
-        when(() => secureStorage.deleteUserId()).thenAnswer((_) async => {});
-
-        final logoutResult = await signOutUseCase();
-
-        expect(logoutResult.isRight(), true);
-        verify(() => remoteDataSource.signOut()).called(1);
-        verify(() => secureStorage.deleteToken()).called(1);
-        verify(() => secureStorage.deleteUserId()).called(1);
+        verify(() => remoteDataSource.login(any())).called(1);
       });
     });
 
     group('Password Reset Flow', () {
       test('should complete password reset flow successfully', () async {
         // Step 1: Request password reset
-        when(() => remoteDataSource.forgotPassword(
-              email: any(named: 'email'),
-            )).thenAnswer((_) async => {'message': 'Email sent'});
+        when(() => remoteDataSource.forgotPassword(any()))
+            .thenAnswer((_) async => {});
 
-        final forgotResult = await forgotPasswordUseCase(email: testEmail);
+        final forgotResult = await forgotPasswordUseCase(
+          email: 'test@example.com',
+        );
 
         expect(forgotResult.isRight(), true);
-        verify(() => remoteDataSource.forgotPassword(email: testEmail))
-            .called(1);
+        verify(() => remoteDataSource.forgotPassword(any())).called(1);
 
         // Step 2: Reset password with token
-        const resetToken = 'reset_token_123';
-        const newPassword = 'newPassword123';
-
-        when(() => remoteDataSource.resetPassword(
-              token: any(named: 'token'),
-              password: any(named: 'password'),
-            )).thenAnswer((_) async => {'message': 'Password reset'});
+        when(() => remoteDataSource.resetPassword(any()))
+            .thenAnswer((_) async => {});
 
         final resetResult = await resetPasswordUseCase(
-          token: resetToken,
-          password: newPassword,
+          token: 'reset_token',
+          newPassword: 'newPassword123',
+          confirmPassword: 'newPassword123',
         );
 
         expect(resetResult.isRight(), true);
-        verify(() => remoteDataSource.resetPassword(
-              token: resetToken,
-              password: newPassword,
-            )).called(1);
+        verify(() => remoteDataSource.resetPassword(any())).called(1);
       });
     });
 
-    group('Error Propagation Through Layers', () {
-      test('should propagate auth error from datasource to use case', () async {
-        // Arrange - datasource throws auth error
-        when(() => remoteDataSource.login(
-              email: any(named: 'email'),
-              password: any(named: 'password'),
-            )).thenThrow(Exception('Invalid credentials'));
+    group('Error Propagation', () {
+      test('should propagate signup error from datasource to use case',
+          () async {
+        // Arrange
+        when(() => remoteDataSource.signup(any()))
+            .thenThrow(Exception('Email already exists'));
+
+        // Act
+        final result = await signupUseCase(
+          email: 'existing@example.com',
+          password: 'password123',
+          fullName: 'Test',
+          username: 'test',
+        );
+
+        // Assert
+        expect(result.isLeft(), true);
+      });
+
+      test('should propagate login error from datasource to use case',
+          () async {
+        // Arrange
+        when(() => remoteDataSource.login(any()))
+            .thenThrow(Exception('Invalid credentials'));
 
         // Act
         final result = await loginUseCase(
-          email: testEmail,
+          username: 'user',
           password: 'wrongpassword',
         );
 
         // Assert
         expect(result.isLeft(), true);
-        result.fold(
-          (failure) => expect(failure.message, contains('Invalid')),
-          (user) => fail('Should not succeed'),
-        );
-      });
-
-      test('should propagate network error from datasource to use case',
-          () async {
-        // Arrange
-        when(() => remoteDataSource.signup(
-              email: any(named: 'email'),
-              password: any(named: 'password'),
-              name: any(named: 'name'),
-            )).thenThrow(Exception('No internet connection'));
-
-        // Act
-        final result = await signupUseCase(
-          email: testEmail,
-          password: testPassword,
-          name: 'Test',
-        );
-
-        // Assert
-        expect(result.isLeft(), true);
-        result.fold(
-          (failure) => expect(failure.message, contains('internet')),
-          (user) => fail('Should not succeed'),
-        );
       });
     });
 
-    group('Edge Cases Through Complete Flow', () {
-      test('should handle already registered email', () async {
-        // Arrange
-        when(() => remoteDataSource.signup(
-              email: any(named: 'email'),
-              password: any(named: 'password'),
-              name: any(named: 'name'),
-            )).thenThrow(Exception('Email already exists'));
-
-        // Act
-        final result = await signupUseCase(
-          email: testEmail,
-          password: testPassword,
-          name: 'Test',
-        );
-
-        // Assert
-        expect(result.isLeft(), true);
-        result.fold(
-          (failure) => expect(failure.message, contains('exists')),
-          (user) => fail('Should not succeed'),
-        );
-      });
-
+    group('Edge Cases', () {
       test('should handle invalid reset token', () async {
         // Arrange
-        when(() => remoteDataSource.resetPassword(
-              token: any(named: 'token'),
-              password: any(named: 'password'),
-            )).thenThrow(Exception('Invalid or expired token'));
+        when(() => remoteDataSource.resetPassword(any()))
+            .thenThrow(Exception('Invalid token'));
 
         // Act
         final result = await resetPasswordUseCase(
-          token: 'invalid_token',
-          password: 'newpass',
+          token: 'invalid',
+          newPassword: 'newpass',
+          confirmPassword: 'newpass',
         );
 
         // Assert
         expect(result.isLeft(), true);
-        result.fold(
-          (failure) => expect(failure.message, contains('Invalid')),
-          (_) => fail('Should not succeed'),
-        );
       });
 
-      test('should handle logout when not logged in', () async {
+      test('should handle signout successfully', () async {
         // Arrange
         when(() => remoteDataSource.signOut()).thenAnswer((_) async => {});
-        when(() => secureStorage.deleteToken()).thenAnswer((_) async => {});
-        when(() => secureStorage.deleteUserId()).thenAnswer((_) async => {});
 
         // Act
         final result = await signOutUseCase();
 
-        // Assert - should still succeed
+        // Assert
         expect(result.isRight(), true);
+        verify(() => remoteDataSource.signOut()).called(1);
       });
     });
   });

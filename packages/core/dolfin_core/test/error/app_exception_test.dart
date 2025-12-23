@@ -5,185 +5,104 @@ void main() {
   group('AppException', () {
     group('NetworkException', () {
       test('creates with message', () {
-        const exception = NetworkException(message: 'No internet');
+        const exception = NetworkException('No internet');
         expect(exception.message, 'No internet');
       });
 
-      test('creates with optional code', () {
-        const exception = NetworkException(
-          message: 'Connection timeout',
-          code: 'TIMEOUT',
-        );
-        expect(exception.message, 'Connection timeout');
-        expect(exception.code, 'TIMEOUT');
+      test('creates with default message', () {
+        const exception = NetworkException();
+        expect(exception.message, 'No internet connection');
       });
 
-      test('creates with optional details', () {
-        const exception = NetworkException(
-          message: 'DNS error',
-          details: 'Could not resolve hostname',
-        );
-        expect(exception.message, 'DNS error');
-        expect(exception.details, 'Could not resolve hostname');
-      });
-
-      test('code defaults to null', () {
-        const exception = NetworkException(message: 'Error');
-        expect(exception.code, isNull);
-      });
-
-      test('details defaults to null', () {
-        const exception = NetworkException(message: 'Error');
-        expect(exception.details, isNull);
+      test('has correct code', () {
+        const exception = NetworkException('Connection timeout');
+        expect(exception.code, 'NETWORK_ERROR');
       });
     });
 
     group('ServerException', () {
       test('creates with message', () {
-        const exception = ServerException(message: 'Internal server error');
+        const exception = ServerException('Internal server error');
         expect(exception.message, 'Internal server error');
       });
 
       test('creates with status code', () {
-        const exception = ServerException(
-          message: 'Not found',
-          statusCode: 404,
-        );
+        const exception = ServerException('Not found', statusCode: 404);
         expect(exception.message, 'Not found');
         expect(exception.statusCode, 404);
       });
 
-      test('creates with all parameters', () {
-        const exception = ServerException(
-          message: 'Bad request',
-          code: 'BAD_REQUEST',
-          details: 'Missing required field',
-          statusCode: 400,
-        );
-        expect(exception.message, 'Bad request');
-        expect(exception.code, 'BAD_REQUEST');
-        expect(exception.details, 'Missing required field');
-        expect(exception.statusCode, 400);
+      test('statusCode defaults to null', () {
+        const exception = ServerException('Error');
+        expect(exception.statusCode, isNull);
       });
 
-      test('statusCode defaults to null', () {
-        const exception = ServerException(message: 'Error');
-        expect(exception.statusCode, isNull);
+      test('has correct code', () {
+        const exception = ServerException('Bad request', statusCode: 400);
+        expect(exception.code, 'SERVER_ERROR');
       });
     });
 
     group('AuthException', () {
       test('creates with message', () {
-        const exception = AuthException(message: 'Invalid credentials');
+        const exception = AuthException('Invalid credentials');
         expect(exception.message, 'Invalid credentials');
       });
 
-      test('creates with code', () {
-        const exception = AuthException(
-          message: 'Token expired',
-          code: 'TOKEN_EXPIRED',
-        );
-        expect(exception.message, 'Token expired');
-        expect(exception.code, 'TOKEN_EXPIRED');
-      });
-
-      test('creates with details', () {
-        const exception = AuthException(
-          message: 'Session invalid',
-          details: 'Please log in again',
-        );
-        expect(exception.message, 'Session invalid');
-        expect(exception.details, 'Please log in again');
+      test('has correct code', () {
+        const exception = AuthException('Token expired');
+        expect(exception.code, 'AUTH_ERROR');
       });
     });
 
     group('CacheException', () {
       test('creates with message', () {
-        const exception = CacheException(message: 'Cache miss');
+        const exception = CacheException('Cache miss');
         expect(exception.message, 'Cache miss');
       });
 
-      test('creates with code', () {
-        const exception = CacheException(
-          message: 'Cache corrupted',
-          code: 'CORRUPTION',
-        );
-        expect(exception.message, 'Cache corrupted');
-        expect(exception.code, 'CORRUPTION');
-      });
-
-      test('creates with details', () {
-        const exception = CacheException(
-          message: 'Read failed',
-          details: 'File does not exist',
-        );
-        expect(exception.message, 'Read failed');
-        expect(exception.details, 'File does not exist');
+      test('has correct code', () {
+        const exception = CacheException('Cache corrupted');
+        expect(exception.code, 'CACHE_ERROR');
       });
     });
 
     group('ValidationException', () {
       test('creates with message', () {
-        const exception = ValidationException(message: 'Invalid email');
+        const exception = ValidationException('Invalid email');
         expect(exception.message, 'Invalid email');
       });
 
-      test('creates with code', () {
-        const exception = ValidationException(
-          message: 'Password too short',
-          code: 'PASSWORD_TOO_SHORT',
-        );
-        expect(exception.message, 'Password too short');
-        expect(exception.code, 'PASSWORD_TOO_SHORT');
-      });
-
-      test('creates with details', () {
-        const exception = ValidationException(
-          message: 'Invalid input',
-          details: 'Field must be at least 8 characters',
-        );
-        expect(exception.message, 'Invalid input');
-        expect(exception.details, 'Field must be at least 8 characters');
+      test('has correct code', () {
+        const exception = ValidationException('Password too short');
+        expect(exception.code, 'VALIDATION_ERROR');
       });
     });
 
     group('UnknownException', () {
       test('creates with message', () {
-        const exception = UnknownException(message: 'Something went wrong');
+        const exception = UnknownException('Something went wrong');
         expect(exception.message, 'Something went wrong');
       });
 
-      test('creates with code', () {
-        const exception = UnknownException(
-          message: 'Unexpected error',
-          code: 'UNKNOWN',
-        );
-        expect(exception.message, 'Unexpected error');
+      test('has correct code', () {
+        const exception = UnknownException('Unexpected error');
         expect(exception.code, 'UNKNOWN');
-      });
-
-      test('creates with details', () {
-        const exception = UnknownException(
-          message: 'Unknown error',
-          details: 'Please try again later',
-        );
-        expect(exception.message, 'Unknown error');
-        expect(exception.details, 'Please try again later');
       });
     });
 
     group('AppException sealed class hierarchy', () {
       test('all exceptions extend AppException', () {
-        expect(const NetworkException(message: ''), isA<AppException>());
-        expect(const ServerException(message: ''), isA<AppException>());
-        expect(const AuthException(message: ''), isA<AppException>());
-        expect(const CacheException(message: ''), isA<AppException>());
-        expect(const ValidationException(message: ''), isA<AppException>());
-        expect(const UnknownException(message: ''), isA<AppException>());
+        expect(const NetworkException(), isA<AppException>());
+        expect(const ServerException(''), isA<AppException>());
+        expect(const AuthException(''), isA<AppException>());
+        expect(const CacheException(''), isA<AppException>());
+        expect(const ValidationException(''), isA<AppException>());
+        expect(const UnknownException(''), isA<AppException>());
       });
 
       test('can pattern match on exception types', () {
-        const AppException exception = NetworkException(message: 'Test');
+        const AppException exception = NetworkException('Test');
 
         final result = switch (exception) {
           NetworkException() => 'network',
@@ -209,12 +128,12 @@ void main() {
           };
         }
 
-        expect(categorize(const NetworkException(message: '')), 'network');
-        expect(categorize(const ServerException(message: '')), 'server');
-        expect(categorize(const AuthException(message: '')), 'auth');
-        expect(categorize(const CacheException(message: '')), 'cache');
-        expect(categorize(const ValidationException(message: '')), 'validation');
-        expect(categorize(const UnknownException(message: '')), 'unknown');
+        expect(categorize(const NetworkException()), 'network');
+        expect(categorize(const ServerException('')), 'server');
+        expect(categorize(const AuthException('')), 'auth');
+        expect(categorize(const CacheException('')), 'cache');
+        expect(categorize(const ValidationException('')), 'validation');
+        expect(categorize(const UnknownException('')), 'unknown');
       });
     });
   });

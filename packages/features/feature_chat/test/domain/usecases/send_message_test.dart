@@ -34,8 +34,8 @@ void main() {
     test('should return Message when sending message succeeds', () async {
       // Arrange
       when(() => mockChatRepository.sendMessage(
-            any(),
-            any(),
+            botId: any(named: 'botId'),
+            content: any(named: 'content'),
             imagePath: any(named: 'imagePath'),
             audioPath: any(named: 'audioPath'),
           )).thenAnswer((_) async => Right(testMessage));
@@ -49,8 +49,8 @@ void main() {
       // Assert
       expect(result, Right(testMessage));
       verify(() => mockChatRepository.sendMessage(
-            testBotId,
-            testContent,
+            botId: testBotId,
+            content: testContent,
             imagePath: null,
             audioPath: null,
           )).called(1);
@@ -62,8 +62,8 @@ void main() {
       const testAudioPath = '/path/to/audio.m4a';
 
       when(() => mockChatRepository.sendMessage(
-            any(),
-            any(),
+            botId: any(named: 'botId'),
+            content: any(named: 'content'),
             imagePath: any(named: 'imagePath'),
             audioPath: any(named: 'audioPath'),
           )).thenAnswer((_) async => Right(testMessage));
@@ -78,8 +78,8 @@ void main() {
 
       // Assert
       verify(() => mockChatRepository.sendMessage(
-            testBotId,
-            testContent,
+            botId: testBotId,
+            content: testContent,
             imagePath: testImagePath,
             audioPath: testAudioPath,
           )).called(1);
@@ -88,8 +88,8 @@ void main() {
     test('should return ChatApiFailure when rate limit exceeded', () async {
       // Arrange
       when(() => mockChatRepository.sendMessage(
-            any(),
-            any(),
+            botId: any(named: 'botId'),
+            content: any(named: 'content'),
             imagePath: any(named: 'imagePath'),
             audioPath: any(named: 'audioPath'),
           )).thenAnswer((_) async => const Left(
@@ -118,8 +118,8 @@ void main() {
     test('should return ChatApiFailure when subscription required', () async {
       // Arrange
       when(() => mockChatRepository.sendMessage(
-            any(),
-            any(),
+            botId: any(named: 'botId'),
+            content: any(named: 'content'),
             imagePath: any(named: 'imagePath'),
             audioPath: any(named: 'audioPath'),
           )).thenAnswer((_) async => const Left(
@@ -148,12 +148,13 @@ void main() {
     test('should return NetworkFailure when no internet', () async {
       // Arrange
       when(() => mockChatRepository.sendMessage(
-            any(),
-            any(),
-            imagePath: any(named: 'imagePath'),
-            audioPath: any(named: 'audioPath'),
-          )).thenAnswer(
-              (_) async => const Left(NetworkFailure('No internet connection')));
+                botId: any(named: 'botId'),
+                content: any(named: 'content'),
+                imagePath: any(named: 'imagePath'),
+                audioPath: any(named: 'audioPath'),
+              ))
+          .thenAnswer((_) async =>
+              const Left(NetworkFailure('No internet connection')));
 
       // Act
       final result = await sendMessage(

@@ -11,6 +11,10 @@ void main() {
   late SubmitFeedback submitFeedback;
   late MockChatFeedbackRepository mockChatFeedbackRepository;
 
+  setUpAll(() {
+    registerFallbackValue(FeedbackType.like);
+  });
+
   setUp(() {
     mockChatFeedbackRepository = MockChatFeedbackRepository();
     submitFeedback = SubmitFeedback(mockChatFeedbackRepository);
@@ -118,10 +122,11 @@ void main() {
         () async {
       // Arrange
       when(() => mockChatFeedbackRepository.submitFeedback(
-            messageId: any(named: 'messageId'),
-            feedback: any(named: 'feedback'),
-          )).thenAnswer((_) async => const Left(
-              PermissionFailure('You do not have permission for this message')));
+                messageId: any(named: 'messageId'),
+                feedback: any(named: 'feedback'),
+              ))
+          .thenAnswer((_) async => const Left(PermissionFailure(
+              'You do not have permission for this message')));
 
       // Act
       final result = await submitFeedback(
@@ -139,9 +144,10 @@ void main() {
     test('should return NotFoundFailure when message not found', () async {
       // Arrange
       when(() => mockChatFeedbackRepository.submitFeedback(
-            messageId: any(named: 'messageId'),
-            feedback: any(named: 'feedback'),
-          )).thenAnswer(
+                messageId: any(named: 'messageId'),
+                feedback: any(named: 'feedback'),
+              ))
+          .thenAnswer(
               (_) async => const Left(NotFoundFailure('Message not found')));
 
       // Act
@@ -174,10 +180,11 @@ void main() {
     test('should return NetworkFailure when no internet', () async {
       // Arrange
       when(() => mockChatFeedbackRepository.submitFeedback(
-            messageId: any(named: 'messageId'),
-            feedback: any(named: 'feedback'),
-          )).thenAnswer(
-          (_) async => const Left(NetworkFailure('No internet connection')));
+                messageId: any(named: 'messageId'),
+                feedback: any(named: 'feedback'),
+              ))
+          .thenAnswer((_) async =>
+              const Left(NetworkFailure('No internet connection')));
 
       // Act
       final result = await submitFeedback(

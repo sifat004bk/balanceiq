@@ -98,8 +98,8 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CircularProgressIndicator(),
-                  SizedBox(height: 16),
+                  const CircularProgressIndicator(),
+                  const SizedBox(height: 16),
                   Text(GetIt.I<CoreStrings>().common.processing),
                 ],
               ),

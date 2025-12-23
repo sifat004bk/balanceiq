@@ -104,23 +104,24 @@ class SubscriptionRepositoryImpl implements SubscriptionRepository {
 
     if (errorMessage.contains('Authentication required') ||
         errorMessage.contains('Unauthorized')) {
-      return AuthFailure('Please login to access subscription features');
+      return const AuthFailure('Please login to access subscription features');
     } else if (errorMessage.contains('No internet') ||
         errorMessage.contains('Connection') ||
         errorMessage.contains('Network error')) {
-      return NetworkFailure(
+      return const NetworkFailure(
           'No internet connection. Please check your network.');
     } else if (errorMessage.contains('timeout')) {
-      return ServerFailure('Request timed out. Please try again.');
+      return const ServerFailure('Request timed out. Please try again.');
     } else if (errorMessage.contains('Conflict') ||
         errorMessage.contains('already exists')) {
-      return ServerFailure('Active subscription already exists.');
+      return const ServerFailure('Active subscription already exists.');
     } else if (errorMessage.contains('not found') ||
         errorMessage.contains('Resource not found')) {
-      return NotFoundFailure('Subscription or plan not found.');
+      return const NotFoundFailure('Subscription or plan not found.');
     } else if (errorMessage.contains('Access denied') ||
         errorMessage.contains('permission')) {
-      return PermissionFailure('You do not have permission for this action.');
+      return const PermissionFailure(
+          'You do not have permission for this action.');
     } else {
       return ServerFailure('Failed: $errorMessage');
     }

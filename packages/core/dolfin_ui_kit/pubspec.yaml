@@ -1,6 +1,7 @@
 name: dolfin_ui_kit
 description: Shared design system, theme, and widgets for Dolfin apps.
 version: 1.0.0
+publish_to: none
 homepage: https://github.com/sifat004bk/dolfin_workspace
 
 environment:

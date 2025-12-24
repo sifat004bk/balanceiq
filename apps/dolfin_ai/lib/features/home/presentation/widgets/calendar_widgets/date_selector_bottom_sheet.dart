@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:balance_iq/features/home/presentation/widgets/calendar_widgets/custom_calendar_date_range_picker.dart';
 import 'package:balance_iq/core/strings/dashboard_strings.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class DateSelectorBottomSheet extends StatefulWidget {
   final Function(DateTime start, DateTime end) onDateSelected;
@@ -207,10 +208,7 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(colors: [
-                        Theme.of(context).colorScheme.primary,
-                        Theme.of(context).colorScheme.secondary,
-                      ]),
+                      color: Theme.of(context).colorScheme.primary,
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
@@ -224,7 +222,7 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
                       ],
                     ),
                     child: Icon(
-                      Icons.date_range_rounded,
+                      LucideIcons.calendar,
                       color: GetIt.instance<AppPalette>().white,
                       size: 20,
                     ),

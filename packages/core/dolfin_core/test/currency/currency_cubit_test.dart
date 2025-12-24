@@ -29,13 +29,13 @@ void main() {
     });
 
     group('Initial State', () {
-      test('should have BDT as initial currency', () async {
+      test('should have null as initial currency', () async {
         final currencyCubit = CurrencyCubit();
         await Future.delayed(const Duration(milliseconds: 50));
 
-        expect(currencyCubit.state.currencyCode, equals('BDT'));
-        expect(currencyCubit.state.currencySymbol, equals('৳'));
-        expect(currencyCubit.state.currencyName, equals('Bangladeshi Taka'));
+        expect(currencyCubit.state.currencyCode, isNull);
+        expect(currencyCubit.state.currencySymbol, isNull);
+        expect(currencyCubit.state.currencyName, isNull);
 
         await currencyCubit.close();
       });
@@ -60,12 +60,12 @@ void main() {
         await currencyCubit.close();
       });
 
-      test('should use default BDT when no currency is saved', () async {
+      test('should use null when no currency is saved', () async {
         final currencyCubit = CurrencyCubit();
         await Future.delayed(const Duration(milliseconds: 50));
 
-        expect(currencyCubit.state.currencyCode, equals('BDT'));
-        expect(currencyCubit.state.currencySymbol, equals('৳'));
+        expect(currencyCubit.state.currencyCode, isNull);
+        expect(currencyCubit.state.currencySymbol, isNull);
 
         await currencyCubit.close();
       });
@@ -109,6 +109,9 @@ void main() {
       test('should format amount with currency symbol', () async {
         final currencyCubit = CurrencyCubit();
         await Future.delayed(const Duration(milliseconds: 50));
+        // Set currency first
+        await currencyCubit
+            .setCurrency(createCurrency('BDT', '৳', 'Bangladeshi Taka'));
 
         final formatted = currencyCubit.formatAmount(1234.56);
         expect(formatted, contains('৳'));
@@ -178,6 +181,8 @@ void main() {
       test('should format millions with M suffix', () async {
         final currencyCubit = CurrencyCubit();
         await Future.delayed(const Duration(milliseconds: 50));
+        await currencyCubit
+            .setCurrency(createCurrency('BDT', '৳', 'Bangladeshi Taka'));
 
         final formatted = currencyCubit.formatCompact(1500000);
         expect(formatted, equals('৳1.5M'));
@@ -188,6 +193,8 @@ void main() {
       test('should format thousands with K suffix', () async {
         final currencyCubit = CurrencyCubit();
         await Future.delayed(const Duration(milliseconds: 50));
+        await currencyCubit
+            .setCurrency(createCurrency('BDT', '৳', 'Bangladeshi Taka'));
 
         final formatted = currencyCubit.formatCompact(2300);
         expect(formatted, equals('৳2.3K'));
@@ -209,11 +216,11 @@ void main() {
     });
 
     group('Symbol Getter', () {
-      test('should return current currency symbol', () async {
+      test('should return empty string if currency unset', () async {
         final currencyCubit = CurrencyCubit();
         await Future.delayed(const Duration(milliseconds: 50));
 
-        expect(currencyCubit.symbol, equals('৳'));
+        expect(currencyCubit.symbol, equals(''));
 
         await currencyCubit.close();
       });
@@ -273,6 +280,8 @@ void main() {
         final currencyCubit = CurrencyCubit();
         await Future.delayed(const Duration(milliseconds: 50));
 
+        // Set BDT first
+        await currencyCubit.setCurrency(createCurrency('BDT', '৳', 'Taka'));
         // Test with BDT
         var formatted = currencyCubit.formatAmount(1000);
         expect(formatted, contains('৳'));

@@ -8,18 +8,38 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../mocks.dart';
+import 'package:dolfin_core/storage/secure_storage_service.dart';
+
+class FakeUser extends Fake implements User {}
+
+class MockSecureStorageService extends Mock implements SecureStorageService {}
 
 void main() {
+  setUpAll(() {
+    registerFallbackValue(FakeUser());
+  });
+
   late LoginCubit loginCubit;
   late MockLogin mockLogin;
   late MockSignInWithGoogle mockSignInWithGoogle;
+  late MockGetProfile mockGetProfile;
+  late MockSaveUser mockSaveUser;
+  late MockSecureStorageService mockSecureStorage;
 
   setUp(() {
     mockLogin = MockLogin();
     mockSignInWithGoogle = MockSignInWithGoogle();
+    mockGetProfile = MockGetProfile();
+    mockSaveUser = MockSaveUser();
+    mockSecureStorage = MockSecureStorageService();
+
     loginCubit = LoginCubit(
       login: mockLogin,
       signInWithGoogle: mockSignInWithGoogle,
+      getProfile: mockGetProfile,
+      saveUser: mockSaveUser,
+      currencyCubit: FakeCurrencyCubit(),
+      secureStorage: mockSecureStorage,
     );
   });
 
@@ -59,6 +79,17 @@ void main() {
       timestamp: 1234567890,
     );
 
+    final testUserInfo = UserInfo(
+      id: 1,
+      username: testUsername,
+      fullName: testUsername,
+      email: testEmail,
+      photoUrl: null,
+      roles: ['USER'],
+      isEmailVerified: true,
+      currency: null,
+    );
+
     final testFailedLoginResponse = LoginResponse(
       success: false,
       message: 'Invalid credentials',
@@ -78,6 +109,10 @@ void main() {
                 username: any(named: 'username'),
                 password: any(named: 'password'),
               )).thenAnswer((_) async => Right(testLoginResponse));
+          when(() => mockGetProfile(any()))
+              .thenAnswer((_) async => Right(testUserInfo));
+          when(() => mockSaveUser(any()))
+              .thenAnswer((_) async => const Right(null));
           return loginCubit;
         },
         act: (cubit) => cubit.loginWithEmail(

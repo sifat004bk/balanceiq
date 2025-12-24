@@ -15,6 +15,8 @@ class MockSecureStorageService extends Mock implements SecureStorageService {}
 
 class MockUpdateCurrency extends Mock implements UpdateCurrency {}
 
+class FakeUser extends Fake implements User {}
+
 void main() {
   late SessionCubit sessionCubit;
   late MockGetCurrentUser mockGetCurrentUser;
@@ -22,6 +24,11 @@ void main() {
   late MockGetProfile mockGetProfile;
   late MockSecureStorageService mockSecureStorage;
   late MockUpdateCurrency mockUpdateCurrency;
+  late MockSaveUser mockSaveUser;
+
+  setUpAll(() {
+    registerFallbackValue(FakeUser());
+  });
 
   setUp(() {
     mockGetCurrentUser = MockGetCurrentUser();
@@ -29,13 +36,16 @@ void main() {
     mockGetProfile = MockGetProfile();
     mockSecureStorage = MockSecureStorageService();
     mockUpdateCurrency = MockUpdateCurrency();
+    mockSaveUser = MockSaveUser();
 
     sessionCubit = SessionCubit(
       getCurrentUser: mockGetCurrentUser,
       signOutUseCase: mockSignOut,
       getProfile: mockGetProfile,
       updateCurrencyUseCase: mockUpdateCurrency,
+      saveUser: mockSaveUser,
       secureStorage: mockSecureStorage,
+      currencyCubit: FakeCurrencyCubit(),
     );
   });
 
@@ -78,6 +88,8 @@ void main() {
               .thenAnswer((_) async => 'valid_token');
           when(() => mockGetProfile(any()))
               .thenAnswer((_) async => Right(testUserInfo));
+          when(() => mockSaveUser(any()))
+              .thenAnswer((_) async => const Right(null));
           return sessionCubit;
         },
         act: (cubit) => cubit.checkAuthStatus(),
@@ -166,6 +178,8 @@ void main() {
               .thenAnswer((_) async => 'valid_token');
           when(() => mockGetProfile(any()))
               .thenAnswer((_) async => Right(testUserInfo));
+          when(() => mockSaveUser(any()))
+              .thenAnswer((_) async => const Right(null));
           return sessionCubit;
         },
         act: (cubit) => cubit.refreshUserProfile(),
@@ -177,6 +191,7 @@ void main() {
         ],
         verify: (_) {
           verify(() => mockGetProfile('valid_token')).called(1);
+          verify(() => mockSaveUser(any())).called(1);
         },
       );
 
@@ -215,7 +230,11 @@ void main() {
 
       blocTest<SessionCubit, SessionState>(
         'does nothing when not authenticated',
-        build: () => sessionCubit,
+        build: () {
+          when(() => mockSecureStorage.getToken())
+              .thenAnswer((_) async => null);
+          return sessionCubit;
+        },
         act: (cubit) => cubit.refreshUserProfile(),
         expect: () => [],
       );

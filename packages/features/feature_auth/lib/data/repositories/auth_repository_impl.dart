@@ -110,6 +110,7 @@ class AuthRepositoryImpl implements AuthRepository {
           isEmailVerified: response.data!.isEmailVerified,
         );
         await localDataSource.saveUser(userModel);
+        await localDataSource.saveAuthToken(response.data!.token);
       }
 
       return Right(response);
@@ -230,6 +231,26 @@ class AuthRepositoryImpl implements AuthRepository {
       return Left(_mapExceptionToFailure(e));
     } catch (e) {
       return Left(ServerFailure('Failed to update currency: $e'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> saveUser(User user) async {
+    try {
+      final userModel = UserModel(
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        photoUrl: user.photoUrl,
+        authProvider: user.authProvider,
+        currency: user.currency,
+        createdAt: user.createdAt,
+        isEmailVerified: user.isEmailVerified,
+      );
+      await localDataSource.saveUser(userModel);
+      return const Right(null);
+    } catch (e) {
+      return Left(CacheFailure('Failed to save user: $e'));
     }
   }
 

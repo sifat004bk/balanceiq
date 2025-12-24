@@ -5,21 +5,23 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 /// Currency state
 class CurrencyState {
-  final String currencyCode;
-  final String currencySymbol;
-  final String currencyName;
+  final String? currencyCode;
+  final String? currencySymbol;
+  final String? currencyName;
+
+  bool get isCurrencySet => currencyCode != null;
 
   const CurrencyState({
-    required this.currencyCode,
-    required this.currencySymbol,
-    required this.currencyName,
+    this.currencyCode,
+    this.currencySymbol,
+    this.currencyName,
   });
 
-  /// Default currency (BDT for Bangladesh)
+  /// Default currency (Unset)
   factory CurrencyState.initial() => const CurrencyState(
-        currencyCode: 'BDT',
-        currencySymbol: '৳',
-        currencyName: 'Bangladeshi Taka',
+        currencyCode: null,
+        currencySymbol: null,
+        currencyName: null,
       );
 
   CurrencyState copyWith({
@@ -75,11 +77,21 @@ class CurrencyCubit extends Cubit<CurrencyState> {
     ));
   }
 
+  /// Set currency by code string (e.g., 'USD', 'BDT')
+  Future<void> setCurrencyByCode(String code) async {
+    final currency = CurrencyService().findByCode(code);
+    if (currency != null) {
+      await setCurrency(currency);
+    }
+  }
+
   /// Format amount with current currency symbol
   /// Example: 1234.56 -> "৳1,234.56" or "$1,234.56"
   String formatAmount(double amount) {
+    // Fallback to strict formatting if needed, or empty symbol
+    final symbol = state.currencySymbol ?? '';
     final formatter = NumberFormat.currency(
-      symbol: state.currencySymbol,
+      symbol: symbol,
       decimalDigits: 2,
     );
     return formatter.format(amount);
@@ -92,21 +104,32 @@ class CurrencyCubit extends Cubit<CurrencyState> {
   }
 
   /// Format compact amount (e.g., 1.2K, 3.5M)
+  /// Returns just the number if currency is not set
   String formatCompact(double amount) {
+    final sym = state.currencySymbol ?? '';
     if (amount >= 1000000) {
-      return '${state.currencySymbol}${(amount / 1000000).toStringAsFixed(1)}M';
+      return '$sym${(amount / 1000000).toStringAsFixed(1)}M';
     } else if (amount >= 1000) {
-      return '${state.currencySymbol}${(amount / 1000).toStringAsFixed(1)}K';
+      return '$sym${(amount / 1000).toStringAsFixed(1)}K';
     }
     return formatAmount(amount);
   }
 
   /// Get just the symbol
-  String get symbol => state.currencySymbol;
+  String get symbol => state.currencySymbol ?? '';
 
   /// Check if currency has been set by user
   Future<bool> hasCurrencyBeenSet() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.containsKey(_currencyCodeKey);
+  }
+
+  /// Reset currency state (call on logout)
+  Future<void> reset() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_currencyCodeKey);
+    await prefs.remove(_currencySymbolKey);
+    await prefs.remove(_currencyNameKey);
+    emit(CurrencyState.initial());
   }
 }

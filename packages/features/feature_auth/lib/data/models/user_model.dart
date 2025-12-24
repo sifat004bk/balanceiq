@@ -6,6 +6,7 @@ class UserModel extends User {
     required super.email,
     required super.name,
     super.photoUrl,
+    super.currency,
     required super.authProvider,
     required super.createdAt,
     super.isEmailVerified = false,
@@ -13,11 +14,13 @@ class UserModel extends User {
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id: json['id'] as String,
+      id: json['id'].toString(),
       email: json['email'] as String,
       name: json['name'] as String,
       photoUrl: json['photo_url'] as String?,
-      authProvider: json['auth_provider'] as String,
+      currency: json['currency'] as String?,
+      authProvider: json['auth_provider'] as String? ??
+          'email', // Handle generic fallback or ensure API sends it
       createdAt: DateTime.parse(json['created_at'] as String),
       isEmailVerified: json['is_email_verified'] as bool? ?? false,
     );
@@ -29,6 +32,7 @@ class UserModel extends User {
       'email': email,
       'name': name,
       'photo_url': photoUrl,
+      'currency': currency,
       'auth_provider': authProvider,
       'created_at': createdAt.toIso8601String(),
       'is_email_verified': isEmailVerified,
@@ -41,6 +45,7 @@ class UserModel extends User {
       email: user.email,
       name: user.name,
       photoUrl: user.photoUrl,
+      currency: user.currency,
       authProvider: user.authProvider,
       createdAt: user.createdAt,
       isEmailVerified: user.isEmailVerified,
@@ -53,6 +58,7 @@ class UserModel extends User {
       email: email,
       name: name,
       photoUrl: photoUrl,
+      currency: currency,
       authProvider: authProvider,
       createdAt: createdAt,
       isEmailVerified: isEmailVerified,

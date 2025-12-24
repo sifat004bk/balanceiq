@@ -5,7 +5,9 @@ import '../../../domain/usecases/get_current_user.dart';
 import '../../../domain/usecases/get_profile.dart';
 import '../../../domain/usecases/sign_out.dart';
 import '../../../domain/usecases/update_currency.dart';
+import '../../../domain/usecases/save_user.dart';
 import 'package:dolfin_core/storage/secure_storage_service.dart';
+import 'package:dolfin_core/currency/currency_cubit.dart';
 
 // States
 abstract class SessionState extends Equatable {
@@ -43,14 +45,18 @@ class SessionCubit extends Cubit<SessionState> {
   final SignOut signOutUseCase;
   final GetProfile getProfile;
   final UpdateCurrency updateCurrencyUseCase;
+  final SaveUser saveUser;
   final SecureStorageService secureStorage;
+  final CurrencyCubit currencyCubit;
 
   SessionCubit({
     required this.getCurrentUser,
     required this.signOutUseCase,
     required this.getProfile,
     required this.updateCurrencyUseCase,
+    required this.saveUser,
     required this.secureStorage,
+    required this.currencyCubit,
   }) : super(SessionInitial());
 
   /// Check for existing session on app start
@@ -76,7 +82,10 @@ class SessionCubit extends Cubit<SessionState> {
     final result = await signOutUseCase();
     result.fold(
       (failure) => emit(SessionError(failure.message)),
-      (_) => emit(Unauthenticated()),
+      (_) async {
+        await currencyCubit.reset();
+        emit(Unauthenticated());
+      },
     );
   }
 
@@ -86,15 +95,29 @@ class SessionCubit extends Cubit<SessionState> {
     if (state is Authenticated) {
       currentUser = (state as Authenticated).user;
     } else {
-      return;
+      // If not authenticated, try to use current user if available or just proceed if token exists
+      final token = await secureStorage.getToken();
+      if (token == null || token.isEmpty) {
+        return;
+      }
+
+      // We have a token, but state is not Authenticated.
+      // This implies we might be in Initial state but valid session exists.
+      // We will let getProfile fetch the user data.
     }
 
     emit(SessionLoading());
 
+    // Fallback: If token not defined, retrieve it again (though we did above, scope is different)
+    // Actually, I removed the token line by mistake in previous edit.
     final token = await secureStorage.getToken() ?? '';
 
     if (token.isEmpty) {
-      emit(Authenticated(currentUser));
+      if (currentUser != null) {
+        emit(Authenticated(currentUser));
+      } else {
+        emit(Unauthenticated());
+      }
       return;
     }
 
@@ -102,18 +125,35 @@ class SessionCubit extends Cubit<SessionState> {
 
     result.fold(
       (failure) {
-        emit(Authenticated(currentUser!));
+        if (currentUser != null) {
+          emit(Authenticated(currentUser!));
+        } else {
+          // If we failed to get profile and don't have current user, emit error
+          emit(SessionError(failure.message));
+        }
       },
-      (userInfo) {
+      (userInfo) async {
         final updatedUser = User(
           id: userInfo.id.toString(),
           email: userInfo.email,
           name: userInfo.fullName,
           photoUrl: userInfo.photoUrl,
-          authProvider: 'email',
-          createdAt: DateTime.now(),
+          currency: userInfo.currency,
+          // If authProvider not in userInfo, fallback to current user's provider or 'email'
+          authProvider: currentUser?.authProvider ?? 'email',
+          // Keep original createdAt or fallback to now if not available (userInfo doesn't have it?)
+          createdAt: currentUser?.createdAt ?? DateTime.now(),
           isEmailVerified: userInfo.isEmailVerified,
         );
+
+        // Sync currency to app state
+        if (userInfo.currency != null && userInfo.currency!.isNotEmpty) {
+          await currencyCubit.setCurrencyByCode(userInfo.currency!);
+        }
+
+        // Save updated user to cache
+        await saveUser(updatedUser);
+
         emit(Authenticated(updatedUser));
       },
     );

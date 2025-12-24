@@ -262,6 +262,7 @@ class UserInfo {
   final String email;
   final String fullName;
   final String? photoUrl;
+  final String? currency;
   final List<String> roles;
   final bool isEmailVerified;
 
@@ -271,6 +272,7 @@ class UserInfo {
     required this.email,
     required this.fullName,
     this.photoUrl,
+    this.currency,
     required this.roles,
     this.isEmailVerified = false,
   });
@@ -286,6 +288,7 @@ class UserInfo {
       email: userData['email'] as String? ?? '',
       fullName: userData['fullName'] as String? ?? '',
       photoUrl: userData['photoUrl'] as String?,
+      currency: userData['currency'] as String?,
       roles: (userData['roles'] as List<dynamic>?)
               ?.map((e) => e.toString())
               .toList() ??
@@ -301,6 +304,7 @@ class UserInfo {
       'email': email,
       'fullName': fullName,
       if (photoUrl != null) 'photoUrl': photoUrl,
+      if (currency != null) 'currency': currency,
       'roles': roles,
       'isEmailVerified': isEmailVerified,
     };

@@ -30,8 +30,10 @@ abstract class AppConstants {
   String get keyUserPhotoUrl;
   String get keyUserAuthProvider;
   String get keyIsLoggedIn;
+  String get keyUserCurrency;
   String get keyIsEmailVerified;
   String get keyThemeMode;
+  String get keyCurrencyCode;
 
   // Mock Mode - Already done
   bool get isMockMode;

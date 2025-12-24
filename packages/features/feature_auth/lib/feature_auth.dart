@@ -24,6 +24,7 @@ import 'package:feature_auth/domain/usecases/get_current_user.dart';
 import 'package:feature_auth/domain/usecases/sign_out.dart';
 import 'package:feature_auth/domain/usecases/get_profile.dart';
 import 'package:feature_auth/domain/usecases/update_currency.dart';
+import 'package:feature_auth/domain/usecases/save_user.dart';
 
 import 'package:feature_auth/presentation/cubit/signup/signup_cubit.dart';
 import 'package:feature_auth/presentation/cubit/login/login_cubit.dart';
@@ -150,6 +151,7 @@ Future<void> initAuthFeature(GetIt sl, AuthFeatureConfig config) async {
 
   sl.registerLazySingleton(() => GetProfile(sl()));
   sl.registerLazySingleton(() => UpdateCurrency(sl()));
+  sl.registerLazySingleton(() => SaveUser(sl()));
 
   // Cubits
   sl.registerFactory(() => SignupCubit(
@@ -163,6 +165,10 @@ Future<void> initAuthFeature(GetIt sl, AuthFeatureConfig config) async {
   sl.registerFactory(() => LoginCubit(
         login: sl(),
         signInWithGoogle: sl(),
+        getProfile: sl(),
+        saveUser: sl(),
+        currencyCubit: sl(),
+        secureStorage: config.secureStorage,
       ));
 
   sl.registerFactory(() => SessionCubit(
@@ -170,7 +176,9 @@ Future<void> initAuthFeature(GetIt sl, AuthFeatureConfig config) async {
         signOutUseCase: sl(),
         getProfile: sl(),
         updateCurrencyUseCase: sl(),
+        saveUser: sl(),
         secureStorage: config.secureStorage,
+        currencyCubit: sl(),
       ));
 
   sl.registerFactory(() => PasswordCubit(

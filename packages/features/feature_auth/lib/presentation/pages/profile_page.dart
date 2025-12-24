@@ -26,6 +26,8 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage>
     with ProfileTourMixin, WidgetsBindingObserver {
+  bool _hasOpenedCurrencyPicker = false;
+
   @override
   void initState() {
     super.initState();
@@ -80,8 +82,70 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
+  void _checkAndShowCurrencyPicker() {
+    if (_hasOpenedCurrencyPicker) return;
+
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    if (args != null && args['action'] == 'open_currency_selector') {
+      _hasOpenedCurrencyPicker = true;
+      final returnToChat = args['returnToChat'] == true;
+      _showCurrencyPicker(context, returnToChat: returnToChat);
+    }
+  }
+
+  void _showCurrencyPicker(BuildContext context, {bool returnToChat = false}) {
+    showCurrencyPicker(
+      context: context,
+      theme: CurrencyPickerThemeData(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        titleTextStyle: TextStyle(
+          fontWeight: FontWeight.w600,
+          fontSize: 18,
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
+        subtitleTextStyle: TextStyle(
+          fontSize: 14,
+          color: Theme.of(context).hintColor,
+        ),
+        flagSize: 28,
+        inputDecoration: InputDecoration(
+          hintText: 'Search currency',
+          prefixIcon: const Icon(Icons.search),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      ),
+      showFlag: true,
+      showCurrencyName: true,
+      showCurrencyCode: true,
+      onSelect: (Currency currency) {
+        GetIt.instance<CurrencyCubit>().setCurrency(currency);
+        // Sync with backend
+        context.read<SessionCubit>().updateUserCurrency(currency.code);
+
+        SnackbarUtils.showSuccess(
+          context,
+          'Currency changed to ${currency.symbol} ${currency.name}',
+        );
+
+        // If navigated from chat, return after selection
+        if (returnToChat) {
+          Navigator.pop(context);
+        }
+      },
+      favorite: ['BDT', 'USD', 'EUR', 'GBP', 'INR'],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    // Check for arguments after build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkAndShowCurrencyPicker();
+    });
+
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -128,7 +192,7 @@ class _ProfilePageState extends State<ProfilePage>
         child: Scaffold(
           body: BlocBuilder<SessionCubit, SessionState>(
             builder: (context, state) {
-              if (state is SessionLoading) {
+              if (state is SessionLoading || state is SessionInitial) {
                 return const ProfileShimmer();
               }
 
@@ -251,52 +315,10 @@ class _ProfilePageState extends State<ProfilePage>
                         return ProfileMenuItem(
                           icon: Icons.currency_exchange_outlined,
                           title: GetIt.I<AuthStrings>().profile.currency,
-                          subtitle:
-                              '${currencyState.currencySymbol} ${currencyState.currencyName}',
-                          onTap: () {
-                            showCurrencyPicker(
-                              context: context,
-                              theme: CurrencyPickerThemeData(
-                                backgroundColor:
-                                    Theme.of(context).scaffoldBackgroundColor,
-                                titleTextStyle: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 18,
-                                  color:
-                                      Theme.of(context).colorScheme.onSurface,
-                                ),
-                                subtitleTextStyle: TextStyle(
-                                  fontSize: 14,
-                                  color: Theme.of(context).hintColor,
-                                ),
-                                flagSize: 28,
-                                inputDecoration: InputDecoration(
-                                  hintText: 'Search currency',
-                                  prefixIcon: const Icon(Icons.search),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                ),
-                              ),
-                              showFlag: true,
-                              showCurrencyName: true,
-                              showCurrencyCode: true,
-                              onSelect: (Currency currency) {
-                                GetIt.instance<CurrencyCubit>()
-                                    .setCurrency(currency);
-                                // Sync with backend
-                                context
-                                    .read<SessionCubit>()
-                                    .updateUserCurrency(currency.code);
-
-                                SnackbarUtils.showSuccess(
-                                  context,
-                                  'Currency changed to ${currency.symbol} ${currency.name}',
-                                );
-                              },
-                              favorite: ['BDT', 'USD', 'EUR', 'GBP', 'INR'],
-                            );
-                          },
+                          subtitle: currencyState.isCurrencySet
+                              ? '${currencyState.currencySymbol} ${currencyState.currencyName}'
+                              : 'Select Currency',
+                          onTap: () => _showCurrencyPicker(context),
                         );
                       },
                     ),

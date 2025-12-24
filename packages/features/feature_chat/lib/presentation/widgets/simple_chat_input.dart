@@ -341,7 +341,7 @@ class _SimpleChatInputState extends State<SimpleChatInput> {
                 children: [
                   Padding(
                     padding:
-                        const EdgeInsets.only(left: 12, right: 12, bottom: 12),
+                        const EdgeInsets.only(left: 4, right: 4, bottom: 12),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [

@@ -240,4 +240,16 @@ class AppTypography {
         fontWeight: FontWeight.w400,
         letterSpacing: 0.2,
       );
+
+  static TextStyle get inputMedium => textTheme.bodyMedium!.copyWith(
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+    letterSpacing: 0.2,
+  );
+
+  static TextStyle get inputSmall => textTheme.bodySmall!.copyWith(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    letterSpacing: 0.2,
+  );
 }

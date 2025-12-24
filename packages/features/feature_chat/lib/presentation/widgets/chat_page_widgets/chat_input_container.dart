@@ -61,7 +61,7 @@ class ChatInputContainer extends StatelessWidget {
             return SimpleChatInput(
               botId: botId,
               botColor: Theme.of(context).colorScheme.primary,
-              width: MediaQuery.of(context).size.width - 32,
+              width: MediaQuery.of(context).size.width,
               isCollapsed: false,
               placeholder: placeholder,
             );

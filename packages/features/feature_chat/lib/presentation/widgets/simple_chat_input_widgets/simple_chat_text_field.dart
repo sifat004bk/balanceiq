@@ -31,7 +31,7 @@ class SimpleChatTextField extends StatelessWidget {
             (isDisabled
                 ? GetIt.I<ChatStrings>().limitReached
                 : GetIt.I<ChatStrings>().inputPlaceholderGeneral),
-        hintStyle: AppTypography.inputLarge.copyWith(
+        hintStyle: AppTypography.inputMedium.copyWith(
           color: Theme.of(context).hintColor,
           fontWeight: FontWeight.w500,
         ),
@@ -45,10 +45,10 @@ class SimpleChatTextField extends StatelessWidget {
         filled: false,
         contentPadding: const EdgeInsets.symmetric(vertical: 8),
       ),
-      style: TextStyle(
-        fontSize: 15,
+      style: AppTypography.inputMedium.copyWith(
         color:
-            isDisabled ? Colors.grey : Theme.of(context).colorScheme.onSurface,
+        isDisabled ? Colors.grey : Theme.of(context).colorScheme.onSurface,
+        fontWeight: FontWeight.w500,
       ),
     );
   }

@@ -17,6 +17,7 @@ import 'package:feature_auth/presentation/cubit/session/session_cubit.dart';
 import 'package:feature_auth/presentation/cubit/login/login_cubit.dart';
 import 'package:feature_auth/presentation/cubit/signup/signup_cubit.dart';
 import 'package:feature_auth/presentation/cubit/password/password_cubit.dart';
+import 'package:dolfin_core/currency/currency_cubit.dart';
 
 // Pages
 import "package:feature_auth/presentation/pages/change_password_page.dart";
@@ -116,75 +117,88 @@ class MyApp extends StatelessWidget {
         BlocProvider<ProductTourCubit>(
           create: (context) => di.sl<ProductTourCubit>(),
         ),
+        BlocProvider<CurrencyCubit>(
+          create: (context) => di.sl<CurrencyCubit>(),
+        ),
       ],
-      child: BlocBuilder<ThemeCubit, ThemeState>(
-        builder: (context, themeState) {
-          final themeMode = themeState is ThemeLoaded
-              ? themeState.themeMode
-              : ThemeMode.system;
-
-          return MaterialApp(
-            navigatorKey: navigatorKey,
-            title: 'Donfin AI',
-            debugShowCheckedModeBanner: false,
-            theme: AppTheme.lightTheme(),
-            darkTheme: AppTheme.darkTheme(),
-            themeMode: themeMode,
-            home: const SplashPage(),
-            routes: {
-              '/onboarding': (context) => const OnboardingPage(),
-              '/interactive-onboarding': (context) =>
-                  const InteractiveOnboardingPage(),
-              '/login': (context) => BlocProvider<LoginCubit>(
-                    create: (context) => di.sl<LoginCubit>(),
-                    child: const LoginPage(),
-                  ),
-              '/signup': (context) => BlocProvider<SignupCubit>(
-                    create: (context) => di.sl<SignupCubit>(),
-                    child: const SignUpPage(),
-                  ),
-              '/verification-success': (context) =>
-                  const VerificationSuccessPage(),
-              '/loading': (context) => const LoadingPage(),
-              '/home': (context) => const HomePage(),
-              '/forgot-password': (context) => BlocProvider<PasswordCubit>(
-                    create: (context) => di.sl<PasswordCubit>(),
-                    child: const ForgotPasswordPage(),
-                  ),
-              '/change-password': (context) => BlocProvider<PasswordCubit>(
-                    create: (context) => di.sl<PasswordCubit>(),
-                    child: const ChangePasswordPage(),
-                  ),
-              '/profile': (context) => const ProfilePage(),
-              '/subscription-plans': (context) => const SubscriptionPlansPage(),
-              '/manage-subscription': (context) =>
-                  const ManageSubscriptionPage(),
-              '/transactions': (context) => const TransactionsPage(),
-            },
-            onGenerateRoute: (settings) {
-              if (settings.name == '/email-verification') {
-                final email =
-                    settings.arguments as String? ?? 'user@example.com';
-                return MaterialPageRoute(
-                  builder: (context) => BlocProvider<SignupCubit>(
-                    create: (context) => di.sl<SignupCubit>(),
-                    child: EmailVerificationPage(email: email),
-                  ),
-                );
-              }
-              if (settings.name == '/reset-password') {
-                final token = settings.arguments as String? ?? '';
-                return MaterialPageRoute(
-                  builder: (context) => BlocProvider<PasswordCubit>(
-                    create: (context) => di.sl<PasswordCubit>(),
-                    child: ResetPasswordPage(token: token),
-                  ),
-                );
-              }
-              return null;
-            },
-          );
+      child: BlocListener<SessionCubit, SessionState>(
+        listener: (context, state) {
+          if (state is Authenticated && state.user.currency != null) {
+            context
+                .read<CurrencyCubit>()
+                .setCurrencyByCode(state.user.currency!);
+          }
         },
+        child: BlocBuilder<ThemeCubit, ThemeState>(
+          builder: (context, themeState) {
+            final themeMode = themeState is ThemeLoaded
+                ? themeState.themeMode
+                : ThemeMode.system;
+
+            return MaterialApp(
+              navigatorKey: navigatorKey,
+              title: 'Donfin AI',
+              debugShowCheckedModeBanner: false,
+              theme: AppTheme.lightTheme(),
+              darkTheme: AppTheme.darkTheme(),
+              themeMode: themeMode,
+              home: const SplashPage(),
+              routes: {
+                '/onboarding': (context) => const OnboardingPage(),
+                '/interactive-onboarding': (context) =>
+                    const InteractiveOnboardingPage(),
+                '/login': (context) => BlocProvider<LoginCubit>(
+                      create: (context) => di.sl<LoginCubit>(),
+                      child: const LoginPage(),
+                    ),
+                '/signup': (context) => BlocProvider<SignupCubit>(
+                      create: (context) => di.sl<SignupCubit>(),
+                      child: const SignUpPage(),
+                    ),
+                '/verification-success': (context) =>
+                    const VerificationSuccessPage(),
+                '/loading': (context) => const LoadingPage(),
+                '/home': (context) => const HomePage(),
+                '/forgot-password': (context) => BlocProvider<PasswordCubit>(
+                      create: (context) => di.sl<PasswordCubit>(),
+                      child: const ForgotPasswordPage(),
+                    ),
+                '/change-password': (context) => BlocProvider<PasswordCubit>(
+                      create: (context) => di.sl<PasswordCubit>(),
+                      child: const ChangePasswordPage(),
+                    ),
+                '/profile': (context) => const ProfilePage(),
+                '/subscription-plans': (context) =>
+                    const SubscriptionPlansPage(),
+                '/manage-subscription': (context) =>
+                    const ManageSubscriptionPage(),
+                '/transactions': (context) => const TransactionsPage(),
+              },
+              onGenerateRoute: (settings) {
+                if (settings.name == '/email-verification') {
+                  final email =
+                      settings.arguments as String? ?? 'user@example.com';
+                  return MaterialPageRoute(
+                    builder: (context) => BlocProvider<SignupCubit>(
+                      create: (context) => di.sl<SignupCubit>(),
+                      child: EmailVerificationPage(email: email),
+                    ),
+                  );
+                }
+                if (settings.name == '/reset-password') {
+                  final token = settings.arguments as String? ?? '';
+                  return MaterialPageRoute(
+                    builder: (context) => BlocProvider<PasswordCubit>(
+                      create: (context) => di.sl<PasswordCubit>(),
+                      child: ResetPasswordPage(token: token),
+                    ),
+                  );
+                }
+                return null;
+              },
+            );
+          },
+        ),
       ),
     );
   }

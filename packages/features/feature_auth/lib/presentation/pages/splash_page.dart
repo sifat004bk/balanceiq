@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:dolfin_core/storage/secure_storage_service.dart';
 import 'package:dolfin_core/utils/app_logger.dart';
 import '../../domain/auth_config.dart';
+import 'package:dolfin_ui_kit/dolfin_ui_kit.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -110,11 +111,7 @@ class _SplashPageState extends State<SplashPage>
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // Logo
-                    Image.asset(
-                      'assets/icons/app_icon.png',
-                      width: 120,
-                      height: 120,
-                    ),
+                    const AppLogo(size: 120),
                     const SizedBox(height: 32),
                     // App name
                     Text(

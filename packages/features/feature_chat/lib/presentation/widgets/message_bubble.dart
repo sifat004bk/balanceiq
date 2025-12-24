@@ -10,7 +10,6 @@ class MessageBubble extends StatefulWidget {
   final Message message;
   final bool isUser;
   final String botName;
-  final Color botColor;
   final bool isLastMessage;
 
   const MessageBubble({
@@ -18,7 +17,6 @@ class MessageBubble extends StatefulWidget {
     required this.message,
     required this.isUser,
     required this.botName,
-    required this.botColor,
     this.isLastMessage = false,
   });
 
@@ -95,7 +93,6 @@ class _MessageBubbleState extends State<MessageBubble>
                     : AiMessageBubble(
                         message: widget.message,
                         botName: widget.botName,
-                        botColor: widget.botColor,
                         isLastMessage: widget.isLastMessage,
                       ),
                 // Timestamp (User only)

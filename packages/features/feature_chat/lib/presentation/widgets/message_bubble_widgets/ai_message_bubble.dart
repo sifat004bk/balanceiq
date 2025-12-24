@@ -9,14 +9,12 @@ import 'chat_message_image_view.dart';
 class AiMessageBubble extends StatelessWidget {
   final Message message;
   final String botName;
-  final Color botColor;
   final bool isLastMessage;
 
   const AiMessageBubble({
     super.key,
     required this.message,
     required this.botName,
-    required this.botColor,
     this.isLastMessage = false,
   });
 
@@ -31,7 +29,6 @@ class AiMessageBubble extends StatelessWidget {
           // Bot header with avatar
           AiMessageHeader(
             botName: botName,
-            botColor: botColor,
           ),
 
           // Content

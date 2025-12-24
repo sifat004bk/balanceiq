@@ -11,59 +11,85 @@ import 'package:google_fonts/google_fonts.dart';
 class MockAppPalette implements AppPalette {
   @override
   Color get primaryLight => Colors.blue;
+
   @override
   Color get primaryDark => Colors.blueAccent;
+
   @override
   Color get secondaryLight => Colors.green;
+
   @override
   Color get secondaryDark => Colors.greenAccent;
+
   @override
   Color get backgroundLight => Colors.white;
+
   @override
   Color get backgroundDark => Colors.black;
+
   @override
   Color get surfaceLight => Colors.grey[200]!;
+
   @override
   Color get surfaceDark => Colors.grey[800]!;
+
   @override
   Color get textPrimaryLight => Colors.black87;
+
   @override
   Color get textPrimaryDark => Colors.white70;
+
   @override
   Color get textSecondaryLight => Colors.black54;
+
   @override
   Color get textSecondaryDark => Colors.white54;
+
   @override
   Color get error => Colors.red;
+
   @override
   Color get warning => Colors.orange;
+
   @override
   Color get success => Colors.green;
+
   @override
   Color get info => Colors.blue;
+
   @override
   Color get white => Colors.white;
+
   @override
   Color get black => Colors.black;
+
   @override
   Color get expense => Colors.red;
+
   @override
   Color get income => Colors.green;
+
   @override
   Color get surfaceContainerDark => Colors.grey[900]!;
+
   @override
   Color get transparent => Colors.transparent;
+
   @override
   List<List<Color>> get chartBarColors => [
         [Colors.blue, Colors.lightBlue]
       ];
+
   @override
   List<Color> get chartLineGradient => [Colors.blue, Colors.lightBlue];
+
   @override
   Color getTooltipColor(bool isDark) =>
       isDark ? Colors.grey[800]! : Colors.grey[200]!;
+
   @override
   List<Color> get categoryColors => [Colors.red, Colors.green, Colors.blue];
+
   @override
   Color getCategoryColor(String category) => Colors.blue;
 }
@@ -142,25 +168,6 @@ void main() {
       expect(theme.primaryColor, Colors.blueAccent);
       expect(theme.scaffoldBackgroundColor, Colors.black);
       expect(theme.useMaterial3, true);
-    });
-
-    test('getBotColor returns correct colors', () {
-      expect(AppTheme.getBotColor('balance_tracker'), Colors.green); // Income
-      expect(AppTheme.getBotColor('investment_guru'),
-          Colors.blue); // Primary Light
-      expect(AppTheme.getBotColor('budget_planner'),
-          Colors.green); // Secondary Light
-      expect(AppTheme.getBotColor('fin_tips'), Colors.orange); // Warning
-      expect(AppTheme.getBotColor('unknown'), Colors.blue); // Default
-    });
-
-    test('getBotIcon returns correct icons', () {
-      expect(
-          AppTheme.getBotIcon('balance_tracker'), Icons.account_balance_wallet);
-      expect(AppTheme.getBotIcon('investment_guru'), Icons.trending_up);
-      expect(AppTheme.getBotIcon('budget_planner'), Icons.receipt_long);
-      expect(AppTheme.getBotIcon('fin_tips'), Icons.lightbulb);
-      expect(AppTheme.getBotIcon('unknown'), Icons.chat);
     });
   });
 }

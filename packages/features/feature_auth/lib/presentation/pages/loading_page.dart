@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:get_it/get_it.dart';
 import '../../domain/auth_config.dart';
+import 'package:dolfin_ui_kit/dolfin_ui_kit.dart';
 
 class LoadingPage extends StatefulWidget {
   const LoadingPage({super.key});
@@ -71,8 +72,8 @@ class _LoadingPageState extends State<LoadingPage>
                     borderRadius: BorderRadius.circular(24),
                   ),
                   child: Center(
-                    child: Image.asset(
-                     'assets/icons/app_icon.png',
+                    child: AppLogo(
+                      size: 48,
                       color: colorScheme.primary,
                     ),
                   ),

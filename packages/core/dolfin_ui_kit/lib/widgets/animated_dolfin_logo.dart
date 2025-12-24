@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'app_logo.dart';
 
 /// Animated Dolfin AI logo widget that can be used throughout the app.
 /// Supports different sizes and optional animation effects.
@@ -98,12 +99,9 @@ class _AnimatedDolfinLogoState extends State<AnimatedDolfinLogo>
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(widget.size * 0.27),
-              child: Image.asset(
-                'assets/icons/app_icon.png',
-                width: widget.size,
-                height: widget.size,
+              child: AppLogo(
+                size: widget.size,
                 fit: BoxFit.cover,
-                package: null, // Use local assets from the app
               ),
             ),
           ),
@@ -150,13 +148,10 @@ class DolfinLogoIcon extends StatelessWidget {
       child: ClipOval(
         child: Padding(
           padding: EdgeInsets.all(size * 0.15),
-          child: Image.asset(
-            'assets/icons/app_icon.png',
-            width: size * 0.7,
-            height: size * 0.7,
+          child: AppLogo(
+            size: size * 0.7,
             fit: BoxFit.contain,
             color: Colors.white,
-            colorBlendMode: BlendMode.srcIn,
           ),
         ),
       ),

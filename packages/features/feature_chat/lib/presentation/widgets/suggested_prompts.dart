@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:feature_chat/constants/chat_strings.dart';
 import 'package:flutter/material.dart';
 import 'suggested_prompt_icon_provider.dart';
+import 'package:dolfin_ui_kit/dolfin_ui_kit.dart';
 
 /// Gemini-style suggested prompts shown in empty chat state
 class SuggestedPrompts extends StatelessWidget {
@@ -191,8 +192,8 @@ class SuggestedPrompts extends StatelessWidget {
                   child: SizedBox(
                     height: 48,
                     width: 48,
-                    child: Image.asset(
-                      'assets/icons/app_icon.png',
+                    child: AppLogo(
+                      size: 48,
                       color: Theme.of(context).colorScheme.onPrimary,
                     ),
                   ),

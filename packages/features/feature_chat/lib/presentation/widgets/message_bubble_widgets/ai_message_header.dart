@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:dolfin_ui_kit/dolfin_ui_kit.dart';
 
 class AiMessageHeader extends StatelessWidget {
   final String botName;
-  final Color botColor;
 
   const AiMessageHeader({
     super.key,
     required this.botName,
-    required this.botColor,
   });
 
   @override
@@ -20,18 +19,14 @@ class AiMessageHeader extends StatelessWidget {
             width: 28,
             height: 28,
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  botColor,
-                  botColor.withValues(alpha: 0.8),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+              color: Theme.of(context).colorScheme.primary,
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: botColor.withValues(alpha: 0.3),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .primary
+                      .withValues(alpha: 0.3),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -40,13 +35,10 @@ class AiMessageHeader extends StatelessWidget {
             child: ClipOval(
               child: Padding(
                 padding: const EdgeInsets.all(4),
-                child: Image.asset(
-                  'assets/icons/app_icon.png',
-                  width: 20,
-                  height: 20,
+                child: AppLogo(
+                  size: 20,
                   fit: BoxFit.contain,
-                  color: Colors.white,
-                  colorBlendMode: BlendMode.srcIn,
+                  color: Theme.of(context).colorScheme.onPrimary,
                 ),
               ),
             ),

@@ -1,3 +1,4 @@
+import 'package:dolfin_ui_kit/dolfin_ui_kit.dart';
 import 'package:flutter/material.dart';
 
 /// Gemini-style typing indicator with three animated dots
@@ -132,21 +133,17 @@ class _TypingIndicatorState extends State<TypingIndicator>
                     Container(
                       width: 28,
                       height: 28,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primary,
                         shape: BoxShape.circle,
                       ),
                       child: ClipOval(
                         child: Padding(
-                          padding: const EdgeInsets.all(2),
-                          child: Image.asset(
-                            'assets/icons/app_icon.png',
-                            width: 24,
-                            height: 24,
-                            fit: BoxFit.contain,
-                            // No color tinting - keep original blue logo
-                          ),
-                        ),
+                            padding: const EdgeInsets.all(2),
+                            child: AppLogo(
+                              size: 24,
+                              color: Theme.of(context).colorScheme.onPrimary,
+                            )),
                       ),
                     ),
                   ],

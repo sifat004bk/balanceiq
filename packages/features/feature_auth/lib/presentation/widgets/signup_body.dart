@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:dolfin_ui_kit/dolfin_ui_kit.dart';
 
 import '../cubit/signup/signup_cubit.dart';
 
@@ -48,12 +49,14 @@ class SignUpBody extends StatelessWidget {
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color:
-                Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+                color: Theme.of(context)
+                    .colorScheme
+                    .primary
+                    .withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(16),
               ),
-              child: Image.asset(
-                'assets/icons/app_icon.png',
+              child: AppLogo(
+                size: 40,
                 color: Theme.of(context).colorScheme.onPrimary,
               ),
             ),

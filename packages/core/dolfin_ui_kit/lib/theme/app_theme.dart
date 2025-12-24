@@ -230,34 +230,4 @@ class AppTheme {
       ),
     );
   }
-
-  static Color getBotColor(String botId) {
-    switch (botId) {
-      case 'balance_tracker':
-        return GetIt.instance<AppPalette>().income;
-      case 'investment_guru':
-        return GetIt.instance<AppPalette>().primaryLight;
-      case 'budget_planner':
-        return GetIt.instance<AppPalette>().secondaryLight;
-      case 'fin_tips':
-        return GetIt.instance<AppPalette>().warning;
-      default:
-        return GetIt.instance<AppPalette>().primaryLight;
-    }
-  }
-
-  static IconData getBotIcon(String botId) {
-    switch (botId) {
-      case 'balance_tracker':
-        return Icons.account_balance_wallet;
-      case 'investment_guru':
-        return Icons.trending_up;
-      case 'budget_planner':
-        return Icons.receipt_long;
-      case 'fin_tips':
-        return Icons.lightbulb;
-      default:
-        return Icons.chat;
-    }
-  }
 }

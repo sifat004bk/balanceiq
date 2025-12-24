@@ -5,3 +5,4 @@ library dolfin_ui_kit;
 export 'theme/app_palette.dart';
 export 'theme/app_theme.dart';
 export 'theme/app_typography.dart';
+export 'widgets/app_logo.dart';

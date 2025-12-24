@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import '../../domain/entities/message.dart';
 import 'package:dolfin_core/constants/app_constants.dart';
-import 'package:dolfin_ui_kit/theme/app_theme.dart';
 import 'message_bubble.dart';
 import 'typing_indicator.dart';
 
@@ -35,10 +34,13 @@ class MessageList extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              AppTheme.getBotIcon(botId),
-              size: 80,
-              color: AppTheme.getBotColor(botId).withValues(alpha: 0.5),
+            SizedBox(
+              height: 80,
+              width: 80,
+              child: Image.asset(
+                'assets/icons/app_icon.png',
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
             ),
             const SizedBox(height: 16),
             Text(
@@ -95,7 +97,6 @@ class MessageList extends StatelessWidget {
                       message: message,
                       isUser: isUser,
                       botName: botName,
-                      botColor: AppTheme.getBotColor(botId),
                       isLastMessage: isLastMessage,
                     );
                   }
@@ -114,7 +115,6 @@ class MessageList extends StatelessWidget {
                     message: message,
                     isUser: isUser,
                     botName: botName,
-                    botColor: AppTheme.getBotColor(botId),
                     isLastMessage: isLastMessage,
                   );
                 }
@@ -139,7 +139,7 @@ class MessageList extends StatelessWidget {
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
                     valueColor: AlwaysStoppedAnimation<Color>(
-                      AppTheme.getBotColor(botId),
+                      Theme.of(context).colorScheme.primary,
                     ),
                   ),
                 ),

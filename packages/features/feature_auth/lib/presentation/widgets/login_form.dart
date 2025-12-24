@@ -59,10 +59,9 @@ class _LoginFormState extends State<LoginForm> {
                   Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(16),
             ),
-            child: Icon(
-              LucideIcons.sparkles,
-              color: Theme.of(context).colorScheme.primary,
-              size: 40,
+            child: Image.asset(
+              'assets/icons/app_icon.png',
+              color: Theme.of(context).colorScheme.onPrimary,
             ),
           ),
           const SizedBox(height: 32),

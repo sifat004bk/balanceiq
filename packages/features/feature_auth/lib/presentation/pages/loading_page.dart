@@ -71,10 +71,9 @@ class _LoadingPageState extends State<LoadingPage>
                     borderRadius: BorderRadius.circular(24),
                   ),
                   child: Center(
-                    child: Icon(
-                      Icons.hub,
+                    child: Image.asset(
+                     'assets/icons/app_icon.png',
                       color: colorScheme.primary,
-                      size: 48,
                     ),
                   ),
                 ),

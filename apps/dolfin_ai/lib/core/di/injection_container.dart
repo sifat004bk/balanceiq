@@ -18,6 +18,8 @@ import '../strings/chat_strings_impl.dart';
 import '../strings/subscription_strings_impl.dart';
 import '../strings/dashboard_strings_impl.dart';
 import 'package:balance_iq/core/strings/dashboard_strings.dart';
+import 'package:balance_iq/core/icons/app_icons.dart';
+import 'package:balance_iq/core/icons/app_icons_impl.dart';
 
 import 'modules/storage_module.dart';
 import 'modules/network_module.dart';
@@ -46,6 +48,9 @@ Future<void> init() async {
       () => const SubscriptionStringsImpl());
   sl.registerLazySingleton<DashboardStrings>(
       () => const DashboardStringsImpl());
+
+  //! Icons
+  sl.registerLazySingleton<AppIcons>(() => const AppIconsImpl());
 
   // Common deps
   final appConstants = sl<AppConstants>();

@@ -1,4 +1,5 @@
 import 'package:balance_iq/core/strings/dashboard_strings.dart';
+import 'package:balance_iq/core/icons/app_icons.dart';
 import 'package:dolfin_core/currency/currency_cubit.dart';
 import 'package:balance_iq/core/di/injection_container.dart';
 import 'package:dolfin_ui_kit/theme/app_palette.dart';
@@ -40,11 +41,10 @@ class BiggestExpenseWidget extends StatelessWidget {
               color: colorScheme.error.withValues(alpha: 0.2),
               shape: BoxShape.circle,
             ),
-            child: Icon(
-              Icons.arrow_upward,
-              color: GetIt.instance<AppPalette>().expense,
-              size: 24,
-            ),
+            child: GetIt.I<AppIcons>().dashboard.expense(
+                  size: 24,
+                  color: GetIt.instance<AppPalette>().expense,
+                ),
           ),
           const SizedBox(width: 16),
 

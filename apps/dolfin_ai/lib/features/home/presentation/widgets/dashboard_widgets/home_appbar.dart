@@ -2,8 +2,10 @@ import 'package:dolfin_ui_kit/widgets/glass_presets.dart';
 import 'package:dolfin_ui_kit/theme/theme_cubit.dart';
 import 'package:dolfin_ui_kit/theme/theme_state.dart';
 import 'package:balance_iq/features/home/domain/entities/dashbaord_summary.dart';
+import 'package:balance_iq/core/icons/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 
 class HomeAppbar extends StatelessWidget {
   final VoidCallback onTapProfileIcon;
@@ -61,11 +63,10 @@ class HomeAppbar extends StatelessWidget {
                     ),
               ),
               const SizedBox(width: 4),
-              Icon(
-                Icons.arrow_drop_down_rounded,
-                color: Theme.of(context).textTheme.titleMedium?.color,
-                size: 20,
-              ),
+              GetIt.I<AppIcons>().navigation.chevronDown(
+                    size: 20,
+                    color: Theme.of(context).textTheme.titleMedium?.color,
+                  ),
             ],
           ),
         ),
@@ -130,11 +131,15 @@ class HomeAppbar extends StatelessWidget {
                   height: 40,
                   width: 40,
                   alignment: Alignment.center,
-                  child: Icon(
-                    isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
-                    size: 20,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
+                  child: isDark
+                      ? GetIt.I<AppIcons>().dashboard.lightMode(
+                            size: 20,
+                            color: Theme.of(context).colorScheme.primary,
+                          )
+                      : GetIt.I<AppIcons>().dashboard.darkMode(
+                            size: 20,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
                 ),
               ),
             );

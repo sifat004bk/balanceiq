@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:feature_auth/presentation/cubit/login/login_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -59,7 +60,7 @@ class _LoginFormState extends State<LoginForm> {
               borderRadius: BorderRadius.circular(16),
             ),
             child: Icon(
-              Icons.hub,
+              LucideIcons.sparkles,
               color: Theme.of(context).colorScheme.primary,
               size: 40,
             ),
@@ -171,9 +172,7 @@ class _LoginFormState extends State<LoginForm> {
                   contentPadding: const EdgeInsets.all(12),
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _isPasswordVisible
-                          ? Icons.visibility
-                          : Icons.visibility_off,
+                      _isPasswordVisible ? LucideIcons.eye : LucideIcons.eyeOff,
                       color: Theme.of(context).hintColor,
                     ),
                     onPressed: () {
@@ -299,7 +298,7 @@ class _LoginFormState extends State<LoginForm> {
                         width: 20,
                         height: 20,
                         errorBuilder: (context, error, stackTrace) =>
-                            const Icon(Icons.g_mobiledata, size: 20),
+                            Icon(LucideIcons.globe, size: 20),
                       ),
                       const SizedBox(width: 8),
                       const Text(

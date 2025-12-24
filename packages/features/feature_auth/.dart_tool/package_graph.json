@@ -17,10 +17,12 @@
         "flutter_bloc",
         "get_it",
         "google_sign_in",
+        "lucide_icons_flutter",
         "shimmer",
         "smooth_page_indicator",
         "tutorial_coach_mark",
-        "uuid"
+        "uuid",
+        "webview_flutter"
       ],
       "devDependencies": [
         "bloc_test",
@@ -143,6 +145,23 @@
         "flutter_bloc",
         "get_it",
         "purchases_flutter"
+      ]
+    },
+    {
+      "name": "lucide_icons_flutter",
+      "version": "3.1.9",
+      "dependencies": [
+        "flutter"
+      ]
+    },
+    {
+      "name": "webview_flutter",
+      "version": "4.13.0",
+      "dependencies": [
+        "flutter",
+        "webview_flutter_android",
+        "webview_flutter_platform_interface",
+        "webview_flutter_wkwebview"
       ]
     },
     {
@@ -619,6 +638,8 @@
         "dolfin_core",
         "dolfin_ui_kit",
         "equatable",
+        "feature_auth",
+        "feature_subscription",
         "fl_chart",
         "flutter",
         "flutter_bloc",
@@ -647,6 +668,34 @@
         "flutter",
         "freezed_annotation",
         "json_annotation"
+      ]
+    },
+    {
+      "name": "webview_flutter_wkwebview",
+      "version": "3.23.0",
+      "dependencies": [
+        "flutter",
+        "meta",
+        "path",
+        "webview_flutter_platform_interface"
+      ]
+    },
+    {
+      "name": "webview_flutter_platform_interface",
+      "version": "2.14.0",
+      "dependencies": [
+        "flutter",
+        "meta",
+        "plugin_platform_interface"
+      ]
+    },
+    {
+      "name": "webview_flutter_android",
+      "version": "4.10.1",
+      "dependencies": [
+        "flutter",
+        "meta",
+        "webview_flutter_platform_interface"
       ]
     },
     {

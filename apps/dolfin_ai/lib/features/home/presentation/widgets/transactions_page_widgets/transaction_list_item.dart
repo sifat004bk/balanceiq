@@ -1,5 +1,6 @@
 import 'package:dolfin_core/currency/currency_cubit.dart';
 import 'package:balance_iq/core/di/injection_container.dart';
+import 'package:balance_iq/core/icons/app_icons.dart';
 import 'package:dolfin_ui_kit/theme/app_palette.dart';
 import 'package:get_it/get_it.dart';
 import 'package:balance_iq/features/home/domain/entities/transaction.dart';
@@ -65,13 +66,15 @@ class TransactionListItem extends StatelessWidget {
                           .withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(14),
                 ),
-                child: Icon(
-                  isIncome ? Icons.arrow_downward : Icons.arrow_upward,
-                  color: isIncome
-                      ? GetIt.instance<AppPalette>().income
-                      : GetIt.instance<AppPalette>().expense,
-                  size: 24,
-                ),
+                child: isIncome
+                    ? GetIt.I<AppIcons>().dashboard.income(
+                          size: 24,
+                          color: GetIt.instance<AppPalette>().income,
+                        )
+                    : GetIt.I<AppIcons>().dashboard.expense(
+                          size: 24,
+                          color: GetIt.instance<AppPalette>().expense,
+                        ),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -123,15 +126,14 @@ class TransactionListItem extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(width: 8),
-                  Icon(
-                    Icons.chevron_right,
-                    size: 20,
-                    color: Theme.of(context)
-                        .textTheme
-                        .bodySmall
-                        ?.color
-                        ?.withValues(alpha: 0.3),
-                  ),
+                  GetIt.I<AppIcons>().navigation.chevronRight(
+                        size: 20,
+                        color: Theme.of(context)
+                            .textTheme
+                            .bodySmall
+                            ?.color
+                            ?.withValues(alpha: 0.3),
+                      ),
                 ],
               ),
             ],

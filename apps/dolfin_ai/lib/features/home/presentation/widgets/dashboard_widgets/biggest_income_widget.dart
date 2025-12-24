@@ -1,4 +1,5 @@
 import 'package:balance_iq/core/strings/dashboard_strings.dart';
+import 'package:balance_iq/core/icons/app_icons.dart';
 import 'package:dolfin_core/currency/currency_cubit.dart';
 import 'package:balance_iq/core/di/injection_container.dart';
 import 'package:dolfin_ui_kit/theme/app_palette.dart';
@@ -39,11 +40,10 @@ class BiggestIncomeWidget extends StatelessWidget {
               color: Colors.green.withValues(alpha: 0.2),
               shape: BoxShape.circle,
             ),
-            child: Icon(
-              Icons.arrow_downward,
-              color: GetIt.instance<AppPalette>().income,
-              size: 24,
-            ),
+            child: GetIt.I<AppIcons>().dashboard.income(
+                  size: 24,
+                  color: GetIt.instance<AppPalette>().income,
+                ),
           ),
           const SizedBox(width: 16),
 

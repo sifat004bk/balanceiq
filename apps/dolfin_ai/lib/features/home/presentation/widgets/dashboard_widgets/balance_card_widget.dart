@@ -1,6 +1,7 @@
 import 'package:dolfin_core/currency/currency_cubit.dart';
 import 'package:balance_iq/core/di/injection_container.dart';
 import 'package:balance_iq/core/strings/dashboard_strings.dart';
+import 'package:balance_iq/core/icons/app_icons.dart';
 import 'package:dolfin_ui_kit/theme/app_palette.dart';
 import 'package:dolfin_ui_kit/widgets/glass_presets.dart';
 import 'package:flutter/material.dart';
@@ -85,7 +86,7 @@ class BalanceCard extends StatelessWidget {
                 child: _buildIncomeExpenseCard(
                   context,
                   currencyCubit: currencyCubit,
-                  icon: Icons.arrow_downward_rounded,
+                  iconWidget: GetIt.I<AppIcons>().dashboard.income(size: 14),
                   label: GetIt.I<DashboardStrings>().totalIncome,
                   amount: totalIncome,
                   isIncome: true,
@@ -96,7 +97,7 @@ class BalanceCard extends StatelessWidget {
                 child: _buildIncomeExpenseCard(
                   context,
                   currencyCubit: currencyCubit,
-                  icon: Icons.arrow_upward_rounded,
+                  iconWidget: GetIt.I<AppIcons>().dashboard.expense(size: 14),
                   label: GetIt.I<DashboardStrings>().totalExpense,
                   amount: totalExpense,
                   isIncome: false,
@@ -112,7 +113,7 @@ class BalanceCard extends StatelessWidget {
   Widget _buildIncomeExpenseCard(
     BuildContext context, {
     required CurrencyCubit currencyCubit,
-    required IconData icon,
+    required Widget iconWidget,
     required String label,
     required double amount,
     required bool isIncome,
@@ -152,10 +153,12 @@ class BalanceCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: Icon(
-                  icon,
-                  color: Theme.of(context).colorScheme.onPrimary,
-                  size: 14,
+                child: ColorFiltered(
+                  colorFilter: ColorFilter.mode(
+                    Theme.of(context).colorScheme.onPrimary,
+                    BlendMode.srcIn,
+                  ),
+                  child: iconWidget,
                 ),
               ),
               const SizedBox(width: 8),

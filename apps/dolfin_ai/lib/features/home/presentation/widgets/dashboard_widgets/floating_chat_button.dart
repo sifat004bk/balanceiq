@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:feature_chat/constants/chat_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:feature_chat/presentation/pages/chat_page.dart';
+import 'package:balance_iq/core/icons/app_icons.dart';
 
 /// Modern floating chat button for homepage
 /// Matches the chat input design but acts as a navigation button
@@ -86,10 +87,13 @@ class FloatingChatButton extends StatelessWidget {
                   ),
                 ],
               ),
-              child: const Icon(
-                Icons.chat_bubble_outline_rounded,
-                color: Colors.white,
-                size: 18,
+              child: ClipOval(
+                child: Image.asset(
+                  'assets/icons/app_icon.png',
+                  width: 18,
+                  height: 18,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             const SizedBox(width: 12),
@@ -131,11 +135,10 @@ class FloatingChatButton extends StatelessWidget {
                   ),
                 ],
               ),
-              child: const Icon(
-                Icons.arrow_upward_rounded,
-                color: Colors.white,
-                size: 22,
-              ),
+              child: GetIt.I<AppIcons>().navigation.arrowUp(
+                    size: 22,
+                    color: Colors.white,
+                  ),
             ),
           ],
         ),

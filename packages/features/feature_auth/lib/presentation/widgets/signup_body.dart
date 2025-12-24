@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../cubit/signup/signup_cubit.dart';
 
@@ -97,7 +98,7 @@ class SignUpBody extends StatelessWidget {
                   decoration: InputDecoration(
                     hintText: 'Enter your full name',
                     prefixIcon: Icon(
-                      Icons.person_outline,
+                      LucideIcons.user,
                       color: Theme.of(context).hintColor,
                     ),
                     filled: true,
@@ -151,7 +152,7 @@ class SignUpBody extends StatelessWidget {
                   decoration: InputDecoration(
                     hintText: 'Enter your email address',
                     prefixIcon: Icon(
-                      Icons.mail_outline,
+                      LucideIcons.mail,
                       color: Theme.of(context).hintColor,
                     ),
                     filled: true,
@@ -208,7 +209,7 @@ class SignUpBody extends StatelessWidget {
                   decoration: InputDecoration(
                     hintText: 'Enter your password',
                     prefixIcon: Icon(
-                      Icons.lock_outline,
+                      LucideIcons.lock,
                       color: Theme.of(context).hintColor,
                     ),
                     filled: true,
@@ -236,8 +237,8 @@ class SignUpBody extends StatelessWidget {
                     suffixIcon: IconButton(
                       icon: Icon(
                         isPasswordVisible
-                            ? Icons.visibility
-                            : Icons.visibility_off,
+                            ? LucideIcons.eye
+                            : LucideIcons.eyeOff,
                         color: Theme.of(context).hintColor,
                       ),
                       onPressed: onTogglePasswordVisibility,
@@ -274,7 +275,7 @@ class SignUpBody extends StatelessWidget {
                   decoration: InputDecoration(
                     hintText: 'Confirm your password',
                     prefixIcon: Icon(
-                      Icons.lock_reset,
+                      LucideIcons.keyRound,
                       color: Theme.of(context).hintColor,
                     ),
                     filled: true,
@@ -302,8 +303,8 @@ class SignUpBody extends StatelessWidget {
                     suffixIcon: IconButton(
                       icon: Icon(
                         isConfirmPasswordVisible
-                            ? Icons.visibility
-                            : Icons.visibility_off,
+                            ? LucideIcons.eye
+                            : LucideIcons.eyeOff,
                         color: Theme.of(context).hintColor,
                       ),
                       onPressed: onToggleConfirmPasswordVisibility,
@@ -410,7 +411,7 @@ class SignUpBody extends StatelessWidget {
                           width: 20,
                           height: 20,
                           errorBuilder: (context, error, stackTrace) =>
-                              const Icon(Icons.g_mobiledata, size: 20),
+                              Icon(LucideIcons.globe, size: 20),
                         ),
                         const SizedBox(width: 8),
                         const Text(

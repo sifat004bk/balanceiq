@@ -1,6 +1,7 @@
 import 'package:dolfin_core/constants/app_strings.dart';
 import 'package:dolfin_core/currency/currency_cubit.dart';
 import 'package:balance_iq/core/di/injection_container.dart';
+import 'package:balance_iq/core/icons/app_icons.dart';
 import 'package:balance_iq/features/home/domain/entities/transaction.dart';
 import 'package:balance_iq/features/home/presentation/cubit/transactions_cubit.dart';
 import 'package:balance_iq/features/home/presentation/cubit/transactions_state.dart';
@@ -161,13 +162,15 @@ class TransactionHistoryWidget extends StatelessWidget {
                           .withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(
-                  isIncome ? Icons.arrow_downward : Icons.arrow_upward,
-                  color: isIncome
-                      ? Theme.of(context).colorScheme.primary
-                      : Theme.of(context).colorScheme.error,
-                  size: 20,
-                ),
+                child: isIncome
+                    ? GetIt.I<AppIcons>().dashboard.income(
+                          size: 20,
+                          color: Theme.of(context).colorScheme.primary,
+                        )
+                    : GetIt.I<AppIcons>().dashboard.expense(
+                          size: 20,
+                          color: Theme.of(context).colorScheme.error,
+                        ),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -211,11 +214,10 @@ class TransactionHistoryWidget extends StatelessWidget {
                         ),
                   ),
                   const SizedBox(width: 4),
-                  Icon(
-                    Icons.chevron_right,
-                    color: isDark ? Colors.white38 : Colors.grey[400],
-                    size: 18,
-                  ),
+                  GetIt.I<AppIcons>().navigation.chevronRight(
+                        size: 18,
+                        color: isDark ? Colors.white38 : Colors.grey[400],
+                      ),
                 ],
               ),
             ],

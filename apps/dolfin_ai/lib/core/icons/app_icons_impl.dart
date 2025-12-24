@@ -23,6 +23,9 @@ class AppIconsImpl implements AppIcons {
 
   @override
   CommonIcons get common => const CommonIconsImpl();
+
+  @override
+  ChatErrorIcons get chatError => const ChatErrorIconsImpl();
 }
 
 /// Navigation icons implementation
@@ -363,6 +366,60 @@ class CommonIconsImpl implements CommonIcons {
   @override
   Widget dateRange({double size = 24, Color? color}) => Icon(
         LucideIcons.calendarDays,
+        size: size,
+        color: color,
+      );
+}
+
+/// Chat error icons implementation
+class ChatErrorIconsImpl implements ChatErrorIcons {
+  const ChatErrorIconsImpl();
+
+  @override
+  Widget emailNotVerified({double size = 24, Color? color}) => Icon(
+        LucideIcons.mailWarning,
+        size: size,
+        color: color,
+      );
+
+  @override
+  Widget subscriptionRequired({double size = 24, Color? color}) => Icon(
+        LucideIcons.crown,
+        size: size,
+        color: color,
+      );
+
+  @override
+  Widget subscriptionExpired({double size = 24, Color? color}) => Icon(
+        LucideIcons.clockAlert,
+        size: size,
+        color: color,
+      );
+
+  @override
+  Widget messageLimitExceeded({double size = 24, Color? color}) => Icon(
+        LucideIcons.messageSquareOff,
+        size: size,
+        color: color,
+      );
+
+  @override
+  Widget rateLimitExceeded({double size = 24, Color? color}) => Icon(
+        LucideIcons.timer,
+        size: size,
+        color: color,
+      );
+
+  @override
+  Widget currencyRequired({double size = 24, Color? color}) => Icon(
+        LucideIcons.circlePercent,
+        size: size,
+        color: color,
+      );
+
+  @override
+  Widget genericError({double size = 24, Color? color}) => Icon(
+        LucideIcons.circleAlert,
         size: size,
         color: color,
       );

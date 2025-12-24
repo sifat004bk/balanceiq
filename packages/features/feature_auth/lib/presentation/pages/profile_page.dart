@@ -14,6 +14,8 @@ import 'package:feature_subscription/presentation/cubit/subscription_cubit.dart'
 import 'package:feature_subscription/presentation/cubit/subscription_state.dart';
 import "package:feature_auth/presentation/cubit/session/session_cubit.dart";
 import "package:feature_auth/presentation/cubit/signup/signup_cubit.dart";
+import 'package:dolfin_ui_kit/theme/theme_cubit.dart';
+import 'package:dolfin_ui_kit/theme/theme_state.dart';
 import '../widgets/profile/profile_widgets.dart';
 import '../mixins/profile_tour_mixin.dart';
 import '../widgets/profile/subscription_card_states.dart';
@@ -274,6 +276,21 @@ class _ProfilePageState extends State<ProfilePage>
                       ),
                     ),
                     const SizedBox(height: 32),
+                    // Currency Selector (at top)
+                    BlocBuilder<CurrencyCubit, CurrencyState>(
+                      bloc: GetIt.instance<CurrencyCubit>(),
+                      builder: (context, currencyState) {
+                        return ProfileMenuItem(
+                          icon: LucideIcons.circleDollarSign,
+                          title: GetIt.I<AuthStrings>().profile.currency,
+                          subtitle: currencyState.isCurrencySet
+                              ? '${currencyState.currencySymbol} ${currencyState.currencyName}'
+                              : 'Select Currency',
+                          onTap: () => _showCurrencyPicker(context),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 12),
                     // Account Details (Expandable)
                     ExpandableProfileMenuItem(
                       icon: LucideIcons.user,
@@ -329,52 +346,27 @@ class _ProfilePageState extends State<ProfilePage>
                       ],
                     ),
                     const SizedBox(height: 12),
-                    ProfileMenuItem(
-                      icon: LucideIcons.bell,
-                      title: GetIt.I<AuthStrings>().profile.notifications,
-                      onTap: () {
-                        SnackbarUtils.showComingSoon(context,
-                            GetIt.I<AuthStrings>().profile.notifications);
-                      },
-                    ),
-                    const SizedBox(height: 12),
                     // Appearance (Expandable)
-                    ExpandableProfileMenuItem(
-                      icon: LucideIcons.palette,
-                      title: GetIt.I<AuthStrings>().profile.appearance,
-                      subItems: [
-                        ProfileSubMenuItem(
-                          icon: LucideIcons.sun,
-                          title: GetIt.I<AuthStrings>().profile.changeTheme,
-                          onTap: () {
-                            SnackbarUtils.showComingSoon(context,
-                                GetIt.I<AuthStrings>().profile.changeTheme);
-                          },
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    // Currency Selector
-                    BlocBuilder<CurrencyCubit, CurrencyState>(
-                      bloc: GetIt.instance<CurrencyCubit>(),
-                      builder: (context, currencyState) {
-                        return ProfileMenuItem(
-                          icon: LucideIcons.circleDollarSign,
-                          title: GetIt.I<AuthStrings>().profile.currency,
-                          subtitle: currencyState.isCurrencySet
-                              ? '${currencyState.currencySymbol} ${currencyState.currencyName}'
-                              : 'Select Currency',
-                          onTap: () => _showCurrencyPicker(context),
+                    BlocBuilder<ThemeCubit, ThemeState>(
+                      bloc: GetIt.instance<ThemeCubit>(),
+                      builder: (context, themeState) {
+                        final isDark =
+                            Theme.of(context).brightness == Brightness.dark;
+                        return ExpandableProfileMenuItem(
+                          icon: LucideIcons.palette,
+                          title: GetIt.I<AuthStrings>().profile.appearance,
+                          subItems: [
+                            ProfileSubMenuItem(
+                              icon: isDark ? LucideIcons.sun : LucideIcons.moon,
+                              title: isDark
+                                  ? 'Switch to Light Mode'
+                                  : 'Switch to Dark Mode',
+                              onTap: () {
+                                GetIt.instance<ThemeCubit>().toggleTheme();
+                              },
+                            ),
+                          ],
                         );
-                      },
-                    ),
-                    const SizedBox(height: 12),
-                    ProfileMenuItem(
-                      icon: LucideIcons.info,
-                      title: GetIt.I<AuthStrings>().profile.helpCenter,
-                      onTap: () {
-                        SnackbarUtils.showComingSoon(
-                            context, GetIt.I<AuthStrings>().profile.helpCenter);
                       },
                     ),
                     const SizedBox(height: 12),

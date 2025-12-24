@@ -9,6 +9,7 @@ abstract class AppIcons {
   CategoryIcons get category;
   AccountIcons get account;
   CommonIcons get common;
+  ChatErrorIcons get chatError;
 }
 
 /// Navigation-related icons (arrows, chevrons, etc.)
@@ -76,4 +77,15 @@ abstract class CommonIcons {
   Widget search({double size, Color? color});
   Widget error({double size, Color? color});
   Widget dateRange({double size, Color? color});
+}
+
+/// Chat error-related icons
+abstract class ChatErrorIcons {
+  Widget emailNotVerified({double size, Color? color});
+  Widget subscriptionRequired({double size, Color? color});
+  Widget subscriptionExpired({double size, Color? color});
+  Widget messageLimitExceeded({double size, Color? color});
+  Widget rateLimitExceeded({double size, Color? color});
+  Widget currencyRequired({double size, Color? color});
+  Widget genericError({double size, Color? color});
 }

@@ -8,6 +8,18 @@ import 'package:dolfin_ui_kit/theme/app_typography.dart';
 import '../../cubit/chat_cubit.dart';
 import '../../cubit/chat_state.dart';
 
+/// Abstract interface for chat error icons.
+/// This allows the feature package to define icons without depending on lucide_icons.
+abstract class ChatErrorIconProvider {
+  Widget emailNotVerified({double size, Color? color});
+  Widget subscriptionRequired({double size, Color? color});
+  Widget subscriptionExpired({double size, Color? color});
+  Widget messageLimitExceeded({double size, Color? color});
+  Widget rateLimitExceeded({double size, Color? color});
+  Widget currencyRequired({double size, Color? color});
+  Widget genericError({double size, Color? color});
+}
+
 class ChatErrorWidget extends StatelessWidget {
   final ChatError state;
   final String botId;
@@ -53,6 +65,7 @@ class ChatErrorWidget extends StatelessWidget {
 
   _ErrorConfig _getErrorConfig(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final iconProvider = GetIt.I<ChatErrorIconProvider>();
 
     switch (state.errorType) {
       case ChatErrorType.emailNotVerified:
@@ -63,7 +76,8 @@ class ChatErrorWidget extends StatelessWidget {
           description: _getSafeString(
               () => GetIt.I<ChatStrings>().emailVerificationMessage,
               'Please verify your email address to use the chat feature.'),
-          icon: Icons.email_outlined,
+          iconWidget: iconProvider.emailNotVerified(
+              size: 48, color: colorScheme.tertiary),
           iconColor: colorScheme.tertiary,
           buttonText: _getSafeString(
               () => GetIt.I<ChatStrings>().verifyEmailButton, 'Verify Email'),
@@ -77,7 +91,8 @@ class ChatErrorWidget extends StatelessWidget {
           description: _getSafeString(
               () => GetIt.I<ChatStrings>().subscriptionRequiredMessage,
               'You need an active subscription plan to use the chat feature.'),
-          icon: Icons.card_membership_outlined,
+          iconWidget: iconProvider.subscriptionRequired(
+              size: 48, color: colorScheme.primary),
           iconColor: colorScheme.primary,
           buttonText: _getSafeString(
               () => GetIt.I<ChatStrings>().viewPlans, 'View Plans'),
@@ -100,7 +115,8 @@ class ChatErrorWidget extends StatelessWidget {
           description: _getSafeString(
               () => GetIt.I<ChatStrings>().subscriptionExpiredMessage,
               'Your subscription has expired. Please renew to continue using the chat feature.'),
-          icon: Icons.timer_off_outlined,
+          iconWidget: iconProvider.subscriptionExpired(
+              size: 48, color: colorScheme.error),
           iconColor: colorScheme.error,
           buttonText: _getSafeString(
               () => GetIt.I<ChatStrings>().renewSubscription,
@@ -126,7 +142,8 @@ class ChatErrorWidget extends StatelessWidget {
               : _getSafeString(
                   () => GetIt.I<ChatStrings>().messageLimitExceededMessage,
                   'You have reached your daily message limit. Resets at midnight.'),
-          icon: Icons.token_outlined,
+          iconWidget: iconProvider.messageLimitExceeded(
+              size: 48, color: colorScheme.secondary),
           iconColor: colorScheme.secondary,
           buttonText: _getSafeString(
               () => GetIt.I<ChatStrings>().upgradePlan, 'Upgrade Plan'),
@@ -140,7 +157,8 @@ class ChatErrorWidget extends StatelessWidget {
           description: _getSafeString(
               () => GetIt.I<ChatStrings>().rateLimitMessage,
               'Please wait a moment before sending more messages.'),
-          icon: Icons.schedule_outlined,
+          iconWidget: iconProvider.rateLimitExceeded(
+              size: 48, color: colorScheme.primary),
           iconColor: colorScheme.primary,
           buttonText: GetIt.I<CoreStrings>().common.gotIt,
           onButtonPressed: () =>
@@ -153,7 +171,8 @@ class ChatErrorWidget extends StatelessWidget {
           description: _getSafeString(
               () => GetIt.I<ChatStrings>().currencyRequiredMessage,
               'Please set your preferred currency in your profile settings before using the chat feature.'),
-          icon: Icons.currency_exchange,
+          iconWidget: iconProvider.currencyRequired(
+              size: 48, color: colorScheme.secondary),
           iconColor: colorScheme.secondary,
           buttonText: _getSafeString(
               () => GetIt.I<ChatStrings>().setCurrency, 'Set Currency'),
@@ -177,7 +196,8 @@ class ChatErrorWidget extends StatelessWidget {
           description: state.message.isNotEmpty
               ? state.message
               : GetIt.I<CoreStrings>().errors.tryAgainLater,
-          icon: Icons.error_outline,
+          iconWidget:
+              iconProvider.genericError(size: 48, color: colorScheme.error),
           iconColor: colorScheme.error,
           buttonText: GetIt.I<CoreStrings>().common.retry,
           onButtonPressed: () =>
@@ -201,11 +221,7 @@ class ChatErrorWidget extends StatelessWidget {
         color: config.iconColor.withValues(alpha: 0.1),
         shape: BoxShape.circle,
       ),
-      child: Icon(
-        config.icon,
-        size: 48,
-        color: config.iconColor,
-      ),
+      child: config.iconWidget,
     );
   }
 
@@ -274,7 +290,7 @@ class ChatErrorWidget extends StatelessWidget {
 class _ErrorConfig {
   final String title;
   final String description;
-  final IconData icon;
+  final Widget iconWidget;
   final Color iconColor;
   final String buttonText;
   final VoidCallback onButtonPressed;
@@ -282,7 +298,7 @@ class _ErrorConfig {
   _ErrorConfig({
     required this.title,
     required this.description,
-    required this.icon,
+    required this.iconWidget,
     required this.iconColor,
     required this.buttonText,
     required this.onButtonPressed,

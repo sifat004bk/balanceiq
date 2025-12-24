@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:feature_subscription/constants/subscription_strings.dart';
 import 'package:dolfin_core/constants/core_strings.dart';
 import 'package:dolfin_core/utils/snackbar_utils.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import 'package:get_it/get_it.dart';
 import 'package:dolfin_ui_kit/theme/app_typography.dart';
@@ -46,7 +47,7 @@ class _ManageSubscriptionView extends StatelessWidget {
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(
-              Icons.arrow_back,
+              LucideIcons.arrowLeft,
               color: Theme.of(context).iconTheme.color,
             ),
             onPressed: () => Navigator.pop(context),
@@ -80,7 +81,7 @@ class _ManageSubscriptionView extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.error_outline,
+                    Icon(LucideIcons.circleX,
                         size: 64, color: Colors.red.shade300),
                     const SizedBox(height: 16),
                     Padding(
@@ -120,7 +121,7 @@ class _ManageSubscriptionView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.card_membership,
+              LucideIcons.creditCard,
               size: 80,
               color: Theme.of(context).hintColor,
             ),
@@ -285,7 +286,9 @@ class _ManageSubscriptionView extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
-                      subscription.isActive ? Icons.star : Icons.pause_circle,
+                      subscription.isActive
+                          ? LucideIcons.star
+                          : LucideIcons.pauseCircle,
                       size: 16,
                       color: Colors.white,
                     ),
@@ -351,7 +354,7 @@ class _ManageSubscriptionView extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.warning,
+                  Icon(LucideIcons.triangleAlert,
                       size: 16, color: Theme.of(context).colorScheme.error),
                   const SizedBox(width: 4),
                   Text(

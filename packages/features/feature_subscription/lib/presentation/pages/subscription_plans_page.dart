@@ -4,6 +4,7 @@ import 'package:feature_subscription/constants/subscription_strings.dart';
 import 'package:dolfin_core/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import 'package:dolfin_ui_kit/theme/app_typography.dart';
 import 'package:dolfin_core/tour/product_tour_cubit.dart';
@@ -43,7 +44,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(
-            Icons.arrow_back,
+            LucideIcons.arrowLeft,
             color: Theme.of(context).iconTheme.color,
           ),
           onPressed: () => Navigator.pop(context),
@@ -116,7 +117,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.error_outline,
+                  Icon(LucideIcons.circleX,
                       size: 64, color: Colors.red.shade300),
                   const SizedBox(height: 16),
                   Text(state.message, textAlign: TextAlign.center),
@@ -358,7 +359,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                       child: Row(
                         children: [
                           Icon(
-                            Icons.check_circle,
+                            LucideIcons.checkCircle,
                             color: Theme.of(context).colorScheme.primary,
                             size: 20,
                           ),

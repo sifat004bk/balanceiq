@@ -16,6 +16,7 @@
         "flutter",
         "flutter_bloc",
         "get_it",
+        "lucide_icons_flutter",
         "purchases_flutter"
       ],
       "devDependencies": [
@@ -126,6 +127,13 @@
       ]
     },
     {
+      "name": "lucide_icons_flutter",
+      "version": "3.1.9",
+      "dependencies": [
+        "flutter"
+      ]
+    },
+    {
       "name": "dio",
       "version": "5.9.0",
       "dependencies": [
@@ -173,6 +181,7 @@
         "google_generative_ai",
         "image_picker",
         "intl",
+        "lucide_icons_flutter",
         "markdown",
         "path_provider",
         "permission_handler",
@@ -739,6 +748,7 @@
         "flutter_bloc",
         "get_it",
         "google_sign_in",
+        "lucide_icons_flutter",
         "shimmer",
         "smooth_page_indicator",
         "tutorial_coach_mark",
@@ -1520,6 +1530,35 @@
       ]
     },
     {
+      "name": "webview_flutter",
+      "version": "4.13.0",
+      "dependencies": [
+        "flutter",
+        "webview_flutter_android",
+        "webview_flutter_platform_interface",
+        "webview_flutter_wkwebview"
+      ]
+    },
+    {
+      "name": "smooth_page_indicator",
+      "version": "1.2.1",
+      "dependencies": [
+        "flutter"
+      ]
+    },
+    {
+      "name": "firebase_auth",
+      "version": "5.7.0",
+      "dependencies": [
+        "firebase_auth_platform_interface",
+        "firebase_auth_web",
+        "firebase_core",
+        "firebase_core_platform_interface",
+        "flutter",
+        "meta"
+      ]
+    },
+    {
       "name": "nested",
       "version": "1.0.0",
       "dependencies": [
@@ -1726,37 +1765,13 @@
       ]
     },
     {
-      "name": "xml",
-      "version": "6.6.1",
-      "dependencies": [
-        "collection",
-        "meta",
-        "petitparser"
-      ]
-    },
-    {
-      "name": "petitparser",
-      "version": "7.0.1",
-      "dependencies": [
-        "collection",
-        "meta"
-      ]
-    },
-    {
-      "name": "smooth_page_indicator",
-      "version": "1.2.1",
-      "dependencies": [
-        "flutter"
-      ]
-    },
-    {
-      "name": "webview_flutter",
-      "version": "4.13.0",
+      "name": "webview_flutter_wkwebview",
+      "version": "3.23.0",
       "dependencies": [
         "flutter",
-        "webview_flutter_android",
-        "webview_flutter_platform_interface",
-        "webview_flutter_wkwebview"
+        "meta",
+        "path",
+        "webview_flutter_platform_interface"
       ]
     },
     {
@@ -1769,25 +1784,23 @@
       ]
     },
     {
-      "name": "webview_flutter_wkwebview",
-      "version": "3.23.0",
+      "name": "webview_flutter_android",
+      "version": "4.10.1",
       "dependencies": [
         "flutter",
         "meta",
-        "path",
         "webview_flutter_platform_interface"
       ]
     },
     {
-      "name": "firebase_auth",
-      "version": "5.7.0",
+      "name": "firebase_core_platform_interface",
+      "version": "6.0.2",
       "dependencies": [
-        "firebase_auth_platform_interface",
-        "firebase_auth_web",
-        "firebase_core",
-        "firebase_core_platform_interface",
+        "collection",
         "flutter",
-        "meta"
+        "flutter_test",
+        "meta",
+        "plugin_platform_interface"
       ]
     },
     {
@@ -1827,6 +1840,15 @@
       ]
     },
     {
+      "name": "xml",
+      "version": "6.6.1",
+      "dependencies": [
+        "collection",
+        "meta",
+        "petitparser"
+      ]
+    },
+    {
       "name": "firebase_core_web",
       "version": "2.24.1",
       "dependencies": [
@@ -1835,17 +1857,6 @@
         "flutter_web_plugins",
         "meta",
         "web"
-      ]
-    },
-    {
-      "name": "firebase_core_platform_interface",
-      "version": "6.0.2",
-      "dependencies": [
-        "collection",
-        "flutter",
-        "flutter_test",
-        "meta",
-        "plugin_platform_interface"
       ]
     },
     {
@@ -1860,12 +1871,11 @@
       ]
     },
     {
-      "name": "webview_flutter_android",
-      "version": "4.10.1",
+      "name": "petitparser",
+      "version": "7.0.1",
       "dependencies": [
-        "flutter",
-        "meta",
-        "webview_flutter_platform_interface"
+        "collection",
+        "meta"
       ]
     }
   ],

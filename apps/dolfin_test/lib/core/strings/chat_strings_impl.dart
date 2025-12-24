@@ -8,6 +8,12 @@ class ChatStringsImpl implements ChatStrings {
   @override
   String get inputPlaceholderGeneral => 'What do you want to write?';
   @override
+  String get inputPlaceholderEmailVerification => 'Email verification required';
+  @override
+  String get inputPlaceholderSubscriptionRequired => 'Subscription required';
+  @override
+  String get inputPlaceholderCurrencyRequired => 'Currency required';
+  @override
   String get sendMessage => 'Send';
 
   @override

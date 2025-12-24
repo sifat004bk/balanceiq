@@ -56,7 +56,11 @@ class TestAppConstantsImpl implements AppConstants {
   @override
   String get keyIsEmailVerified => 'is_email_verified';
   @override
+  String get keyUserCurrency => 'user_currency';
+  @override
   String get keyThemeMode => 'theme_mode';
+  @override
+  String get keyCurrencyCode => 'selected_currency_code';
 
   // Mock Mode - Always true for test app
   @override

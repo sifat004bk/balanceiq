@@ -246,7 +246,7 @@ class _ManageSubscriptionView extends StatelessWidget {
           Text(
             subscription.plan.displayName,
             style: AppTypography.displayMedium.copyWith(
-              color: Theme.of(context).textTheme.displayMedium?.color,
+              color: Theme.of(context).textTheme.displayLarge?.color,
             ),
           ),
           const SizedBox(height: 8),
@@ -327,7 +327,9 @@ class _ManageSubscriptionView extends StatelessWidget {
               ),
               child: Text(
                 GetIt.I<SubscriptionStrings>().changePlan,
-                style: AppTypography.buttonMedium,
+                style: AppTypography.buttonMedium.copyWith(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
               ),
             ),
           ),

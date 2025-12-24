@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:feature_chat/constants/chat_strings.dart';
 import 'package:get_it/get_it.dart';
 import 'package:dolfin_ui_kit/theme/app_typography.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class AttachmentModal extends StatelessWidget {
   final VoidCallback onCameraTap;
@@ -45,25 +46,25 @@ class AttachmentModal extends StatelessWidget {
               children: [
                 _buildOption(
                   context,
-                  icon: Icons.camera_alt_outlined,
+                  icon: LucideIcons.camera,
                   label: GetIt.I<ChatStrings>().camera,
                   onTap: onCameraTap,
                 ),
                 _buildOption(
                   context,
-                  icon: Icons.photo_library_outlined,
+                  icon: LucideIcons.image,
                   label: GetIt.I<ChatStrings>().gallery,
                   onTap: onGalleryTap,
                 ),
                 _buildOption(
                   context,
-                  icon: Icons.insert_drive_file_outlined,
+                  icon: LucideIcons.file,
                   label: GetIt.I<ChatStrings>().files,
                   onTap: onFilesTap,
                 ),
                 _buildOption(
                   context,
-                  icon: Icons.add_to_drive_outlined,
+                  icon: LucideIcons.hardDrive,
                   label: GetIt.I<ChatStrings>().drive,
                   onTap: onDriveTap,
                 ),

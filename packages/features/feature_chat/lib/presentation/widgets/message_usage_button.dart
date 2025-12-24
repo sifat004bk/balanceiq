@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import 'package:dolfin_core/constants/app_constants.dart';
 
@@ -86,8 +87,8 @@ class MessageUsageButton extends StatelessWidget {
                       ),
                       Icon(
                         isLimitReached
-                            ? Icons.warning_rounded
-                            : Icons.chat_bubble_outline,
+                            ? LucideIcons.triangleAlert
+                            : LucideIcons.messageCircle,
                         size: 12,
                         color: progressColor,
                       ),

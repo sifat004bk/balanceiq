@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import 'recording_animation.dart';
 
@@ -69,7 +70,7 @@ class ChatMicButton extends StatelessWidget {
           child: isRecording
               ? const RecordingAnimation()
               : Icon(
-                  Icons.mic_none,
+                  LucideIcons.mic,
                   color: isDisabled ? Colors.grey : primaryColor,
                   size: 22,
                 ),

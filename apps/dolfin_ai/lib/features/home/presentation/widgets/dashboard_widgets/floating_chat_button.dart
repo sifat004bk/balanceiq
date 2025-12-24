@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:get_it/get_it.dart';
 import 'package:feature_chat/constants/chat_strings.dart';
 import 'package:flutter/material.dart';
@@ -32,122 +34,98 @@ class FloatingChatButton extends StatelessWidget {
         // Refresh dashboard when returning from chat
         onReturn?.call();
       },
-      child: Container(
+      child:Container(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        padding: const EdgeInsets.all(1.5), // This is your border width
+        // 1. The Outer Container (Gradient Border)
+        padding: const EdgeInsets.all(1.5),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Theme.of(context).colorScheme.primary,
-              Theme.of(context).colorScheme.secondary,
+              Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
+              Theme.of(context).colorScheme.secondary.withValues(alpha: 0.3),
             ],
           ),
-
-        ),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(28.5),
-            gradient: LinearGradient(
-              colors: [
-                Theme.of(context).cardColor,
-                Theme.of(context).cardColor.withValues(alpha: 0.8),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
+          boxShadow: [
+            BoxShadow(
+              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
             ),
-            boxShadow: [
-              BoxShadow(
-                color:
-                Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
-                blurRadius: 20,
-                offset: const Offset(0, 4),
-                spreadRadius: 2,
-              ),
-              if (isDark)
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.3),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(28.5),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              decoration: BoxDecoration(
+                color: (isDark ? Colors.black : Colors.white).withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(28.5),
+                border: Border.all(
+                  color: Colors.white.withValues(alpha: 0.1), // Subtle inner shine
+                  width: 0.5,
                 ),
-            ],
-          ),
-          child: Row(
-            children: [
-              // Chat icon with gradient
-              Container(
-                width: 36,
-                height: 36,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: [
-                    Theme.of(context).colorScheme.primary,
-                    Theme.of(context).colorScheme.primary,
-                  ]),
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
-                      blurRadius: 8,
-                      spreadRadius: 1,
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 36,
+                    height: 36,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(colors: [
+                        Theme.of(context).colorScheme.primary,
+                        Theme.of(context).colorScheme.primary,
+                      ]),
+                      shape: BoxShape.circle,
                     ),
-                  ],
-                ),
-                child: ClipOval(
-                  child: AppLogo(
-                    size: 18,
-                    fit: BoxFit.cover,
-                    color: Theme.of(context).colorScheme.onPrimary,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 12),
-
-              // Placeholder text
-              Expanded(
-                child: Text(
-                  GetIt.I<ChatStrings>().inputPlaceholder,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).hintColor,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 0.2,
-                  ),
-                ),
-              ),
-
-              const SizedBox(width: 12),
-
-              // Send button with gradient
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: [
-                    Theme.of(context).colorScheme.primary,
-                    Theme.of(context).colorScheme.primary,
-                  ]),
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.4),
-                      blurRadius: 12,
-                      offset: const Offset(0, 3),
-                      spreadRadius: 1,
+                    child: ClipOval(
+                      child: AppLogo(
+                        size: 18,
+                        fit: BoxFit.cover,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
                     ),
-                  ],
-                ),
-                child: GetIt.I<AppIcons>().navigation.arrowUp(
-                  size: 22,
-                  color: Colors.white,
-                ),
+                  ),
+                  const SizedBox(width: 12),
+
+                  // Placeholder text
+                  Expanded(
+                    child: Text(
+                      GetIt.I<ChatStrings>().inputPlaceholder,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).hintColor.withValues(alpha: 0.9),
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(width: 12),
+
+                  // Send button
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary,
+                      shape: BoxShape.circle,
+                    ),
+                    child: GetIt.I<AppIcons>().navigation.arrowUp(
+                      size: 22,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),
+
     );
   }
 }

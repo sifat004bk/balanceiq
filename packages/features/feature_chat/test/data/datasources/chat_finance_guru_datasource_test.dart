@@ -39,6 +39,11 @@ void main() {
 
     dataSource = ChatFinanceGuruDataSource(
         mockDio, mockSharedPreferences, mockSecureStorage);
+
+    when(() => mockAppConstants.keyCurrencyCode)
+        .thenReturn('selected_currency_code');
+    when(() => mockSharedPreferences.getString('selected_currency_code'))
+        .thenReturn('USD'); // Default to set
   });
 
   tearDown(() {
@@ -50,12 +55,38 @@ void main() {
     const tContent = 'Hello';
 
     test(
+        'should throw ChatApiException with currencyRequired locally when currency is not set',
+        () async {
+      // Arrange
+      when(() => mockSecureStorage.getUserId())
+          .thenAnswer((_) async => 'user1');
+      when(() => mockSharedPreferences.getString('selected_currency_code'))
+          .thenReturn(null); // Currency NOT set
+
+      // Act
+      final call = dataSource.sendMessage;
+
+      // Assert
+      expect(
+          () => call(botId: tBotId, content: tContent),
+          throwsA(isA<ChatApiException>().having((e) => e.errorType,
+              'errorType', ChatApiErrorType.currencyRequired)));
+
+      verifyNever(() => mockDio.post(any(),
+          data: any(named: 'data'), options: any(named: 'options')));
+    });
+
+    test(
         'should throw ChatApiException with currencyRequired when 400 error contains "currency"',
         () async {
       // Arrange
       when(() => mockSecureStorage.getUserId())
           .thenAnswer((_) async => 'user1');
       when(() => mockSharedPreferences.getString(any())).thenReturn(null);
+      // Ensure currency IS set for this test so it proceeds to API
+      when(() => mockSharedPreferences.getString('selected_currency_code'))
+          .thenReturn('USD');
+
       when(() => mockSecureStorage.getToken()).thenAnswer((_) async => 'token');
 
       when(() => mockDio.post(
@@ -79,6 +110,114 @@ void main() {
       // Assert
       expect(
           () => call(botId: tBotId, content: tContent),
+          throwsA(isA<ChatApiException>().having((e) => e.errorType,
+              'errorType', ChatApiErrorType.currencyRequired)));
+    });
+    test(
+        'should throw ChatApiException with currencyRequired when 403 error contains "currency"',
+        () async {
+      // Arrange
+      when(() => mockSecureStorage.getUserId())
+          .thenAnswer((_) async => 'user1');
+      when(() => mockSharedPreferences.getString(any())).thenReturn(null);
+      // Ensure currency IS set so it hits the API
+      when(() => mockSharedPreferences.getString('selected_currency_code'))
+          .thenReturn('USD');
+
+      when(() => mockSecureStorage.getToken()).thenAnswer((_) async => 'token');
+
+      when(() => mockDio.post(
+            any(),
+            data: any(named: 'data'),
+            options: any(named: 'options'),
+          )).thenThrow(DioException(
+          requestOptions: RequestOptions(path: ''),
+          type: DioExceptionType.badResponse,
+          response: Response(
+              requestOptions: RequestOptions(path: ''),
+              statusCode: 403,
+              data: {
+                'message':
+                    'Please set your preferred currency in your profile settings before using the chat feature.'
+              })));
+
+      // Act
+      final call = dataSource.sendMessage;
+
+      // Assert
+      expect(
+          () => call(botId: tBotId, content: tContent),
+          throwsA(isA<ChatApiException>().having((e) => e.errorType,
+              'errorType', ChatApiErrorType.currencyRequired)));
+    });
+  });
+
+  group('getChatHistory', () {
+    const tUserId = 'user1';
+
+    test(
+        'should throw ChatApiException with currencyRequired when currency is null',
+        () async {
+      // Arrange
+      when(() => mockSharedPreferences.getString('selected_currency_code'))
+          .thenReturn(null);
+
+      // Act
+      final call = dataSource.getChatHistory;
+
+      // Assert
+      expect(
+          () => call(userId: tUserId, page: 1),
+          throwsA(isA<ChatApiException>().having((e) => e.errorType,
+              'errorType', ChatApiErrorType.currencyRequired)));
+    });
+
+    test(
+        'should throw ChatApiException with currencyRequired when currency is empty',
+        () async {
+      // Arrange
+      when(() => mockSharedPreferences.getString('selected_currency_code'))
+          .thenReturn('');
+
+      // Act
+      final call = dataSource.getChatHistory;
+
+      // Assert
+      expect(
+          () => call(userId: tUserId, page: 1),
+          throwsA(isA<ChatApiException>().having((e) => e.errorType,
+              'errorType', ChatApiErrorType.currencyRequired)));
+    });
+
+    test(
+        'should throw ChatApiException with currencyRequired when 400 error contains "currency"',
+        () async {
+      // Arrange
+      when(() => mockSharedPreferences.getString('selected_currency_code'))
+          .thenReturn('USD');
+      when(() => mockSecureStorage.getToken()).thenAnswer((_) async => 'token');
+
+      when(() => mockDio.get(
+                any(),
+                queryParameters: any(named: 'queryParameters'),
+                options: any(named: 'options'),
+              ))
+          .thenThrow(DioException(
+              requestOptions: RequestOptions(path: ''),
+              type: DioExceptionType.badResponse,
+              response: Response(
+                  requestOptions: RequestOptions(path: ''),
+                  statusCode: 400,
+                  data: {
+                    'message': 'Currency not set. Please update profile.'
+                  })));
+
+      // Act
+      final call = dataSource.getChatHistory;
+
+      // Assert
+      expect(
+          () => call(userId: tUserId, page: 1),
           throwsA(isA<ChatApiException>().having((e) => e.errorType,
               'errorType', ChatApiErrorType.currencyRequired)));
     });

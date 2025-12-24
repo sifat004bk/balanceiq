@@ -5,6 +5,7 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:get_it/get_it.dart';
 import 'package:dolfin_core/tour/product_tour_cubit.dart';
 import 'package:dolfin_core/tour/product_tour_state.dart';
+import 'package:dolfin_core/currency/currency_cubit.dart';
 import 'package:dolfin_core/tour/tour_widget_factory.dart';
 import 'package:feature_chat/presentation/cubit/chat_cubit.dart';
 import 'package:feature_chat/presentation/cubit/chat_state.dart';
@@ -169,16 +170,34 @@ class _ChatViewState extends State<ChatView> {
   Widget build(BuildContext context) {
     final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
 
-    return BlocListener<ProductTourCubit, ProductTourState>(
-      listener: (context, tourState) {
-        if (tourState is TourActive &&
-            tourState.currentStep == TourStep.chatInputHint &&
-            !tourState.isTransitioning) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            _showChatInputTour();
-          });
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<ProductTourCubit, ProductTourState>(
+          listener: (context, tourState) {
+            if (tourState is TourActive &&
+                tourState.currentStep == TourStep.chatInputHint &&
+                !tourState.isTransitioning) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                _showChatInputTour();
+              });
+            }
+          },
+        ),
+        BlocListener<CurrencyCubit, CurrencyState>(
+          bloc: GetIt.instance<CurrencyCubit>(),
+          listenWhen: (previous, current) {
+            // Listen when currency changes from not set to set
+            final wasSet = previous.isCurrencySet;
+            final isNowSet = current.isCurrencySet;
+            return !wasSet && isNowSet;
+          },
+          listener: (context, state) {
+            // Currency was just set, reload chat to remove restriction
+            debugPrint('[ChatDebug] Currency set, reloading chat');
+            context.read<ChatCubit>().loadChatHistory(widget.botId);
+          },
+        ),
+      ],
       child: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();
@@ -187,7 +206,9 @@ class _ChatViewState extends State<ChatView> {
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           resizeToAvoidBottomInset: true,
           body: Stack(
+            fit: StackFit.expand,
             children: [
+              // 1. Message List and Loading State (Bottom Layer)
               Positioned.fill(
                 child: BlocConsumer<ChatCubit, ChatState>(
                   listener: (context, state) {
@@ -200,9 +221,11 @@ class _ChatViewState extends State<ChatView> {
                     }
                   },
                   builder: (context, state) {
+                    debugPrint('[ChatDebug] ChatPage builder state: $state');
                     final topPadding = MediaQuery.of(context).padding.top + 60;
-                    double bottomPadding = 80.0;
+                    double bottomPadding = 80.0; // Base padding for input
 
+                    // Adjust padding if near limit or if input needs more space
                     if (state is ChatLoaded) {
                       final isLimitReached = state.isMessageLimitReached;
                       final isNearLimit = state.messagesUsedToday >=
@@ -213,12 +236,14 @@ class _ChatViewState extends State<ChatView> {
                     }
 
                     if (state is ChatLoading) {
+                      debugPrint('[ChatDebug] Rendering ChatShimmer');
                       return Padding(
                         padding: EdgeInsets.only(
                             top: topPadding, bottom: bottomPadding),
                         child: const ChatShimmer(),
                       );
                     } else if (state is ChatLoaded) {
+                      debugPrint('[ChatDebug] Rendering ChatLoaded');
                       if (state.messages.isEmpty && !state.isSending) {
                         return Padding(
                           padding: EdgeInsets.only(
@@ -251,28 +276,45 @@ class _ChatViewState extends State<ChatView> {
                           ),
                         ),
                       );
-                    } else if (state is ChatError) {
-                      return Padding(
-                        padding: EdgeInsets.only(
-                            top: topPadding, bottom: bottomPadding),
-                        child: ChatErrorWidget(
-                          state: state,
-                          botId: widget.botId,
-                        ),
-                      );
                     }
+
+                    // For ChatError, we don't render content here as it is overlayed.
+                    // But we might want to show empty space or previous messages if available?
+                    // Implementation plan implies replacing content.
+                    // However, blocking errors like Currency/Sub usually replace content.
+                    // If we just return SizedBox, the background is empty.
+                    debugPrint(
+                        '[ChatDebug] Rendering SizedBox.shrink (State: $state)');
                     return const SizedBox.shrink();
                   },
                 ),
               ),
+
               const GlassHeaderBackground(),
               const GlassFooterBackground(),
               const ChatBackButton(),
               const ChatUsageButton(),
+
+              // 2. Chat Input (Middle Layer - Always Visible)
               ChatInputContainer(
                 chatInputKey: _chatInputKey,
                 keyboardHeight: keyboardHeight,
                 botId: widget.botId,
+              ),
+
+              // 3. Error Overlay (Top Layer)
+              BlocBuilder<ChatCubit, ChatState>(
+                builder: (context, state) {
+                  if (state is ChatError) {
+                    return Positioned.fill(
+                      child: ChatErrorWidget(
+                        state: state,
+                        botId: widget.botId,
+                      ),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
               ),
             ],
           ),

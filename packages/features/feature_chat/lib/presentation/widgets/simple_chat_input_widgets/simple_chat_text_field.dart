@@ -8,12 +8,14 @@ class SimpleChatTextField extends StatelessWidget {
   final TextEditingController controller;
   final FocusNode focusNode;
   final bool isDisabled;
+  final String? placeholder;
 
   const SimpleChatTextField({
     super.key,
     required this.controller,
     required this.focusNode,
     required this.isDisabled,
+    this.placeholder,
   });
 
   @override
@@ -25,9 +27,10 @@ class SimpleChatTextField extends StatelessWidget {
       maxLines: 4,
       minLines: 1,
       decoration: InputDecoration(
-        hintText: isDisabled
-            ? GetIt.I<ChatStrings>().limitReached
-            : GetIt.I<ChatStrings>().inputPlaceholderGeneral,
+        hintText: placeholder ??
+            (isDisabled
+                ? GetIt.I<ChatStrings>().limitReached
+                : GetIt.I<ChatStrings>().inputPlaceholderGeneral),
         hintStyle: AppTypography.inputLarge.copyWith(
           color: Theme.of(context).hintColor,
           fontWeight: FontWeight.w500,

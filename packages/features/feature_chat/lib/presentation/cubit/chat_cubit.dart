@@ -1,20 +1,28 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
 import 'package:synchronized/synchronized.dart';
+import 'package:get_it/get_it.dart';
+
+import 'package:dolfin_core/constants/app_constants.dart';
+import 'package:dolfin_core/error/failures.dart';
+import 'package:dolfin_core/storage/secure_storage_service.dart';
+import 'package:dolfin_core/currency/currency_cubit.dart';
+
+// Feature dependencies
+import 'package:feature_auth/domain/usecases/get_current_user.dart';
+import 'package:feature_subscription/domain/usecases/get_subscription_status.dart';
+
 import '../../domain/entities/message.dart';
 import '../../domain/entities/message_usage.dart';
+import '../../domain/entities/chat_feedback.dart';
 import '../../domain/usecases/get_chat_history.dart';
 import '../../domain/usecases/get_messages.dart';
 import '../../domain/usecases/send_message.dart';
 import '../../domain/usecases/update_message.dart';
 import '../../domain/usecases/get_message_usage.dart';
 import '../../domain/usecases/submit_feedback.dart';
-import '../../domain/entities/chat_feedback.dart';
 import 'chat_state.dart';
-import 'package:dolfin_core/constants/app_constants.dart';
-import 'package:get_it/get_it.dart';
-import 'package:dolfin_core/error/failures.dart';
-import 'package:dolfin_core/storage/secure_storage_service.dart';
 
 class ChatCubit extends Cubit<ChatState> {
   final GetMessages getMessages;
@@ -25,6 +33,8 @@ class ChatCubit extends Cubit<ChatState> {
   final SubmitFeedback submitFeedback;
   final SecureStorageService secureStorage;
   final Uuid uuid;
+  final GetCurrentUser getCurrentUser;
+  final GetSubscriptionStatus getSubscriptionStatus;
 
   String? currentBotId;
   int _apiPage = 0;
@@ -41,7 +51,9 @@ class ChatCubit extends Cubit<ChatState> {
     required this.submitFeedback,
     required this.secureStorage,
     required this.uuid,
-  }) : super(ChatInitial());
+    required this.getCurrentUser,
+    required this.getSubscriptionStatus,
+  }) : super(ChatInitial()); // Removed const
 
   Future<void> loadMessageUsage() async {
     final result = await getMessageUsage();
@@ -64,12 +76,53 @@ class ChatCubit extends Cubit<ChatState> {
   Future<void> loadChatHistory(String botId) async {
     currentBotId = botId;
 
-    emit(ChatLoading());
+    emit(ChatLoading()); // Removed const
+    debugPrint('[ChatDebug] ChatCubit emitted ChatLoading for botId: $botId');
+
+    // 1. Check Email Verification (Highest Priority)
+    final userResult = await getCurrentUser();
+    final user = userResult.fold((l) => null, (r) => r);
+
+    if (user != null && !user.isEmailVerified) {
+      debugPrint('[ChatDebug] ChatCubit: Email not verified.');
+      emit(const ChatError(
+        message: 'Email not verified',
+        errorType: ChatErrorType.emailNotVerified,
+      ));
+      return;
+    }
+
+    // 2. Check Subscription Status
+    final subResult = await getSubscriptionStatus();
+    final isSubscribed =
+        subResult.fold((l) => false, (r) => r.hasActiveSubscription);
+
+    if (!isSubscribed) {
+      debugPrint('[ChatDebug] ChatCubit: Subscription required.');
+      emit(const ChatError(
+        message: 'Subscription required',
+        errorType: ChatErrorType.subscriptionRequired,
+      ));
+      return;
+    }
+
+    // 3. Check Currency (Lowest Priority) - using CurrencyCubit state
+    final currencyCubit = GetIt.instance<CurrencyCubit>();
+    if (!currencyCubit.state.isCurrencySet) {
+      debugPrint('[ChatDebug] ChatCubit: Currency not set.');
+      emit(const ChatError(
+        message: 'Currency not set',
+        errorType: ChatErrorType.currencyRequired,
+      ));
+      return;
+    }
 
     await loadMessageUsage();
+    debugPrint('[ChatDebug] ChatCubit loaded message usage');
 
     final userId = await secureStorage.getUserId() ?? '';
 
+    // Load local cached messages first
     final cachedResult = await getMessages(userId, botId, limit: 20);
     cachedResult.fold(
       (failure) {},
@@ -89,6 +142,7 @@ class ChatCubit extends Cubit<ChatState> {
 
     _apiPage = 1;
 
+    // Load remote history (Direct call, no Params object)
     final apiResult = await getChatHistory(
       userId: userId,
       page: _apiPage,
@@ -99,20 +153,44 @@ class ChatCubit extends Cubit<ChatState> {
     if (!isClosed) {
       apiResult.fold(
         (failure) {
+          debugPrint(
+              '[ChatDebug] ChatCubit API failure: ${failure.message}, Type: ${failure is ChatApiFailure ? failure.failureType : "Unknown"}');
           final currentState = state;
+
+          ChatErrorType? errorType;
+          if (failure is ChatApiFailure) {
+            errorType = _mapChatFailureType(failure.failureType);
+            debugPrint('[ChatDebug] ChatCubit mapped errorType: $errorType');
+          }
+
           if (currentState is ChatLoaded) {
+            debugPrint(
+                '[ChatDebug] ChatCubit emitting ChatError (preserving messages)');
             emit(ChatError(
-                message: failure.message, messages: currentState.messages));
+              message: failure.message,
+              messages: currentState.messages,
+              errorType: errorType,
+            ));
           } else {
-            emit(ChatError(message: failure.message));
+            debugPrint(
+                '[ChatDebug] ChatCubit emitting ChatError (no messages)');
+            emit(ChatError(
+              message: failure.message,
+              errorType: errorType,
+            ));
           }
         },
         (response) async {
           _hasMore = response.pagination.hasNext;
 
+          // Sync local messages with remote logic if needed, or just fetch updated local
+          // Assuming getChatHistory updates local DB, we re-fetch from local.
           final updatedResult = await getMessages(userId, botId, limit: 20);
           updatedResult.fold(
-            (failure) => emit(ChatError(message: failure.message)),
+            (failure) => emit(ChatError(
+              message: failure.message,
+              errorType: ChatErrorType.general,
+            )),
             (messages) {
               emit(ChatLoaded(
                 messages: messages,
@@ -152,7 +230,7 @@ class ChatCubit extends Cubit<ChatState> {
       userId: userId,
       page: _apiPage,
       limit: 10,
-      botId: currentBotId,
+      botId: currentBotId!,
     );
 
     if (!isClosed) {
@@ -211,7 +289,7 @@ class ChatCubit extends Cubit<ChatState> {
           imageUrl: imagePath,
           audioUrl: audioPath,
           timestamp: DateTime.now(),
-          isSending: false,
+          isSending: true,
           hasError: false,
         );
 
@@ -227,33 +305,31 @@ class ChatCubit extends Cubit<ChatState> {
         );
 
         if (!isClosed) {
-          result.fold(
-            (failure) {
-              if (failure is ChatApiFailure) {
-                final errorType = _mapChatFailureType(failure.failureType);
-                emit(ChatError(
-                  message: failure.message,
-                  messages: currentState.messages,
-                  errorType: errorType,
-                ));
-                return;
+          result.fold((failure) {
+            // Mark message as failed
+            final failedMessages = updatedMessages.map((m) {
+              if (m.id == tempUserMessage.id) {
+                return m.copyWith(hasError: true, isSending: false);
               }
-            },
-            (_) => null,
-          );
+              return m;
+            }).toList();
 
-          if (state is! ChatError) {
+            emit(currentState.copyWith(
+                messages: failedMessages, isSending: false));
+
+            // Also show error state if critical (or snackbar usually)
+            // But here we might want to keep the chat loaded.
+          }, (_) async {
+            // Success. Re-fetch messages to get the AI response or confirmed user message state
             final reloadResult = await getMessages(userId, botId,
-                limit: currentState.messages.length + 2);
+                limit: updatedMessages.length + 2);
             reloadResult.fold(
-              (failure) => emit(currentState.copyWith(isSending: false)),
-              (messages) {
-                emit(currentState.copyWith(
-                    messages: messages, isSending: false));
-                loadMessageUsage();
-              },
-            );
-          }
+                (failure) => emit(currentState.copyWith(isSending: false)),
+                (messages) {
+              emit(currentState.copyWith(messages: messages, isSending: false));
+              loadMessageUsage();
+            });
+          });
         }
       }
     });
@@ -297,16 +373,11 @@ class ChatCubit extends Cubit<ChatState> {
       await updateMessage(updatedMessage);
 
       if (updatedMessage.conversationId != null) {
-        final result = await submitFeedback(
+        await submitFeedback(
           messageId: updatedMessage.conversationId!,
           feedback: feedback,
         );
-
-        result.fold(
-          (failure) {},
-          (success) {},
-        );
-      } else {}
+      }
     }
   }
 

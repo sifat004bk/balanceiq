@@ -225,4 +225,39 @@ void main() {
               CacheFailure('Failed to load messages: Exception: Cache error')));
     });
   });
+  group('getChatHistory', () {
+    const tUserId = 'user1';
+    const tBotId = 'bot1';
+
+    test(
+        'should return ChatFailureType.currencyRequired when remote throws currencyRequired error',
+        () async {
+      // Arrange
+      when(() => mockSecureStorageService.getUserId()).thenAnswer(
+          (_) async => '1'); // userId for API is int usually but handled
+
+      when(() => mockRemoteDataSource.getChatHistory(
+            userId: any(named: 'userId'),
+            page: any(named: 'page'),
+            limit: any(named: 'limit'),
+          )).thenThrow(ChatApiException(
+        message: 'Currency required',
+        errorType: ChatApiErrorType.currencyRequired,
+      ));
+
+      // Act
+      final result = await repository.getChatHistory(
+        userId: '1',
+        botId: tBotId,
+        page: 1,
+        limit: 10,
+      );
+
+      // Assert
+      expect(
+          result,
+          const Left(ChatApiFailure('Currency required',
+              failureType: ChatFailureType.currencyRequired)));
+    });
+  });
 }

@@ -20,25 +20,32 @@ class ChatErrorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint(
+        '[ChatDebug] ChatErrorWidget build started for type: ${state.errorType}');
     final errorConfig = _getErrorConfig(context);
+    debugPrint(
+        '[ChatDebug] ChatErrorWidget config retrieved: ${errorConfig.title}');
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _buildIconContainer(errorConfig),
-            const SizedBox(height: 24),
-            _buildTitle(errorConfig, colorScheme),
-            const SizedBox(height: 12),
-            _buildDescription(context, errorConfig),
-            const SizedBox(height: 32),
-            _buildActionButton(context, errorConfig, colorScheme),
-            if (state.messages?.isNotEmpty == true)
-              _buildBackToChatButton(context, colorScheme),
-          ],
+    return Container(
+      color: Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.9),
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _buildIconContainer(errorConfig),
+              const SizedBox(height: 24),
+              _buildTitle(errorConfig, colorScheme),
+              const SizedBox(height: 12),
+              _buildDescription(context, errorConfig),
+              const SizedBox(height: 32),
+              _buildActionButton(context, errorConfig, colorScheme),
+              if (state.messages?.isNotEmpty == true)
+                _buildBackToChatButton(context, colorScheme),
+            ],
+          ),
         ),
       ),
     );
@@ -50,49 +57,73 @@ class ChatErrorWidget extends StatelessWidget {
     switch (state.errorType) {
       case ChatErrorType.emailNotVerified:
         return _ErrorConfig(
-          title: GetIt.I<ChatStrings>().emailVerificationRequired,
-          description: GetIt.I<ChatStrings>().emailVerificationMessage,
+          title: _getSafeString(
+              () => GetIt.I<ChatStrings>().emailVerificationRequired,
+              'Email Verification Required'),
+          description: _getSafeString(
+              () => GetIt.I<ChatStrings>().emailVerificationMessage,
+              'Please verify your email address to use the chat feature.'),
           icon: Icons.email_outlined,
           iconColor: colorScheme.tertiary,
-          buttonText: GetIt.I<ChatStrings>().verifyEmailButton,
+          buttonText: _getSafeString(
+              () => GetIt.I<ChatStrings>().verifyEmailButton, 'Verify Email'),
           onButtonPressed: () => Navigator.pushNamed(context, '/profile'),
         );
       case ChatErrorType.subscriptionRequired:
         return _ErrorConfig(
-          title: GetIt.I<ChatStrings>().subscriptionRequired,
-          description: GetIt.I<ChatStrings>().subscriptionRequiredMessage,
+          title: _getSafeString(
+              () => GetIt.I<ChatStrings>().subscriptionRequired,
+              'Subscription Required'),
+          description: _getSafeString(
+              () => GetIt.I<ChatStrings>().subscriptionRequiredMessage,
+              'You need an active subscription plan to use the chat feature.'),
           icon: Icons.card_membership_outlined,
           iconColor: colorScheme.primary,
-          buttonText: GetIt.I<ChatStrings>().viewPlans,
+          buttonText: _getSafeString(
+              () => GetIt.I<ChatStrings>().viewPlans, 'View Plans'),
           onButtonPressed: () =>
               Navigator.pushNamed(context, '/subscription-plans'),
         );
       case ChatErrorType.subscriptionExpired:
         return _ErrorConfig(
-          title: GetIt.I<ChatStrings>().subscriptionExpired,
-          description: GetIt.I<ChatStrings>().subscriptionExpiredMessage,
+          title: _getSafeString(
+              () => GetIt.I<ChatStrings>().subscriptionExpired,
+              'Subscription Expired'),
+          description: _getSafeString(
+              () => GetIt.I<ChatStrings>().subscriptionExpiredMessage,
+              'Your subscription has expired. Please renew to continue using the chat feature.'),
           icon: Icons.timer_off_outlined,
           iconColor: colorScheme.error,
-          buttonText: GetIt.I<ChatStrings>().renewSubscription,
+          buttonText: _getSafeString(
+              () => GetIt.I<ChatStrings>().renewSubscription,
+              'Renew Subscription'),
           onButtonPressed: () =>
               Navigator.pushNamed(context, '/manage-subscription'),
         );
       case ChatErrorType.messageLimitExceeded:
         return _ErrorConfig(
-          title: GetIt.I<ChatStrings>().messageLimitExceeded,
+          title: _getSafeString(
+              () => GetIt.I<ChatStrings>().messageLimitExceeded,
+              'Message Limit Exceeded'),
           description: state.message.isNotEmpty
               ? state.message
-              : GetIt.I<ChatStrings>().messageLimitExceededMessage,
+              : _getSafeString(
+                  () => GetIt.I<ChatStrings>().messageLimitExceededMessage,
+                  'You have reached your daily message limit. Resets at midnight.'),
           icon: Icons.token_outlined,
           iconColor: colorScheme.secondary,
-          buttonText: GetIt.I<ChatStrings>().upgradePlan,
+          buttonText: _getSafeString(
+              () => GetIt.I<ChatStrings>().upgradePlan, 'Upgrade Plan'),
           onButtonPressed: () =>
               Navigator.pushNamed(context, '/subscription-plans'),
         );
       case ChatErrorType.rateLimitExceeded:
         return _ErrorConfig(
-          title: GetIt.I<ChatStrings>().tooManyRequests,
-          description: GetIt.I<ChatStrings>().rateLimitMessage,
+          title: _getSafeString(() => GetIt.I<ChatStrings>().tooManyRequests,
+              'Too Many Requests'),
+          description: _getSafeString(
+              () => GetIt.I<ChatStrings>().rateLimitMessage,
+              'Please wait a moment before sending more messages.'),
           icon: Icons.schedule_outlined,
           iconColor: colorScheme.primary,
           buttonText: GetIt.I<CoreStrings>().common.gotIt,
@@ -101,12 +132,28 @@ class ChatErrorWidget extends StatelessWidget {
         );
       case ChatErrorType.currencyRequired:
         return _ErrorConfig(
-          title: GetIt.I<ChatStrings>().currencyRequired,
-          description: GetIt.I<ChatStrings>().currencyRequiredMessage,
+          title: _getSafeString(() => GetIt.I<ChatStrings>().currencyRequired,
+              'Currency Required'),
+          description: _getSafeString(
+              () => GetIt.I<ChatStrings>().currencyRequiredMessage,
+              'Please set your preferred currency in your profile settings before using the chat feature.'),
           icon: Icons.currency_exchange,
           iconColor: colorScheme.secondary,
-          buttonText: GetIt.I<ChatStrings>().setCurrency,
-          onButtonPressed: () => Navigator.pushNamed(context, '/profile'),
+          buttonText: _getSafeString(
+              () => GetIt.I<ChatStrings>().setCurrency, 'Set Currency'),
+          onButtonPressed: () {
+            Navigator.pushNamed(
+              context,
+              '/profile',
+              arguments: {
+                'action': 'open_currency_selector',
+                'returnToChat': true
+              },
+            ).then((_) {
+              // Reload chat after returning from profile
+              context.read<ChatCubit>().loadChatHistory(botId);
+            });
+          },
         );
       default:
         return _ErrorConfig(
@@ -120,6 +167,14 @@ class ChatErrorWidget extends StatelessWidget {
           onButtonPressed: () =>
               context.read<ChatCubit>().loadChatHistory(botId),
         );
+    }
+  }
+
+  String _getSafeString(String Function() getter, String fallback) {
+    try {
+      return getter();
+    } catch (_) {
+      return fallback;
     }
   }
 

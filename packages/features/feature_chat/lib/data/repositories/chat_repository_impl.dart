@@ -173,6 +173,10 @@ class ChatRepositoryImpl implements ChatRepository {
 
       // Return domain entity
       return Right(responseModel.toEntity());
+    } on ChatApiException catch (e) {
+      // Map ChatApiException to ChatApiFailure
+      final failureType = _mapChatApiErrorType(e.errorType);
+      return Left(ChatApiFailure(e.message, failureType: failureType));
     } catch (e) {
       // If server fails (e.g. offline), we might want to return local cache?
       // Use cases should handle this override if needed, here we report server failure.

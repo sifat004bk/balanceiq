@@ -2,6 +2,9 @@ abstract class ChatStrings {
   // Input
   String get inputPlaceholder;
   String get inputPlaceholderGeneral;
+  String get inputPlaceholderEmailVerification;
+  String get inputPlaceholderSubscriptionRequired;
+  String get inputPlaceholderCurrencyRequired;
   String get sendMessage;
   String get attachFile;
   String get camera;

@@ -10,6 +10,8 @@ import 'package:get_it/get_it.dart';
 import 'package:feature_chat/constants/chat_strings.dart';
 import 'package:dolfin_ui_kit/theme/app_typography.dart';
 import 'package:dolfin_core/utils/snackbar_utils.dart';
+import 'package:dolfin_core/currency/currency_cubit.dart';
+
 import '../cubit/chat_cubit.dart';
 import '../cubit/chat_state.dart';
 import '../chat_config.dart';
@@ -23,6 +25,7 @@ class SimpleChatInput extends StatefulWidget {
   final bool isCollapsed;
   final VoidCallback? onToggleCollapse;
   final ValueChanged<bool>? onFocusChanged;
+  final String? placeholder;
 
   const SimpleChatInput({
     super.key,
@@ -33,6 +36,7 @@ class SimpleChatInput extends StatefulWidget {
     this.isCollapsed = false,
     this.onToggleCollapse,
     this.onFocusChanged,
+    this.placeholder,
   });
 
   @override
@@ -55,6 +59,10 @@ class _SimpleChatInputState extends State<SimpleChatInput> {
     super.initState();
     _textController.addListener(_onTextChanged);
     _focusNode.addListener(_onFocusChanged);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Currency check is now handled by ChatPage/ChatCubit initial load
+    });
   }
 
   void _onFocusChanged() {
@@ -218,6 +226,8 @@ class _SimpleChatInputState extends State<SimpleChatInput> {
     );
   }
 
+  // Currency dialog removed as part of UI refactor
+
   Widget _buildAttachmentOption({
     required IconData icon,
     required String label,
@@ -289,119 +299,153 @@ class _SimpleChatInputState extends State<SimpleChatInput> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final primaryColor = Theme.of(context).colorScheme.primary;
 
-    return BlocBuilder<ChatCubit, ChatState>(
-      builder: (context, state) {
-        bool isLimitReached = false;
-        bool isNearLimit = false;
-        int remainingMessages = 0;
+    return BlocBuilder<CurrencyCubit, CurrencyState>(
+      builder: (context, currencyState) {
+        final isCurrencySet = currencyState.isCurrencySet;
 
-        if (state is ChatLoaded) {
-          isLimitReached = state.isMessageLimitReached;
-          isNearLimit =
-              state.messagesUsedToday >= (state.dailyMessageLimit * 0.8);
-          remainingMessages = state.messagesRemaining;
-        }
+        return BlocBuilder<ChatCubit, ChatState>(
+          builder: (context, state) {
+            bool isLimitReached = false;
+            bool isNearLimit = false;
+            int remainingMessages = 0;
 
-        return Container(
-          width: widget.width,
-          constraints: const BoxConstraints(maxWidth: double.infinity),
-          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 12, right: 12, bottom: 12),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    LimitWarningBanner(
-                      isLimitReached: isLimitReached,
-                      isNearLimit: isNearLimit,
-                      remainingMessages: remainingMessages,
-                    ),
-                    if (_selectedImage != null)
-                      ImagePreviewCard(
-                        imagePath: _selectedImage!.path,
-                        onRemove: () => setState(() => _selectedImage = null),
-                      ),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(24),
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 10,
+            if (state is ChatLoaded) {
+              isLimitReached = state.isMessageLimitReached;
+              isNearLimit =
+                  state.messagesUsedToday >= (state.dailyMessageLimit * 0.8);
+              remainingMessages = state.messagesRemaining;
+            }
+
+            // Check for blocking errors
+            bool isBlockingError = false;
+            if (state is ChatError) {
+              final type = state.errorType;
+              if (type == ChatErrorType.emailNotVerified ||
+                  type == ChatErrorType.subscriptionRequired ||
+                  type == ChatErrorType.subscriptionExpired ||
+                  type == ChatErrorType.currencyRequired) {
+                isBlockingError = true;
+              }
+            }
+
+            final isDisabled =
+                isLimitReached || !isCurrencySet || isBlockingError;
+
+            return Container(
+              width: widget.width,
+              constraints: const BoxConstraints(maxWidth: double.infinity),
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 12, right: 12, bottom: 12),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        LimitWarningBanner(
+                          isLimitReached: isLimitReached,
+                          isNearLimit: isNearLimit,
+                          remainingMessages: remainingMessages,
+                        ),
+                        if (_selectedImage != null)
+                          ImagePreviewCard(
+                            imagePath: _selectedImage!.path,
+                            onRemove: () =>
+                                setState(() => _selectedImage = null),
                           ),
-                          decoration: BoxDecoration(
-                            color: Theme.of(context)
-                                .cardColor
-                                .withValues(alpha: 0.7),
-                            borderRadius: BorderRadius.circular(24),
-                            border: Border.all(
-                              color: _focusNode.hasFocus
-                                  ? primaryColor.withValues(alpha: 0.5)
-                                  : primaryColor.withValues(
-                                      alpha: isDark ? 0.15 : 0.1),
-                              width: _focusNode.hasFocus ? 1.5 : 1.0,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(24),
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 10,
+                              ),
+                              decoration: BoxDecoration(
                                 color: Theme.of(context)
-                                    .shadowColor
-                                    .withValues(alpha: 0.08),
-                                blurRadius: 8,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              if (GetIt.instance<ChatConfig>()
-                                  .showAttachments) ...[
-                                ChatAttachmentButton(
-                                  primaryColor: primaryColor,
-                                  isDisabled: isLimitReached,
-                                  onTap: _showAttachmentOptions,
+                                    .cardColor
+                                    .withValues(alpha: 0.7),
+                                borderRadius: BorderRadius.circular(24),
+                                border: Border.all(
+                                  color: _focusNode.hasFocus
+                                      ? primaryColor.withValues(alpha: 0.5)
+                                      : primaryColor.withValues(
+                                          alpha: isDark ? 0.15 : 0.1),
+                                  width: _focusNode.hasFocus ? 1.5 : 1.0,
                                 ),
-                                const SizedBox(width: 12),
-                              ],
-                              Expanded(
-                                child: SimpleChatTextField(
-                                  controller: _textController,
-                                  focusNode: _focusNode,
-                                  isDisabled: isLimitReached,
-                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Theme.of(context)
+                                        .shadowColor
+                                        .withValues(alpha: 0.08),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
                               ),
-                              const SizedBox(width: 12),
-                              if (GetIt.instance<ChatConfig>()
-                                  .showAudioRecording) ...[
-                                ChatMicButton(
-                                  isRecording: _isRecording,
-                                  isDisabled: isLimitReached,
-                                  primaryColor: primaryColor,
-                                  onTap: _toggleRecording,
-                                ),
-                                const SizedBox(width: 8),
-                              ],
-                              ChatSendButton(
-                                hasContent: _hasContent,
-                                isDisabled: isLimitReached,
-                                primaryColor: primaryColor,
-                                onTap: _sendMessage,
+                              child: Stack(
+                                children: [
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      if (GetIt.instance<ChatConfig>()
+                                          .showAttachments) ...[
+                                        ChatAttachmentButton(
+                                          primaryColor: primaryColor,
+                                          isDisabled: isDisabled,
+                                          onTap: _showAttachmentOptions,
+                                        ),
+                                        const SizedBox(width: 12),
+                                      ],
+                                      Expanded(
+                                        child: SimpleChatTextField(
+                                          controller: _textController,
+                                          focusNode: _focusNode,
+                                          isDisabled: isDisabled,
+                                          placeholder: widget.placeholder,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 12),
+                                      if (GetIt.instance<ChatConfig>()
+                                          .showAudioRecording) ...[
+                                        ChatMicButton(
+                                          isRecording: _isRecording,
+                                          isDisabled: isDisabled,
+                                          primaryColor: primaryColor,
+                                          onTap: _toggleRecording,
+                                        ),
+                                        const SizedBox(width: 8),
+                                      ],
+                                      ChatSendButton(
+                                        hasContent: _hasContent,
+                                        isDisabled: isDisabled,
+                                        primaryColor: primaryColor,
+                                        onTap: _sendMessage,
+                                      ),
+                                    ],
+                                  ),
+                                  if (!isCurrencySet)
+                                    Positioned.fill(
+                                      child: Container(
+                                        color: Colors.transparent,
+                                      ),
+                                    ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            );
+          },
         );
       },
     );

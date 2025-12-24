@@ -32,6 +32,10 @@ import 'package:feature_chat/data/repositories/chat_feedback_repository_impl.dar
 import 'package:feature_chat/domain/repositories/message_usage_repository.dart';
 import 'package:feature_chat/domain/repositories/chat_feedback_repository.dart';
 
+// Feature dependencies for ChatCubit priority logic
+import 'package:feature_auth/domain/usecases/get_current_user.dart';
+import 'package:feature_subscription/domain/usecases/get_subscription_status.dart';
+
 // Re-export common types
 export 'package:feature_chat/presentation/chat_config.dart';
 export 'package:feature_chat/presentation/pages/chat_page.dart';
@@ -99,6 +103,8 @@ Future<void> initChatFeature(GetIt sl, ChatFeatureConfig config) async {
       submitFeedback: sl(),
       secureStorage: config.secureStorage,
       uuid: config.uuid,
+      getCurrentUser: sl(),
+      getSubscriptionStatus: sl(),
     ),
   );
 
@@ -172,13 +178,6 @@ Future<void> initChatFeature(GetIt sl, ChatFeatureConfig config) async {
         AppLogger.debug(
             'Registering REAL MessageUsageDataSource (Finance Guru API)',
             name: 'DI');
-        // Assuming MessageUsageDataSourceImpl has similar dependencies
-        // Need to import MessageUsageDataSourceImpl if it exists, or check constructor
-        // Based on existing code: MessageUsageDataSourceImpl(sl(), sl()) -> likely Dio, AppConstants/SecureStorage?
-        // Wait, imported MessageUsageDataSource but impl?
-        // Let's assume standard deps for now or verify impl file if needed.
-        // Actually, dolfin_ai used: MessageUsageDataSourceImpl(sl(), sl())
-        // I need to import it. It wasn't imported in my code above!
         return MessageUsageDataSourceImpl(config.dio, config.secureStorage);
       }
     },

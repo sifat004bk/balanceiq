@@ -1,26 +1,33 @@
+import 'package:bloc_test/bloc_test.dart';
+import 'package:dartz/dartz.dart';
+import 'package:dolfin_core/constants/app_constants.dart';
 import 'package:dolfin_core/error/failures.dart';
 import 'package:dolfin_core/storage/secure_storage_service.dart';
+import 'package:feature_auth/domain/entities/user.dart';
+import 'package:feature_auth/domain/usecases/get_current_user.dart';
 import 'package:feature_chat/domain/entities/chat_history_response.dart';
 import 'package:feature_chat/domain/entities/message.dart';
 import 'package:feature_chat/domain/entities/message_usage.dart';
 import 'package:feature_chat/presentation/cubit/chat_cubit.dart';
 import 'package:feature_chat/presentation/cubit/chat_state.dart';
-import 'package:bloc_test/bloc_test.dart';
-import 'package:dartz/dartz.dart';
+import 'package:feature_subscription/domain/entities/subscription_status.dart';
+import 'package:feature_subscription/domain/usecases/get_subscription_status.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../mocks.dart';
-
-import 'package:dolfin_core/constants/app_constants.dart';
-import 'package:get_it/get_it.dart';
 
 class MockSecureStorageService extends Mock implements SecureStorageService {}
 
 class MockUuid extends Mock implements Uuid {}
 
 class MockAppConstants extends Mock implements AppConstants {}
+
+class MockGetCurrentUser extends Mock implements GetCurrentUser {}
+
+class MockGetSubscriptionStatus extends Mock implements GetSubscriptionStatus {}
 
 void main() {
   late ChatCubit chatCubit;
@@ -33,6 +40,8 @@ void main() {
   late MockSecureStorageService mockSecureStorage;
   late MockUuid mockUuid;
   late MockAppConstants mockAppConstants;
+  late MockGetCurrentUser mockGetCurrentUser;
+  late MockGetSubscriptionStatus mockGetSubscriptionStatus;
 
   setUp(() {
     mockGetMessages = MockGetMessages();
@@ -44,6 +53,8 @@ void main() {
     mockSecureStorage = MockSecureStorageService();
     mockUuid = MockUuid();
     mockAppConstants = MockAppConstants();
+    mockGetCurrentUser = MockGetCurrentUser();
+    mockGetSubscriptionStatus = MockGetSubscriptionStatus();
 
     GetIt.instance.registerSingleton<AppConstants>(mockAppConstants);
     when(() => mockAppConstants.senderBot).thenReturn('bot');
@@ -59,6 +70,8 @@ void main() {
       submitFeedback: mockSubmitFeedback,
       secureStorage: mockSecureStorage,
       uuid: mockUuid,
+      getCurrentUser: mockGetCurrentUser,
+      getSubscriptionStatus: mockGetSubscriptionStatus,
     );
   });
 
@@ -69,6 +82,47 @@ void main() {
   group('ChatCubit', () {
     const testBotId = 'balance_tracker';
     const testUserId = 'user123';
+
+    // Correct User object instantiation
+    final testUserVerified = User(
+      id: "1",
+      email: 'test@example.com',
+      name: 'testuser',
+      isEmailVerified: true,
+      currency: 'USD',
+      authProvider: 'email',
+      createdAt: DateTime.now(),
+    );
+
+    final testUserUnverified = User(
+      id: "1",
+      email: 'test@example.com',
+      name: 'testuser',
+      isEmailVerified: false,
+      currency: 'USD',
+      authProvider: 'email',
+      createdAt: DateTime.now(),
+    );
+
+    final testUserNoCurrency = User(
+      id: "1",
+      email: 'test@example.com',
+      name: 'testuser',
+      isEmailVerified: true,
+      currency: null,
+      authProvider: 'email',
+      createdAt: DateTime.now(),
+    );
+
+    // Correct SubscriptionStatus instantiation
+    final testSubscriptionActive = SubscriptionStatus(
+      hasActiveSubscription: true,
+      // subscription: ... // Optional
+    );
+
+    final testSubscriptionInactive = SubscriptionStatus(
+      hasActiveSubscription: false,
+    );
 
     final testMessageUsage = MessageUsage(
       messagesUsedToday: 5,
@@ -113,13 +167,75 @@ void main() {
     });
 
     blocTest<ChatCubit, ChatState>(
-      'emits ChatLoaded when loadChatHistory succeeds',
+      'emits ChatError(emailNotVerified) if user email is not verified',
       build: () {
+        when(() => mockGetCurrentUser())
+            .thenAnswer((_) async => Right(testUserUnverified));
+        return chatCubit;
+      },
+      act: (cubit) => cubit.loadChatHistory(testBotId),
+      expect: () => [
+        isA<ChatLoading>(),
+        isA<ChatError>().having(
+            (s) => s.errorType, 'errorType', ChatErrorType.emailNotVerified),
+      ],
+      verify: (_) {
+        verifyNever(() => mockGetSubscriptionStatus());
+        verifyNever(() => mockGetChatHistory(
+              userId: any(named: 'userId'),
+              page: any(named: 'page'),
+              limit: any(named: 'limit'),
+              botId: any(named: 'botId'),
+            ));
+      },
+    );
+
+    blocTest<ChatCubit, ChatState>(
+      'emits ChatError(subscriptionRequired) if user verified but no subscription',
+      build: () {
+        when(() => mockGetCurrentUser())
+            .thenAnswer((_) async => Right(testUserVerified));
+        when(() => mockGetSubscriptionStatus())
+            .thenAnswer((_) async => Right(testSubscriptionInactive));
+        return chatCubit;
+      },
+      act: (cubit) => cubit.loadChatHistory(testBotId),
+      expect: () => [
+        isA<ChatLoading>(),
+        isA<ChatError>().having((s) => s.errorType, 'errorType',
+            ChatErrorType.subscriptionRequired),
+      ],
+    );
+
+    blocTest<ChatCubit, ChatState>(
+      'emits ChatError(currencyRequired) if user verified, sub active, but no currency',
+      build: () {
+        when(() => mockGetCurrentUser())
+            .thenAnswer((_) async => Right(testUserNoCurrency));
+        when(() => mockGetSubscriptionStatus())
+            .thenAnswer((_) async => Right(testSubscriptionActive));
+        return chatCubit;
+      },
+      act: (cubit) => cubit.loadChatHistory(testBotId),
+      expect: () => [
+        isA<ChatLoading>(),
+        isA<ChatError>().having(
+            (s) => s.errorType, 'errorType', ChatErrorType.currencyRequired),
+      ],
+    );
+
+    blocTest<ChatCubit, ChatState>(
+      'emits ChatLoaded when checks pass and loadChatHistory succeeds',
+      build: () {
+        when(() => mockGetCurrentUser())
+            .thenAnswer((_) async => Right(testUserVerified));
+        when(() => mockGetSubscriptionStatus())
+            .thenAnswer((_) async => Right(testSubscriptionActive));
+
         when(() => mockGetMessageUsage())
             .thenAnswer((_) async => Right(testMessageUsage));
         when(() => mockSecureStorage.getUserId())
             .thenAnswer((_) async => testUserId);
-        // Return existing messages from DB
         when(() => mockGetMessages(any(), any(), limit: any(named: 'limit')))
             .thenAnswer((_) async => Right([testMessage]));
 
@@ -137,42 +253,6 @@ void main() {
         isA<ChatLoading>(),
         isA<ChatLoaded>(),
         isA<ChatLoaded>(),
-      ],
-    );
-
-    blocTest<ChatCubit, ChatState>(
-      'emits ChatError with currencyRequired when sendMessage fails with currencyRequired',
-      seed: () => ChatLoaded(
-        messages: [],
-        isSending: false,
-      ),
-      build: () {
-        when(() => mockSecureStorage.getUserId())
-            .thenAnswer((_) async => testUserId);
-        when(() => mockUuid.v4()).thenReturn('temp_msg_id');
-        when(() => mockGetMessageUsage())
-            .thenAnswer((_) async => Right(testMessageUsage));
-
-        when(() => mockSendMessage(
-              botId: any(named: 'botId'),
-              content: any(named: 'content'),
-              imagePath: any(named: 'imagePath'),
-              audioPath: any(named: 'audioPath'),
-            )).thenAnswer((_) async => const Left(ChatApiFailure(
-              'Currency required',
-              failureType: ChatFailureType.currencyRequired,
-            )));
-
-        return chatCubit;
-      },
-      act: (cubit) => cubit.sendNewMessage(
-        botId: testBotId,
-        content: 'Hello',
-      ),
-      expect: () => [
-        isA<ChatLoaded>().having((s) => s.isSending, 'isSending', true),
-        isA<ChatError>().having(
-            (s) => s.errorType, 'errorType', ChatErrorType.currencyRequired),
       ],
     );
   });

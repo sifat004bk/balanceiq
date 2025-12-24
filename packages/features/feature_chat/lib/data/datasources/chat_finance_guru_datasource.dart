@@ -64,6 +64,16 @@ class ChatFinanceGuruDataSource implements ChatRemoteDataSource {
               .getString(GetIt.instance<AppConstants>().keyUserName) ??
           'User';
 
+      // Check if currency is set
+      final currency = sharedPreferences
+          .getString(GetIt.instance<AppConstants>().keyCurrencyCode);
+      if (currency == null) {
+        throw ChatApiException(
+          message: 'Currency not set',
+          errorType: ChatApiErrorType.currencyRequired,
+        );
+      }
+
       // Use username from email or full name
       final username = userEmail.split('@').first.isNotEmpty
           ? userEmail.split('@').first
@@ -161,6 +171,11 @@ class ChatFinanceGuruDataSource implements ChatRemoteDataSource {
               message: message.toString(),
               errorType: ChatApiErrorType.tokenLimitExceeded,
             );
+          } else if (message.toString().toLowerCase().contains('currency')) {
+            throw ChatApiException(
+              message: message.toString(),
+              errorType: ChatApiErrorType.currencyRequired,
+            );
           }
         } else if (statusCode == 429) {
           throw ChatApiException(
@@ -198,6 +213,16 @@ class ChatFinanceGuruDataSource implements ChatRemoteDataSource {
         size: limit ?? 20,
       );
 
+      // Check if currency is set
+      final currency = sharedPreferences
+          .getString(GetIt.instance<AppConstants>().keyCurrencyCode);
+      if (currency == null || currency.isEmpty) {
+        throw ChatApiException(
+          message: 'Currency not set',
+          errorType: ChatApiErrorType.currencyRequired,
+        );
+      }
+
       // Get auth token if available
       final token = await secureStorage.getToken();
 
@@ -228,13 +253,59 @@ class ChatFinanceGuruDataSource implements ChatRemoteDataSource {
       } else if (e.type == DioExceptionType.badResponse) {
         final statusCode = e.response?.statusCode;
         final message =
-            e.response?.data?['message'] ?? e.response?.data?['error'];
+            e.response?.data?['message'] ?? e.response?.data?['error'] ?? '';
+
+        // Handle 403 Forbidden errors with specific error types
+        if (statusCode == 403) {
+          if (message.toString().toLowerCase().contains('verify your email')) {
+            throw ChatApiException(
+              message: message.toString(),
+              errorType: ChatApiErrorType.emailNotVerified,
+            );
+          } else if (message
+              .toString()
+              .toLowerCase()
+              .contains('active subscription')) {
+            throw ChatApiException(
+              message: message.toString(),
+              errorType: ChatApiErrorType.subscriptionRequired,
+            );
+          } else if (message.toString().toLowerCase().contains('expired')) {
+            throw ChatApiException(
+              message: message.toString(),
+              errorType: ChatApiErrorType.subscriptionExpired,
+            );
+          } else if (message.toString().toLowerCase().contains('token limit')) {
+            throw ChatApiException(
+              message: message.toString(),
+              errorType: ChatApiErrorType.tokenLimitExceeded,
+            );
+          } else if (message.toString().toLowerCase().contains('currency')) {
+            throw ChatApiException(
+              message: message.toString(),
+              errorType: ChatApiErrorType.currencyRequired,
+            );
+          }
+        } else if (statusCode == 429) {
+          throw ChatApiException(
+            message: message.toString(),
+            errorType: ChatApiErrorType.rateLimitExceeded,
+          );
+        } else if (statusCode == 400) {
+          if (message.toString().toLowerCase().contains('currency')) {
+            throw ChatApiException(
+              message: message.toString(),
+              errorType: ChatApiErrorType.currencyRequired,
+            );
+          }
+        }
         throw Exception(
             'Server error ($statusCode): ${message ?? 'Unknown error'}');
       } else {
         throw Exception('Network error: ${e.message}');
       }
     } catch (e) {
+      if (e is ChatApiException) rethrow;
       throw Exception('Failed to get chat history: $e');
     }
   }

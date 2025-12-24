@@ -93,6 +93,9 @@ class FloatingChatButton extends StatelessWidget {
                   width: 18,
                   height: 18,
                   fit: BoxFit.cover,
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onPrimary,
                 ),
               ),
             ),

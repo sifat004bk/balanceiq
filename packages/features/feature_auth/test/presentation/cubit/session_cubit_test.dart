@@ -25,6 +25,7 @@ void main() {
   late MockSecureStorageService mockSecureStorage;
   late MockUpdateCurrency mockUpdateCurrency;
   late MockSaveUser mockSaveUser;
+  late MockUpdateProfile mockUpdateProfile;
 
   setUpAll(() {
     registerFallbackValue(FakeUser());
@@ -37,12 +38,14 @@ void main() {
     mockSecureStorage = MockSecureStorageService();
     mockUpdateCurrency = MockUpdateCurrency();
     mockSaveUser = MockSaveUser();
+    mockUpdateProfile = MockUpdateProfile();
 
     sessionCubit = SessionCubit(
       getCurrentUser: mockGetCurrentUser,
       signOutUseCase: mockSignOut,
       getProfile: mockGetProfile,
       updateCurrencyUseCase: mockUpdateCurrency,
+      updateProfileUseCase: mockUpdateProfile,
       saveUser: mockSaveUser,
       secureStorage: mockSecureStorage,
       currencyCubit: FakeCurrencyCubit(),

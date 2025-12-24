@@ -13,6 +13,7 @@ import 'package:feature_auth/domain/usecases/sign_in_with_google.dart';
 import 'package:feature_auth/domain/usecases/sign_out.dart';
 import 'package:feature_auth/domain/usecases/signup.dart';
 import 'package:feature_auth/domain/usecases/save_user.dart';
+import 'package:feature_auth/domain/usecases/update_profile.dart';
 import 'package:dolfin_core/currency/currency_cubit.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -50,9 +51,14 @@ class MockResetPassword extends Mock implements ResetPassword {}
 
 class MockSaveUser extends Mock implements SaveUser {}
 
+class MockUpdateProfile extends Mock implements UpdateProfile {}
+
 /// A fake CurrencyCubit for testing.
 /// We use Fake because CurrencyCubit extends Cubit which is not mockable directly.
 class FakeCurrencyCubit extends Fake implements CurrencyCubit {
   @override
   Future<void> setCurrencyByCode(String code) async {}
+
+  @override
+  Future<void> reset() async {}
 }

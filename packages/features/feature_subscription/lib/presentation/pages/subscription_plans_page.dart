@@ -359,7 +359,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                       child: Row(
                         children: [
                           Icon(
-                            LucideIcons.checkCircle,
+                            LucideIcons.circleCheck,
                             color: Theme.of(context).colorScheme.primary,
                             size: 20,
                           ),

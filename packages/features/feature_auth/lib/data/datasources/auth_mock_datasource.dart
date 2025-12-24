@@ -536,6 +536,32 @@ class AuthMockDataSource implements AuthRemoteDataSource {
   static Map<String, String> getResetTokens() {
     return Map.from(_resetTokens);
   }
+
+  @override
+  Future<UpdateProfileResponse> updateProfile(
+      UpdateProfileRequest request) async {
+    await _simulateDelay();
+
+    // Mock implementation - return updated profile
+    AppLogger.debug('updateProfile called with: ${request.toJson()}',
+        name: 'MockAuth');
+
+    return UpdateProfileResponse(
+      success: true,
+      message: 'Profile updated successfully',
+      timestamp: DateTime.now().millisecondsSinceEpoch,
+      data: UserInfo(
+        id: 1,
+        username: request.email?.split('@').first ?? 'testuser',
+        fullName: request.fullName ?? 'Test User',
+        email: request.email ?? 'test@example.com',
+        photoUrl: null,
+        currency: request.currency,
+        roles: ['USER'],
+        isEmailVerified: true,
+      ),
+    );
+  }
 }
 
 /// Internal class to represent a mock user in memory

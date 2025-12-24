@@ -288,7 +288,7 @@ class _ManageSubscriptionView extends StatelessWidget {
                     Icon(
                       subscription.isActive
                           ? LucideIcons.star
-                          : LucideIcons.pauseCircle,
+                          : LucideIcons.circlePause,
                       size: 16,
                       color: Colors.white,
                     ),

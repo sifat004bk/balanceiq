@@ -80,7 +80,7 @@ class DashboardLayout extends StatelessWidget {
                           duration: 500.ms,
                           curve: Curves.easeOutCubic,
                         ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 16),
 
                     // Spending Trend Chart - Fade in with scale
                     if (summary.spendingTrend.isNotEmpty) ...[

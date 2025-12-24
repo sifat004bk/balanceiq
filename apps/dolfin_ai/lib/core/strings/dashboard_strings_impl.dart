@@ -16,9 +16,9 @@ class DashboardStringsImpl implements DashboardStrings {
   @override
   String get netBalance => 'Net Balance';
   @override
-  String get totalIncome => 'Total Income';
+  String get totalIncome => 'Income';
   @override
-  String get totalExpense => 'Total Expense';
+  String get totalExpense => 'Expense';
   @override
   String get totalIncomeThisMonth => 'Total Income (This Month)';
   @override

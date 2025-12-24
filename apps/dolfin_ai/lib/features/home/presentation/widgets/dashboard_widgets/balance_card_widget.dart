@@ -77,7 +77,7 @@ class BalanceCard extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 16),
 
           // Income and Expense Cards with glassmorphism
           Row(
@@ -111,23 +111,27 @@ class BalanceCard extends StatelessWidget {
   }
 
   Widget _buildIncomeExpenseCard(
-    BuildContext context, {
-    required CurrencyCubit currencyCubit,
-    required Widget iconWidget,
-    required String label,
-    required double amount,
-    required bool isIncome,
-  }) {
+      BuildContext context, {
+        required CurrencyCubit currencyCubit,
+        required Widget iconWidget,
+        required String label,
+        required double amount,
+        required bool isIncome,
+      }) {
     final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+
+    // Get semantic colors from your palette
     final iconColor = isIncome
         ? GetIt.instance<AppPalette>().income
         : GetIt.instance<AppPalette>().expense;
 
     return ThemedGlass.container(
       context: context,
-      preset: GlassPreset.card,
-      padding: const EdgeInsets.all(18),
+      preset: GlassPreset.medium,
+      padding: const EdgeInsets.all(16),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -135,19 +139,18 @@ class BalanceCard extends StatelessWidget {
               Container(
                 width: 24,
                 height: 24,
+                padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
                       iconColor,
-                      iconColor.withValues(alpha: 0.7),
+                      iconColor.withValues(alpha: 0.8),
                     ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
                   ),
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: iconColor.withValues(alpha: 0.3),
+                      color: iconColor.withValues(alpha: 0.4),
                       blurRadius: 8,
                       spreadRadius: 1,
                     ),
@@ -166,22 +169,34 @@ class BalanceCard extends StatelessWidget {
                 label,
                 style: textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.w600,
+                  color: colorScheme.onSurface.withValues(alpha: 0.8),
                   letterSpacing: 0.2,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 8),
           Text(
             currencyCubit.formatCompact(amount),
             style: textTheme.titleLarge?.copyWith(
               fontSize: 22,
-              fontWeight: FontWeight.w800,
-              letterSpacing: -0.5,
+              fontWeight: FontWeight.w900,
+              letterSpacing: -0.8,
+              color: colorScheme.onSurface,
+            ),
+          ),
+          // Subtle indicator bar at the bottom for quick visual parsing
+          const SizedBox(height: 12),
+          Container(
+            width: 40,
+            height: 3,
+            decoration: BoxDecoration(
+              color: iconColor.withValues(alpha: 0.5),
+              borderRadius: BorderRadius.circular(2),
             ),
           ),
         ],
       ),
     );
   }
-}
+  }

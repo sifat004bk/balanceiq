@@ -2,6 +2,7 @@ import 'package:dolfin_core/constants/app_constants.dart';
 import 'package:get_it/get_it.dart';
 import 'package:feature_chat/constants/chat_strings.dart';
 import 'package:flutter/material.dart';
+import 'suggested_prompt_icon_provider.dart';
 
 /// Gemini-style suggested prompts shown in empty chat state
 class SuggestedPrompts extends StatelessWidget {
@@ -16,26 +17,31 @@ class SuggestedPrompts extends StatelessWidget {
 
   List<PromptChip> _getPromptsForBot(String botId) {
     final constants = GetIt.instance<AppConstants>();
+    final icons = GetIt.I<SuggestedPromptIconProvider>();
 
     if (botId == constants.balanceTrackerID) {
       return [
         PromptChip(
-          icon: Icons.receipt_long,
+          iconBuilder: (size, color) =>
+              icons.trackExpense(size: size, color: color),
           label: GetIt.I<ChatStrings>().prompts.trackExpenseLabel,
           prompt: GetIt.I<ChatStrings>().prompts.trackExpensePrompt,
         ),
         PromptChip(
-          icon: Icons.account_balance_wallet,
+          iconBuilder: (size, color) =>
+              icons.checkBalance(size: size, color: color),
           label: GetIt.I<ChatStrings>().prompts.checkBalanceLabel,
           prompt: GetIt.I<ChatStrings>().prompts.checkBalancePrompt,
         ),
         PromptChip(
-          icon: Icons.trending_up,
+          iconBuilder: (size, color) =>
+              icons.monthlySummary(size: size, color: color),
           label: GetIt.I<ChatStrings>().prompts.monthlySummaryLabel,
           prompt: GetIt.I<ChatStrings>().prompts.monthlySummaryPrompt,
         ),
         PromptChip(
-          icon: Icons.savings,
+          iconBuilder: (size, color) =>
+              icons.addIncome(size: size, color: color),
           label: GetIt.I<ChatStrings>().prompts.addIncomeLabel,
           prompt: GetIt.I<ChatStrings>().prompts.addIncomePrompt,
         ),
@@ -43,22 +49,26 @@ class SuggestedPrompts extends StatelessWidget {
     } else if (botId == constants.investmentGuruID) {
       return [
         PromptChip(
-          icon: Icons.show_chart,
+          iconBuilder: (size, color) =>
+              icons.investmentTips(size: size, color: color),
           label: GetIt.I<ChatStrings>().prompts.investmentTipsLabel,
           prompt: GetIt.I<ChatStrings>().prompts.investmentTipsPrompt,
         ),
         PromptChip(
-          icon: Icons.account_balance,
+          iconBuilder: (size, color) =>
+              icons.stockAdvice(size: size, color: color),
           label: GetIt.I<ChatStrings>().prompts.stockAdviceLabel,
           prompt: GetIt.I<ChatStrings>().prompts.stockAdvicePrompt,
         ),
         PromptChip(
-          icon: Icons.pie_chart,
+          iconBuilder: (size, color) =>
+              icons.portfolioReview(size: size, color: color),
           label: GetIt.I<ChatStrings>().prompts.portfolioReviewLabel,
           prompt: GetIt.I<ChatStrings>().prompts.portfolioReviewPrompt,
         ),
         PromptChip(
-          icon: Icons.trending_up,
+          iconBuilder: (size, color) =>
+              icons.marketTrends(size: size, color: color),
           label: GetIt.I<ChatStrings>().prompts.marketTrendsLabel,
           prompt: GetIt.I<ChatStrings>().prompts.marketTrendsPrompt,
         ),
@@ -66,22 +76,26 @@ class SuggestedPrompts extends StatelessWidget {
     } else if (botId == constants.budgetPlannerID) {
       return [
         PromptChip(
-          icon: Icons.calendar_today,
+          iconBuilder: (size, color) =>
+              icons.createBudget(size: size, color: color),
           label: GetIt.I<ChatStrings>().prompts.createBudgetLabel,
           prompt: GetIt.I<ChatStrings>().prompts.createBudgetPrompt,
         ),
         PromptChip(
-          icon: Icons.category,
+          iconBuilder: (size, color) =>
+              icons.budgetCategories(size: size, color: color),
           label: GetIt.I<ChatStrings>().prompts.budgetCategoriesLabel,
           prompt: GetIt.I<ChatStrings>().prompts.budgetCategoriesPrompt,
         ),
         PromptChip(
-          icon: Icons.savings,
+          iconBuilder: (size, color) =>
+              icons.saveMoney(size: size, color: color),
           label: GetIt.I<ChatStrings>().prompts.saveMoneyLabel,
           prompt: GetIt.I<ChatStrings>().prompts.saveMoneyPrompt,
         ),
         PromptChip(
-          icon: Icons.warning,
+          iconBuilder: (size, color) =>
+              icons.budgetAlerts(size: size, color: color),
           label: GetIt.I<ChatStrings>().prompts.budgetAlertsLabel,
           prompt: GetIt.I<ChatStrings>().prompts.budgetAlertsPrompt,
         ),
@@ -89,22 +103,26 @@ class SuggestedPrompts extends StatelessWidget {
     } else if (botId == constants.finTipsID) {
       return [
         PromptChip(
-          icon: Icons.lightbulb,
+          iconBuilder: (size, color) =>
+              icons.moneyTips(size: size, color: color),
           label: GetIt.I<ChatStrings>().prompts.moneyTipsLabel,
           prompt: GetIt.I<ChatStrings>().prompts.moneyTipsPrompt,
         ),
         PromptChip(
-          icon: Icons.school,
+          iconBuilder: (size, color) =>
+              icons.learnFinance(size: size, color: color),
           label: GetIt.I<ChatStrings>().prompts.learnFinanceLabel,
           prompt: GetIt.I<ChatStrings>().prompts.learnFinancePrompt,
         ),
         PromptChip(
-          icon: Icons.security,
+          iconBuilder: (size, color) =>
+              icons.emergencyFund(size: size, color: color),
           label: GetIt.I<ChatStrings>().prompts.emergencyFundLabel,
           prompt: GetIt.I<ChatStrings>().prompts.emergencyFundPrompt,
         ),
         PromptChip(
-          icon: Icons.credit_card,
+          iconBuilder: (size, color) =>
+              icons.creditAdvice(size: size, color: color),
           label: GetIt.I<ChatStrings>().prompts.creditAdviceLabel,
           prompt: GetIt.I<ChatStrings>().prompts.creditAdvicePrompt,
         ),
@@ -112,12 +130,14 @@ class SuggestedPrompts extends StatelessWidget {
     } else {
       return [
         PromptChip(
-          icon: Icons.help,
+          iconBuilder: (size, color) =>
+              icons.getStarted(size: size, color: color),
           label: GetIt.I<ChatStrings>().prompts.getStartedLabel,
           prompt: GetIt.I<ChatStrings>().prompts.getStartedPrompt,
         ),
         PromptChip(
-          icon: Icons.info,
+          iconBuilder: (size, color) =>
+              icons.learnMore(size: size, color: color),
           label: GetIt.I<ChatStrings>().prompts.learnMoreLabel,
           prompt: GetIt.I<ChatStrings>().prompts.learnMorePrompt,
         ),
@@ -168,10 +188,13 @@ class SuggestedPrompts extends StatelessWidget {
                       ),
                     ],
                   ),
-                  child: Icon(
-                    Icons.auto_awesome,
-                    size: 56,
-                    color: Theme.of(context).colorScheme.onPrimary,
+                  child: SizedBox(
+                    height: 48,
+                    width: 48,
+                    child: Image.asset(
+                      'assets/icons/app_icon.png',
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    ),
                   ),
                 ),
               );
@@ -288,11 +311,8 @@ class SuggestedPrompts extends StatelessWidget {
                       .withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(
-                  chip.icon,
-                  size: 16,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
+                child:
+                    chip.iconBuilder(16, Theme.of(context).colorScheme.primary),
               ),
               const SizedBox(width: 12),
               Text(
@@ -313,12 +333,12 @@ class SuggestedPrompts extends StatelessWidget {
 }
 
 class PromptChip {
-  final IconData icon;
+  final Widget Function(double size, Color? color) iconBuilder;
   final String label;
   final String prompt;
 
   PromptChip({
-    required this.icon,
+    required this.iconBuilder,
     required this.label,
     required this.prompt,
   });

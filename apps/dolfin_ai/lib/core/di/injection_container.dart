@@ -21,7 +21,9 @@ import 'package:balance_iq/core/strings/dashboard_strings.dart';
 import 'package:balance_iq/core/icons/app_icons.dart';
 import 'package:balance_iq/core/icons/app_icons_impl.dart';
 import 'package:balance_iq/core/icons/chat_error_icon_provider_impl.dart';
+import 'package:balance_iq/core/icons/suggested_prompt_icon_provider_impl.dart';
 import 'package:feature_chat/presentation/widgets/chat_page_widgets/chat_error_widget.dart';
+import 'package:feature_chat/presentation/widgets/suggested_prompt_icon_provider.dart';
 
 import 'modules/storage_module.dart';
 import 'modules/network_module.dart';
@@ -55,6 +57,8 @@ Future<void> init() async {
   sl.registerLazySingleton<AppIcons>(() => const AppIconsImpl());
   sl.registerLazySingleton<ChatErrorIconProvider>(
       () => ChatErrorIconProviderImpl(sl<AppIcons>().chatError));
+  sl.registerLazySingleton<SuggestedPromptIconProvider>(
+      () => SuggestedPromptIconProviderImpl(sl<AppIcons>().suggestedPrompts));
 
   // Common deps
   final appConstants = sl<AppConstants>();

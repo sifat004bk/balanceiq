@@ -26,6 +26,9 @@ class AppIconsImpl implements AppIcons {
 
   @override
   ChatErrorIcons get chatError => const ChatErrorIconsImpl();
+
+  @override
+  SuggestedPromptIcons get suggestedPrompts => const SuggestedPromptIconsImpl();
 }
 
 /// Navigation icons implementation
@@ -384,7 +387,7 @@ class ChatErrorIconsImpl implements ChatErrorIcons {
 
   @override
   Widget subscriptionRequired({double size = 24, Color? color}) => Icon(
-        LucideIcons.crown,
+        LucideIcons.ticket,
         size: size,
         color: color,
       );
@@ -412,7 +415,7 @@ class ChatErrorIconsImpl implements ChatErrorIcons {
 
   @override
   Widget currencyRequired({double size = 24, Color? color}) => Icon(
-        LucideIcons.circlePercent,
+        LucideIcons.dollarSign,
         size: size,
         color: color,
       );
@@ -420,6 +423,142 @@ class ChatErrorIconsImpl implements ChatErrorIcons {
   @override
   Widget genericError({double size = 24, Color? color}) => Icon(
         LucideIcons.circleAlert,
+        size: size,
+        color: color,
+      );
+}
+
+/// Suggested prompt icons implementation
+class SuggestedPromptIconsImpl implements SuggestedPromptIcons {
+  const SuggestedPromptIconsImpl();
+
+  // Balance Tracker prompts
+  @override
+  Widget trackExpense({double size = 24, Color? color}) => Icon(
+        LucideIcons.receipt,
+        size: size,
+        color: color,
+      );
+
+  @override
+  Widget checkBalance({double size = 24, Color? color}) => Icon(
+        LucideIcons.wallet,
+        size: size,
+        color: color,
+      );
+
+  @override
+  Widget monthlySummary({double size = 24, Color? color}) => Icon(
+        LucideIcons.trendingUp,
+        size: size,
+        color: color,
+      );
+
+  @override
+  Widget addIncome({double size = 24, Color? color}) => Icon(
+        LucideIcons.piggyBank,
+        size: size,
+        color: color,
+      );
+
+  // Investment Guru prompts
+  @override
+  Widget investmentTips({double size = 24, Color? color}) => Icon(
+        LucideIcons.chartLine,
+        size: size,
+        color: color,
+      );
+
+  @override
+  Widget stockAdvice({double size = 24, Color? color}) => Icon(
+        LucideIcons.landmark,
+        size: size,
+        color: color,
+      );
+
+  @override
+  Widget portfolioReview({double size = 24, Color? color}) => Icon(
+        LucideIcons.chartPie,
+        size: size,
+        color: color,
+      );
+
+  @override
+  Widget marketTrends({double size = 24, Color? color}) => Icon(
+        LucideIcons.trendingUp,
+        size: size,
+        color: color,
+      );
+
+  // Budget Planner prompts
+  @override
+  Widget createBudget({double size = 24, Color? color}) => Icon(
+        LucideIcons.calendar,
+        size: size,
+        color: color,
+      );
+
+  @override
+  Widget budgetCategories({double size = 24, Color? color}) => Icon(
+        LucideIcons.layoutGrid,
+        size: size,
+        color: color,
+      );
+
+  @override
+  Widget saveMoney({double size = 24, Color? color}) => Icon(
+        LucideIcons.piggyBank,
+        size: size,
+        color: color,
+      );
+
+  @override
+  Widget budgetAlerts({double size = 24, Color? color}) => Icon(
+        LucideIcons.bellRing,
+        size: size,
+        color: color,
+      );
+
+  // Fin Tips prompts
+  @override
+  Widget moneyTips({double size = 24, Color? color}) => Icon(
+        LucideIcons.lightbulb,
+        size: size,
+        color: color,
+      );
+
+  @override
+  Widget learnFinance({double size = 24, Color? color}) => Icon(
+        LucideIcons.graduationCap,
+        size: size,
+        color: color,
+      );
+
+  @override
+  Widget emergencyFund({double size = 24, Color? color}) => Icon(
+        LucideIcons.shieldCheck,
+        size: size,
+        color: color,
+      );
+
+  @override
+  Widget creditAdvice({double size = 24, Color? color}) => Icon(
+        LucideIcons.creditCard,
+        size: size,
+        color: color,
+      );
+
+  // Default prompts
+  @override
+  Widget getStarted({double size = 24, Color? color}) => Icon(
+        LucideIcons.sparkles,
+        size: size,
+        color: color,
+      );
+
+  @override
+  Widget learnMore({double size = 24, Color? color}) => Icon(
+        LucideIcons.info,
         size: size,
         color: color,
       );

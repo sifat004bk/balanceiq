@@ -61,11 +61,6 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
       body: BlocConsumer<SubscriptionCubit, SubscriptionState>(
         listener: (context, state) {
           if (state is SubscriptionCreated) {
-            SnackbarUtils.showSuccess(
-              context,
-              '${GetIt.I<SubscriptionStrings>().subscriptionSuccess} ${state.subscription.plan.displayName}!',
-            );
-
             // Check if tour is active at subscription step
             final tourCubit = context.read<ProductTourCubit>();
             if (tourCubit.isAtStep(TourStep.profileSubscription)) {
@@ -81,10 +76,13 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                 ),
               );
             } else {
+              // Navigate back with success result - parent can show snackbar if needed
               Navigator.pop(context, true);
             }
           } else if (state is SubscriptionError) {
-            SnackbarUtils.showError(context, state.message);
+            if (context.mounted) {
+              SnackbarUtils.showError(context, state.message);
+            }
             // Reload plans after error
             context.read<SubscriptionCubit>().loadPlansAndStatus();
           }

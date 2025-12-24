@@ -81,8 +81,16 @@ class ChatErrorWidget extends StatelessWidget {
           iconColor: colorScheme.primary,
           buttonText: _getSafeString(
               () => GetIt.I<ChatStrings>().viewPlans, 'View Plans'),
-          onButtonPressed: () =>
-              Navigator.pushNamed(context, '/subscription-plans'),
+          onButtonPressed: () {
+            Navigator.pushNamed(
+              context,
+              '/subscription-plans',
+              arguments: {'returnToChat': true},
+            ).then((_) {
+              // Reload chat after returning from subscription plans
+              context.read<ChatCubit>().loadChatHistory(botId);
+            });
+          },
         );
       case ChatErrorType.subscriptionExpired:
         return _ErrorConfig(
@@ -97,8 +105,16 @@ class ChatErrorWidget extends StatelessWidget {
           buttonText: _getSafeString(
               () => GetIt.I<ChatStrings>().renewSubscription,
               'Renew Subscription'),
-          onButtonPressed: () =>
-              Navigator.pushNamed(context, '/manage-subscription'),
+          onButtonPressed: () {
+            Navigator.pushNamed(
+              context,
+              '/manage-subscription',
+              arguments: {'returnToChat': true},
+            ).then((_) {
+              // Reload chat after returning from manage subscription
+              context.read<ChatCubit>().loadChatHistory(botId);
+            });
+          },
         );
       case ChatErrorType.messageLimitExceeded:
         return _ErrorConfig(

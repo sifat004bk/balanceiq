@@ -156,12 +156,12 @@ class ChatStringsImpl implements ChatStrings {
   @override
   String get verifyEmailButton => 'Verify Email';
   @override
-  String get subscriptionRequired => 'Subscription Required';
+  String get subscriptionRequired => 'Choose Your Plan';
   @override
   String get subscriptionRequiredMessage =>
-      'You need an active subscription plan to use the chat feature.';
+      'Start your financial journey today! Try our Free plan — no credit card required. Upgrade anytime to unlock unlimited AI-powered insights.';
   @override
-  String get viewPlans => 'View Plans';
+  String get viewPlans => 'Get Started Free';
   @override
   String get subscriptionExpired => 'Subscription Expired';
   @override

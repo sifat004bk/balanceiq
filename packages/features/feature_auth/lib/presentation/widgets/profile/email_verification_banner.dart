@@ -4,6 +4,7 @@ import 'package:feature_auth/constants/auth_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../cubit/signup/signup_cubit.dart';
 
@@ -63,8 +64,8 @@ class EmailVerificationBanner extends StatelessWidget {
                       borderRadius:
                           BorderRadius.circular(DesignConstants.radiusSmall),
                     ),
-                    child: const Icon(
-                      Icons.warning_amber_rounded,
+                    child: Icon(
+                      LucideIcons.triangleAlert,
                       color: warningColor,
                       size: DesignConstants.iconSizeLarge,
                     ),
@@ -105,8 +106,8 @@ class EmailVerificationBanner extends StatelessWidget {
                     foregroundColor: colorScheme.onInverseSurface,
                     disabledBackgroundColor:
                         warningColor.withValues(alpha: 0.5),
-                    padding:
-                        const EdgeInsets.symmetric(vertical: DesignConstants.space3),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: DesignConstants.space3),
                     shape: RoundedRectangleBorder(
                       borderRadius:
                           BorderRadius.circular(DesignConstants.radiusMedium),

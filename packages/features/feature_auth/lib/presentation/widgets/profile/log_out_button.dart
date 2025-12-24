@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import 'package:dolfin_core/constants/core_strings.dart';
 import 'package:feature_auth/constants/auth_strings.dart';
@@ -55,7 +56,7 @@ class LogOutButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.logout,
+              LucideIcons.logOut,
               size: 20,
               color: Theme.of(context).colorScheme.error,
             ),

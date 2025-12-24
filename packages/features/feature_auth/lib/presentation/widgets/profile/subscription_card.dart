@@ -2,6 +2,7 @@ import 'package:feature_subscription/domain/entities/subscription_status.dart';
 import 'package:feature_subscription/presentation/cubit/subscription_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class SubscriptionCard extends StatelessWidget {
   final SubscriptionStatus status;
@@ -61,7 +62,8 @@ class SubscriptionCard extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.warning, size: 14, color: Colors.orange),
+                      Icon(LucideIcons.triangleAlert,
+                          size: 14, color: Colors.orange),
                       const SizedBox(width: 4),
                       Text(
                         '${subscription.daysRemaining} days left',

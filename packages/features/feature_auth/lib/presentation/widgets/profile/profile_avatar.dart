@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class ProfileAvatar extends StatelessWidget {
   final dynamic user;
@@ -83,8 +84,8 @@ class ProfileAvatar extends StatelessWidget {
                 color: Theme.of(context).canvasColor,
                 shape: BoxShape.circle,
               ),
-              child: const Icon(
-                Icons.verified_rounded,
+              child: Icon(
+                LucideIcons.badgeCheck,
                 color: Colors.green,
                 size: 24,
               ),

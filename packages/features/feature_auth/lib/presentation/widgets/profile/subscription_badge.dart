@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class SubscriptionBadge extends StatelessWidget {
   final String planName;
@@ -26,7 +27,7 @@ class SubscriptionBadge extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
-            Icons.star,
+            LucideIcons.star,
             size: 16,
             color: colorScheme.primary,
           ),

@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:feature_subscription/presentation/cubit/subscription_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:shimmer/shimmer.dart';
 
 class SubscriptionCardLoading extends StatelessWidget {
@@ -100,7 +101,7 @@ class SubscriptionCardError extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Icon(Icons.error_outline,
+          Icon(LucideIcons.circleX,
               color: Theme.of(context).colorScheme.error, size: 32),
           const SizedBox(height: 8),
           Text(

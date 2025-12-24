@@ -2,6 +2,7 @@ import 'package:currency_picker/currency_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import 'package:feature_auth/constants/auth_strings.dart';
 import 'package:dolfin_core/currency/currency_cubit.dart';
@@ -112,7 +113,7 @@ class _ProfilePageState extends State<ProfilePage>
         flagSize: 28,
         inputDecoration: InputDecoration(
           hintText: 'Search currency',
-          prefixIcon: const Icon(Icons.search),
+          prefixIcon: Icon(LucideIcons.search),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
           ),
@@ -275,7 +276,7 @@ class _ProfilePageState extends State<ProfilePage>
                     const SizedBox(height: 32),
                     // Menu Items
                     ProfileMenuItem(
-                      icon: Icons.person_outline,
+                      icon: LucideIcons.user,
                       title: 'Account Details',
                       onTap: () {
                         SnackbarUtils.showComingSoon(context,
@@ -284,7 +285,7 @@ class _ProfilePageState extends State<ProfilePage>
                     ),
                     const SizedBox(height: 12),
                     ProfileMenuItem(
-                      icon: Icons.lock_outline,
+                      icon: LucideIcons.lock,
                       title: 'Security',
                       onTap: () {
                         Navigator.pushNamed(context, '/change-password');
@@ -292,7 +293,7 @@ class _ProfilePageState extends State<ProfilePage>
                     ),
                     const SizedBox(height: 12),
                     ProfileMenuItem(
-                      icon: Icons.notifications_outlined,
+                      icon: LucideIcons.bell,
                       title: 'Notifications',
                       onTap: () {
                         SnackbarUtils.showComingSoon(context,
@@ -301,7 +302,7 @@ class _ProfilePageState extends State<ProfilePage>
                     ),
                     const SizedBox(height: 12),
                     ProfileMenuItem(
-                      icon: Icons.palette_outlined,
+                      icon: LucideIcons.palette,
                       title: 'Appearance',
                       onTap: () {
                         SnackbarUtils.showComingSoon(
@@ -314,7 +315,7 @@ class _ProfilePageState extends State<ProfilePage>
                       bloc: GetIt.instance<CurrencyCubit>(),
                       builder: (context, currencyState) {
                         return ProfileMenuItem(
-                          icon: Icons.currency_exchange_outlined,
+                          icon: LucideIcons.circleDollarSign,
                           title: GetIt.I<AuthStrings>().profile.currency,
                           subtitle: currencyState.isCurrencySet
                               ? '${currencyState.currencySymbol} ${currencyState.currencyName}'
@@ -325,7 +326,7 @@ class _ProfilePageState extends State<ProfilePage>
                     ),
                     const SizedBox(height: 12),
                     ProfileMenuItem(
-                      icon: Icons.help_outline,
+                      icon: LucideIcons.info,
                       title: 'Help Center',
                       onTap: () {
                         SnackbarUtils.showComingSoon(
@@ -334,7 +335,7 @@ class _ProfilePageState extends State<ProfilePage>
                     ),
                     const SizedBox(height: 12),
                     ProfileMenuItem(
-                      icon: Icons.privacy_tip_outlined,
+                      icon: LucideIcons.shieldCheck,
                       title: GetIt.I<AuthStrings>().profile.privacyPolicy,
                       onTap: () {
                         Navigator.push(
@@ -351,7 +352,7 @@ class _ProfilePageState extends State<ProfilePage>
                     ),
                     const SizedBox(height: 12),
                     ProfileMenuItem(
-                      icon: Icons.description_outlined,
+                      icon: LucideIcons.fileText,
                       title: GetIt.I<AuthStrings>().profile.termsOfService,
                       onTap: () {
                         Navigator.push(
@@ -368,7 +369,7 @@ class _ProfilePageState extends State<ProfilePage>
                     ),
                     const SizedBox(height: 12),
                     ProfileMenuItem(
-                      icon: Icons.delete_outline,
+                      icon: LucideIcons.trash2,
                       title: GetIt.I<AuthStrings>().profile.deleteAccount,
                       iconColor: Theme.of(context).colorScheme.error,
                       titleColor: Theme.of(context).colorScheme.error,
@@ -405,7 +406,7 @@ class _ProfilePageState extends State<ProfilePage>
             ),
             child: IconButton(
               icon: Icon(
-                Icons.arrow_back,
+                LucideIcons.arrowLeft,
                 color: Theme.of(context).colorScheme.onSurface,
               ),
               onPressed: () => Navigator.pop(context),

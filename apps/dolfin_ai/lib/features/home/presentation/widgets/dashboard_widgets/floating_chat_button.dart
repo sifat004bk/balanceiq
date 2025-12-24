@@ -45,20 +45,7 @@ class FloatingChatButton extends StatelessWidget {
               Theme.of(context).colorScheme.secondary,
             ],
           ),
-          boxShadow: [
-            BoxShadow(
-              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.05),
-              blurRadius: 20,
-              offset: const Offset(0, 4),
-              spreadRadius: 2,
-            ),
-            if (isDark)
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.3),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-          ],
+
         ),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -72,6 +59,21 @@ class FloatingChatButton extends StatelessWidget {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
+            boxShadow: [
+              BoxShadow(
+                color:
+                Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
+                blurRadius: 20,
+                offset: const Offset(0, 4),
+                spreadRadius: 2,
+              ),
+              if (isDark)
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.3),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+            ],
           ),
           child: Row(
             children: [

@@ -4,7 +4,7 @@ class AuthStringsImpl implements AuthStrings {
   const AuthStringsImpl();
 
   @override
-  String get welcomeTitle => 'Donfin AI';
+  String get welcomeTitle => 'Dolfin AI';
   @override
   String get welcomeSubtitle => 'Your AI-powered personal finance assistant';
   @override
@@ -43,7 +43,7 @@ class AuthStringsImpl implements AuthStrings {
   @override
   String get signupTitle => 'Create Account';
   @override
-  String get signupSubtitle => 'Join Donfin AI today';
+  String get signupSubtitle => 'Join Dolfin AI today';
   @override
   String get nameLabel => 'Full Name';
   @override

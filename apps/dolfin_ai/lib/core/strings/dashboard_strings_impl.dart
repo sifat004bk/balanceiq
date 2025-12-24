@@ -75,7 +75,7 @@ class DashboardStringsImpl implements DashboardStrings {
   String get noDataForPeriod => 'No data for this period';
 
   @override
-  String get welcomeToApp => 'Welcome to Donfin AI';
+  String get welcomeToApp => 'Welcome to Dolfin AI';
   @override
   String get welcomeSubtitle =>
       'Start tracking your finances and\ntake control of your money';

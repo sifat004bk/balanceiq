@@ -138,7 +138,7 @@ class MyApp extends StatelessWidget {
 
             return MaterialApp(
               navigatorKey: navigatorKey,
-              title: 'Donfin AI',
+              title: 'Dolfin AI',
               debugShowCheckedModeBanner: false,
               theme: AppTheme.lightTheme(),
               darkTheme: AppTheme.darkTheme(),

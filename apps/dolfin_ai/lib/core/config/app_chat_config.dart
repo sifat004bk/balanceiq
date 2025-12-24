@@ -20,5 +20,5 @@ class AppChatConfig implements ChatConfig {
   bool get showRegenerateButton => false;
 
   @override
-  String? get bottomDisclaimerText => "Donfin AI can make mistake.";
+  String? get bottomDisclaimerText => "Dolfin AI can make mistake.";
 }

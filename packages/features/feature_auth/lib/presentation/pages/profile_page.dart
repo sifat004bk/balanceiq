@@ -348,7 +348,6 @@ class _ProfilePageState extends State<ProfilePage>
                     const SizedBox(height: 12),
                     // Appearance (Expandable)
                     BlocBuilder<ThemeCubit, ThemeState>(
-                      bloc: GetIt.instance<ThemeCubit>(),
                       builder: (context, themeState) {
                         final isDark =
                             Theme.of(context).brightness == Brightness.dark;
@@ -362,7 +361,7 @@ class _ProfilePageState extends State<ProfilePage>
                                   ? 'Switch to Light Mode'
                                   : 'Switch to Dark Mode',
                               onTap: () {
-                                GetIt.instance<ThemeCubit>().toggleTheme();
+                                context.read<ThemeCubit>().toggleTheme();
                               },
                             ),
                           ],

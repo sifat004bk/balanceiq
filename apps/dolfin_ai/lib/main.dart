@@ -37,6 +37,7 @@ import 'features/home/presentation/pages/home_page.dart';
 import 'features/home/presentation/pages/transactions_page.dart';
 import 'package:feature_subscription/presentation/pages/manage_subscription_page.dart';
 import 'package:feature_subscription/presentation/pages/subscription_plans_page.dart';
+import 'package:feature_auth/presentation/pages/update_profile_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -173,6 +174,7 @@ class MyApp extends StatelessWidget {
                 '/manage-subscription': (context) =>
                     const ManageSubscriptionPage(),
                 '/transactions': (context) => const TransactionsPage(),
+                '/update-profile': (context) => const UpdateProfilePage(),
               },
               onGenerateRoute: (settings) {
                 if (settings.name == '/email-verification') {

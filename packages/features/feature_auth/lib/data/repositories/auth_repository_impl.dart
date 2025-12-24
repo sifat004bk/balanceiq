@@ -254,6 +254,49 @@ class AuthRepositoryImpl implements AuthRepository {
     }
   }
 
+  @override
+  Future<Either<Failure, UserInfo>> updateProfile({
+    String? fullName,
+    String? username,
+    String? email,
+    String? currency,
+  }) async {
+    try {
+      final request = UpdateProfileRequest(
+        fullName: fullName,
+        username: username,
+        email: email,
+        currency: currency,
+      );
+      final response = await remoteDataSource.updateProfile(request);
+
+      if (response.success && response.data != null) {
+        // Update local user cache with new profile data
+        final currentUser = await localDataSource.getCachedUser();
+        if (currentUser != null) {
+          final updatedUser = UserModel(
+            id: currentUser.id,
+            email: response.data!.email,
+            name: response.data!.fullName,
+            photoUrl: response.data!.photoUrl,
+            authProvider: currentUser.authProvider,
+            currency: response.data!.currency,
+            createdAt: currentUser.createdAt,
+            isEmailVerified: response.data!.isEmailVerified,
+          );
+          await localDataSource.saveUser(updatedUser);
+        }
+        return Right(response.data!);
+      } else {
+        return Left(ServerFailure(response.message));
+      }
+    } on AppException catch (e) {
+      return Left(_mapExceptionToFailure(e));
+    } catch (e) {
+      return Left(ServerFailure('Failed to update profile: $e'));
+    }
+  }
+
   Failure _mapExceptionToFailure(AppException exception) {
     if (exception is NetworkException) {
       return NetworkFailure(exception.message);

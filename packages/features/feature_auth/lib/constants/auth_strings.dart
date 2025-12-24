@@ -168,4 +168,9 @@ abstract class ProfileStrings {
   String get profileUpdated;
   String get emailVerified;
   String get languageChanged;
+  String get updateAccountDetails;
+  String get fullName;
+  String get saveChanges;
+  String get changeTheme;
+  String get changePassword;
 }

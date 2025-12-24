@@ -30,6 +30,7 @@ abstract class AuthRemoteDataSource {
   // New Methods
   Future<void> updateCurrency(String currency);
   Future<void> logout();
+  Future<UpdateProfileResponse> updateProfile(UpdateProfileRequest request);
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -354,6 +355,26 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
     } catch (e) {
       throw ErrorHandler.handle(e, source: 'logout');
+    }
+  }
+
+  @override
+  Future<UpdateProfileResponse> updateProfile(
+      UpdateProfileRequest request) async {
+    try {
+      final response = await dio.put(
+        ApiEndpoints.updateProfile,
+        data: request.toJson(),
+        options: Options(
+          headers: {'Content-Type': 'application/json'},
+          sendTimeout: GetIt.instance<AppConstants>().apiTimeout,
+          receiveTimeout: GetIt.instance<AppConstants>().apiTimeout,
+        ),
+      );
+
+      return UpdateProfileResponse.fromJson(response.data);
+    } catch (e) {
+      throw ErrorHandler.handle(e, source: 'updateProfile');
     }
   }
 }

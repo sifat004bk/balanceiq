@@ -323,6 +323,61 @@ class RefreshTokenRequest {
   }
 }
 
+/// Update Profile Request
+/// PUT /api/auth/profile
+class UpdateProfileRequest {
+  final String? fullName;
+  final String? username;
+  final String? email;
+  final String? currency;
+
+  UpdateProfileRequest({
+    this.fullName,
+    this.username,
+    this.email,
+    this.currency,
+  });
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = {};
+    if (fullName != null) data['fullName'] = fullName;
+    if (username != null) data['username'] = username;
+    if (email != null) data['email'] = email;
+    if (currency != null) data['currency'] = currency;
+    return data;
+  }
+}
+
+/// Update Profile Response
+/// PUT /api/auth/profile
+class UpdateProfileResponse {
+  final bool success;
+  final String message;
+  final UserInfo? data;
+  final String? error;
+  final int timestamp;
+
+  UpdateProfileResponse({
+    required this.success,
+    required this.message,
+    this.data,
+    this.error,
+    required this.timestamp,
+  });
+
+  factory UpdateProfileResponse.fromJson(Map<String, dynamic> json) {
+    return UpdateProfileResponse(
+      success: json['success'] as bool? ?? false,
+      message: json['message'] as String? ?? '',
+      data: json['data'] != null
+          ? UserInfo.fromJson(json['data'] as Map<String, dynamic>)
+          : null,
+      error: json['error'] as String?,
+      timestamp: json['timestamp'] as int? ?? 0,
+    );
+  }
+}
+
 class RefreshTokenResponse {
   final bool success;
   final String message;

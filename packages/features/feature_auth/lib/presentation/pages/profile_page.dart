@@ -274,40 +274,84 @@ class _ProfilePageState extends State<ProfilePage>
                       ),
                     ),
                     const SizedBox(height: 32),
-                    // Menu Items
-                    ProfileMenuItem(
+                    // Account Details (Expandable)
+                    ExpandableProfileMenuItem(
                       icon: LucideIcons.user,
-                      title: 'Account Details',
-                      onTap: () {
-                        SnackbarUtils.showComingSoon(context,
-                            GetIt.I<AuthStrings>().profile.accountDetails);
-                      },
+                      title: GetIt.I<AuthStrings>().profile.accountDetails,
+                      subItems: [
+                        ProfileSubMenuItem(
+                          icon: LucideIcons.userPen,
+                          title: GetIt.I<AuthStrings>()
+                              .profile
+                              .updateAccountDetails,
+                          onTap: () async {
+                            final result = await Navigator.pushNamed(
+                                context, '/update-profile');
+                            if (result == true && context.mounted) {
+                              context.read<SessionCubit>().refreshUserProfile();
+                            }
+                          },
+                        ),
+                        ProfileSubMenuItem(
+                          icon: LucideIcons.trash2,
+                          title: GetIt.I<AuthStrings>().profile.deleteAccount,
+                          iconColor: Theme.of(context).colorScheme.error,
+                          titleColor: Theme.of(context).colorScheme.error,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => WebViewPage(
+                                  title: GetIt.I<AuthStrings>()
+                                      .profile
+                                      .deleteAccount,
+                                  url: 'https://dolfinmind.com/delete-account',
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 12),
-                    ProfileMenuItem(
+                    // Security (Expandable)
+                    ExpandableProfileMenuItem(
                       icon: LucideIcons.lock,
-                      title: 'Security',
-                      onTap: () {
-                        Navigator.pushNamed(context, '/change-password');
-                      },
+                      title: GetIt.I<AuthStrings>().profile.security,
+                      subItems: [
+                        ProfileSubMenuItem(
+                          icon: LucideIcons.keyRound,
+                          title: GetIt.I<AuthStrings>().profile.changePassword,
+                          onTap: () {
+                            Navigator.pushNamed(context, '/change-password');
+                          },
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 12),
                     ProfileMenuItem(
                       icon: LucideIcons.bell,
-                      title: 'Notifications',
+                      title: GetIt.I<AuthStrings>().profile.notifications,
                       onTap: () {
                         SnackbarUtils.showComingSoon(context,
                             GetIt.I<AuthStrings>().profile.notifications);
                       },
                     ),
                     const SizedBox(height: 12),
-                    ProfileMenuItem(
+                    // Appearance (Expandable)
+                    ExpandableProfileMenuItem(
                       icon: LucideIcons.palette,
-                      title: 'Appearance',
-                      onTap: () {
-                        SnackbarUtils.showComingSoon(
-                            context, GetIt.I<AuthStrings>().profile.appearance);
-                      },
+                      title: GetIt.I<AuthStrings>().profile.appearance,
+                      subItems: [
+                        ProfileSubMenuItem(
+                          icon: LucideIcons.sun,
+                          title: GetIt.I<AuthStrings>().profile.changeTheme,
+                          onTap: () {
+                            SnackbarUtils.showComingSoon(context,
+                                GetIt.I<AuthStrings>().profile.changeTheme);
+                          },
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 12),
                     // Currency Selector
@@ -327,64 +371,54 @@ class _ProfilePageState extends State<ProfilePage>
                     const SizedBox(height: 12),
                     ProfileMenuItem(
                       icon: LucideIcons.info,
-                      title: 'Help Center',
+                      title: GetIt.I<AuthStrings>().profile.helpCenter,
                       onTap: () {
                         SnackbarUtils.showComingSoon(
                             context, GetIt.I<AuthStrings>().profile.helpCenter);
                       },
                     ),
                     const SizedBox(height: 12),
-                    ProfileMenuItem(
-                      icon: LucideIcons.shieldCheck,
-                      title: GetIt.I<AuthStrings>().profile.privacyPolicy,
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => WebViewPage(
-                              title:
-                                  GetIt.I<AuthStrings>().profile.privacyPolicy,
-                              url: 'https://dolfinmind.com/privacy-policy',
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 12),
-                    ProfileMenuItem(
-                      icon: LucideIcons.fileText,
-                      title: GetIt.I<AuthStrings>().profile.termsOfService,
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => WebViewPage(
-                              title:
-                                  GetIt.I<AuthStrings>().profile.termsOfService,
-                              url: 'https://dolfinmind.com/terms-of-service',
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 12),
-                    ProfileMenuItem(
-                      icon: LucideIcons.trash2,
-                      title: GetIt.I<AuthStrings>().profile.deleteAccount,
-                      iconColor: Theme.of(context).colorScheme.error,
-                      titleColor: Theme.of(context).colorScheme.error,
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => WebViewPage(
-                              title:
-                                  GetIt.I<AuthStrings>().profile.deleteAccount,
-                              url: 'https://dolfinmind.com/delete-account',
-                            ),
-                          ),
-                        );
-                      },
+                    // Legal (Expandable)
+                    ExpandableProfileMenuItem(
+                      icon: LucideIcons.scale,
+                      title: 'Legal',
+                      subItems: [
+                        ProfileSubMenuItem(
+                          icon: LucideIcons.shieldCheck,
+                          title: GetIt.I<AuthStrings>().profile.privacyPolicy,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => WebViewPage(
+                                  title: GetIt.I<AuthStrings>()
+                                      .profile
+                                      .privacyPolicy,
+                                  url: 'https://dolfinmind.com/privacy-policy',
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        ProfileSubMenuItem(
+                          icon: LucideIcons.fileText,
+                          title: GetIt.I<AuthStrings>().profile.termsOfService,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => WebViewPage(
+                                  title: GetIt.I<AuthStrings>()
+                                      .profile
+                                      .termsOfService,
+                                  url:
+                                      'https://dolfinmind.com/terms-of-service',
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 40),
                     // Log Out Button

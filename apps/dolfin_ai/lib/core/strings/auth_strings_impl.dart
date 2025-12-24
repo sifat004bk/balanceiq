@@ -316,6 +316,16 @@ class ProfileStringsImpl implements ProfileStrings {
   String get emailVerified => 'Email verified successfully!';
   @override
   String get languageChanged => 'Language changed successfully';
+  @override
+  String get updateAccountDetails => 'Update Account Details';
+  @override
+  String get fullName => 'Full Name';
+  @override
+  String get saveChanges => 'Save Changes';
+  @override
+  String get changeTheme => 'Change Theme';
+  @override
+  String get changePassword => 'Change Password';
 }
 
 class OnboardingStringsImpl implements OnboardingStrings {

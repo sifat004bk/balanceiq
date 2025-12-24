@@ -45,4 +45,12 @@ abstract class AuthRepository {
   Future<Either<Failure, void>> resendVerificationEmail(String email);
   Future<Either<Failure, void>> updateCurrency(String currency);
   Future<Either<Failure, void>> saveUser(User user);
+
+  // Profile Update
+  Future<Either<Failure, UserInfo>> updateProfile({
+    String? fullName,
+    String? username,
+    String? email,
+    String? currency,
+  });
 }

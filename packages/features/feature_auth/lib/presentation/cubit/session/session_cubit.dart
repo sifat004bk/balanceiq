@@ -5,6 +5,7 @@ import '../../../domain/usecases/get_current_user.dart';
 import '../../../domain/usecases/get_profile.dart';
 import '../../../domain/usecases/sign_out.dart';
 import '../../../domain/usecases/update_currency.dart';
+import '../../../domain/usecases/update_profile.dart';
 import '../../../domain/usecases/save_user.dart';
 import 'package:dolfin_core/storage/secure_storage_service.dart';
 import 'package:dolfin_core/currency/currency_cubit.dart';
@@ -39,12 +40,39 @@ class SessionError extends SessionState {
   List<Object?> get props => [message];
 }
 
+class ProfileUpdating extends SessionState {
+  final User user;
+  const ProfileUpdating(this.user);
+
+  @override
+  List<Object?> get props => [user];
+}
+
+class ProfileUpdateSuccess extends SessionState {
+  final User user;
+  final String message;
+  const ProfileUpdateSuccess(this.user, this.message);
+
+  @override
+  List<Object?> get props => [user, message];
+}
+
+class ProfileUpdateError extends SessionState {
+  final User user;
+  final String message;
+  const ProfileUpdateError(this.user, this.message);
+
+  @override
+  List<Object?> get props => [user, message];
+}
+
 // Cubit
 class SessionCubit extends Cubit<SessionState> {
   final GetCurrentUser getCurrentUser;
   final SignOut signOutUseCase;
   final GetProfile getProfile;
   final UpdateCurrency updateCurrencyUseCase;
+  final UpdateProfile updateProfileUseCase;
   final SaveUser saveUser;
   final SecureStorageService secureStorage;
   final CurrencyCubit currencyCubit;
@@ -54,6 +82,7 @@ class SessionCubit extends Cubit<SessionState> {
     required this.signOutUseCase,
     required this.getProfile,
     required this.updateCurrencyUseCase,
+    required this.updateProfileUseCase,
     required this.saveUser,
     required this.secureStorage,
     required this.currencyCubit,
@@ -183,5 +212,72 @@ class SessionCubit extends Cubit<SessionState> {
     } catch (_) {
       // Ignore
     }
+  }
+
+  /// Update user profile
+  Future<void> updateProfile({
+    String? fullName,
+    String? username,
+    String? email,
+    String? currency,
+  }) async {
+    User? currentUser;
+    if (state is Authenticated) {
+      currentUser = (state as Authenticated).user;
+    } else if (state is ProfileUpdating) {
+      currentUser = (state as ProfileUpdating).user;
+    } else if (state is ProfileUpdateSuccess) {
+      currentUser = (state as ProfileUpdateSuccess).user;
+    } else if (state is ProfileUpdateError) {
+      currentUser = (state as ProfileUpdateError).user;
+    }
+
+    if (currentUser == null) {
+      emit(const SessionError('Not authenticated'));
+      return;
+    }
+
+    emit(ProfileUpdating(currentUser));
+
+    final result = await updateProfileUseCase(
+      fullName: fullName,
+      username: username,
+      email: email,
+      currency: currency,
+    );
+
+    result.fold(
+      (failure) {
+        emit(ProfileUpdateError(currentUser!, failure.message));
+      },
+      (userInfo) async {
+        final updatedUser = User(
+          id: userInfo.id.toString(),
+          email: userInfo.email,
+          name: userInfo.fullName,
+          photoUrl: userInfo.photoUrl,
+          currency: userInfo.currency,
+          authProvider: currentUser!.authProvider,
+          createdAt: currentUser.createdAt,
+          isEmailVerified: userInfo.isEmailVerified,
+        );
+
+        // Sync currency to app state if changed
+        if (userInfo.currency != null && userInfo.currency!.isNotEmpty) {
+          await currencyCubit.setCurrencyByCode(userInfo.currency!);
+        }
+
+        // Save updated user to cache
+        await saveUser(updatedUser);
+
+        // Determine success message
+        String message = 'Profile updated successfully';
+        if (email != null && email != currentUser.email) {
+          message = 'Profile updated. Please verify your new email address.';
+        }
+
+        emit(ProfileUpdateSuccess(updatedUser, message));
+      },
+    );
   }
 }

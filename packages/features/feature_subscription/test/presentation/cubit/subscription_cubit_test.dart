@@ -16,16 +16,19 @@ void main() {
   late MockGetAllPlans mockGetAllPlans;
   late MockGetSubscriptionStatus mockGetSubscriptionStatus;
   late MockCreateSubscription mockCreateSubscription;
+  late MockCancelSubscription mockCancelSubscription;
 
   setUp(() {
     mockGetAllPlans = MockGetAllPlans();
     mockGetSubscriptionStatus = MockGetSubscriptionStatus();
     mockCreateSubscription = MockCreateSubscription();
+    mockCancelSubscription = MockCancelSubscription();
 
     subscriptionCubit = SubscriptionCubit(
       getAllPlansUseCase: mockGetAllPlans,
       getSubscriptionStatusUseCase: mockGetSubscriptionStatus,
       createSubscriptionUseCase: mockCreateSubscription,
+      cancelSubscriptionUseCase: mockCancelSubscription,
     );
   });
 

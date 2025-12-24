@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/usecases/get_all_plans.dart';
 import '../../domain/usecases/get_subscription_status.dart';
 import '../../domain/usecases/create_subscription.dart';
+import '../../domain/usecases/cancel_subscription.dart';
 import 'subscription_state.dart';
 
 /// Cubit for managing subscription state
@@ -9,11 +10,13 @@ class SubscriptionCubit extends Cubit<SubscriptionState> {
   final GetAllPlans getAllPlansUseCase;
   final GetSubscriptionStatus getSubscriptionStatusUseCase;
   final CreateSubscription createSubscriptionUseCase;
+  final CancelSubscription cancelSubscriptionUseCase;
 
   SubscriptionCubit({
     required this.getAllPlansUseCase,
     required this.getSubscriptionStatusUseCase,
     required this.createSubscriptionUseCase,
+    required this.cancelSubscriptionUseCase,
   }) : super(SubscriptionInitial());
 
   /// Load all available plans
@@ -74,6 +77,18 @@ class SubscriptionCubit extends Cubit<SubscriptionState> {
     result.fold(
       (failure) => emit(SubscriptionError(failure.message)),
       (subscription) => emit(SubscriptionCreated(subscription)),
+    );
+  }
+
+  /// Cancel subscription
+  Future<void> cancelSubscription({String? reason}) async {
+    emit(CancellingSubscription());
+
+    final result = await cancelSubscriptionUseCase(reason: reason);
+
+    result.fold(
+      (failure) => emit(SubscriptionError(failure.message)),
+      (subscription) => emit(SubscriptionCancelled(subscription)),
     );
   }
 

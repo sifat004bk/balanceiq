@@ -9,6 +9,7 @@ import 'package:feature_subscription/domain/repositories/subscription_repository
 import 'package:feature_subscription/domain/usecases/get_all_plans.dart';
 import 'package:feature_subscription/domain/usecases/get_subscription_status.dart';
 import 'package:feature_subscription/domain/usecases/create_subscription.dart';
+import 'package:feature_subscription/domain/usecases/cancel_subscription.dart';
 import 'package:feature_subscription/presentation/cubit/subscription_cubit.dart';
 
 // Re-export common types
@@ -51,6 +52,7 @@ Future<void> initSubscriptionFeature(
   sl.registerLazySingleton(() => GetAllPlans(sl()));
   sl.registerLazySingleton(() => GetSubscriptionStatus(sl()));
   sl.registerLazySingleton(() => CreateSubscription(sl()));
+  sl.registerLazySingleton(() => CancelSubscription(sl()));
 
   // Cubit
   sl.registerFactory(
@@ -58,6 +60,7 @@ Future<void> initSubscriptionFeature(
       getAllPlansUseCase: sl(),
       getSubscriptionStatusUseCase: sl(),
       createSubscriptionUseCase: sl(),
+      cancelSubscriptionUseCase: sl(),
     ),
   );
 }

@@ -60,6 +60,20 @@ class SubscriptionRepositoryImpl implements SubscriptionRepository {
     }
   }
 
+  @override
+  Future<Either<Failure, Subscription>> cancelSubscription({
+    String? reason,
+  }) async {
+    try {
+      final subscriptionDto =
+          await remoteDataSource.cancelSubscription(reason: reason);
+      final subscription = _mapSubscriptionDtoToEntity(subscriptionDto);
+      return Right(subscription);
+    } catch (e) {
+      return Left(_mapErrorToFailure(e));
+    }
+  }
+
   Plan _mapPlanDtoToEntity(PlanDto dto) {
     return Plan(
       id: dto.id,

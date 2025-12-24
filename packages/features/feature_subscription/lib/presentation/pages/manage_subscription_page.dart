@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:feature_subscription/constants/subscription_strings.dart';
 import 'package:dolfin_core/constants/core_strings.dart';
+import 'package:dolfin_core/utils/snackbar_utils.dart';
 
 import 'package:get_it/get_it.dart';
 import 'package:dolfin_ui_kit/theme/app_typography.dart';
@@ -26,73 +27,87 @@ class _ManageSubscriptionView extends StatelessWidget {
   const _ManageSubscriptionView();
 
   @override
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Theme.of(context).iconTheme.color,
+    return BlocListener<SubscriptionCubit, SubscriptionState>(
+      listener: (context, state) {
+        if (state is SubscriptionCancelled) {
+          SnackbarUtils.showSuccess(
+            context,
+            GetIt.I<SubscriptionStrings>().cancellationSuccess,
+          );
+          // Reload subscription status after cancellation
+          context.read<SubscriptionCubit>().loadSubscriptionStatus();
+        } else if (state is SubscriptionError) {
+          SnackbarUtils.showError(context, state.message);
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Theme.of(context).iconTheme.color,
+            ),
+            onPressed: () => Navigator.pop(context),
           ),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text(
-          GetIt.I<SubscriptionStrings>().manageSubscriptionTitle,
-          style: AppTypography.titleXLargeSemiBold.copyWith(
-            color: Theme.of(context).textTheme.titleLarge?.color,
+          title: Text(
+            GetIt.I<SubscriptionStrings>().manageSubscriptionTitle,
+            style: AppTypography.titleXLargeSemiBold.copyWith(
+              color: Theme.of(context).textTheme.titleLarge?.color,
+            ),
           ),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
         ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: BlocBuilder<SubscriptionCubit, SubscriptionState>(
-        builder: (context, state) {
-          if (state is SubscriptionStatusLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (state is SubscriptionStatusLoaded) {
-            if (!state.status.hasActiveSubscription) {
-              return _buildNoSubscriptionView(context);
+        body: BlocBuilder<SubscriptionCubit, SubscriptionState>(
+          builder: (context, state) {
+            if (state is SubscriptionStatusLoading ||
+                state is CancellingSubscription) {
+              return const Center(child: CircularProgressIndicator());
             }
-            return _buildSubscriptionContent(
-                context, state.status.subscription!);
-          }
 
-          if (state is SubscriptionError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.error_outline,
-                      size: 64, color: Colors.red.shade300),
-                  const SizedBox(height: 16),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 32),
-                    child: Text(
-                      state.message,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Theme.of(context).hintColor,
+            if (state is SubscriptionStatusLoaded) {
+              if (!state.status.hasActiveSubscription) {
+                return _buildNoSubscriptionView(context);
+              }
+              return _buildSubscriptionContent(
+                  context, state.status.subscription!);
+            }
+
+            if (state is SubscriptionError) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.error_outline,
+                        size: 64, color: Colors.red.shade300),
+                    const SizedBox(height: 16),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 32),
+                      child: Text(
+                        state.message,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Theme.of(context).hintColor,
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () => context
-                        .read<SubscriptionCubit>()
-                        .loadSubscriptionStatus(),
-                    child: Text(GetIt.I<CoreStrings>().common.retry),
-                  ),
-                ],
-              ),
-            );
-          }
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () => context
+                          .read<SubscriptionCubit>()
+                          .loadSubscriptionStatus(),
+                      child: Text(GetIt.I<CoreStrings>().common.retry),
+                    ),
+                  ],
+                ),
+              );
+            }
 
-          return const Center(child: CircularProgressIndicator());
-        },
+            return const Center(child: CircularProgressIndicator());
+          },
+        ),
       ),
     );
   }
@@ -173,16 +188,62 @@ class _ManageSubscriptionView extends StatelessWidget {
           _buildSubscriptionDetailsCard(context, subscription),
           const SizedBox(height: 32),
 
-          // Settings
-          // _buildSectionTitle('Settings', isDark),
-          // const SizedBox(height: 16),
-          // _buildAutoRenewalToggle(isDark),
-          // const SizedBox(height: 32),
-          //
-          // // Cancel Subscription Button
-          // _buildCancelSubscriptionButton(context, isDark),
-          // const SizedBox(height: 32),
+          // Cancel Subscription Section
+          const SizedBox(height: 16),
+          _buildCancelSubscriptionButton(context),
+          const SizedBox(height: 32),
         ],
+      ),
+    );
+  }
+
+  void _showCancelConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(GetIt.I<SubscriptionStrings>().cancelSubscription),
+        content: Text(GetIt.I<SubscriptionStrings>().cancelConfirmation),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text(GetIt.I<CoreStrings>().common.cancel),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(dialogContext);
+              context.read<SubscriptionCubit>().cancelSubscription();
+            },
+            style: TextButton.styleFrom(
+              foregroundColor: Theme.of(context).colorScheme.error,
+            ),
+            child: Text(GetIt.I<SubscriptionStrings>().cancelButton),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCancelSubscriptionButton(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: OutlinedButton(
+        onPressed: () => _showCancelConfirmationDialog(context),
+        style: OutlinedButton.styleFrom(
+          foregroundColor: Theme.of(context).colorScheme.error,
+          side: BorderSide(
+            color: Theme.of(context).colorScheme.error.withValues(alpha: 0.5),
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        child: Text(
+          GetIt.I<SubscriptionStrings>().cancelSubscription,
+          style: AppTypography.buttonMedium.copyWith(
+            color: Theme.of(context).colorScheme.error,
+          ),
+        ),
       ),
     );
   }

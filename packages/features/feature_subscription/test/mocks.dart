@@ -1,5 +1,6 @@
 import 'package:feature_subscription/data/datasources/subscription_datasource.dart';
 import 'package:feature_subscription/domain/repositories/subscription_repository.dart';
+import 'package:feature_subscription/domain/usecases/cancel_subscription.dart';
 import 'package:feature_subscription/domain/usecases/create_subscription.dart';
 import 'package:feature_subscription/domain/usecases/get_all_plans.dart';
 import 'package:feature_subscription/domain/usecases/get_subscription_status.dart';
@@ -20,6 +21,8 @@ class MockGetAllPlans extends Mock implements GetAllPlans {}
 class MockGetSubscriptionStatus extends Mock implements GetSubscriptionStatus {}
 
 class MockCreateSubscription extends Mock implements CreateSubscription {}
+
+class MockCancelSubscription extends Mock implements CancelSubscription {}
 
 // Cubits
 class MockSubscriptionCubit extends Mock implements SubscriptionCubit {}

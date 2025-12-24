@@ -16,6 +16,7 @@ import "package:feature_auth/presentation/cubit/signup/signup_cubit.dart";
 import '../widgets/profile/profile_widgets.dart';
 import '../mixins/profile_tour_mixin.dart';
 import '../widgets/profile/subscription_card_states.dart';
+import 'webview_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -329,6 +330,59 @@ class _ProfilePageState extends State<ProfilePage>
                       onTap: () {
                         SnackbarUtils.showComingSoon(
                             context, GetIt.I<AuthStrings>().profile.helpCenter);
+                      },
+                    ),
+                    const SizedBox(height: 12),
+                    ProfileMenuItem(
+                      icon: Icons.privacy_tip_outlined,
+                      title: GetIt.I<AuthStrings>().profile.privacyPolicy,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => WebViewPage(
+                              title:
+                                  GetIt.I<AuthStrings>().profile.privacyPolicy,
+                              url: 'https://dolfinmind.com/privacy-policy',
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 12),
+                    ProfileMenuItem(
+                      icon: Icons.description_outlined,
+                      title: GetIt.I<AuthStrings>().profile.termsOfService,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => WebViewPage(
+                              title:
+                                  GetIt.I<AuthStrings>().profile.termsOfService,
+                              url: 'https://dolfinmind.com/terms-of-service',
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 12),
+                    ProfileMenuItem(
+                      icon: Icons.delete_outline,
+                      title: GetIt.I<AuthStrings>().profile.deleteAccount,
+                      iconColor: Theme.of(context).colorScheme.error,
+                      titleColor: Theme.of(context).colorScheme.error,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => WebViewPage(
+                              title:
+                                  GetIt.I<AuthStrings>().profile.deleteAccount,
+                              url: 'https://dolfinmind.com/delete-account',
+                            ),
+                          ),
+                        );
                       },
                     ),
                     const SizedBox(height: 40),

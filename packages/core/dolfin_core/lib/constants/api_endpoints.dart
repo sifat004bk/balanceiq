@@ -50,4 +50,5 @@ class ApiEndpoints {
   static String get allPlans => plansBaseUrl;
   static String get subscriptionStatus => '$subscriptionsBaseUrl/status';
   static String get createSubscription => subscriptionsBaseUrl;
+  static String get cancelSubscription => '$subscriptionsBaseUrl/cancel';
 }

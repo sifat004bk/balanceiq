@@ -27,4 +27,12 @@ abstract class SubscriptionRepository {
     required String planName,
     required bool autoRenew,
   });
+
+  /// Cancel the current user's subscription
+  ///
+  /// Endpoint: POST /api/subscriptions/cancel
+  ///
+  /// Parameters:
+  /// - [reason]: Optional reason for cancellation (for analytics)
+  Future<Either<Failure, Subscription>> cancelSubscription({String? reason});
 }

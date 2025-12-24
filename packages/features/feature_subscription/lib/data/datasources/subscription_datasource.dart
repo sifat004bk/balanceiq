@@ -11,6 +11,7 @@ import '../models/create_subscription_request.dart';
 /// - GET /api/plans (Get All Plans)
 /// - GET /api/subscriptions/status (Get Subscription Status)
 /// - POST /api/subscriptions/ (Create Subscription)
+/// - POST /api/subscriptions/cancel (Cancel Subscription)
 /// Auth: Bearer token
 abstract class SubscriptionDataSource {
   /// Get all available subscription plans
@@ -21,6 +22,9 @@ abstract class SubscriptionDataSource {
 
   /// Create a new subscription
   Future<SubscriptionDto> createSubscription(CreateSubscriptionRequest request);
+
+  /// Cancel the current user's subscription
+  Future<SubscriptionDto> cancelSubscription({String? reason});
 }
 
 /// Implementation of subscription data source
@@ -156,6 +160,50 @@ class SubscriptionDataSourceImpl implements SubscriptionDataSource {
         rethrow;
       }
       throw Exception('Failed to create subscription: $e');
+    }
+  }
+
+  @override
+  Future<SubscriptionDto> cancelSubscription({String? reason}) async {
+    try {
+      final token = await secureStorage.getToken();
+      if (token == null) {
+        throw Exception('Authentication required. Please login.');
+      }
+
+      final response = await dio.post<Map<String, dynamic>>(
+        ApiEndpoints.cancelSubscription,
+        data: reason != null ? {'reason': reason} : null,
+        options: Options(
+          headers: <String, String>{
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+          sendTimeout: const Duration(seconds: 30),
+          receiveTimeout: const Duration(seconds: 30),
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = response.data;
+        if (responseData == null) {
+          throw Exception('No subscription data returned');
+        }
+
+        return SubscriptionDto.fromJson(responseData);
+      } else {
+        throw Exception('Server error: ${response.statusCode}');
+      }
+    } on DioException catch (e) {
+      _handleDioError(e);
+      rethrow;
+    } catch (e) {
+      if (e.toString().contains('Authentication required') ||
+          e.toString().contains('No active subscription') ||
+          e.toString().contains('already cancelled')) {
+        rethrow;
+      }
+      throw Exception('Failed to cancel subscription: $e');
     }
   }
 

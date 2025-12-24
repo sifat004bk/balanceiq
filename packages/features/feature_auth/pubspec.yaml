@@ -25,6 +25,7 @@ dependencies:
   smooth_page_indicator: ^1.2.0+3
   tutorial_coach_mark: ^1.2.11
   currency_picker: ^2.0.21
+  webview_flutter: ^4.10.0
   feature_subscription:
     path: ../feature_subscription
 

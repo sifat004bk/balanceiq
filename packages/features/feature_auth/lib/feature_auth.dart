@@ -44,6 +44,7 @@ export 'package:feature_auth/presentation/pages/splash_page.dart';
 export 'package:feature_auth/presentation/pages/profile_page.dart';
 export 'package:feature_auth/presentation/pages/forgot_password_page.dart';
 export 'package:feature_auth/presentation/pages/onboarding_page.dart';
+export 'package:feature_auth/presentation/pages/webview_page.dart';
 
 /// Configuration for initializing the Auth feature.
 ///

@@ -5,6 +5,8 @@ class ProfileMenuItem extends StatelessWidget {
   final String title;
   final VoidCallback onTap;
   final String? subtitle;
+  final Color? iconColor;
+  final Color? titleColor;
 
   const ProfileMenuItem({
     super.key,
@@ -12,6 +14,8 @@ class ProfileMenuItem extends StatelessWidget {
     required this.title,
     required this.onTap,
     this.subtitle,
+    this.iconColor,
+    this.titleColor,
   });
 
   @override
@@ -35,15 +39,13 @@ class ProfileMenuItem extends StatelessWidget {
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: Theme.of(context)
-                    .colorScheme
-                    .primary
+                color: (iconColor ?? Theme.of(context).colorScheme.primary)
                     .withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
                 icon,
-                color: Theme.of(context).colorScheme.primary,
+                color: iconColor ?? Theme.of(context).colorScheme.primary,
                 size: 24,
               ),
             ),
@@ -57,7 +59,8 @@ class ProfileMenuItem extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
-                      color: Theme.of(context).colorScheme.onSurface,
+                      color:
+                          titleColor ?? Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                   if (subtitle != null) ...[

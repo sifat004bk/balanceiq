@@ -23,6 +23,9 @@ class SubscriptionStatusLoading extends SubscriptionState {}
 /// Loading state for creating subscription
 class CreatingSubscription extends SubscriptionState {}
 
+/// Loading state for cancelling subscription
+class CancellingSubscription extends SubscriptionState {}
+
 /// Plans loaded successfully
 class PlansLoaded extends SubscriptionState {
   final List<Plan> plans;
@@ -62,6 +65,16 @@ class SubscriptionCreated extends SubscriptionState {
   final Subscription subscription;
 
   const SubscriptionCreated(this.subscription);
+
+  @override
+  List<Object?> get props => [subscription];
+}
+
+/// Subscription cancelled successfully
+class SubscriptionCancelled extends SubscriptionState {
+  final Subscription subscription;
+
+  const SubscriptionCancelled(this.subscription);
 
   @override
   List<Object?> get props => [subscription];

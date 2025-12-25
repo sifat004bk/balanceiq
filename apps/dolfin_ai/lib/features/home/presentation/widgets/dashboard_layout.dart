@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
 import '../../domain/entities/dashbaord_summary.dart';
 import 'analysis_widgets/accounts_breakdown_widget.dart';
@@ -41,10 +42,12 @@ class DashboardLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        RefreshIndicator(
+        LiquidPullToRefresh(
           onRefresh: onRefresh,
           color: Theme.of(context).colorScheme.primary,
           backgroundColor: Theme.of(context).canvasColor,
+          showChildOpacityTransition: false,
+          springAnimationDurationInMilliseconds: 500,
           child: CustomScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             slivers: [

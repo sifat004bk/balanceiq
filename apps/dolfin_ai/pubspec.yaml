@@ -99,6 +99,7 @@ dependencies:
     path: ../../packages/features/feature_chat
   feature_subscription:
     path: ../../packages/features/feature_subscription
+  liquid_pull_to_refresh: ^3.0.1
 
 dev_dependencies:
   flutter_test:

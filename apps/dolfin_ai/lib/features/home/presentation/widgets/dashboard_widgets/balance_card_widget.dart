@@ -64,7 +64,7 @@ class BalanceCard extends StatelessWidget {
                     ]).createShader(bounds);
                   },
                   child: Text(
-                    currencyCubit.formatCompact(netBalance),
+                    currencyCubit.formatAmount(netBalance),
                     style: textTheme.displayLarge?.copyWith(
                       fontSize: 48,
                       fontWeight: FontWeight.w900,
@@ -111,13 +111,13 @@ class BalanceCard extends StatelessWidget {
   }
 
   Widget _buildIncomeExpenseCard(
-      BuildContext context, {
-        required CurrencyCubit currencyCubit,
-        required Widget iconWidget,
-        required String label,
-        required double amount,
-        required bool isIncome,
-      }) {
+    BuildContext context, {
+    required CurrencyCubit currencyCubit,
+    required Widget iconWidget,
+    required String label,
+    required double amount,
+    required bool isIncome,
+  }) {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
 
@@ -177,7 +177,7 @@ class BalanceCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            currencyCubit.formatCompact(amount),
+            currencyCubit.formatAmount(amount),
             style: textTheme.titleLarge?.copyWith(
               fontSize: 22,
               fontWeight: FontWeight.w900,
@@ -199,4 +199,4 @@ class BalanceCard extends StatelessWidget {
       ),
     );
   }
-  }
+}

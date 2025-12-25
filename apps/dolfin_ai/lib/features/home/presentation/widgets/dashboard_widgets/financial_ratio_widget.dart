@@ -63,7 +63,7 @@ class FinancialRatiosWidget extends StatelessWidget {
           Text(
             title,
             style: textTheme.bodySmall?.copyWith(
-              color: Theme.of(context).hintColor,
+              color: textColor.withValues(alpha: 0.8),
             ),
           ),
           const SizedBox(height: 8),
@@ -72,6 +72,7 @@ class FinancialRatiosWidget extends StatelessWidget {
             style: textTheme.headlineSmall?.copyWith(
               fontSize: 24,
               fontWeight: FontWeight.bold,
+              color: textColor,
             ),
           ),
         ],

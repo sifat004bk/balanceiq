@@ -41,25 +41,29 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(
-            LucideIcons.arrowLeft,
-            color: Theme.of(context).iconTheme.color,
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text(
-          GetIt.I<SubscriptionStrings>().choosePlanTitle,
-          style: AppTypography.titleXLargeSemiBold.copyWith(
-            color: Theme.of(context).textTheme.titleLarge?.color,
-          ),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
+    return BlocBuilder<SubscriptionCubit, SubscriptionState>(
+      builder: (context, state) {
+        final showAppBar = state is! CreatingSubscription;
+        
+        return Scaffold(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          appBar: showAppBar ? AppBar(
+            leading: IconButton(
+              icon: Icon(
+                LucideIcons.arrowLeft,
+                color: Theme.of(context).iconTheme.color,
+              ),
+              onPressed: () => Navigator.pop(context),
+            ),
+            title: Text(
+              GetIt.I<SubscriptionStrings>().choosePlanTitle,
+              style: AppTypography.titleXLargeSemiBold.copyWith(
+                color: Theme.of(context).textTheme.titleLarge?.color,
+              ),
+            ),
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+          ) : null,
       body: BlocConsumer<SubscriptionCubit, SubscriptionState>(
         listener: (context, state) {
           if (state is SubscriptionCreated) {
@@ -277,8 +281,8 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                 ? Theme.of(context).colorScheme.onSurface
                 : Theme.of(context).hintColor,
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 

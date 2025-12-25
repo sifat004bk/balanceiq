@@ -45,26 +45,30 @@ class _ManageSubscriptionView extends StatelessWidget {
           SnackbarUtils.showError(context, state.message);
         }
       },
-      child: Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(
-              LucideIcons.arrowLeft,
-              color: Theme.of(context).iconTheme.color,
-            ),
-            onPressed: () => Navigator.pop(context),
-          ),
-          title: Text(
-            GetIt.I<SubscriptionStrings>().manageSubscriptionTitle,
-            style: AppTypography.titleXLargeSemiBold.copyWith(
-              color: Theme.of(context).textTheme.titleLarge?.color,
-            ),
-          ),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-        ),
-        body: BlocBuilder<SubscriptionCubit, SubscriptionState>(
+      child: BlocBuilder<SubscriptionCubit, SubscriptionState>(
+        builder: (context, state) {
+          final showAppBar = state is! CancellingSubscription;
+          
+          return Scaffold(
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            appBar: showAppBar ? AppBar(
+              leading: IconButton(
+                icon: Icon(
+                  LucideIcons.arrowLeft,
+                  color: Theme.of(context).iconTheme.color,
+                ),
+                onPressed: () => Navigator.pop(context),
+              ),
+              title: Text(
+                GetIt.I<SubscriptionStrings>().manageSubscriptionTitle,
+                style: AppTypography.titleXLargeSemiBold.copyWith(
+                  color: Theme.of(context).textTheme.titleLarge?.color,
+                ),
+              ),
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+            ) : null,
+            body: BlocBuilder<SubscriptionCubit, SubscriptionState>(
           builder: (context, state) {
             if (state is SubscriptionStatusLoading) {
               return const Center(child: CircularProgressIndicator());

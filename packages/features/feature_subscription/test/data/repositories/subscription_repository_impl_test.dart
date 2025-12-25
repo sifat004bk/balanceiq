@@ -297,7 +297,7 @@ void main() {
           (subscription) {
             expect(subscription, isA<Subscription>());
             expect(subscription.userId, 1);
-            expect(subscription.plan.name, 'PREMIUM');
+            expect(subscription.plan!.name, 'PREMIUM');
             expect(subscription.isActive, true);
           },
         );

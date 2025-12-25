@@ -35,8 +35,8 @@ void main() {
 
       // Assert
       expect(result.userId, 123);
-      expect(result.plan.name, 'PREMIUM');
-      expect(result.plan.price, 9.99);
+      expect(result.plan!.name, 'PREMIUM');
+      expect(result.plan!.price, 9.99);
       expect(result.startDate, DateTime.parse('2024-01-01T00:00:00.000Z'));
       expect(result.endDate, DateTime.parse('2024-02-01T00:00:00.000Z'));
       expect(result.isActive, true);
@@ -119,7 +119,7 @@ void main() {
       expect(result.hasActiveSubscription, true);
       expect(result.subscription, isNotNull);
       expect(result.subscription!.userId, 123);
-      expect(result.subscription!.plan.name, 'PREMIUM');
+      expect(result.subscription!.plan!.name, 'PREMIUM');
       expect(result.subscription!.daysRemaining, 15);
     });
 
@@ -185,8 +185,8 @@ void main() {
 
       // Assert
       expect(result.hasActiveSubscription, true);
-      expect(result.subscription!.plan.billingCycle, 'YEARLY');
-      expect(result.subscription!.plan.price, 99.99);
+      expect(result.subscription!.plan!.billingCycle, 'YEARLY');
+      expect(result.subscription!.plan!.price, 99.99);
       expect(result.subscription!.daysRemaining, 365);
     });
 

@@ -124,7 +124,7 @@ void main() {
           (failure) => fail('Should not fail'),
           (subscription) {
             expect(subscription.userId, 1);
-            expect(subscription.plan.name, 'PREMIUM');
+            expect(subscription.plan!.name, 'PREMIUM');
             expect(subscription.isActive, true);
           },
         );
@@ -145,7 +145,7 @@ void main() {
           (status) {
             expect(status.hasActiveSubscription, true);
             expect(status.subscription, isNotNull);
-            expect(status.subscription!.plan.name, 'PREMIUM');
+            expect(status.subscription!.plan!.name, 'PREMIUM');
           },
         );
 

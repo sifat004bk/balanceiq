@@ -1,6 +1,5 @@
 import 'package:dolfin_core/network/logging_interceptor.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

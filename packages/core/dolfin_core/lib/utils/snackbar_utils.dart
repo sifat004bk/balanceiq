@@ -175,8 +175,8 @@ class SnackbarUtils {
             fontWeight: FontWeight.w500,
           ),
         ),
-        backgroundColor: backgroundColor?.withOpacity(isDark ? 0.3 : 0.4) ??
-            Theme.of(context).colorScheme.surface.withOpacity(0.3),
+        backgroundColor: backgroundColor?.withValues(alpha: isDark ? 0.3 : 0.4) ??
+            Theme.of(context).colorScheme.surface.withValues(alpha: 0.3),
         duration: duration,
         behavior: behavior,
         elevation: 0,
@@ -184,7 +184,7 @@ class SnackbarUtils {
           borderRadius: BorderRadius.circular(borderRadius),
           side: BorderSide(
             color: (backgroundColor ?? Theme.of(context).colorScheme.primary)
-                .withOpacity(0.5),
+                .withValues(alpha: 0.5),
             width: 1.5,
           ),
         ),

@@ -105,7 +105,7 @@ class SubscriptionRepositoryImpl implements SubscriptionRepository {
   Subscription _mapSubscriptionDtoToEntity(SubscriptionDto dto) {
     return Subscription(
       userId: dto.userId,
-      plan: _mapPlanDtoToEntity(dto.plan),
+      plan: dto.plan != null ? _mapPlanDtoToEntity(dto.plan!) : null,
       startDate: dto.startDate,
       endDate: dto.endDate,
       isActive: dto.isActive,

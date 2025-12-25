@@ -4,7 +4,7 @@ import 'plan_dto.dart';
 /// Maps to: SubscriptionDto from backend
 class SubscriptionDto {
   final int userId;
-  final PlanDto plan;
+  final PlanDto? plan; // Nullable - can be null when subscription is cancelled
   final DateTime startDate;
   final DateTime endDate;
   final bool isActive;
@@ -12,7 +12,7 @@ class SubscriptionDto {
 
   SubscriptionDto({
     required this.userId,
-    required this.plan,
+    this.plan, // Now optional
     required this.startDate,
     required this.endDate,
     required this.isActive,
@@ -22,7 +22,9 @@ class SubscriptionDto {
   factory SubscriptionDto.fromJson(Map<String, dynamic> json) {
     return SubscriptionDto(
       userId: json['userId'] as int,
-      plan: PlanDto.fromJson(json['plan'] as Map<String, dynamic>),
+      plan: json['plan'] != null
+          ? PlanDto.fromJson(json['plan'] as Map<String, dynamic>)
+          : null,
       startDate: DateTime.parse(json['startDate'] as String),
       endDate: DateTime.parse(json['endDate'] as String),
       isActive: json['isActive'] as bool? ?? false,

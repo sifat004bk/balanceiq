@@ -4,7 +4,7 @@ import 'plan.dart';
 /// Subscription entity
 class Subscription extends Equatable {
   final int userId;
-  final Plan plan;
+  final Plan? plan; // Nullable - can be null when subscription is cancelled
   final DateTime startDate;
   final DateTime endDate;
   final bool isActive;
@@ -12,7 +12,7 @@ class Subscription extends Equatable {
 
   const Subscription({
     required this.userId,
-    required this.plan,
+    this.plan, // Now optional
     required this.startDate,
     required this.endDate,
     required this.isActive,

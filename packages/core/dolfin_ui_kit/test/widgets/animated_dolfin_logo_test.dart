@@ -1,15 +1,13 @@
 import 'package:dolfin_ui_kit/widgets/animated_dolfin_logo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
 import 'package:flutter/services.dart';
-import 'dart:typed_data';
 
 class TestAssetBundle extends AssetBundle {
   @override
   Future<ByteData> load(String key) async {
     if (key == 'AssetManifest.bin') {
-      return StandardMessageCodec().encodeMessage(<String, List<Object>>{})!;
+      return const StandardMessageCodec().encodeMessage(<String, List<Object>>{})!;
     }
 
     if (key == 'AssetManifest.json') {

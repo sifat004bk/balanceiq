@@ -120,8 +120,8 @@ void main() {
       final decoration = container.decoration as BoxDecoration;
       // Dark mode uses black base
       // We can verify behavior indirectly or just ensure no crash
-      expect(decoration.color!.value,
-          isNot(Colors.white.value)); // should be based on black
+      expect(decoration.color!.toARGB32(),
+          isNot(Colors.white.toARGB32())); // should be based on black
     });
   });
 }

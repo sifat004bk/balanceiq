@@ -7,8 +7,6 @@ class GlassmorphicUtils {
 
   /// Creates a glassmorphic dialog theme
   static DialogTheme getDialogTheme(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return DialogTheme(
       backgroundColor: Colors.transparent,
       elevation: 0,
@@ -34,20 +32,20 @@ class GlassmorphicUtils {
         child: Container(
           decoration: BoxDecoration(
             color: isDark
-                ? Colors.white.withOpacity(0.1)
-                : Colors.white.withOpacity(0.7),
+                ? Colors.white.withValues(alpha: 0.1)
+                : Colors.white.withValues(alpha: 0.7),
             borderRadius: BorderRadius.circular(borderRadius),
             border: Border.all(
               color: isDark
-                  ? Colors.white.withOpacity(0.2)
-                  : Colors.white.withOpacity(0.3),
+                  ? Colors.white.withValues(alpha: 0.2)
+                  : Colors.white.withValues(alpha: 0.3),
               width: 1.5,
             ),
             boxShadow: [
               BoxShadow(
                 color: isDark
-                    ? Colors.black.withOpacity(0.3)
-                    : Colors.black.withOpacity(0.1),
+                    ? Colors.black.withValues(alpha: 0.3)
+                    : Colors.black.withValues(alpha: 0.1),
                 blurRadius: 20,
                 offset: const Offset(0, 10),
               ),
@@ -114,13 +112,13 @@ class GlassmorphicUtils {
 
     return BoxDecoration(
       color: isDark
-          ? Colors.white.withOpacity(0.1)
-          : Colors.white.withOpacity(0.7),
+          ? Colors.white.withValues(alpha: 0.1)
+          : Colors.white.withValues(alpha: 0.7),
       borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       border: Border.all(
         color: isDark
-            ? Colors.white.withOpacity(0.2)
-            : Colors.white.withOpacity(0.3),
+            ? Colors.white.withValues(alpha: 0.2)
+            : Colors.white.withValues(alpha: 0.3),
         width: 1.5,
       ),
     );
@@ -154,21 +152,6 @@ class GlassmorphicUtils {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return SnackBar(
-      content: Row(
-        children: [
-          Icon(icon, color: Colors.white),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              message,
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ],
-      ),
       behavior: SnackBarBehavior.floating,
       backgroundColor: Colors.transparent,
       elevation: 0,
@@ -185,15 +168,15 @@ class GlassmorphicUtils {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
-              color: backgroundColor.withOpacity(isDark ? 0.3 : 0.4),
+              color: backgroundColor.withValues(alpha: isDark ? 0.3 : 0.4),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: backgroundColor.withOpacity(0.5),
+                color: backgroundColor.withValues(alpha: 0.5),
                 width: 1.5,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: backgroundColor.withOpacity(0.3),
+                  color: backgroundColor.withValues(alpha: 0.3),
                   blurRadius: 20,
                   offset: const Offset(0, 8),
                 ),

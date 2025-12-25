@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 import 'package:dolfin_ui_kit/theme/app_palette.dart';
 import 'package:dolfin_ui_kit/theme/app_theme.dart';
 import 'package:flutter/material.dart';

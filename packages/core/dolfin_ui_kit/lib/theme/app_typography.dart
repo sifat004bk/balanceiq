@@ -12,8 +12,8 @@ class AppTypography {
   // We use Google Sans (Open Sans / Product Sans logic) if available,
   // otherwise we can fallback to Manrope or Inter.
   // 'GoogleFonts.outfit' is a great modern geometric sans match for 2026 fintech.
-  // Using Manrope as it was legacy default, but modernizing the weights.
-  static TextTheme textTheme = GoogleFonts.manropeTextTheme();
+  // Using Outfit as requested to match Gemini/Antigravity aesthetic.
+  static TextTheme textTheme = GoogleFonts.outfitTextTheme();
 
   /// Hero: Huge, thin/light. For Balances.
   static TextStyle get hero => textTheme.displayLarge!.copyWith(
@@ -242,14 +242,14 @@ class AppTypography {
       );
 
   static TextStyle get inputMedium => textTheme.bodyMedium!.copyWith(
-    fontSize: 16,
-    fontWeight: FontWeight.w400,
-    letterSpacing: 0.2,
-  );
+        fontSize: 16,
+        fontWeight: FontWeight.w400,
+        letterSpacing: 0.2,
+      );
 
   static TextStyle get inputSmall => textTheme.bodySmall!.copyWith(
-    fontSize: 14,
-    fontWeight: FontWeight.w400,
-    letterSpacing: 0.2,
-  );
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+        letterSpacing: 0.2,
+      );
 }

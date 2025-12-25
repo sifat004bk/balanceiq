@@ -327,7 +327,7 @@ class _LoginFormState extends State<LoginForm> {
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.pushReplacementNamed(context, '/signup');
+                  Navigator.pushNamed(context, '/signup');
                 },
                 child: Text(
                   GetIt.I<AuthStrings>().signupLink,

@@ -172,12 +172,31 @@ class GenUIChart extends StatelessWidget {
               bottomTitles: AxisTitles(
                 sideTitles: SideTitles(
                   showTitles: true,
-                  reservedSize: 42,
+                  reservedSize: labels.length > 5 ? 60 : 42,
                   getTitlesWidget: (value, meta) {
                     if (value.toInt() >= 0 && value.toInt() < labels.length) {
-                      // Logic to skip labels if too congested
-                      if (labels.length > 6 && value.toInt() % 2 != 0) {
-                        return const SizedBox.shrink();
+                      // Logic to rotate labels if too congested
+                      if (labels.length > 5) {
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: RotatedBox(
+                            quarterTurns: 1, // Vertical text
+                            child: Text(
+                              _truncateLabel(labels[value.toInt()]),
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSurface
+                                    .withValues(alpha: 0.6),
+                                fontWeight: FontWeight.w600,
+                              ),
+                              textAlign: TextAlign.center,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        );
                       }
 
                       return Padding(

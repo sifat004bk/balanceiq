@@ -100,7 +100,7 @@ class _SignUpPageState extends State<SignUpPage> {
             onSignUp: _handleSignUp,
             onGoogleSignUp: _handleGoogleSignUp,
             onLoginTap: () {
-              Navigator.pushReplacementNamed(context, '/login');
+              Navigator.pop(context);
             },
           ),
         ),

@@ -166,7 +166,8 @@ class _ProfilePageState extends State<ProfilePage>
           BlocListener<SessionCubit, SessionState>(
             listener: (context, state) {
               if (state is Unauthenticated) {
-                Navigator.of(context).pushReplacementNamed('/login');
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil('/login', (route) => false);
               } else if (state is SessionError) {
                 SnackbarUtils.showError(context, state.message);
               }

@@ -44,95 +44,100 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
     return BlocBuilder<SubscriptionCubit, SubscriptionState>(
       builder: (context, state) {
         final showAppBar = state is! CreatingSubscription;
-        
+
         return Scaffold(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          appBar: showAppBar ? AppBar(
-            leading: IconButton(
-              icon: Icon(
-                LucideIcons.arrowLeft,
-                color: Theme.of(context).iconTheme.color,
-              ),
-              onPressed: () => Navigator.pop(context),
-            ),
-            title: Text(
-              GetIt.I<SubscriptionStrings>().choosePlanTitle,
-              style: AppTypography.titleXLargeSemiBold.copyWith(
-                color: Theme.of(context).textTheme.titleLarge?.color,
-              ),
-            ),
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-          ) : null,
-      body: BlocConsumer<SubscriptionCubit, SubscriptionState>(
-        listener: (context, state) {
-          if (state is SubscriptionCreated) {
-            // Check if tour is active at subscription step
-            final tourCubit = context.read<ProductTourCubit>();
-            if (tourCubit.isAtStep(TourStep.profileSubscription)) {
-              // Advance tour and navigate to chat
-              tourCubit.onSubscriptionCreated();
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const ChatPage(
-                    botId: "nai kichu",
-                    botName: 'Dolfin AI',
+          appBar: showAppBar
+              ? AppBar(
+                  leading: IconButton(
+                    icon: Icon(
+                      LucideIcons.arrowLeft,
+                      color: Theme.of(context).iconTheme.color,
+                    ),
+                    onPressed: () => Navigator.pop(context),
                   ),
-                ),
-              );
-            } else {
-              // Navigate back to profile page
-              Navigator.popUntil(
-                  context,
-                  (route) =>
-                      route.settings.name == '/profile' || route.isFirst);
-            }
-          } else if (state is SubscriptionError) {
-            if (context.mounted) {
-              SnackbarUtils.showError(context, state.message);
-            }
-            // Reload plans after error
-            context.read<SubscriptionCubit>().loadPlansAndStatus();
-          }
-        },
-        builder: (context, state) {
-          if (state is PlansLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (state is CreatingSubscription) {
-            return const ProfileShimmer();
-          }
-
-          if (state is PlansLoaded) {
-            return _buildPlansContent(context, state.plans,
-                state.subscriptionStatus?.subscription?.plan?.name);
-          }
-
-          if (state is SubscriptionError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(LucideIcons.circleX,
-                      size: 64, color: Colors.red.shade300),
-                  const SizedBox(height: 16),
-                  Text(state.message, textAlign: TextAlign.center),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () =>
-                        context.read<SubscriptionCubit>().loadPlansAndStatus(),
-                    child: Text(GetIt.I<CoreStrings>().common.retry),
+                  title: Text(
+                    GetIt.I<SubscriptionStrings>().choosePlanTitle,
+                    style: AppTypography.titleXLargeSemiBold.copyWith(
+                      color: Theme.of(context).textTheme.titleLarge?.color,
+                    ),
                   ),
-                ],
-              ),
-            );
-          }
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                )
+              : null,
+          body: BlocConsumer<SubscriptionCubit, SubscriptionState>(
+            listener: (context, state) {
+              if (state is SubscriptionCreated) {
+                // Check if tour is active at subscription step
+                final tourCubit = context.read<ProductTourCubit>();
+                if (tourCubit.isAtStep(TourStep.profileSubscription)) {
+                  // Advance tour and navigate to chat
+                  tourCubit.onSubscriptionCreated();
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ChatPage(
+                        botId: "nai kichu",
+                        botName: 'Dolfin AI',
+                      ),
+                    ),
+                  );
+                } else {
+                  // Navigate back to profile page
+                  Navigator.popUntil(
+                      context,
+                      (route) =>
+                          route.settings.name == '/profile' || route.isFirst);
+                }
+              } else if (state is SubscriptionError) {
+                if (context.mounted) {
+                  SnackbarUtils.showError(context, state.message);
+                }
+                // Reload plans after error
+                context.read<SubscriptionCubit>().loadPlansAndStatus();
+              }
+            },
+            builder: (context, state) {
+              if (state is PlansLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-          return const Center(child: CircularProgressIndicator());
-        },
-      ),
+              if (state is CreatingSubscription) {
+                return const ProfileShimmer();
+              }
+
+              if (state is PlansLoaded) {
+                return _buildPlansContent(context, state.plans,
+                    state.subscriptionStatus?.subscription?.plan?.name);
+              }
+
+              if (state is SubscriptionError) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(LucideIcons.circleX,
+                          size: 64, color: Colors.red.shade300),
+                      const SizedBox(height: 16),
+                      Text(state.message, textAlign: TextAlign.center),
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: () => context
+                            .read<SubscriptionCubit>()
+                            .loadPlansAndStatus(),
+                        child: Text(GetIt.I<CoreStrings>().common.retry),
+                      ),
+                    ],
+                  ),
+                );
+              }
+
+              return const Center(child: CircularProgressIndicator());
+            },
+          ),
+        );
+      },
     );
   }
 
@@ -281,8 +286,8 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                 ? Theme.of(context).colorScheme.onSurface
                 : Theme.of(context).hintColor,
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 

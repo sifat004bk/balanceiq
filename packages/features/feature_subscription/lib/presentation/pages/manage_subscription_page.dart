@@ -48,77 +48,81 @@ class _ManageSubscriptionView extends StatelessWidget {
       child: BlocBuilder<SubscriptionCubit, SubscriptionState>(
         builder: (context, state) {
           final showAppBar = state is! CancellingSubscription;
-          
+
           return Scaffold(
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            appBar: showAppBar ? AppBar(
-              leading: IconButton(
-                icon: Icon(
-                  LucideIcons.arrowLeft,
-                  color: Theme.of(context).iconTheme.color,
-                ),
-                onPressed: () => Navigator.pop(context),
-              ),
-              title: Text(
-                GetIt.I<SubscriptionStrings>().manageSubscriptionTitle,
-                style: AppTypography.titleXLargeSemiBold.copyWith(
-                  color: Theme.of(context).textTheme.titleLarge?.color,
-                ),
-              ),
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-            ) : null,
-            body: BlocBuilder<SubscriptionCubit, SubscriptionState>(
-          builder: (context, state) {
-            if (state is SubscriptionStatusLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            if (state is CancellingSubscription) {
-              return const ProfileShimmer();
-            }
-
-            if (state is SubscriptionStatusLoaded) {
-              if (!state.status.hasActiveSubscription) {
-                return _buildNoSubscriptionView(context);
-              }
-              return _buildSubscriptionContent(
-                  context, state.status.subscription!);
-            }
-
-            if (state is SubscriptionError) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(LucideIcons.circleX,
-                        size: 64, color: Colors.red.shade300),
-                    const SizedBox(height: 16),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 32),
-                      child: Text(
-                        state.message,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Theme.of(context).hintColor,
-                        ),
+            appBar: showAppBar
+                ? AppBar(
+                    leading: IconButton(
+                      icon: Icon(
+                        LucideIcons.arrowLeft,
+                        color: Theme.of(context).iconTheme.color,
+                      ),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    title: Text(
+                      GetIt.I<SubscriptionStrings>().manageSubscriptionTitle,
+                      style: AppTypography.titleXLargeSemiBold.copyWith(
+                        color: Theme.of(context).textTheme.titleLarge?.color,
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () => context
-                          .read<SubscriptionCubit>()
-                          .loadSubscriptionStatus(),
-                      child: Text(GetIt.I<CoreStrings>().common.retry),
-                    ),
-                  ],
-                ),
-              );
-            }
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,
+                  )
+                : null,
+            body: BlocBuilder<SubscriptionCubit, SubscriptionState>(
+              builder: (context, state) {
+                if (state is SubscriptionStatusLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
-            return const Center(child: CircularProgressIndicator());
-          },
-        ),
+                if (state is CancellingSubscription) {
+                  return const ProfileShimmer();
+                }
+
+                if (state is SubscriptionStatusLoaded) {
+                  if (!state.status.hasActiveSubscription) {
+                    return _buildNoSubscriptionView(context);
+                  }
+                  return _buildSubscriptionContent(
+                      context, state.status.subscription!);
+                }
+
+                if (state is SubscriptionError) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(LucideIcons.circleX,
+                            size: 64, color: Colors.red.shade300),
+                        const SizedBox(height: 16),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 32),
+                          child: Text(
+                            state.message,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Theme.of(context).hintColor,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        ElevatedButton(
+                          onPressed: () => context
+                              .read<SubscriptionCubit>()
+                              .loadSubscriptionStatus(),
+                          child: Text(GetIt.I<CoreStrings>().common.retry),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+
+                return const Center(child: CircularProgressIndicator());
+              },
+            ),
+          );
+        },
       ),
     );
   }

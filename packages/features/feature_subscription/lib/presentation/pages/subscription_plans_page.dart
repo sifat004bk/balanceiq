@@ -15,7 +15,7 @@ import 'package:feature_auth/presentation/pages/webview_page.dart';
 import 'package:feature_subscription/domain/entities/plan.dart';
 import 'package:feature_subscription/presentation/cubit/subscription_cubit.dart';
 import 'package:feature_subscription/presentation/cubit/subscription_state.dart';
-import 'package:feature_auth/presentation/widgets/profile/profile_shimmer.dart';
+import 'package:feature_chat/presentation/widgets/chat_page_shimmer.dart';
 
 class SubscriptionPlansPage extends StatelessWidget {
   const SubscriptionPlansPage({super.key});
@@ -95,7 +95,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
           }
 
           if (state is CreatingSubscription) {
-            return const ProfileShimmer();
+            return const ChatPageShimmer();
           }
 
           if (state is PlansLoaded) {

@@ -149,7 +149,7 @@ class SnackbarUtils {
     );
   }
 
-  /// Internal method to show snackbar with consistent styling
+  /// Internal method to show snackbar with consistent glassmorphic styling
   static void _showSnackbar(
     BuildContext context, {
     required String message,
@@ -160,23 +160,33 @@ class SnackbarUtils {
     SnackBarBehavior behavior = SnackBarBehavior.floating,
     double borderRadius = DesignConstants.radiusMedium,
   }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     // Clear any existing snackbars first
     ScaffoldMessenger.of(context).clearSnackBars();
 
-    // Show new snackbar
+    // Show new glassmorphic snackbar
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
           message,
           style: TextStyle(
             color: textColor ?? Colors.white,
+            fontWeight: FontWeight.w500,
           ),
         ),
-        backgroundColor: backgroundColor,
+        backgroundColor: backgroundColor?.withOpacity(isDark ? 0.3 : 0.4) ??
+            Theme.of(context).colorScheme.surface.withOpacity(0.3),
         duration: duration,
         behavior: behavior,
+        elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(borderRadius),
+          side: BorderSide(
+            color: (backgroundColor ?? Theme.of(context).colorScheme.primary)
+                .withOpacity(0.5),
+            width: 1.5,
+          ),
         ),
         action: action,
       ),

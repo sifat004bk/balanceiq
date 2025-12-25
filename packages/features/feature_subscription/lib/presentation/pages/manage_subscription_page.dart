@@ -11,6 +11,7 @@ import 'package:feature_subscription/domain/entities/subscription.dart';
 import 'package:feature_subscription/presentation/cubit/subscription_cubit.dart';
 import 'package:feature_subscription/presentation/cubit/subscription_state.dart';
 import '../widgets/cancellation_reason_dialog.dart';
+import '../widgets/manage_subscription_shimmer.dart';
 
 class ManageSubscriptionPage extends StatelessWidget {
   const ManageSubscriptionPage({super.key});
@@ -64,9 +65,12 @@ class _ManageSubscriptionView extends StatelessWidget {
         ),
         body: BlocBuilder<SubscriptionCubit, SubscriptionState>(
           builder: (context, state) {
-            if (state is SubscriptionStatusLoading ||
-                state is CancellingSubscription) {
+            if (state is SubscriptionStatusLoading) {
               return const Center(child: CircularProgressIndicator());
+            }
+
+            if (state is CancellingSubscription) {
+              return const ManageSubscriptionShimmer();
             }
 
             if (state is SubscriptionStatusLoaded) {

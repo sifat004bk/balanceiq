@@ -15,6 +15,7 @@ import 'package:feature_auth/presentation/pages/webview_page.dart';
 import 'package:feature_subscription/domain/entities/plan.dart';
 import 'package:feature_subscription/presentation/cubit/subscription_cubit.dart';
 import 'package:feature_subscription/presentation/cubit/subscription_state.dart';
+import 'package:feature_auth/presentation/widgets/profile/profile_shimmer.dart';
 
 class SubscriptionPlansPage extends StatelessWidget {
   const SubscriptionPlansPage({super.key});
@@ -94,16 +95,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
           }
 
           if (state is CreatingSubscription) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const CircularProgressIndicator(),
-                  const SizedBox(height: 16),
-                  Text(GetIt.I<CoreStrings>().common.processing),
-                ],
-              ),
-            );
+            return const ProfileShimmer();
           }
 
           if (state is PlansLoaded) {
@@ -414,7 +406,6 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                           : isPopular
                               ? Theme.of(context).colorScheme.secondary
                               : Theme.of(context).colorScheme.primary,
-
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),

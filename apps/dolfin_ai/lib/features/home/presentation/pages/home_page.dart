@@ -215,11 +215,11 @@ class _DashboardViewState extends State<DashboardView> {
       },
       child: PopScope(
         canPop: false,
-        onPopInvoked: (didPop) async {
+        onPopInvokedWithResult: (didPop, result) async {
           if (didPop) return;
           await showDialog<bool>(
             context: context,
-            barrierColor: Colors.black.withOpacity(0.5),
+            barrierColor: Colors.black.withValues(alpha: 0.5),
             builder: (context) => _buildExitDialog(context),
           );
         },
@@ -334,20 +334,20 @@ class _DashboardViewState extends State<DashboardView> {
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
               color: isDark
-                  ? Colors.white.withOpacity(0.1)
-                  : Colors.white.withOpacity(0.7),
+                  ? Colors.white.withValues(alpha: 0.1)
+                  : Colors.white.withValues(alpha: 0.7),
               borderRadius: BorderRadius.circular(24),
               border: Border.all(
                 color: isDark
-                    ? Colors.white.withOpacity(0.2)
-                    : Colors.white.withOpacity(0.3),
+                    ? Colors.white.withValues(alpha: 0.2)
+                    : Colors.white.withValues(alpha: 0.3),
                 width: 1.5,
               ),
               boxShadow: [
                 BoxShadow(
                   color: isDark
-                      ? Colors.black.withOpacity(0.3)
-                      : Colors.black.withOpacity(0.1),
+                      ? Colors.black.withValues(alpha: 0.3)
+                      : Colors.black.withValues(alpha: 0.1),
                   blurRadius: 20,
                   offset: const Offset(0, 10),
                 ),

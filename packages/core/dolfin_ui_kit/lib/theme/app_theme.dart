@@ -43,7 +43,7 @@ class AppTheme {
       ),
 
       // Typography
-      fontFamily: 'Manrope',
+      fontFamily: 'Outfit',
       textTheme: AppTypography.textTheme.copyWith(
         displayLarge: AppTypography.hero
             .copyWith(color: GetIt.instance<AppPalette>().textPrimaryLight),
@@ -151,7 +151,7 @@ class AppTheme {
       ),
 
       // Typography
-      fontFamily: 'Manrope',
+      fontFamily: 'Outfit',
       textTheme: AppTypography.textTheme.copyWith(
         displayLarge: AppTypography.hero
             .copyWith(color: GetIt.instance<AppPalette>().textPrimaryDark),

@@ -159,4 +159,25 @@ class SubscriptionStringsImpl implements SubscriptionStrings {
   String get subscriptionFailed => 'Subscription failed. Please try again.';
   @override
   String get cancellationSuccess => 'Subscription cancelled successfully';
+
+  @override
+  String get whyCancelling => 'Why are you cancelling?';
+  @override
+  String get cancelReasonTooExpensive => 'Too expensive';
+  @override
+  String get cancelReasonNotUsing => 'Not using enough';
+  @override
+  String get cancelReasonMissingFeatures => 'Missing features I need';
+  @override
+  String get cancelReasonFoundAlternative => 'Found a better alternative';
+  @override
+  String get cancelReasonTechnicalIssues => 'Technical issues';
+  @override
+  String get cancelReasonOther => 'Other';
+  @override
+  String get pleaseSpecifyReason => 'Please specify your reason';
+  @override
+  String get reasonRequired => 'Reason is required';
+  @override
+  String get submitCancellation => 'Submit Cancellation';
 }

@@ -11,7 +11,7 @@ import 'package:feature_subscription/domain/entities/subscription.dart';
 import 'package:feature_subscription/presentation/cubit/subscription_cubit.dart';
 import 'package:feature_subscription/presentation/cubit/subscription_state.dart';
 import '../widgets/cancellation_reason_dialog.dart';
-import '../widgets/manage_subscription_shimmer.dart';
+import 'package:feature_auth/presentation/widgets/profile/profile_shimmer.dart';
 
 class ManageSubscriptionPage extends StatelessWidget {
   const ManageSubscriptionPage({super.key});
@@ -38,8 +38,9 @@ class _ManageSubscriptionView extends StatelessWidget {
             context,
             GetIt.I<SubscriptionStrings>().cancellationSuccess,
           );
-          // Reload subscription status after cancellation
-          context.read<SubscriptionCubit>().loadSubscriptionStatus();
+          // Navigate back to profile page
+          Navigator.popUntil(context,
+              (route) => route.settings.name == '/profile' || route.isFirst);
         } else if (state is SubscriptionError) {
           SnackbarUtils.showError(context, state.message);
         }
@@ -70,7 +71,7 @@ class _ManageSubscriptionView extends StatelessWidget {
             }
 
             if (state is CancellingSubscription) {
-              return const ManageSubscriptionShimmer();
+              return const ProfileShimmer();
             }
 
             if (state is SubscriptionStatusLoaded) {

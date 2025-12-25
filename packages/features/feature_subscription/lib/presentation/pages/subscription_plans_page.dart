@@ -15,7 +15,7 @@ import 'package:feature_auth/presentation/pages/webview_page.dart';
 import 'package:feature_subscription/domain/entities/plan.dart';
 import 'package:feature_subscription/presentation/cubit/subscription_cubit.dart';
 import 'package:feature_subscription/presentation/cubit/subscription_state.dart';
-import 'package:feature_chat/presentation/widgets/chat_page_shimmer.dart';
+import 'package:feature_auth/presentation/widgets/profile/profile_shimmer.dart';
 
 class SubscriptionPlansPage extends StatelessWidget {
   const SubscriptionPlansPage({super.key});
@@ -73,13 +73,16 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                 MaterialPageRoute(
                   builder: (context) => const ChatPage(
                     botId: "nai kichu",
-                    botName: 'Donfin AI',
+                    botName: 'Dolfin AI',
                   ),
                 ),
               );
             } else {
-              // Navigate back with success result - parent can show snackbar if needed
-              Navigator.pop(context, true);
+              // Navigate back to profile page
+              Navigator.popUntil(
+                  context,
+                  (route) =>
+                      route.settings.name == '/profile' || route.isFirst);
             }
           } else if (state is SubscriptionError) {
             if (context.mounted) {
@@ -95,7 +98,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
           }
 
           if (state is CreatingSubscription) {
-            return const ChatPageShimmer();
+            return const ProfileShimmer();
           }
 
           if (state is PlansLoaded) {

@@ -108,9 +108,8 @@ class SubscriptionCard extends StatelessWidget {
               const SizedBox(width: 16),
               ElevatedButton(
                 onPressed: () async {
-                  final result = await Navigator.pushNamed(
-                      context, '/manage-subscription');
-                  if (result == true && context.mounted) {
+                  await Navigator.pushNamed(context, '/manage-subscription');
+                  if (context.mounted) {
                     context.read<SubscriptionCubit>().loadSubscriptionStatus();
                   }
                 },

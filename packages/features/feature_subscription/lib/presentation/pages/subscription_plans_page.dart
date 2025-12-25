@@ -11,6 +11,7 @@ import 'package:dolfin_core/tour/product_tour_cubit.dart';
 import 'package:dolfin_core/tour/product_tour_state.dart';
 
 import 'package:feature_chat/presentation/pages/chat_page.dart';
+import 'package:feature_auth/presentation/pages/webview_page.dart';
 import 'package:feature_subscription/domain/entities/plan.dart';
 import 'package:feature_subscription/presentation/cubit/subscription_cubit.dart';
 import 'package:feature_subscription/presentation/cubit/subscription_state.dart';
@@ -174,7 +175,15 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
             children: [
               TextButton(
                 onPressed: () {
-                  // TODO: Show terms of service
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => WebViewPage(
+                        title: GetIt.I<SubscriptionStrings>().termsOfService,
+                        url: 'https://dolfinmind.com/terms-of-service',
+                      ),
+                    ),
+                  );
                 },
                 child: Text(
                   GetIt.I<SubscriptionStrings>().termsOfService,
@@ -186,7 +195,15 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
               const SizedBox(width: 16),
               TextButton(
                 onPressed: () {
-                  // TODO: Show privacy policy
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => WebViewPage(
+                        title: GetIt.I<SubscriptionStrings>().privacyPolicy,
+                        url: 'https://dolfinmind.com/privacy-policy',
+                      ),
+                    ),
+                  );
                 },
                 child: Text(
                   GetIt.I<SubscriptionStrings>().privacyPolicy,

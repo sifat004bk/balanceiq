@@ -57,6 +57,13 @@ class _CancellationReasonDialogState extends State<CancellationReasonDialog> {
     });
   }
 
+  bool get _isSubmitEnabled {
+    if (_isOtherSelected) {
+      return _otherController.text.trim().isNotEmpty;
+    }
+    return _selectedReason != null;
+  }
+
   void _submit() {
     String? finalReason;
 
@@ -111,9 +118,11 @@ class _CancellationReasonDialogState extends State<CancellationReasonDialog> {
                   contentPadding: const EdgeInsets.all(12),
                 ),
                 onChanged: (_) {
-                  if (_errorMessage != null) {
-                    setState(() => _errorMessage = null);
-                  }
+                  setState(() {
+                    if (_errorMessage != null) {
+                      _errorMessage = null;
+                    }
+                  });
                 },
               ),
             ],
@@ -138,9 +147,10 @@ class _CancellationReasonDialogState extends State<CancellationReasonDialog> {
           child: Text(GetIt.I<CoreStrings>().common.cancel),
         ),
         FilledButton(
-          onPressed: _submit,
+          onPressed: _isSubmitEnabled ? _submit : null,
           style: FilledButton.styleFrom(
             backgroundColor: colorScheme.error,
+            disabledBackgroundColor: colorScheme.error.withValues(alpha: 0.3),
           ),
           child: Text(strings.submitCancellation),
         ),

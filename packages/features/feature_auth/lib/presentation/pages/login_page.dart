@@ -52,11 +52,14 @@ class _LoginPageState extends State<LoginPage> {
           SnackbarUtils.showError(context, state.message);
         }
       },
-      child: const Scaffold(
-        body: SafeArea(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.all(16.0),
-            child: LoginForm(),
+      child: const PopScope(
+        canPop: false,
+        child: Scaffold(
+          body: SafeArea(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.all(16.0),
+              child: LoginForm(),
+            ),
           ),
         ),
       ),

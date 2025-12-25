@@ -9,6 +9,7 @@ import '../../../domain/usecases/update_profile.dart';
 import '../../../domain/usecases/save_user.dart';
 import 'package:dolfin_core/storage/secure_storage_service.dart';
 import 'package:dolfin_core/currency/currency_cubit.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 // States
 abstract class SessionState extends Equatable {
@@ -113,6 +114,8 @@ class SessionCubit extends Cubit<SessionState> {
       (failure) => emit(SessionError(failure.message)),
       (_) async {
         await currencyCubit.reset();
+        await DefaultCacheManager().emptyCache();
+        await secureStorage.deleteAll();
         emit(Unauthenticated());
       },
     );

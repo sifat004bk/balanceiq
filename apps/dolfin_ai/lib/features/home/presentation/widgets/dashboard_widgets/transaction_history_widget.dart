@@ -83,7 +83,9 @@ class TransactionHistoryWidget extends StatelessWidget {
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                itemCount: state.transactions.length,
+                itemCount: state.transactions.length > 3
+                    ? 3
+                    : state.transactions.length,
                 separatorBuilder: (context, index) =>
                     const SizedBox(height: 12),
                 itemBuilder: (context, index) {

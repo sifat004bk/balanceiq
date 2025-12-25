@@ -6,6 +6,7 @@ import 'package:balance_iq/features/home/presentation/cubit/dashboard_state.dart
 import 'package:balance_iq/features/home/presentation/widgets/dashboard_widgets/dashboard_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 import '../cubit/dashboard_cubit.dart';
@@ -211,97 +212,124 @@ class _DashboardViewState extends State<DashboardView> {
           });
         }
       },
-      child: Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        body: BlocBuilder<CurrencyCubit, CurrencyState>(
-          bloc: sl<CurrencyCubit>(),
-          builder: (context, currencyState) {
-            // This BlocBuilder ensures widgets rebuild when currency changes
-            return BlocConsumer<DashboardCubit, DashboardState>(
-              listener: (context, state) {
-                if (state is DashboardLoaded && !_tourCheckDone) {
-                  _tourCheckDone = true;
-                  // Dashboard loaded - check if we need to start the tour
-                  final isOnboarded = state.summary.onboarded;
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    final tourCubit = context.read<ProductTourCubit>();
-                    tourCubit.checkAndStartTourIfNeeded(
-                        isOnboarded: isOnboarded);
+      child: PopScope(
+        canPop: false,
+        onPopInvoked: (didPop) async {
+          if (didPop) return;
+          await showDialog<bool>(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Exit App'),
+              content: const Text('Do you want to exit the app?'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: const Text('No'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(true);
+                    SystemNavigator.pop();
+                  },
+                  child: const Text('Yes'),
+                ),
+              ],
+            ),
+          );
+        },
+        child: Scaffold(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          body: BlocBuilder<CurrencyCubit, CurrencyState>(
+            bloc: sl<CurrencyCubit>(),
+            builder: (context, currencyState) {
+              // This BlocBuilder ensures widgets rebuild when currency changes
+              return BlocConsumer<DashboardCubit, DashboardState>(
+                listener: (context, state) {
+                  if (state is DashboardLoaded && !_tourCheckDone) {
+                    _tourCheckDone = true;
+                    // Dashboard loaded - check if we need to start the tour
+                    final isOnboarded = state.summary.onboarded;
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      final tourCubit = context.read<ProductTourCubit>();
+                      tourCubit.checkAndStartTourIfNeeded(
+                          isOnboarded: isOnboarded);
 
-                    // If tour is already active at dashboard step, show it
-                    Future.delayed(const Duration(milliseconds: 500), () {
-                      if (mounted &&
-                          tourCubit.isAtStep(TourStep.dashboardProfileIcon)) {
-                        _tourController.showProfileIconTour();
-                      }
+                      // If tour is already active at dashboard step, show it
+                      Future.delayed(const Duration(milliseconds: 500), () {
+                        if (mounted &&
+                            tourCubit.isAtStep(TourStep.dashboardProfileIcon)) {
+                          _tourController.showProfileIconTour();
+                        }
+                      });
                     });
-                  });
-                }
-              },
-              builder: (context, state) {
-                if (state is DashboardLoading) {
-                  return const DashboardShimmer();
-                }
+                  }
+                },
+                builder: (context, state) {
+                  if (state is DashboardLoading) {
+                    return const DashboardShimmer();
+                  }
 
-                if (state is DashboardError) {
-                  if (state.message.contains('No dashboard data')) {
-                    return WelcomePage(
-                      userName: _userName,
-                      onGetStarted: _loadDashboard,
+                  if (state is DashboardError) {
+                    if (state.message.contains('No dashboard data')) {
+                      return WelcomePage(
+                        userName: _userName,
+                        onGetStarted: _loadDashboard,
+                      );
+                    }
+
+                    // Check if error is authentication-related
+                    final isAuthError =
+                        state.message.toLowerCase().contains('unauthorized') ||
+                            state.message
+                                .toLowerCase()
+                                .contains('unauthenticated') ||
+                            state.message.toLowerCase().contains('token') ||
+                            state.message.toLowerCase().contains('login');
+
+                    return Error404Page(
+                      errorMessage: state.message,
+                      isAuthError: isAuthError,
+                      onRetry: isAuthError
+                          ? () {
+                              // Navigate to login page
+                              Navigator.pushNamedAndRemoveUntil(
+                                context,
+                                '/login',
+                                (route) => false,
+                              );
+                            }
+                          : _loadDashboard,
                     );
                   }
 
-                  // Check if error is authentication-related
-                  final isAuthError = state.message
-                          .toLowerCase()
-                          .contains('unauthorized') ||
-                      state.message.toLowerCase().contains('unauthenticated') ||
-                      state.message.toLowerCase().contains('token') ||
-                      state.message.toLowerCase().contains('login');
+                  if (state is DashboardLoaded) {
+                    final summary = state.summary;
 
-                  return Error404Page(
-                    errorMessage: state.message,
-                    isAuthError: isAuthError,
-                    onRetry: isAuthError
-                        ? () {
-                            // Navigate to login page
-                            Navigator.pushNamedAndRemoveUntil(
-                              context,
-                              '/login',
-                              (route) => false,
-                            );
-                          }
-                        : _loadDashboard,
-                  );
-                }
+                    return DashboardLayout(
+                      summary: summary,
+                      onRefresh: _refreshDashboard,
+                      onTapProfileIcon: () {
+                        final tourCubit = context.read<ProductTourCubit>();
+                        if (tourCubit.isAtStep(TourStep.dashboardProfileIcon)) {
+                          tourCubit.onProfileIconTapped();
+                        }
+                        Navigator.pushNamed(context, '/profile');
+                      },
+                      onChatReturn: _loadDashboard,
+                      profileUrl: _profileUrl ?? '',
+                      userName: _userName,
+                      displayDate: _getFormattedDateRange(),
+                      onTapDateRange: _selectDateRange,
+                      profileIconKey: _profileIconKey,
+                    );
+                  }
 
-                if (state is DashboardLoaded) {
-                  final summary = state.summary;
-
-                  return DashboardLayout(
-                    summary: summary,
-                    onRefresh: _refreshDashboard,
-                    onTapProfileIcon: () {
-                      final tourCubit = context.read<ProductTourCubit>();
-                      if (tourCubit.isAtStep(TourStep.dashboardProfileIcon)) {
-                        tourCubit.onProfileIconTapped();
-                      }
-                      Navigator.pushNamed(context, '/profile');
-                    },
-                    onChatReturn: _loadDashboard,
-                    profileUrl: _profileUrl ?? '',
-                    userName: _userName,
-                    displayDate: _getFormattedDateRange(),
-                    onTapDateRange: _selectDateRange,
-                    profileIconKey: _profileIconKey,
-                  );
-                }
-
-                return const SizedBox.shrink();
-              },
-            ); // End BlocConsumer
-          },
-        ), // End BlocBuilder for CurrencyCubit
+                  return const SizedBox.shrink();
+                },
+              ); // End BlocConsumer
+            },
+          ), // End BlocBuilder for CurrencyCubit
+        ),
       ),
     );
   }

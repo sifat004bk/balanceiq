@@ -63,17 +63,7 @@ class DetailHeader extends StatelessWidget {
                 .fadeIn(delay: 100.ms, duration: 300.ms)
                 .slideX(begin: 0.1, end: 0, delay: 100.ms, duration: 300.ms),
           ),
-          IconButton(
-            onPressed: onToggleEdit,
-            icon: Icon(
-              isEditMode ? Icons.close : Icons.edit_outlined,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            style: IconButton.styleFrom(
-              backgroundColor:
-                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
-            ),
-          ).animate().fadeIn(delay: 200.ms, duration: 300.ms),
+          // Removed redundant IconButton
         ],
       ),
     );

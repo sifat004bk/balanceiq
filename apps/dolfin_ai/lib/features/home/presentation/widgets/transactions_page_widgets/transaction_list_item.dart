@@ -26,8 +26,8 @@ class TransactionListItem extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    // Calculate staggered delay - cap at 10 items to avoid long waits
-    final staggerDelay = Duration(milliseconds: 50 * (index < 10 ? index : 10));
+    // Calculate staggered delay - cap at 6 items (was 10) to avoid long waits
+    final staggerDelay = Duration(milliseconds: 20 * (index < 6 ? index : 6));
 
     return Material(
       color: Colors.transparent,
@@ -142,8 +142,8 @@ class TransactionListItem extends StatelessWidget {
       ),
     )
         .animate(delay: staggerDelay)
-        .fadeIn(duration: 400.ms, curve: Curves.easeOutQuad)
+        .fadeIn(duration: 300.ms, curve: Curves.easeOutQuad)
         .slideY(
-            begin: 0.1, end: 0, duration: 400.ms, curve: Curves.easeOutQuad);
+            begin: 0.1, end: 0, duration: 300.ms, curve: Curves.easeOutQuad);
   }
 }

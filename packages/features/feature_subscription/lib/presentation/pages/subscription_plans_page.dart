@@ -412,13 +412,9 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                       backgroundColor: isCurrentPlan
                           ? Theme.of(context).disabledColor
                           : isPopular
-                              ? Theme.of(context).colorScheme.primary
-                              : Theme.of(context).colorScheme.onSurface,
-                      foregroundColor: isCurrentPlan
-                          ? Theme.of(context).colorScheme.onSurface
-                          : isPopular
-                              ? Theme.of(context).colorScheme.onPrimary
-                              : Theme.of(context).colorScheme.onPrimary,
+                              ? Theme.of(context).colorScheme.secondary
+                              : Theme.of(context).colorScheme.primary,
+
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -429,7 +425,9 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
                       isCurrentPlan
                           ? GetIt.I<SubscriptionStrings>().currentPlan
                           : GetIt.I<SubscriptionStrings>().subscribeButton,
-                      style: AppTypography.buttonMedium,
+                      style: AppTypography.buttonMedium.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
                     ),
                   ),
                 ),

@@ -44,8 +44,8 @@ class DashboardLayout extends StatelessWidget {
       children: [
         LiquidPullToRefresh(
           onRefresh: onRefresh,
-          color: Theme.of(context).colorScheme.onPrimary,
-          backgroundColor: Theme.of(context).colorScheme.primary,
+          color: Theme.of(context).colorScheme.primary,
+          backgroundColor: Theme.of(context).colorScheme.secondary,
           showChildOpacityTransition: false,
           springAnimationDurationInMilliseconds: 500,
           child: CustomScrollView(

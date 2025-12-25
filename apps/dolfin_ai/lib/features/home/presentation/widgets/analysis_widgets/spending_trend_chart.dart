@@ -27,7 +27,8 @@ class SpendingTrendChart extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final maxAmount = spendingTrend.map((e) => e.amount).reduce((a, b) => a > b ? a : b);
+    final maxAmount =
+        spendingTrend.map((e) => e.amount).reduce((a, b) => a > b ? a : b);
 
     return Container(
       // 1. Outer Container for the Gradient Border
@@ -76,21 +77,27 @@ class SpendingTrendChart extends StatelessWidget {
                     LineChartData(
                       gridData: const FlGridData(show: false),
                       titlesData: FlTitlesData(
-                        leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                        rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                        topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                        leftTitles: const AxisTitles(
+                            sideTitles: SideTitles(showTitles: false)),
+                        rightTitles: const AxisTitles(
+                            sideTitles: SideTitles(showTitles: false)),
+                        topTitles: const AxisTitles(
+                            sideTitles: SideTitles(showTitles: false)),
                         bottomTitles: AxisTitles(
                           sideTitles: SideTitles(
                             showTitles: true,
                             interval: 5,
                             getTitlesWidget: (value, meta) {
-                              if ([1, 5, 10, 15, 20, 25, 30].contains(value.toInt())) {
+                              if ([1, 5, 10, 15, 20, 25, 30]
+                                  .contains(value.toInt())) {
                                 return Padding(
                                   padding: const EdgeInsets.only(top: 8),
                                   child: Text(
                                     value.toInt().toString(),
                                     style: textTheme.bodySmall?.copyWith(
-                                      color: Theme.of(context).hintColor.withValues(alpha: 0.8),
+                                      color: Theme.of(context)
+                                          .hintColor
+                                          .withValues(alpha: 0.8),
                                       fontSize: 12,
                                       fontWeight: FontWeight.w600,
                                     ),
@@ -133,7 +140,8 @@ class SpendingTrendChart extends StatelessWidget {
                       ],
                       lineTouchData: LineTouchData(
                         touchTooltipData: LineTouchTooltipData(
-                          getTooltipColor: (spot) => colorScheme.primaryContainer.withValues(alpha: 0.9),
+                          getTooltipColor: (spot) =>
+                              colorScheme.inverseSurface.withValues(alpha: 0.9),
                           tooltipRoundedRadius: 12,
                           getTooltipItems: (touchedSpots) {
                             final currencyCubit = sl<CurrencyCubit>();
@@ -141,7 +149,7 @@ class SpendingTrendChart extends StatelessWidget {
                               return LineTooltipItem(
                                 '${currencyCubit.formatAmount(spot.y)}',
                                 textTheme.labelLarge!.copyWith(
-                                  color: colorScheme.onPrimaryContainer,
+                                  color: colorScheme.onInverseSurface,
                                   fontWeight: FontWeight.bold,
                                 ),
                               );

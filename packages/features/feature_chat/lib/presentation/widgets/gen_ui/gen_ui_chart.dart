@@ -172,15 +172,20 @@ class GenUIChart extends StatelessWidget {
               bottomTitles: AxisTitles(
                 sideTitles: SideTitles(
                   showTitles: true,
-                  reservedSize: 36,
+                  reservedSize: 42,
                   getTitlesWidget: (value, meta) {
                     if (value.toInt() >= 0 && value.toInt() < labels.length) {
+                      // Logic to skip labels if too congested
+                      if (labels.length > 6 && value.toInt() % 2 != 0) {
+                        return const SizedBox.shrink();
+                      }
+
                       return Padding(
-                        padding: const EdgeInsets.only(top: 12.0),
+                        padding: const EdgeInsets.only(top: 8.0),
                         child: Text(
                           _truncateLabel(labels[value.toInt()]),
                           style: TextStyle(
-                            fontSize: 11,
+                            fontSize: 10,
                             color: Theme.of(context)
                                 .colorScheme
                                 .onSurface
@@ -188,6 +193,8 @@ class GenUIChart extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                           ),
                           textAlign: TextAlign.center,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       );
                     }

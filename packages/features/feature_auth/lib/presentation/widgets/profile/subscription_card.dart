@@ -87,7 +87,7 @@ class SubscriptionCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Plan: ${subscription.plan.displayName}',
+                      'Plan: ${subscription.plan?.displayName ?? 'N/A'}',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,

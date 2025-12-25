@@ -291,7 +291,7 @@ class _ManageSubscriptionView extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            subscription.plan.displayName,
+            subscription.plan?.displayName ?? '',
             style: AppTypography.displayMedium.copyWith(
               color: Theme.of(context).textTheme.displayLarge?.color,
             ),
@@ -301,7 +301,7 @@ class _ManageSubscriptionView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                subscription.plan.formattedPrice,
+                subscription.plan?.formattedPrice ?? '',
                 style: AppTypography.displayLarge.copyWith(
                   color: Theme.of(context).colorScheme.primary,
                 ),
@@ -310,7 +310,7 @@ class _ManageSubscriptionView extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
                 child: Text(
-                  '/ ${subscription.plan.billingCycle.toLowerCase()}',
+                  '/ ${subscription.plan?.billingCycle.toLowerCase() ?? ""}',
                   style: AppTypography.bodyLarge.copyWith(
                     color: Theme.of(context).hintColor,
                   ),

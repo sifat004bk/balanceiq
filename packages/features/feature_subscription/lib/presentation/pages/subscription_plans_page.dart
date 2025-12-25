@@ -107,7 +107,7 @@ class _SubscriptionPlansViewState extends State<_SubscriptionPlansView> {
 
           if (state is PlansLoaded) {
             return _buildPlansContent(context, state.plans,
-                state.subscriptionStatus?.subscription?.plan.name);
+                state.subscriptionStatus?.subscription?.plan?.name);
           }
 
           if (state is SubscriptionError) {

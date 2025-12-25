@@ -87,4 +87,16 @@ abstract class SubscriptionStrings {
   String get subscriptionSuccess;
   String get subscriptionFailed;
   String get cancellationSuccess;
+
+  // Cancellation Reasons
+  String get whyCancelling;
+  String get cancelReasonTooExpensive;
+  String get cancelReasonNotUsing;
+  String get cancelReasonMissingFeatures;
+  String get cancelReasonFoundAlternative;
+  String get cancelReasonTechnicalIssues;
+  String get cancelReasonOther;
+  String get pleaseSpecifyReason;
+  String get reasonRequired;
+  String get submitCancellation;
 }

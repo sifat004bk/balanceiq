@@ -10,6 +10,7 @@ import 'package:dolfin_ui_kit/theme/app_typography.dart';
 import 'package:feature_subscription/domain/entities/subscription.dart';
 import 'package:feature_subscription/presentation/cubit/subscription_cubit.dart';
 import 'package:feature_subscription/presentation/cubit/subscription_state.dart';
+import '../widgets/cancellation_reason_dialog.dart';
 
 class ManageSubscriptionPage extends StatelessWidget {
   const ManageSubscriptionPage({super.key});
@@ -198,30 +199,12 @@ class _ManageSubscriptionView extends StatelessWidget {
     );
   }
 
-  void _showCancelConfirmationDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(GetIt.I<SubscriptionStrings>().cancelSubscription),
-        content: Text(GetIt.I<SubscriptionStrings>().cancelConfirmation),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: Text(GetIt.I<CoreStrings>().common.cancel),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(dialogContext);
-              context.read<SubscriptionCubit>().cancelSubscription();
-            },
-            style: TextButton.styleFrom(
-              foregroundColor: Theme.of(context).colorScheme.error,
-            ),
-            child: Text(GetIt.I<SubscriptionStrings>().cancelButton),
-          ),
-        ],
-      ),
-    );
+  void _showCancelConfirmationDialog(BuildContext context) async {
+    final reason = await CancellationReasonDialog.show(context);
+
+    if (reason != null && context.mounted) {
+      context.read<SubscriptionCubit>().cancelSubscription(reason: reason);
+    }
   }
 
   Widget _buildCancelSubscriptionButton(BuildContext context) {

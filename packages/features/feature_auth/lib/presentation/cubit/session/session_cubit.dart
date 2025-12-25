@@ -158,7 +158,7 @@ class SessionCubit extends Cubit<SessionState> {
     result.fold(
       (failure) {
         if (currentUser != null) {
-          emit(Authenticated(currentUser!));
+          emit(Authenticated(currentUser));
         } else {
           // If we failed to get profile and don't have current user, emit error
           emit(SessionError(failure.message));

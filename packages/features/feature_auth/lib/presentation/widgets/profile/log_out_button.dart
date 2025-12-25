@@ -20,7 +20,7 @@ class LogOutButton extends StatelessWidget {
           // Show glassmorphic confirmation dialog
           showDialog(
             context: context,
-            barrierColor: Colors.black.withOpacity(0.5),
+            barrierColor: Colors.black.withValues(alpha: 0.5),
             builder: (context) => Dialog(
               backgroundColor: Colors.transparent,
               elevation: 0,
@@ -71,20 +71,20 @@ class LogOutButton extends StatelessWidget {
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
             color: isDark
-                ? Colors.white.withOpacity(0.1)
-                : Colors.white.withOpacity(0.7),
+                ? Colors.white.withValues(alpha: 0.1)
+                : Colors.white.withValues(alpha: 0.7),
             borderRadius: BorderRadius.circular(24),
             border: Border.all(
               color: isDark
-                  ? Colors.white.withOpacity(0.2)
-                  : Colors.white.withOpacity(0.3),
+                  ? Colors.white.withValues(alpha: 0.2)
+                  : Colors.white.withValues(alpha: 0.3),
               width: 1.5,
             ),
             boxShadow: [
               BoxShadow(
                 color: isDark
-                    ? Colors.black.withOpacity(0.3)
-                    : Colors.black.withOpacity(0.1),
+                    ? Colors.black.withValues(alpha: 0.3)
+                    : Colors.black.withValues(alpha: 0.1),
                 blurRadius: 20,
                 offset: const Offset(0, 10),
               ),

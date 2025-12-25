@@ -6,7 +6,6 @@ import 'package:feature_chat/constants/chat_strings.dart';
 import 'package:feature_chat/presentation/cubit/chat_cubit.dart';
 import 'package:feature_chat/presentation/cubit/chat_state.dart';
 
-import 'package:dolfin_ui_kit/theme/app_theme.dart';
 import '../simple_chat_input.dart';
 
 class ChatInputContainer extends StatelessWidget {

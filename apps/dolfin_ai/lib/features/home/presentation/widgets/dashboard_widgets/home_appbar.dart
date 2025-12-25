@@ -94,23 +94,24 @@ class HomeAppbar extends StatelessWidget {
             padding: const EdgeInsets.all(3),
             child: profileUrl.isNotEmpty
                 ? CircleAvatar(
-              radius: 16,
-              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-              backgroundImage: NetworkImage(profileUrl),
-              onBackgroundImageError: (_, __) {},
-            )
+                    radius: 16,
+                    backgroundColor:
+                        Theme.of(context).colorScheme.primaryContainer,
+                    backgroundImage: NetworkImage(profileUrl),
+                    onBackgroundImageError: (_, __) {},
+                  )
                 : CircleAvatar(
-              radius: 16,
-              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-              child: Text(
-                _getInitial(),
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.onPrimaryContainer,
-                ),
-              ),
-            ),
+                    radius: 16,
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    child: Text(
+                      _getInitial(),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
           ),
         ),
       ),

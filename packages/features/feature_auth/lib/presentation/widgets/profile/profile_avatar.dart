@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class ProfileAvatar extends StatelessWidget {
@@ -52,23 +53,19 @@ class ProfileAvatar extends StatelessWidget {
             ),
             child: user.photoUrl != null && user.photoUrl!.isNotEmpty
                 ? ClipOval(
-                    child: Image.network(
-                      user.photoUrl!,
+                    child: CachedNetworkImage(
+                      imageUrl: user.photoUrl!,
                       width: 114,
                       height: 114,
                       fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return _buildInitials(context);
-                      },
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return Center(
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: colorScheme.primary,
-                          ),
-                        );
-                      },
+                      placeholder: (context, url) => Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: colorScheme.primary,
+                        ),
+                      ),
+                      errorWidget: (context, url, error) =>
+                          _buildInitials(context),
                     ),
                   )
                 : _buildInitials(context),

@@ -119,13 +119,15 @@ class _TypingIndicatorState extends State<TypingIndicator>
                   alignment: Alignment.center,
                   children: [
                     // Rotating beam arc around the logo
-                    Transform.rotate(
-                      angle: _animationController.value * 2 * 3.14159,
-                      child: CustomPaint(
-                        size: const Size(36, 36),
-                        painter: _BeamPainter(
-                          color: beamColor,
-                          strokeWidth: 2.5,
+                    RepaintBoundary(
+                      child: Transform.rotate(
+                        angle: _animationController.value * 2 * 3.14159,
+                        child: CustomPaint(
+                          size: const Size(36, 36),
+                          painter: _BeamPainter(
+                            color: beamColor,
+                            strokeWidth: 2.5,
+                          ),
                         ),
                       ),
                     ),

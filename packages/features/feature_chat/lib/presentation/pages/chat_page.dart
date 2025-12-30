@@ -22,18 +22,24 @@ import 'package:feature_chat/presentation/widgets/chat_page_widgets/glass_footer
 class ChatPage extends StatelessWidget {
   final String botId;
   final String botName;
+  final String? initialMessage;
 
   const ChatPage({
     super.key,
     required this.botId,
     required this.botName,
+    this.initialMessage,
   });
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<ChatCubit>(
       create: (_) => GetIt.instance<ChatCubit>()..loadChatHistory(botId),
-      child: ChatView(botId: botId, botName: botName),
+      child: ChatView(
+        botId: botId,
+        botName: botName,
+        initialMessage: initialMessage,
+      ),
     );
   }
 }
@@ -41,11 +47,13 @@ class ChatPage extends StatelessWidget {
 class ChatView extends StatefulWidget {
   final String botId;
   final String botName;
+  final String? initialMessage;
 
   const ChatView({
     super.key,
     required this.botId,
     required this.botName,
+    this.initialMessage,
   });
 
   @override
@@ -57,6 +65,7 @@ class _ChatViewState extends State<ChatView> {
   String? _latestMessageId;
   TutorialCoachMark? _tutorialCoachMark;
   bool _chatTourShown = false;
+  bool _initialMessageSent = false;
   final GlobalKey _chatInputKey = GlobalKey();
 
   @override
@@ -212,11 +221,26 @@ class _ChatViewState extends State<ChatView> {
               Positioned.fill(
                 child: BlocConsumer<ChatCubit, ChatState>(
                   listener: (context, state) {
-                    if (state is ChatLoaded && state.messages.isNotEmpty) {
-                      final latestMessage = state.messages.first;
-                      if (_latestMessageId != latestMessage.id) {
-                        _latestMessageId = latestMessage.id;
-                        _scrollToBottom();
+                    if (state is ChatLoaded) {
+                      // Send initial message if provided and not yet sent
+                      if (widget.initialMessage != null &&
+                          !_initialMessageSent &&
+                          !state.isSending) {
+                        _initialMessageSent = true;
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          context.read<ChatCubit>().sendNewMessage(
+                                botId: widget.botId,
+                                content: widget.initialMessage!,
+                              );
+                        });
+                      }
+
+                      if (state.messages.isNotEmpty) {
+                        final latestMessage = state.messages.first;
+                        if (_latestMessageId != latestMessage.id) {
+                          _latestMessageId = latestMessage.id;
+                          _scrollToBottom();
+                        }
                       }
                     }
                   },

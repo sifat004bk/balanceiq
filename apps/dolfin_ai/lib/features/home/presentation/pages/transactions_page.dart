@@ -83,23 +83,32 @@ class _TransactionsViewState extends State<TransactionsView> {
       },
       builder: (context, state) {
         return Scaffold(
-          appBar: AppBar(
-            title: Text(AppStrings.transactions.title),
-            centerTitle: true,
-            elevation: 0,
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            foregroundColor: Theme.of(context).textTheme.titleLarge?.color,
-          ),
-          body: Column(
-            children: [
-              const TransactionsFilterSection(),
-              Divider(height: 1, color: Theme.of(context).dividerColor),
-              Expanded(
-                child: TransactionsList(
-                  onTransactionTap: _showTransactionDetail,
+          body: NestedScrollView(
+            headerSliverBuilder: (context, innerBoxIsScrolled) {
+              return [
+                SliverAppBar(
+                  title: Text(AppStrings.transactions.title),
+                  centerTitle: true,
+                  floating: true,
+                  snap: true,
+                  elevation: 0,
+                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                  foregroundColor: Theme.of(context).textTheme.titleLarge?.color,
+                  bottom: PreferredSize(
+                    preferredSize: const Size.fromHeight(120),
+                    child: Column(
+                      children: [
+                        const TransactionsFilterSection(),
+                        Divider(height: 1, color: Theme.of(context).dividerColor),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-            ],
+              ];
+            },
+            body: TransactionsList(
+              onTransactionTap: _showTransactionDetail,
+            ),
           ),
         );
       },

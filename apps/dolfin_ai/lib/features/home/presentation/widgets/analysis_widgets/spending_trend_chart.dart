@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:dolfin_core/currency/currency_cubit.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../../../../core/di/injection_container.dart';
@@ -20,27 +21,99 @@ class SpendingTrendChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (spendingTrend.isEmpty) return const SizedBox.shrink();
-
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    // Calculate stats
+    // 1. Sort data by date to ensure chronology
+    final sortedTrend = List<SpendingTrendPoint>.from(spendingTrend)
+      ..sort((a, b) => a.date.compareTo(b.date));
+
+    // 2. Determine aggregation strategy
+    if (sortedTrend.isEmpty) return const SizedBox.shrink();
+
+    final startDate = sortedTrend.first.date;
+    final endDate = sortedTrend.last.date;
+    final totalDays = endDate.difference(startDate).inDays;
+
+    List<_ChartPoint> aggregatedPoints = [];
+    String periodLabel = '';
+
+    if (totalDays <= 35) {
+      // Daily: Show all points as is (mapped to dates)
+      // Check if we need to fill gaps? For now, let's just plot available data to avoid 0-value noise if not desired.
+      aggregatedPoints = sortedTrend.map((e) {
+        return _ChartPoint(
+          amount: e.amount,
+          label: '${_getMonthName(e.date.month)} ${e.date.day}',
+          date: e.date,
+        );
+      }).toList();
+      periodLabel = 'Daily';
+    } else if (totalDays <= 120) {
+      // Weekly: Group by ISO week (roughly)
+      // Simple way: Key = "Year-Week"
+      Map<String, _ChartPoint> groups = {};
+      for (var p in sortedTrend) {
+        // Week number calculation (basic)
+        final daysSinceEpoch = p.date.difference(DateTime(1970, 1, 1)).inDays;
+        final weekNum = (daysSinceEpoch / 7).floor();
+        final key = weekNum.toString();
+
+        if (!groups.containsKey(key)) {
+          groups[key] =
+              _ChartPoint(amount: 0, label: '', date: p.date, count: 0);
+        }
+        final current = groups[key]!;
+        // Update label to be start of week
+        final label = '${_getMonthName(p.date.month)} ${p.date.day}';
+
+        // Sum amount
+        groups[key] = _ChartPoint(
+          amount: current.amount + p.amount,
+          label: current.count == 0
+              ? label
+              : current.label, // Keep first date as label
+          date: current.date,
+          count: current.count + 1,
+        );
+      }
+      aggregatedPoints = groups.values.toList();
+      periodLabel = 'Weekly';
+    } else {
+      // Monthly: Group by Year-Month
+      Map<String, _ChartPoint> groups = {};
+      for (var p in sortedTrend) {
+        final key = '${p.date.year}-${p.date.month}';
+        if (!groups.containsKey(key)) {
+          groups[key] = _ChartPoint(
+              amount: 0, label: _getMonthName(p.date.month), date: p.date);
+        }
+        final current = groups[key]!;
+        groups[key] = _ChartPoint(
+          amount: current.amount + p.amount,
+          label: current.label,
+          date: current.date,
+        );
+      }
+      aggregatedPoints = groups.values.toList();
+      periodLabel = 'Monthly';
+    }
+
+    // Double check we have points
+    if (aggregatedPoints.isEmpty) return const SizedBox.shrink();
+
+    // Calculate chart stats based on AGGREGATED data
     double totalAmount = 0;
     double maxAmount = 0;
 
-    for (int i = 0; i < spendingTrend.length; i++) {
-      final amount = spendingTrend[i].amount;
-      totalAmount += amount;
-      if (amount > maxAmount) {
-        maxAmount = amount;
-      }
+    for (var p in aggregatedPoints) {
+      totalAmount += p.amount;
+      if (p.amount > maxAmount) maxAmount = p.amount;
     }
 
-    final averageAmount = totalAmount / spendingTrend.length;
-    final xMax =
-        spendingTrend.isNotEmpty ? spendingTrend.length.toDouble() : 30.0;
+    final averageAmount = totalAmount / aggregatedPoints.length;
+    final xMax = (aggregatedPoints.length - 1).toDouble(); // 0-based index
     final currencyCubit = sl<CurrencyCubit>();
 
     return Container(
@@ -88,7 +161,7 @@ class SpendingTrendChart extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'Daily Avg: ${currencyCubit.formatAmount(averageAmount)}',
+                          '$periodLabel Avg: ${currencyCubit.formatAmount(averageAmount)}',
                           style: textTheme.bodySmall?.copyWith(
                             color: Theme.of(context).hintColor,
                             fontWeight: FontWeight.w500,
@@ -262,6 +335,10 @@ class SpendingTrendChart extends StatelessWidget {
                             tooltipPadding: const EdgeInsets.symmetric(
                                 horizontal: 16, vertical: 8),
                             getTooltipItems: (touchedSpots) {
+                              // Trigger haptic only once per touch update
+                              if (touchedSpots.isNotEmpty) {
+                                HapticFeedback.lightImpact();
+                              }
                               return touchedSpots.map((spot) {
                                 // Find custom tooltip data if available, otherwise just amount
                                 // We might want date here but we only have index.
@@ -300,4 +377,37 @@ class SpendingTrendChart extends StatelessWidget {
       ),
     );
   }
+
+  String _getMonthName(int month) {
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
+    ];
+    if (month < 1 || month > 12) return '';
+    return months[month - 1];
+  }
+}
+
+class _ChartPoint {
+  final double amount;
+  final String label;
+  final DateTime date;
+  final int count;
+
+  _ChartPoint({
+    required this.amount,
+    required this.label,
+    required this.date,
+    this.count = 1,
+  });
 }

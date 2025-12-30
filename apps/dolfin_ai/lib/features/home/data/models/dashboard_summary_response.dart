@@ -37,12 +37,13 @@ class DashboardSummaryModel extends DashboardSummary {
       if (spendingTrendData != null && spendingTrendData is List) {
         for (final dynamic point in spendingTrendData) {
           if (point is Map<String, dynamic>) {
-            // Parse date "2025-12-01" to get day
+            // Parse date "2025-12-01"
             int day = 0;
+            DateTime date = DateTime.now(); // Default fallback
             final dateStr = point['date'];
             if (dateStr != null) {
               try {
-                final date = DateTime.parse(dateStr.toString());
+                date = DateTime.parse(dateStr.toString());
                 day = date.day;
               } catch (_) {}
             }
@@ -50,6 +51,7 @@ class DashboardSummaryModel extends DashboardSummary {
             spendingTrend.add(SpendingTrendPoint(
               day: day,
               amount: _parseDoubleNullable(point['amount']) ?? 0.0,
+              date: date,
             ));
           }
         }
@@ -189,6 +191,7 @@ class DashboardSummaryModel extends DashboardSummary {
           .map((SpendingTrendPoint point) => <String, dynamic>{
                 'day': point.day,
                 'amount': point.amount,
+                'date': point.date.toIso8601String(),
               })
           .toList(),
       'categories': categories,

@@ -33,7 +33,7 @@ void main() {
     isEmailVerified: true,
   );
 
-  const tDashboardSummary = DashboardSummaryModel(
+  final tDashboardSummary = DashboardSummaryModel(
     totalIncome: 50000,
     totalExpense: 10000,
     netBalance: 40000,
@@ -44,8 +44,8 @@ void main() {
     avgIncome: 10000,
     avgExpense: 1000,
     spendingTrend: [
-      SpendingTrendPoint(day: 1, amount: 500),
-      SpendingTrendPoint(day: 2, amount: 300),
+      SpendingTrendPoint(day: 1, amount: 100, date: DateTime(2025, 12, 1)),
+      SpendingTrendPoint(day: 2, amount: 200, date: DateTime(2025, 12, 2)),
     ],
     categories: {'Food': 5000, 'Transport': 3000, 'Shopping': 2000},
     accountsBreakdown: {'Cash': 15000, 'Bank': 25000},
@@ -78,7 +78,7 @@ void main() {
       final result = await repository.getDashboardSummary();
 
       // Assert
-      expect(result, const Right(tDashboardSummary));
+      expect(result, Right(tDashboardSummary));
       verify(() => mockLocalDataSource.getCachedUser()).called(1);
       verify(() => mockRemoteDataSource.getDashboardSummary(
             startDate: null,
@@ -104,7 +104,7 @@ void main() {
       );
 
       // Assert
-      expect(result, const Right(tDashboardSummary));
+      expect(result, Right(tDashboardSummary));
       verify(() => mockRemoteDataSource.getDashboardSummary(
             startDate: startDate,
             endDate: endDate,

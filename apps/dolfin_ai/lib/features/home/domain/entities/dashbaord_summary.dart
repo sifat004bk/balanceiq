@@ -3,14 +3,16 @@ import 'package:equatable/equatable.dart';
 class SpendingTrendPoint extends Equatable {
   final int day;
   final double amount;
+  final DateTime date;
 
   const SpendingTrendPoint({
     required this.day,
     required this.amount,
+    required this.date,
   });
 
   @override
-  List<Object?> get props => [day, amount];
+  List<Object?> get props => [day, amount, date];
 }
 
 class DashboardSummary extends Equatable {

@@ -72,6 +72,9 @@ class GenUITable extends StatelessWidget {
                   dataRowHeight: 48,
                   dividerThickness: 0.5,
                   fixedTopRows: 1, // Sticky header
+                  // Disable scrolling if content fits fully within the max height
+                  scrollController:
+                      requiredHeight <= 400.0 ? ScrollController() : null,
                   headingRowDecoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [

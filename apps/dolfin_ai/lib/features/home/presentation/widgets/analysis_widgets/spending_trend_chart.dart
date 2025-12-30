@@ -37,7 +37,6 @@ class SpendingTrendChart extends StatelessWidget {
     final totalDays = endDate.difference(startDate).inDays;
 
     List<_ChartPoint> aggregatedPoints = [];
-    String periodLabel = '';
 
     if (totalDays <= 35) {
       // Daily: Show all points as is (mapped to dates)
@@ -49,37 +48,50 @@ class SpendingTrendChart extends StatelessWidget {
           date: e.date,
         );
       }).toList();
-      periodLabel = 'Daily';
     } else if (totalDays <= 120) {
       // Weekly: Group by ISO week (roughly)
       // Simple way: Key = "Year-Week"
       Map<String, _ChartPoint> groups = {};
       for (var p in sortedTrend) {
-        // Week number calculation (basic)
+        // W1, W2 format
+        // Reset week number relative to start? Or just global week?
+        // Let's make it relative to the dataset for "W1, W2" feel
+        // Or simpler: "W{index + 1}"
+        // But we need to group by actual week first.
+        // Let's use the group key index for labeling.
+
         final daysSinceEpoch = p.date.difference(DateTime(1970, 1, 1)).inDays;
         final weekNum = (daysSinceEpoch / 7).floor();
         final key = weekNum.toString();
 
         if (!groups.containsKey(key)) {
+          // We will fix labels later based on group index in list
+          // For now, store a placeholder or the week start date
           groups[key] =
               _ChartPoint(amount: 0, label: '', date: p.date, count: 0);
         }
         final current = groups[key]!;
-        // Update label to be start of week
-        final label = '${_getMonthName(p.date.month)} ${p.date.day}';
 
-        // Sum amount
         groups[key] = _ChartPoint(
           amount: current.amount + p.amount,
-          label: current.count == 0
-              ? label
-              : current.label, // Keep first date as label
+          label: '', // Will update
           date: current.date,
           count: current.count + 1,
         );
       }
-      aggregatedPoints = groups.values.toList();
-      periodLabel = 'Weekly';
+
+      // Post-process labels for Weekly to be "W1", "W2"...
+      int wIndex = 1;
+      aggregatedPoints = groups.values.map((p) {
+        // Option 1: W1, W2...
+        // Option 2: Jan W1, Jan W2... (More informative)
+        // User asked for "w1, w2 or jan, feb".
+        // Let's go with "Mmm Wn" if month changes, else "Wn"?
+        // Or strictly "W1, W2" as requested.
+        // Let's use simple tight "W$wIndex"
+        final label = 'W${wIndex++}';
+        return _ChartPoint(amount: p.amount, label: label, date: p.date);
+      }).toList();
     } else {
       // Monthly: Group by Year-Month
       Map<String, _ChartPoint> groups = {};
@@ -92,12 +104,11 @@ class SpendingTrendChart extends StatelessWidget {
         final current = groups[key]!;
         groups[key] = _ChartPoint(
           amount: current.amount + p.amount,
-          label: current.label,
+          label: current.label, // Month name already set
           date: current.date,
         );
       }
       aggregatedPoints = groups.values.toList();
-      periodLabel = 'Monthly';
     }
 
     // Double check we have points
@@ -160,12 +171,42 @@ class SpendingTrendChart extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 4),
-                        Text(
-                          '$periodLabel Avg: ${currencyCubit.formatAmount(averageAmount)}',
-                          style: textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context).hintColor,
-                            fontWeight: FontWeight.w500,
-                          ),
+                        Row(
+                          children: [
+                            // Legend: Spending
+                            Container(
+                              width: 8,
+                              height: 8,
+                              decoration: BoxDecoration(
+                                color: colorScheme.primary,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              'Spending',
+                              style: textTheme.bodySmall?.copyWith(
+                                color: Theme.of(context).hintColor,
+                                fontSize: 10,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            // Legend: Average
+                            Container(
+                              width:
+                                  12, // slightly wider for dash effect representation
+                              height: 2,
+                              color: colorScheme.tertiary,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              'Avg: ${currencyCubit.formatAmount(averageAmount)}',
+                              style: textTheme.bodySmall?.copyWith(
+                                color: Theme.of(context).hintColor,
+                                fontSize: 10,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -191,40 +232,37 @@ class SpendingTrendChart extends StatelessWidget {
                               showTitles: true,
                               interval: 1,
                               getTitlesWidget: (value, meta) {
-                                final intVal = value.toInt();
-                                bool showLabel = false;
-
-                                if (xMax <= 31) {
-                                  if (xMax < 7) {
-                                    showLabel = true;
-                                  } else {
-                                    for (int i = 0; i < 7; i++) {
-                                      final point =
-                                          (1 + (i * (xMax - 1) / 6)).round();
-                                      if (intVal == point) {
-                                        showLabel = true;
-                                        break;
-                                      }
-                                      if (i == 6 && intVal == xMax.toInt())
-                                        showLabel = true;
-                                    }
-                                  }
-                                } else if (xMax <= 90) {
-                                  if ((intVal - 1) % 7 == 0) showLabel = true;
-                                } else {
-                                  if ((intVal - 1) % 30 == 0) showLabel = true;
+                                final index = value.toInt();
+                                if (index < 0 ||
+                                    index >= aggregatedPoints.length) {
+                                  return const SizedBox.shrink();
                                 }
+
+                                // Smart Label Logic:
+                                bool showLabel = false;
+                                int points = aggregatedPoints.length;
+
+                                if (points <= 7) {
+                                  showLabel = true;
+                                } else if (points <= 14) {
+                                  if (index % 2 == 0) showLabel = true;
+                                } else {
+                                  final step = (points / 5).ceil();
+                                  if (index % step == 0) showLabel = true;
+                                }
+                                if (index == 0 || index == points - 1)
+                                  showLabel = true;
 
                                 if (showLabel) {
                                   return Padding(
                                     padding: const EdgeInsets.only(top: 8),
                                     child: Text(
-                                      intVal.toString(),
+                                      aggregatedPoints[index].label,
                                       style: textTheme.bodySmall?.copyWith(
                                         color: Theme.of(context)
                                             .hintColor
                                             .withValues(alpha: 0.8),
-                                        fontSize: 12,
+                                        fontSize: 10,
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
@@ -236,10 +274,11 @@ class SpendingTrendChart extends StatelessWidget {
                           ),
                         ),
                         borderData: FlBorderData(show: false),
-                        minX: 1,
+                        minX: 0,
                         maxX: xMax,
                         minY: 0,
-                        maxY: maxAmount * 1.3, // More breathing room
+                        maxY: maxAmount *
+                            1.05, // Tighter fit as requested // More breathing room
                         extraLinesData: ExtraLinesData(
                           horizontalLines: [
                             HorizontalLine(
@@ -265,8 +304,11 @@ class SpendingTrendChart extends StatelessWidget {
                         ),
                         lineBarsData: [
                           LineChartBarData(
-                            spots: spendingTrend
-                                .map((p) => FlSpot(p.day.toDouble(), p.amount))
+                            spots: aggregatedPoints
+                                .asMap()
+                                .entries
+                                .map((e) =>
+                                    FlSpot(e.key.toDouble(), e.value.amount))
                                 .toList(),
                             isCurved: true,
                             curveSmoothness: 0.35,
@@ -354,7 +396,7 @@ class SpendingTrendChart extends StatelessWidget {
                                   children: [
                                     TextSpan(
                                       text:
-                                          '\nDay ${spot.x.toInt()}', // Can enhance with full date if we pass it down
+                                          '\n${aggregatedPoints[spot.x.toInt()].label}',
                                       style: textTheme.labelSmall?.copyWith(
                                         color: colorScheme.onInverseSurface
                                             .withValues(alpha: 0.7),

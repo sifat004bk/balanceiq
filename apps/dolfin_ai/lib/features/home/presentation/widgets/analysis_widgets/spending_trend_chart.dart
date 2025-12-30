@@ -29,24 +29,52 @@ class SpendingTrendChart extends StatelessWidget {
     final maxAmount =
         spendingTrend.map((e) => e.amount).reduce((a, b) => a > b ? a : b);
 
-    final xMax = spendingTrend.isNotEmpty ? spendingTrend.length.toDouble() : 30.0;
-    
+    final xMax =
+        spendingTrend.isNotEmpty ? spendingTrend.length.toDouble() : 30.0;
+
     // Calculate smart interval based on data length
-    // If <= 30 days, show every 5 days
-    // If > 30 days, calculate interval to show roughly 6-7 labels
     double interval = 5;
     if (xMax > 30) {
       interval = (xMax / 6).ceilToDouble();
     }
 
     return Container(
-      // ... (existing container code)
+      padding: const EdgeInsets.all(1.5),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(24),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            colorScheme.primary.withValues(alpha: 0.4),
+            colorScheme.primary.withValues(alpha: 0.1),
+          ],
+        ),
+      ),
       child: ClipRRect(
-        // ...
+        borderRadius: BorderRadius.circular(22.5),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: colorScheme.surface.withValues(alpha: isDark ? 0.4 : 0.7),
+              borderRadius: BorderRadius.circular(22.5),
+              border: Border.all(
+                color: Colors.white.withValues(alpha: 0.1),
+                width: 0.5,
+              ),
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // ... (Title code remains same)
+                Text(
+                  GetIt.I<DashboardStrings>().spendingTrend,
+                  style: textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.5,
+                  ),
+                ),
                 const SizedBox(height: 16),
                 SizedBox(
                   height: 140,
@@ -67,7 +95,9 @@ class SpendingTrendChart extends StatelessWidget {
                               interval: interval,
                               getTitlesWidget: (value, meta) {
                                 final intVal = value.toInt();
-                                if (intVal == 1 || intVal % interval.toInt() == 0 || intVal == xMax.toInt()) {
+                                if (intVal == 1 ||
+                                    intVal % interval.toInt() == 0 ||
+                                    intVal == xMax.toInt()) {
                                   return Padding(
                                     padding: const EdgeInsets.only(top: 8),
                                     child: Text(
@@ -97,7 +127,6 @@ class SpendingTrendChart extends StatelessWidget {
                             spots: spendingTrend
                                 .map((p) => FlSpot(p.day.toDouble(), p.amount))
                                 .toList(),
-                            // ... (rest of LineChartBarData)
                             isCurved: true,
                             curveSmoothness: 0.4,
                             color: colorScheme.primary,

@@ -155,7 +155,7 @@ class _DashboardViewState extends State<DashboardView> {
       backgroundColor: Colors.transparent,
       builder: (bottomSheetContext) => DateSelectorBottomSheet(
         onDateSelected: (start, end) {
-          Navigator.pop(bottomSheetContext);
+          // Navigator.pop handled by DateSelectorBottomSheet for presets
           setState(() {
             _startDate = start;
             _endDate = end;

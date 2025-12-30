@@ -20,7 +20,7 @@ class DateSelectorBottomSheet extends StatefulWidget {
 }
 
 class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
-  String? _selectedPreset;
+  String? _selectedPreset = 'last_30_days';
 
   @override
   Widget build(BuildContext context) {

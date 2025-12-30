@@ -164,6 +164,12 @@
       "languageVersion": "2.18"
     },
     {
+      "name": "dio_smart_retry",
+      "rootUri": "file:///Users/sifatullahchowdhury/.pub-cache/hosted/pub.dev/dio_smart_retry-7.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
       "name": "dio_web_adapter",
       "rootUri": "file:///Users/sifatullahchowdhury/.pub-cache/hosted/pub.dev/dio_web_adapter-2.1.1",
       "packageUri": "lib/",
@@ -291,7 +297,7 @@
     },
     {
       "name": "flutter",
-      "rootUri": "file:///Users/sifatullahchowdhury/fvm/versions/3.32.6/packages/flutter",
+      "rootUri": "file:///Users/sifatullahchowdhury/fvm/versions/3.32.0/packages/flutter",
       "packageUri": "lib/",
       "languageVersion": "3.7"
     },
@@ -387,13 +393,13 @@
     },
     {
       "name": "flutter_test",
-      "rootUri": "file:///Users/sifatullahchowdhury/fvm/versions/3.32.6/packages/flutter_test",
+      "rootUri": "file:///Users/sifatullahchowdhury/fvm/versions/3.32.0/packages/flutter_test",
       "packageUri": "lib/",
       "languageVersion": "3.7"
     },
     {
       "name": "flutter_web_plugins",
-      "rootUri": "file:///Users/sifatullahchowdhury/fvm/versions/3.32.6/packages/flutter_web_plugins",
+      "rootUri": "file:///Users/sifatullahchowdhury/fvm/versions/3.32.0/packages/flutter_web_plugins",
       "packageUri": "lib/",
       "languageVersion": "3.7"
     },
@@ -915,7 +921,7 @@
     },
     {
       "name": "sky_engine",
-      "rootUri": "file:///Users/sifatullahchowdhury/fvm/versions/3.32.6/bin/cache/pkg/sky_engine",
+      "rootUri": "file:///Users/sifatullahchowdhury/fvm/versions/3.32.0/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
       "languageVersion": "3.7"
     },
@@ -1185,8 +1191,8 @@
     }
   ],
   "generator": "pub",
-  "generatorVersion": "3.8.1",
-  "flutterRoot": "file:///Users/sifatullahchowdhury/fvm/versions/3.32.6",
-  "flutterVersion": "3.32.6",
+  "generatorVersion": "3.8.0",
+  "flutterRoot": "file:///Users/sifatullahchowdhury/fvm/versions/3.32.0",
+  "flutterVersion": "3.32.0",
   "pubCache": "file:///Users/sifatullahchowdhury/.pub-cache"
 }

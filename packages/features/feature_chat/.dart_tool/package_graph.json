@@ -401,6 +401,7 @@
         "currency_picker",
         "dartz",
         "dio",
+        "dio_smart_retry",
         "dolfin_core",
         "dolfin_ui_kit",
         "equatable",
@@ -1153,6 +1154,15 @@
         "flutter",
         "freezed_annotation",
         "json_annotation"
+      ]
+    },
+    {
+      "name": "dio_smart_retry",
+      "version": "7.0.1",
+      "dependencies": [
+        "dio",
+        "http_parser",
+        "path"
       ]
     },
     {

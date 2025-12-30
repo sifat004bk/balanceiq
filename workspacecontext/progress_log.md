@@ -15,7 +15,11 @@ This document tracks progress on the monorepo package extraction and architectur
 - [x] Applied `RepaintBoundary` to `TypingIndicator`, `TransactionListItem`, and `SpendingTrendChart`.
 - [x] Verified with static analysis.
 
-**Commit**: `63b5f21` feat: Performance optimization - CachedNetworkImage & RepaintBoundary
+- **Commit:** `c2f54b7` - fix(home): removed redundant pop causing black screen in date selection
+- **Commit:** `69ccd4c` - fix(transactions): prevent state emission on closed cubit in loadTransactions
+- **Commit:** `481610c` - feat(observability): implemented global error handling and retry policies
+- **Commit:** `0eb29a3` - fix(transactions): resolved date picker context invalidation issue
+- **Commit:** `63b5f21` - chore(perf): optimized rendering with RepaintBoundary and CachedNetworkImage & RepaintBoundary
 
 ## 2025-12-22 Session
 ...

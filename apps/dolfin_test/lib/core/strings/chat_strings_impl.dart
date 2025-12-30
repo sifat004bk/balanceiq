@@ -4,7 +4,7 @@ class ChatStringsImpl implements ChatStrings {
   const ChatStringsImpl();
 
   @override
-  String get inputPlaceholder => 'Ask about your finances...';
+  String get inputPlaceholder => 'Ask dolfin AI';
   @override
   String get inputPlaceholderGeneral => 'What do you want to write?';
   @override

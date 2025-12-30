@@ -11,6 +11,7 @@
         "currency_picker",
         "dartz",
         "dio",
+        "dio_smart_retry",
         "dolfin_core",
         "dolfin_ui_kit",
         "equatable",
@@ -135,6 +136,15 @@
         "test_api",
         "vector_math",
         "vm_service"
+      ]
+    },
+    {
+      "name": "dio_smart_retry",
+      "version": "7.0.1",
+      "dependencies": [
+        "dio",
+        "http_parser",
+        "path"
       ]
     },
     {
@@ -653,6 +663,16 @@
       ]
     },
     {
+      "name": "http_parser",
+      "version": "4.1.2",
+      "dependencies": [
+        "collection",
+        "source_span",
+        "string_scanner",
+        "typed_data"
+      ]
+    },
+    {
       "name": "octo_image",
       "version": "2.1.0",
       "dependencies": [
@@ -816,16 +836,6 @@
       "name": "mime",
       "version": "2.0.0",
       "dependencies": []
-    },
-    {
-      "name": "http_parser",
-      "version": "4.1.2",
-      "dependencies": [
-        "collection",
-        "source_span",
-        "string_scanner",
-        "typed_data"
-      ]
     },
     {
       "name": "webview_flutter_wkwebview",

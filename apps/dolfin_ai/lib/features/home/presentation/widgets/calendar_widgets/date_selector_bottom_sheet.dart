@@ -7,11 +7,13 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 class DateSelectorBottomSheet extends StatefulWidget {
   final Function(DateTime start, DateTime end, String? label) onDateSelected;
   final VoidCallback? onCustomRangePressed;
+  final String? currentLabel;
 
   const DateSelectorBottomSheet({
     super.key,
     required this.onDateSelected,
     this.onCustomRangePressed,
+    this.currentLabel,
   });
 
   @override
@@ -20,7 +22,35 @@ class DateSelectorBottomSheet extends StatefulWidget {
 }
 
 class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
-  String? _selectedPreset = 'last_30_days';
+  String? _selectedPreset;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeSelection();
+  }
+
+  void _initializeSelection() {
+    switch (widget.currentLabel) {
+      case 'Last 30 Days':
+        _selectedPreset = 'last_30_days';
+        break;
+      case 'This Month':
+        _selectedPreset = 'this_month';
+        break;
+      case 'Last Month':
+        _selectedPreset = 'last_month';
+        break;
+      case 'Last 3 Months':
+        _selectedPreset = 'last_3_months';
+        break;
+      case 'This Year':
+        _selectedPreset = 'this_year';
+        break;
+      default:
+        _selectedPreset = null;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

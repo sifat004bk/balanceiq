@@ -154,6 +154,7 @@ class _DashboardViewState extends State<DashboardView> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (bottomSheetContext) => DateSelectorBottomSheet(
+        currentLabel: _selectedDateLabel,
         onDateSelected: (start, end, label) {
           // Navigator.pop handled by DateSelectorBottomSheet for presets
           setState(() {

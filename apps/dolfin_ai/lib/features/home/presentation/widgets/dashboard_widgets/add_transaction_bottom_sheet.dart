@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:feature_chat/domain/entities/message_usage.dart';
 import 'package:feature_chat/domain/usecases/get_message_usage.dart';
 import 'package:feature_chat/domain/usecases/send_message.dart';
@@ -237,80 +238,88 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
   Widget build(BuildContext context) {
     final bottomPadding = MediaQuery.of(context).viewInsets.bottom;
 
-    return Container(
-      padding: EdgeInsets.only(
-        top: 12,
-        bottom: 24 + bottomPadding,
-        left: 20,
-        right: 20,
-      ),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
-        border: Border.all(
-          color: Theme.of(context).dividerColor.withValues(alpha: 0.1),
-          width: 1,
-        ),
-      ),
-      child: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Handle bar
-              Center(
-                child: Container(
-                  margin: const EdgeInsets.only(bottom: 20),
-                  width: 48,
-                  height: 5,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: [
-                      Theme.of(context).colorScheme.primary,
-                      Theme.of(context).colorScheme.secondary,
-                    ]),
-                    borderRadius: BorderRadius.circular(3),
-                  ),
-                ),
-              ),
-
-              // Title
-              Text(
-                'Add Transaction',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: -0.5,
+    return ClipRRect(
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+        child: Container(
+          padding: EdgeInsets.only(
+            top: 12,
+            bottom: 24 + bottomPadding,
+            left: 20,
+            right: 20,
+          ),
+          decoration: BoxDecoration(
+            color: Theme.of(context)
+                .scaffoldBackgroundColor
+                .withValues(alpha: 0.8),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+            border: Border.all(
+              color: Colors.white.withValues(alpha: 0.1),
+              width: 1,
+            ),
+          ),
+          child: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Handle bar
+                  Center(
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 20),
+                      width: 48,
+                      height: 5,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(colors: [
+                          Theme.of(context).colorScheme.primary,
+                          Theme.of(context).colorScheme.secondary,
+                        ]),
+                        borderRadius: BorderRadius.circular(3),
+                      ),
                     ),
-                textAlign: TextAlign.center,
+                  ),
+
+                  // Title
+                  Text(
+                    'Add Transaction',
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: -0.5,
+                        ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Transaction Type Toggle
+                  _buildTransactionTypeToggle(context),
+                  const SizedBox(height: 20),
+
+                  // Amount Field
+                  _buildAmountField(context),
+                  const SizedBox(height: 16),
+
+                  // Category Dropdown
+                  _buildCategoryDropdown(context),
+                  const SizedBox(height: 16),
+
+                  // Custom Category Field (if selected)
+                  if (_isCustomCategory) ...[
+                    _buildCustomCategoryField(context),
+                    const SizedBox(height: 16),
+                  ],
+
+                  // Date Picker
+                  _buildDatePicker(context),
+                  const SizedBox(height: 24),
+
+                  // Submit Button
+                  _buildSubmitButton(context),
+                ],
               ),
-              const SizedBox(height: 24),
-
-              // Transaction Type Toggle
-              _buildTransactionTypeToggle(context),
-              const SizedBox(height: 20),
-
-              // Amount Field
-              _buildAmountField(context),
-              const SizedBox(height: 16),
-
-              // Category Dropdown
-              _buildCategoryDropdown(context),
-              const SizedBox(height: 16),
-
-              // Custom Category Field (if selected)
-              if (_isCustomCategory) ...[
-                _buildCustomCategoryField(context),
-                const SizedBox(height: 16),
-              ],
-
-              // Date Picker
-              _buildDatePicker(context),
-              const SizedBox(height: 24),
-
-              // Submit Button
-              _buildSubmitButton(context),
-            ],
+            ),
           ),
         ),
       ),
@@ -361,7 +370,8 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
-          color: isSelected ? color.withValues(alpha: 0.15) : Colors.transparent,
+          color:
+              isSelected ? color.withValues(alpha: 0.15) : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
           border: isSelected
               ? Border.all(color: color.withValues(alpha: 0.3), width: 1)
@@ -543,8 +553,10 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
             ? null
             : [
                 BoxShadow(
-                  color:
-                      Theme.of(context).colorScheme.primary.withValues(alpha: 0.4),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .primary
+                      .withValues(alpha: 0.4),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),
@@ -587,13 +599,19 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
               Icon(
                 LucideIcons.circleAlert,
                 size: 18,
-                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                color: Theme.of(context)
+                    .colorScheme
+                    .onSurface
+                    .withValues(alpha: 0.6),
               ),
               const SizedBox(width: 8),
               Text(
                 'Limit Reached',
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withValues(alpha: 0.6),
                       fontWeight: FontWeight.w700,
                     ),
               ),
@@ -603,7 +621,10 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
           Text(
             'Resets on ${_messageUsage?.formattedResetDateTime ?? ''}',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.5),
                 ),
           ),
         ],

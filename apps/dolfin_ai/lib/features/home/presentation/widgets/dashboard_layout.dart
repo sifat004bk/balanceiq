@@ -4,6 +4,7 @@ import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
 import '../../domain/entities/dashbaord_summary.dart';
 import 'analysis_widgets/accounts_breakdown_widget.dart';
+import 'analysis_widgets/analysis_carousel.dart';
 import 'analysis_widgets/category_breakdown_widget.dart';
 import 'analysis_widgets/spending_trend_chart.dart';
 import 'dashboard_widgets/balance_card_widget.dart';
@@ -85,13 +86,13 @@ class DashboardLayout extends StatelessWidget {
                         ),
                     const SizedBox(height: 16),
 
-                    // Spending Trend Chart - Fade in with scale
-                    if (summary.spendingTrend.isNotEmpty) ...[
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: SpendingTrendChart(
-                          spendingTrend: summary.spendingTrend,
-                        ),
+                    // Analysis Carousel - Fade in with scale
+                    if (summary.spendingTrend.isNotEmpty ||
+                        summary.categories.isNotEmpty ||
+                        (summary.totalIncome > 0 ||
+                            summary.totalExpense > 0)) ...[
+                      AnalysisCarousel(
+                        summary: summary,
                       )
                           .animate()
                           .fadeIn(

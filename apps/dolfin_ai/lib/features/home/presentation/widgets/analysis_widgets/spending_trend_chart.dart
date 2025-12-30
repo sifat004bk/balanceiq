@@ -177,7 +177,7 @@ class SpendingTrendChart extends StatelessWidget {
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
           child: Container(
-            padding: const EdgeInsets.all(16), // Reduced from 24
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
             decoration: BoxDecoration(
               color: colorScheme.surface.withValues(alpha: isDark ? 0.4 : 0.7),
               borderRadius: BorderRadius.circular(22.5),
@@ -245,188 +245,180 @@ class SpendingTrendChart extends StatelessWidget {
                     // Optional: Add trend indicator here later
                   ],
                 ),
-                const SizedBox(height: 16), // Reduced from 24
-                SizedBox(
-                  height: 128, // Reduced from 160 (-20%)
-                  child: RepaintBoundary(
-                    child: LineChart(
-                      LineChartData(
-                        gridData: const FlGridData(show: false),
-                        titlesData: FlTitlesData(
-                          leftTitles: const AxisTitles(
-                              sideTitles: SideTitles(showTitles: false)),
-                          rightTitles: const AxisTitles(
-                              sideTitles: SideTitles(showTitles: false)),
-                          topTitles: const AxisTitles(
-                              sideTitles: SideTitles(showTitles: false)),
-                          bottomTitles: AxisTitles(
-                            sideTitles: SideTitles(
-                              showTitles: true,
-                              interval: 1,
-                              getTitlesWidget: (value, meta) {
-                                final index = value.toInt();
-                                if (index < 0 ||
-                                    index >= aggregatedPoints.length) {
-                                  return const SizedBox.shrink();
-                                }
-
-                                if (visibleIndices.contains(index)) {
-                                  return Padding(
-                                    padding: const EdgeInsets.only(top: 8),
-                                    child: Text(
-                                      aggregatedPoints[index].label,
-                                      style: textTheme.bodySmall?.copyWith(
-                                        color: Theme.of(context)
-                                            .hintColor
-                                            .withValues(alpha: 0.8),
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  );
-                                }
+                const SizedBox(height: 12),
+                Expanded(
+                  child: LineChart(
+                    LineChartData(
+                      gridData: const FlGridData(show: false),
+                      titlesData: FlTitlesData(
+                        show: true,
+                        rightTitles: const AxisTitles(
+                          sideTitles: SideTitles(showTitles: false),
+                        ),
+                        topTitles: const AxisTitles(
+                          sideTitles: SideTitles(showTitles: false),
+                        ),
+                        leftTitles: const AxisTitles(
+                          sideTitles: SideTitles(showTitles: false),
+                        ),
+                        bottomTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                            showTitles: true,
+                            interval: 1,
+                            getTitlesWidget: (value, meta) {
+                              final index = value.toInt();
+                              if (index < 0 ||
+                                  index >= aggregatedPoints.length) {
                                 return const SizedBox.shrink();
-                              },
-                            ),
-                          ),
-                        ),
-                        borderData: FlBorderData(show: false),
-                        minX: 0,
-                        maxX: xMax,
-                        minY: 0,
-                        maxY: maxAmount *
-                            1.05, // Tighter fit as requested // More breathing room
-                        extraLinesData: ExtraLinesData(
-                          horizontalLines: [
-                            HorizontalLine(
-                              y: averageAmount,
-                              color:
-                                  colorScheme.tertiary.withValues(alpha: 0.5),
-                              strokeWidth: 1.5,
-                              dashArray: [5, 5],
-                              label: HorizontalLineLabel(
-                                show: true,
-                                alignment: Alignment.topRight,
-                                padding:
-                                    const EdgeInsets.only(right: 5, bottom: 2),
-                                style: textTheme.labelSmall?.copyWith(
-                                  color: colorScheme.tertiary,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 10,
-                                ),
-                                labelResolver: (line) => 'Avg',
-                              ),
-                            ),
-                          ],
-                        ),
-                        lineBarsData: [
-                          LineChartBarData(
-                            spots: aggregatedPoints
-                                .asMap()
-                                .entries
-                                .map((e) =>
-                                    FlSpot(e.key.toDouble(), e.value.amount))
-                                .toList(),
-                            isCurved: true,
-                            curveSmoothness: 0.35,
-                            color: colorScheme.primary,
-                            barWidth: 3,
-                            isStrokeCapRound: true,
-                            dotData: FlDotData(
-                              show: true,
-                              checkToShowDot: (spot, barData) {
-                                // Show dot for max value
-                                return spot.y == maxAmount;
-                              },
-                              getDotPainter: (spot, percent, barData, index) {
-                                return FlDotCirclePainter(
-                                  radius: 4,
-                                  color: colorScheme.surface,
-                                  strokeWidth: 2,
-                                  strokeColor: colorScheme.primary,
-                                );
-                              },
-                            ),
-                            belowBarData: BarAreaData(
-                              show: true,
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [
-                                  colorScheme.primary.withValues(alpha: 0.3),
-                                  colorScheme.primary.withValues(alpha: 0.05),
-                                  Colors.transparent,
-                                ],
-                                stops: const [0, 0.7, 1],
-                              ),
-                            ),
-                          ),
-                        ],
-                        lineTouchData: LineTouchData(
-                          getTouchedSpotIndicator: (barData, spotIndexes) {
-                            return spotIndexes.map((spotIndex) {
-                              return TouchedSpotIndicatorData(
-                                FlLine(
-                                  color: colorScheme.primary
-                                      .withValues(alpha: 0.5),
-                                  strokeWidth: 2,
-                                  dashArray: [5, 5],
-                                ),
-                                FlDotData(
-                                  getDotPainter:
-                                      (spot, percent, barData, index) {
-                                    return FlDotCirclePainter(
-                                      radius: 6,
-                                      color: colorScheme.surface,
-                                      strokeWidth: 3,
-                                      strokeColor: colorScheme.secondary,
-                                    );
-                                  },
-                                ),
-                              );
-                            }).toList();
-                          },
-                          touchTooltipData: LineTouchTooltipData(
-                            getTooltipColor: (spot) => colorScheme
-                                .inverseSurface
-                                .withValues(alpha: 0.9),
-                            tooltipRoundedRadius: 16,
-                            tooltipPadding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 8),
-                            getTooltipItems: (touchedSpots) {
-                              // Trigger haptic only once per touch update
-                              if (touchedSpots.isNotEmpty) {
-                                HapticFeedback.lightImpact();
                               }
-                              return touchedSpots.map((spot) {
-                                // Find custom tooltip data if available, otherwise just amount
-                                // We might want date here but we only have index.
-                                // Assuming 'day' matches list index + 1 or similar if sequential?
-                                // Actually spendingTrend has 'day' field which might not be index.
-                                // But spot.x is 'day'.
-                                return LineTooltipItem(
-                                  currencyCubit.formatAmount(spot.y),
-                                  textTheme.labelLarge!.copyWith(
-                                    color: colorScheme.onInverseSurface,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  children: [
-                                    TextSpan(
-                                      text:
-                                          '\n${aggregatedPoints[spot.x.toInt()].label}',
-                                      style: textTheme.labelSmall?.copyWith(
-                                        color: colorScheme.onInverseSurface
-                                            .withValues(alpha: 0.7),
-                                      ),
+
+                              if (visibleIndices.contains(index)) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(top: 8),
+                                  child: Text(
+                                    aggregatedPoints[index].label,
+                                    style: textTheme.bodySmall?.copyWith(
+                                      color: Theme.of(context)
+                                          .hintColor
+                                          .withValues(alpha: 0.8),
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w600,
                                     ),
-                                  ],
+                                  ),
                                 );
-                              }).toList();
+                              }
+                              return const SizedBox.shrink();
                             },
                           ),
                         ),
                       ),
+                      borderData: FlBorderData(show: false),
+                      minX: 0,
+                      maxX: xMax,
+                      minY: 0,
+                      maxY: maxAmount * 1.05,
+                      extraLinesData: ExtraLinesData(
+                        horizontalLines: [
+                          HorizontalLine(
+                            y: averageAmount,
+                            color: colorScheme.tertiary.withValues(alpha: 0.5),
+                            strokeWidth: 1.5,
+                            dashArray: [5, 5],
+                            label: HorizontalLineLabel(
+                              show: true,
+                              alignment: Alignment.topRight,
+                              padding:
+                                  const EdgeInsets.only(right: 5, bottom: 2),
+                              style: textTheme.labelSmall?.copyWith(
+                                color: colorScheme.tertiary,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 10,
+                              ),
+                              labelResolver: (line) => 'Avg',
+                            ),
+                          ),
+                        ],
+                      ),
+                      lineBarsData: [
+                        LineChartBarData(
+                          spots: aggregatedPoints
+                              .asMap()
+                              .entries
+                              .map((e) =>
+                                  FlSpot(e.key.toDouble(), e.value.amount))
+                              .toList(),
+                          isCurved: true,
+                          curveSmoothness: 0.35,
+                          color: colorScheme.primary,
+                          barWidth: 3,
+                          isStrokeCapRound: true,
+                          dotData: FlDotData(
+                            show: true,
+                            checkToShowDot: (spot, barData) {
+                              return spot.y == maxAmount;
+                            },
+                            getDotPainter: (spot, percent, barData, index) {
+                              return FlDotCirclePainter(
+                                radius: 4,
+                                color: colorScheme.surface,
+                                strokeWidth: 2,
+                                strokeColor: colorScheme.primary,
+                              );
+                            },
+                          ),
+                          belowBarData: BarAreaData(
+                            show: true,
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                colorScheme.primary.withValues(alpha: 0.3),
+                                colorScheme.primary.withValues(alpha: 0.05),
+                                Colors.transparent,
+                              ],
+                              stops: const [0, 0.7, 1],
+                            ),
+                          ),
+                        ),
+                      ],
+                      lineTouchData: LineTouchData(
+                        touchTooltipData: LineTouchTooltipData(
+                          getTooltipColor: (spot) =>
+                              colorScheme.inverseSurface.withValues(alpha: 0.9),
+                          tooltipRoundedRadius: 16,
+                          tooltipPadding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
+                          getTooltipItems: (touchedSpots) {
+                            if (touchedSpots.isNotEmpty) {
+                              HapticFeedback.lightImpact();
+                            }
+                            return touchedSpots.map((spot) {
+                              return LineTooltipItem(
+                                currencyCubit.formatAmount(spot.y),
+                                textTheme.labelLarge!.copyWith(
+                                  color: colorScheme.onInverseSurface,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                children: [
+                                  TextSpan(
+                                    text:
+                                        '\n${aggregatedPoints[spot.x.toInt()].label}',
+                                    style: textTheme.labelSmall?.copyWith(
+                                      color: colorScheme.onInverseSurface
+                                          .withValues(alpha: 0.7),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }).toList();
+                          },
+                        ),
+                        getTouchedSpotIndicator: (barData, spotIndexes) {
+                          return spotIndexes.map((spotIndex) {
+                            return TouchedSpotIndicatorData(
+                              FlLine(
+                                color:
+                                    colorScheme.primary.withValues(alpha: 0.5),
+                                strokeWidth: 2,
+                                dashArray: [5, 5],
+                              ),
+                              FlDotData(
+                                getDotPainter: (spot, percent, barData, index) {
+                                  return FlDotCirclePainter(
+                                    radius: 6,
+                                    color: colorScheme.surface,
+                                    strokeWidth: 3,
+                                    strokeColor: colorScheme.secondary,
+                                  );
+                                },
+                              ),
+                            );
+                          }).toList();
+                        },
+                      ),
                     ),
+                    duration: const Duration(milliseconds: 250),
+                    curve: Curves.easeInOutCubic,
                   ),
                 ),
               ],

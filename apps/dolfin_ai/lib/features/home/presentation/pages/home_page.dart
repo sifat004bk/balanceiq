@@ -61,11 +61,10 @@ class _DashboardViewState extends State<DashboardView> {
 
     _loadUser();
 
-    // Initialize with current month's date range
+    // Initialize with last 30 days
     final now = DateTime.now();
-    _startDate = DateTime(now.year, now.month, 1);
-    _endDate =
-        DateTime(now.year, now.month + 1, 0); // Last day of current month
+    _startDate = now.subtract(const Duration(days: 30));
+    _endDate = now;
 
     _loadDashboard();
   }

@@ -1,10 +1,9 @@
-import 'dart:ui';
-
 import 'package:get_it/get_it.dart';
 import 'package:feature_chat/constants/chat_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:feature_chat/presentation/pages/chat_page.dart';
 import 'package:balance_iq/core/icons/app_icons.dart';
+import 'dart:ui';
 import 'package:dolfin_ui_kit/dolfin_ui_kit.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -69,13 +68,22 @@ class FloatingChatButton extends StatelessWidget {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                      Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
-                      Theme.of(context).colorScheme.secondary.withValues(alpha: 0.3),
+                      Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withValues(alpha: 0.5),
+                      Theme.of(context)
+                          .colorScheme
+                          .secondary
+                          .withValues(alpha: 0.3),
                     ],
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withValues(alpha: 0.1),
                       blurRadius: 20,
                       offset: const Offset(0, 10),
                     ),
@@ -86,12 +94,15 @@ class FloatingChatButton extends StatelessWidget {
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 16),
                       decoration: BoxDecoration(
-                        color: (isDark ? Colors.black : Colors.white).withValues(alpha: 0.2),
+                        color: (isDark ? Colors.black : Colors.white)
+                            .withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(28.5),
                         border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.1), // Subtle inner shine
+                          color: Colors.white
+                              .withValues(alpha: 0.1), // Subtle inner shine
                           width: 0.5,
                         ),
                       ),
@@ -121,11 +132,16 @@ class FloatingChatButton extends StatelessWidget {
                           Expanded(
                             child: Text(
                               GetIt.I<ChatStrings>().inputPlaceholder,
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: Theme.of(context).hintColor.withValues(alpha: 0.9),
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                              ),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                    color: Theme.of(context)
+                                        .hintColor
+                                        .withValues(alpha: 0.9),
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                             ),
                           ),
 
@@ -140,9 +156,9 @@ class FloatingChatButton extends StatelessWidget {
                               shape: BoxShape.circle,
                             ),
                             child: GetIt.I<AppIcons>().navigation.arrowUp(
-                              size: 22,
-                              color: Colors.white,
-                            ),
+                                  size: 22,
+                                  color: Colors.white,
+                                ),
                           ),
                         ],
                       ),
@@ -166,13 +182,22 @@ class FloatingChatButton extends StatelessWidget {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
-                    Theme.of(context).colorScheme.secondary.withValues(alpha: 0.3),
+                    Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withValues(alpha: 0.5),
+                    Theme.of(context)
+                        .colorScheme
+                        .secondary
+                        .withValues(alpha: 0.3),
                   ],
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withValues(alpha: 0.2),
                     blurRadius: 12,
                     offset: const Offset(0, 4),
                   ),

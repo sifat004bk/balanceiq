@@ -137,6 +137,18 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
               ),
               _buildPresetChip(
                 context,
+                label: 'Last 30 Days',
+                presetKey: 'last_30_days',
+                onTap: () {
+                  final now = DateTime.now();
+                  final start = now.subtract(const Duration(days: 30));
+                  final end = now;
+                  widget.onDateSelected(start, end);
+                  Navigator.pop(context);
+                },
+              ),
+              _buildPresetChip(
+                context,
                 label: 'This Year',
                 presetKey: 'this_year',
                 onTap: () {

@@ -32,12 +32,6 @@ class SpendingTrendChart extends StatelessWidget {
     final xMax =
         spendingTrend.isNotEmpty ? spendingTrend.length.toDouble() : 30.0;
 
-    // Calculate smart interval based on data length
-    double interval = 5;
-    if (xMax > 30) {
-      interval = (xMax / 6).ceilToDouble();
-    }
-
     return Container(
       padding: const EdgeInsets.all(1.5),
       decoration: BoxDecoration(
@@ -92,12 +86,48 @@ class SpendingTrendChart extends StatelessWidget {
                           bottomTitles: AxisTitles(
                             sideTitles: SideTitles(
                               showTitles: true,
-                              interval: interval,
+                              interval:
+                                  1, // Must be 1 to allow checking every value in getTitlesWidget
                               getTitlesWidget: (value, meta) {
                                 final intVal = value.toInt();
-                                if (intVal == 1 ||
-                                    intVal % interval.toInt() == 0 ||
-                                    intVal == xMax.toInt()) {
+
+                                // Logic to determine if we show this label
+                                bool showLabel = false;
+
+                                if (xMax <= 31) {
+                                  // 7 points logic
+                                  // If range is small, show all
+                                  if (xMax < 7) {
+                                    showLabel = true;
+                                  } else {
+                                    // Calculate 7 points
+                                    // We want indices 0..6 mapped to 1..xMax
+                                    // Using interpolation to pick best integers
+                                    for (int i = 0; i < 7; i++) {
+                                      final point =
+                                          (1 + (i * (xMax - 1) / 6)).round();
+                                      if (intVal == point) {
+                                        showLabel = true;
+                                        break;
+                                      }
+                                      // Ensure last point is always shown if rounding misses it for some reason (unlikely with this math)
+                                      if (i == 6 && intVal == xMax.toInt())
+                                        showLabel = true;
+                                    }
+                                  }
+                                } else if (xMax <= 90) {
+                                  // Weekly logic: 1, 8, 15, 22...
+                                  if ((intVal - 1) % 7 == 0) {
+                                    showLabel = true;
+                                  }
+                                } else {
+                                  // Monthly logic: 1, 31, 61... (approx 30 days)
+                                  if ((intVal - 1) % 30 == 0) {
+                                    showLabel = true;
+                                  }
+                                }
+
+                                if (showLabel) {
                                   return Padding(
                                     padding: const EdgeInsets.only(top: 8),
                                     child: Text(

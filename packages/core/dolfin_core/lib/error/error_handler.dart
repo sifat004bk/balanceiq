@@ -14,7 +14,9 @@ class ErrorHandler {
     } else if (error is AppException) {
       return error;
     } else {
-      return UnknownException(error.toString());
+      // For unknown errors, we log the specific error but show a generic message to the user
+      return const UnknownException(
+          'An unexpected error occurred. Please try again.');
     }
   }
 
@@ -23,15 +25,18 @@ class ErrorHandler {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
-        return const NetworkException('Connection timed out');
+        return const NetworkException(
+            'Connection timed out. Please check your internet connection.');
       case DioExceptionType.connectionError:
-        return const NetworkException('No internet connection');
+        return const NetworkException(
+            'No internet connection. Please check your settings.');
       case DioExceptionType.badResponse:
         return _handleBadResponse(error.response);
       case DioExceptionType.cancel:
         return const UnknownException('Request cancelled');
       default:
-        return const UnknownException('Something went wrong');
+        return const UnknownException(
+            'Something went wrong. Please try again.');
     }
   }
 

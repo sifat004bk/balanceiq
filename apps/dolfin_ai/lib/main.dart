@@ -1,8 +1,10 @@
 import 'package:dolfin_ui_kit/theme/app_palette.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:dolfin_core/utils/app_logger.dart';
 
 import 'package:balance_iq/core/config/app_network_config.dart';
 
@@ -47,6 +49,28 @@ void main() async {
   AppNetworkConfig.init();
 
   await di.init();
+
+  // Handle Flutter framework errors
+  FlutterError.onError = (FlutterErrorDetails details) {
+    FlutterError.presentError(details);
+    AppLogger.error(
+      'Flutter Error',
+      error: details.exception,
+      stackTrace: details.stack,
+      name: 'GlobalErrorHandler',
+    );
+  };
+
+  // Handle async platform errors
+  PlatformDispatcher.instance.onError = (error, stack) {
+    AppLogger.error(
+      'Platform Error',
+      error: error,
+      stackTrace: stack,
+      name: 'GlobalErrorHandler',
+    );
+    return true;
+  };
 
   ErrorWidget.builder = (FlutterErrorDetails details) {
     return Material(

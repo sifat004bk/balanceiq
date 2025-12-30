@@ -100,6 +100,7 @@ dependencies:
   feature_subscription:
     path: ../../packages/features/feature_subscription
   liquid_pull_to_refresh: ^3.0.1
+  dio_smart_retry: ^7.0.1
 
 dev_dependencies:
   flutter_test:

@@ -55,40 +55,56 @@ class TransactionsCubit extends Cubit<TransactionsState> {
     );
 
     result.fold(
-      (failure) => emit(TransactionsError(failure.message)),
-      (searchResult) => emit(
-        TransactionsLoaded(
-          transactions: searchResult.transactions,
-          hasReachedMax:
-              searchResult.transactions.length < (_currentParams.limit ?? 50),
-        ),
-      ),
+      (failure) {
+        if (!isClosed) emit(TransactionsError(failure.message));
+      },
+      (searchResult) {
+        if (!isClosed) {
+          emit(
+            TransactionsLoaded(
+              transactions: searchResult.transactions,
+              hasReachedMax: searchResult.transactions.length <
+                  (_currentParams.limit ?? 50),
+            ),
+          );
+        }
+      },
     );
   }
 
   Future<void> updateTransaction(Transaction transaction) async {
+    if (isClosed) return;
     emit(TransactionsLoading());
 
     final result = await updateTransactionUseCase(transaction);
+    if (isClosed) return;
 
     result.fold(
-      (failure) => emit(TransactionsError(failure.message)),
+      (failure) {
+        if (!isClosed) emit(TransactionsError(failure.message));
+      },
       (_) => _reloadTransactions(),
     );
   }
 
   Future<void> deleteTransaction(int id) async {
+    if (isClosed) return;
     emit(TransactionsLoading());
 
     final result = await deleteTransactionUseCase(id);
+    if (isClosed) return;
 
     result.fold(
-      (failure) => emit(TransactionsError(failure.message)),
+      (failure) {
+        if (!isClosed) emit(TransactionsError(failure.message));
+      },
       (_) => _reloadTransactions(),
     );
   }
 
   Future<void> _reloadTransactions() async {
+    if (isClosed) return;
+
     final result = await searchTransactions(
       search: _currentParams.search,
       category: _currentParams.category,
@@ -100,19 +116,28 @@ class TransactionsCubit extends Cubit<TransactionsState> {
       limit: _currentParams.limit,
     );
 
+    if (isClosed) return;
+
     result.fold(
-      (failure) => emit(TransactionsError(failure.message)),
-      (searchResult) => emit(
-        TransactionsLoaded(
-          transactions: searchResult.transactions,
-          hasReachedMax:
-              searchResult.transactions.length < (_currentParams.limit ?? 50),
-        ),
-      ),
+      (failure) {
+        if (!isClosed) emit(TransactionsError(failure.message));
+      },
+      (searchResult) {
+        if (!isClosed) {
+          emit(
+            TransactionsLoaded(
+              transactions: searchResult.transactions,
+              hasReachedMax: searchResult.transactions.length <
+                  (_currentParams.limit ?? 50),
+            ),
+          );
+        }
+      },
     );
   }
 
   Future<void> loadMoreTransactions() async {
+    if (isClosed) return;
     if (state is! TransactionsLoaded) return;
     final currentState = state as TransactionsLoaded;
     if (currentState.hasReachedMax || currentState.isMoreLoading) return;
@@ -133,21 +158,25 @@ class TransactionsCubit extends Cubit<TransactionsState> {
       limit: _currentParams.limit,
     );
 
+    if (isClosed) return;
+
     result.fold(
       (failure) {
         // In case of error loading more, we revert isMoreLoading but keep old data
         // For now, simpler to just show error or emit loaded without loading
-        emit(currentState.copyWith(isMoreLoading: false));
+        if (!isClosed) emit(currentState.copyWith(isMoreLoading: false));
       },
       (searchResult) {
-        emit(
-          TransactionsLoaded(
-            transactions: searchResult.transactions,
-            hasReachedMax:
-                searchResult.transactions.length < (_currentParams.limit ?? 50),
-            isMoreLoading: false,
-          ),
-        );
+        if (!isClosed) {
+          emit(
+            TransactionsLoaded(
+              transactions: searchResult.transactions,
+              hasReachedMax: searchResult.transactions.length <
+                  (_currentParams.limit ?? 50),
+              isMoreLoading: false,
+            ),
+          );
+        }
       },
     );
   }

@@ -2,6 +2,7 @@ import 'package:dolfin_ui_kit/theme/app_palette.dart';
 import 'package:get_it/get_it.dart';
 import 'package:balance_iq/core/strings/dashboard_strings.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class DateSelectorBottomSheet extends StatefulWidget {
@@ -31,24 +32,40 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
   }
 
   void _initializeSelection() {
-    switch (widget.currentLabel) {
-      case 'Last 30 Days':
-        _selectedPreset = 'last_30_days';
-        break;
-      case 'This Month':
-        _selectedPreset = 'this_month';
-        break;
-      case 'Last Month':
-        _selectedPreset = 'last_month';
-        break;
-      case 'Last 3 Months':
-        _selectedPreset = 'last_3_months';
-        break;
-      case 'This Year':
-        _selectedPreset = 'this_year';
-        break;
+    if (widget.currentLabel == 'Last 30 Days') {
+      _selectedPreset = 'last_30_days';
+    } else if (widget.currentLabel == _getPresetLabel('this_month')) {
+      _selectedPreset = 'this_month';
+    } else if (widget.currentLabel == _getPresetLabel('last_month')) {
+      _selectedPreset = 'last_month';
+    } else if (widget.currentLabel == _getPresetLabel('last_3_months')) {
+      _selectedPreset = 'last_3_months';
+    } else if (widget.currentLabel == _getPresetLabel('this_year')) {
+      _selectedPreset = 'this_year';
+    } else {
+      _selectedPreset = null;
+    }
+  }
+
+  String _getPresetLabel(String key) {
+    final now = DateTime.now();
+    switch (key) {
+      case 'this_month':
+        return DateFormat('MMMM yyyy').format(now);
+      case 'last_month':
+        final lastMonth = DateTime(now.year, now.month - 1, 1);
+        return DateFormat('MMMM yyyy').format(lastMonth);
+      case 'this_year':
+        return DateFormat('yyyy').format(now);
+      case 'last_3_months':
+        final start = DateTime(now.year, now.month - 2, 1);
+        final end = DateTime(now.year, now.month + 1, 0);
+        if (start.year == end.year) {
+          return '${DateFormat('MMM d').format(start)} - ${DateFormat('MMM d, yyyy').format(end)}';
+        }
+        return '${DateFormat('MMM d, yyyy').format(start)} - ${DateFormat('MMM d, yyyy').format(end)}';
       default:
-        _selectedPreset = null;
+        return '';
     }
   }
 
@@ -137,7 +154,8 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
                   final now = DateTime.now();
                   final start = DateTime(now.year, now.month, 1);
                   final end = DateTime(now.year, now.month + 1, 0);
-                  widget.onDateSelected(start, end, null);
+                  widget.onDateSelected(
+                      start, end, _getPresetLabel('this_month'));
                   Navigator.pop(context);
                 },
               ),
@@ -149,7 +167,8 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
                   final now = DateTime.now();
                   final start = DateTime(now.year, now.month - 1, 1);
                   final end = DateTime(now.year, now.month, 0);
-                  widget.onDateSelected(start, end, null);
+                  widget.onDateSelected(
+                      start, end, _getPresetLabel('last_month'));
                   Navigator.pop(context);
                 },
               ),
@@ -161,7 +180,8 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
                   final now = DateTime.now();
                   final start = DateTime(now.year, now.month - 2, 1);
                   final end = DateTime(now.year, now.month + 1, 0);
-                  widget.onDateSelected(start, end, null);
+                  widget.onDateSelected(
+                      start, end, _getPresetLabel('last_3_months'));
                   Navigator.pop(context);
                 },
               ),
@@ -185,7 +205,8 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
                   final now = DateTime.now();
                   final start = DateTime(now.year, 1, 1);
                   final end = DateTime(now.year, 12, 31);
-                  widget.onDateSelected(start, end, null);
+                  widget.onDateSelected(
+                      start, end, _getPresetLabel('this_year'));
                   Navigator.pop(context);
                 },
               ),
@@ -239,7 +260,14 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary,
+                      gradient: LinearGradient(
+                        colors: [
+                          Theme.of(context).colorScheme.primary,
+                          Theme.of(context).colorScheme.secondary,
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(

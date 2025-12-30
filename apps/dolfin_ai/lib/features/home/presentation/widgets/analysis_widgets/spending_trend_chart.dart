@@ -114,6 +114,16 @@ class SpendingTrendChart extends StatelessWidget {
     // Double check we have points
     if (aggregatedPoints.isEmpty) return const SizedBox.shrink();
 
+    // Determine frequency label
+    String frequencyLabel = '';
+    if (totalDays <= 35) {
+      frequencyLabel = ' (per day)';
+    } else if (totalDays <= 120) {
+      frequencyLabel = ' (per week)';
+    } else {
+      frequencyLabel = ' (per month)';
+    }
+
     // Calculate chart stats based on AGGREGATED data
     double totalAmount = 0;
     double maxAmount = 0;
@@ -126,6 +136,28 @@ class SpendingTrendChart extends StatelessWidget {
     final averageAmount = totalAmount / aggregatedPoints.length;
     final xMax = (aggregatedPoints.length - 1).toDouble(); // 0-based index
     final currencyCubit = sl<CurrencyCubit>();
+
+    // Calculate visible indices for labels (Prioritize Last)
+    final Set<int> visibleIndices = {};
+    if (aggregatedPoints.isNotEmpty) {
+      if (aggregatedPoints.length <= 7) {
+        // Show all
+        for (int i = 0; i < aggregatedPoints.length; i++) {
+          visibleIndices.add(i);
+        }
+      } else {
+        // Show ~5 labels, prioritizing the last one
+        // Step size
+        final step = (aggregatedPoints.length / 5).ceil();
+        // Always add last
+        visibleIndices.add(aggregatedPoints.length - 1);
+
+        // Add others backwards
+        for (int i = aggregatedPoints.length - 1 - step; i >= 0; i -= step) {
+          visibleIndices.add(i);
+        }
+      }
+    }
 
     return Container(
       padding: const EdgeInsets.all(1.5),
@@ -145,7 +177,7 @@ class SpendingTrendChart extends StatelessWidget {
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
           child: Container(
-            padding: const EdgeInsets.all(24),
+            padding: const EdgeInsets.all(16), // Reduced from 24
             decoration: BoxDecoration(
               color: colorScheme.surface.withValues(alpha: isDark ? 0.4 : 0.7),
               borderRadius: BorderRadius.circular(22.5),
@@ -200,7 +232,7 @@ class SpendingTrendChart extends StatelessWidget {
                             ),
                             const SizedBox(width: 4),
                             Text(
-                              'Avg: ${currencyCubit.formatAmount(averageAmount)}',
+                              'Avg: ${currencyCubit.formatAmount(averageAmount)}$frequencyLabel',
                               style: textTheme.bodySmall?.copyWith(
                                 color: Theme.of(context).hintColor,
                                 fontSize: 10,
@@ -213,9 +245,9 @@ class SpendingTrendChart extends StatelessWidget {
                     // Optional: Add trend indicator here later
                   ],
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 16), // Reduced from 24
                 SizedBox(
-                  height: 160,
+                  height: 128, // Reduced from 160 (-20%)
                   child: RepaintBoundary(
                     child: LineChart(
                       LineChartData(
@@ -238,22 +270,7 @@ class SpendingTrendChart extends StatelessWidget {
                                   return const SizedBox.shrink();
                                 }
 
-                                // Smart Label Logic:
-                                bool showLabel = false;
-                                int points = aggregatedPoints.length;
-
-                                if (points <= 7) {
-                                  showLabel = true;
-                                } else if (points <= 14) {
-                                  if (index % 2 == 0) showLabel = true;
-                                } else {
-                                  final step = (points / 5).ceil();
-                                  if (index % step == 0) showLabel = true;
-                                }
-                                if (index == 0 || index == points - 1)
-                                  showLabel = true;
-
-                                if (showLabel) {
+                                if (visibleIndices.contains(index)) {
                                   return Padding(
                                     padding: const EdgeInsets.only(top: 8),
                                     child: Text(

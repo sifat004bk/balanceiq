@@ -1,16 +1,17 @@
 import 'package:dolfin_ui_kit/theme/app_palette.dart';
 import 'package:get_it/get_it.dart';
-import 'package:balance_iq/features/home/presentation/widgets/calendar_widgets/custom_calendar_date_range_picker.dart';
 import 'package:balance_iq/core/strings/dashboard_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class DateSelectorBottomSheet extends StatefulWidget {
   final Function(DateTime start, DateTime end) onDateSelected;
+  final VoidCallback? onCustomRangePressed;
 
   const DateSelectorBottomSheet({
     super.key,
     required this.onDateSelected,
+    this.onCustomRangePressed,
   });
 
   @override
@@ -168,22 +169,10 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
           const SizedBox(height: 20),
 
           InkWell(
-            onTap: () async {
-              Navigator.pop(context);
-
-              final now = DateTime.now();
-
-              // Show custom calendar picker
-              await showDialog(
-                context: context,
-                builder: (context) => CustomCalendarDateRangePicker(
-                  minDate: DateTime(2020),
-                  maxDate: now.add(const Duration(days: 365)),
-                  onDateRangeSelected: (startDate, endDate) {
-                    widget.onDateSelected(startDate, endDate);
-                  },
-                ),
-              );
+            onTap: () {
+              if (widget.onCustomRangePressed != null) {
+                widget.onCustomRangePressed!();
+              }
             },
             borderRadius: BorderRadius.circular(16),
             child: Container(

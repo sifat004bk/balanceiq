@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:balance_iq/features/home/presentation/widgets/calendar_widgets/custom_calendar_date_range_picker.dart';
 
 class TransactionsFilterSection extends StatefulWidget {
   const TransactionsFilterSection({super.key});
@@ -33,9 +34,27 @@ class _TransactionsFilterSectionState extends State<TransactionsFilterSection> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => DateSelectorBottomSheet(
+      builder: (bottomSheetContext) => DateSelectorBottomSheet(
         onDateSelected: (start, end) {
+          Navigator.pop(bottomSheetContext);
           context.read<TransactionFilterCubit>().updateDateRange(start, end);
+        },
+        onCustomRangePressed: () async {
+          Navigator.pop(bottomSheetContext);
+
+          final now = DateTime.now();
+          await showDialog(
+            context: context,
+            builder: (context) => CustomCalendarDateRangePicker(
+              minDate: DateTime(2020),
+              maxDate: now.add(const Duration(days: 365)),
+              onDateRangeSelected: (startDate, endDate) {
+                context
+                    .read<TransactionFilterCubit>()
+                    .updateDateRange(startDate, endDate);
+              },
+            ),
+          );
         },
       ),
     );

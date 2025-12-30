@@ -16,6 +16,7 @@ import '../widgets/calendar_widgets/date_selector_bottom_sheet.dart';
 import '../widgets/dashboard_layout.dart';
 import 'error_page.dart';
 import 'welcome_page.dart';
+import '../widgets/calendar_widgets/custom_calendar_date_range_picker.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -152,13 +153,33 @@ class _DashboardViewState extends State<DashboardView> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => DateSelectorBottomSheet(
+      builder: (bottomSheetContext) => DateSelectorBottomSheet(
         onDateSelected: (start, end) {
+          Navigator.pop(bottomSheetContext);
           setState(() {
             _startDate = start;
             _endDate = end;
           });
           _loadDashboard();
+        },
+        onCustomRangePressed: () async {
+          Navigator.pop(bottomSheetContext);
+
+          final now = DateTime.now();
+          await showDialog(
+            context: context,
+            builder: (context) => CustomCalendarDateRangePicker(
+              minDate: DateTime(2020),
+              maxDate: now.add(const Duration(days: 365)),
+              onDateRangeSelected: (startDate, endDate) {
+                setState(() {
+                  _startDate = startDate;
+                  _endDate = endDate;
+                });
+                _loadDashboard();
+              },
+            ),
+          );
         },
       ),
     );

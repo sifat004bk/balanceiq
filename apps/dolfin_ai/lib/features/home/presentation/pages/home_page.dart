@@ -191,6 +191,16 @@ class _DashboardViewState extends State<DashboardView> {
     final end = _endDate!;
     final now = DateTime.now();
 
+    // Check for Last 30 Days
+    if (start.year == now.subtract(const Duration(days: 30)).year &&
+        start.month == now.subtract(const Duration(days: 30)).month &&
+        start.day == now.subtract(const Duration(days: 30)).day &&
+        end.year == now.year &&
+        end.month == now.month &&
+        end.day == now.day) {
+      return 'Last 30 Days';
+    }
+
     // Check if it's the current month fully selected
     if (start.year == now.year &&
         start.month == now.month &&

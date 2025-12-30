@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class DateSelectorBottomSheet extends StatefulWidget {
-  final Function(DateTime start, DateTime end) onDateSelected;
+  final Function(DateTime start, DateTime end, String? label) onDateSelected;
   final VoidCallback? onCustomRangePressed;
 
   const DateSelectorBottomSheet({
@@ -107,7 +107,7 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
                   final now = DateTime.now();
                   final start = DateTime(now.year, now.month, 1);
                   final end = DateTime(now.year, now.month + 1, 0);
-                  widget.onDateSelected(start, end);
+                  widget.onDateSelected(start, end, null);
                   Navigator.pop(context);
                 },
               ),
@@ -119,7 +119,7 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
                   final now = DateTime.now();
                   final start = DateTime(now.year, now.month - 1, 1);
                   final end = DateTime(now.year, now.month, 0);
-                  widget.onDateSelected(start, end);
+                  widget.onDateSelected(start, end, null);
                   Navigator.pop(context);
                 },
               ),
@@ -131,7 +131,7 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
                   final now = DateTime.now();
                   final start = DateTime(now.year, now.month - 2, 1);
                   final end = DateTime(now.year, now.month + 1, 0);
-                  widget.onDateSelected(start, end);
+                  widget.onDateSelected(start, end, null);
                   Navigator.pop(context);
                 },
               ),
@@ -143,7 +143,7 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
                   final now = DateTime.now();
                   final start = now.subtract(const Duration(days: 30));
                   final end = now;
-                  widget.onDateSelected(start, end);
+                  widget.onDateSelected(start, end, 'Last 30 Days');
                   Navigator.pop(context);
                 },
               ),
@@ -155,7 +155,7 @@ class _DateSelectorBottomSheetState extends State<DateSelectorBottomSheet> {
                   final now = DateTime.now();
                   final start = DateTime(now.year, 1, 1);
                   final end = DateTime(now.year, 12, 31);
-                  widget.onDateSelected(start, end);
+                  widget.onDateSelected(start, end, null);
                   Navigator.pop(context);
                 },
               ),

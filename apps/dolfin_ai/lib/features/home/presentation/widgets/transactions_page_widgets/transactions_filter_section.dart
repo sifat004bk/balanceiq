@@ -35,7 +35,7 @@ class _TransactionsFilterSectionState extends State<TransactionsFilterSection> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (bottomSheetContext) => DateSelectorBottomSheet(
-        onDateSelected: (start, end) {
+        onDateSelected: (start, end, label) {
           Navigator.pop(bottomSheetContext);
           context.read<TransactionFilterCubit>().updateDateRange(start, end);
         },

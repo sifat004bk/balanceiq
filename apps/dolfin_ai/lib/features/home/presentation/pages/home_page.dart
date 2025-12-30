@@ -43,6 +43,7 @@ class _DashboardViewState extends State<DashboardView> {
   DateTime? _startDate;
   DateTime? _endDate;
   bool _tourCheckDone = false;
+  String? _selectedDateLabel = 'Last 30 Days'; // Initialize with default label
 
   final GlobalKey _profileIconKey = GlobalKey();
   late DashboardTourController _tourController;
@@ -153,11 +154,12 @@ class _DashboardViewState extends State<DashboardView> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (bottomSheetContext) => DateSelectorBottomSheet(
-        onDateSelected: (start, end) {
+        onDateSelected: (start, end, label) {
           // Navigator.pop handled by DateSelectorBottomSheet for presets
           setState(() {
             _startDate = start;
             _endDate = end;
+            _selectedDateLabel = label;
           });
           _loadDashboard();
         },
@@ -174,6 +176,7 @@ class _DashboardViewState extends State<DashboardView> {
                 setState(() {
                   _startDate = startDate;
                   _endDate = endDate;
+                  _selectedDateLabel = null; // Reset label for custom range
                 });
                 _loadDashboard();
               },
@@ -187,19 +190,14 @@ class _DashboardViewState extends State<DashboardView> {
   String _getFormattedDateRange() {
     if (_startDate == null || _endDate == null) return 'Select Date';
 
+    // Priority: Explicit label from preset
+    if (_selectedDateLabel != null) {
+      return _selectedDateLabel!;
+    }
+
     final start = _startDate!;
     final end = _endDate!;
     final now = DateTime.now();
-
-    // Check for Last 30 Days
-    if (start.year == now.subtract(const Duration(days: 30)).year &&
-        start.month == now.subtract(const Duration(days: 30)).month &&
-        start.day == now.subtract(const Duration(days: 30)).day &&
-        end.year == now.year &&
-        end.month == now.month &&
-        end.day == now.day) {
-      return 'Last 30 Days';
-    }
 
     // Check if it's the current month fully selected
     if (start.year == now.year &&

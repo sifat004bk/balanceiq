@@ -73,8 +73,8 @@ class ProductTourServiceImpl implements ProductTourService {
             if (await launchUrl(uri, mode: LaunchMode.externalApplication)) {
               return true;
             }
-          } catch (e) {
-            debugPrint('Intent launch failed for $intentStr: $e');
+          } catch (_) {
+            // Intent launch failed, try next
           }
         }
       }
@@ -113,14 +113,13 @@ class ProductTourServiceImpl implements ProductTourService {
         // Force try launching anyway
         try {
           return await launchUrl(mailUri, mode: LaunchMode.externalApplication);
-        } catch (e) {
-          debugPrint('Force launch failed: $e');
+        } catch (_) {
+          // Force launch failed
         }
       }
 
       return false;
-    } catch (e) {
-      debugPrint('Error opening mail app: $e');
+    } catch (_) {
       return false;
     }
   }

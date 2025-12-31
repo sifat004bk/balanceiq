@@ -72,7 +72,27 @@ This plan outlines the specific tasks required to bridge the gap from the curren
 - [ ] **User Feedback Loop**
   - Ensure all errors map to user-friendly, localized messages (already partially done, verify coverage).
 
-## 6. Verification Steps
+## 6. Future: App Store Publishing (Pre-Launch)
+
+**Goal:** Prepare for successful App Store verification and launch.
+
+- [ ] **Developer Account**
+  - Enroll in the Apple Developer Program ($99/year).
+  - Invite team members if necessary (Development vs. Distribution roles).
+- [ ] **App Store Connect Setup**
+  - Create the App Record in App Store Connect with Bundle ID `com.dolfinmind.balanceiq`.
+  - Fill in App Privacy Details (use `PrivacyInfo.xcprivacy` as reference).
+  - Prepare Marketing Assets (Screenshots for 6.5" and 5.5" iPhones, App Icon 1024x1024).
+- [ ] **TestFlight Beta**
+  - Archive specific "Beta" build.
+  - Set up Internal Testing group.
+  - Validate In-App Purchases in Sandbox environment.
+- [ ] **Review Guidelines Compliance**
+  - Verify "Sign in with Apple" implementation (Required if Google Sign-In is used).
+  - Verify Delete Account functionality is visible and functional within the app.
+  - Ensure Subscription terms and policies are linked in the paywall.
+
+## 7. Verification Steps
 
 To validate the completion of these improvements:
 1.  **Security Audit:** Run automated security scan (if available) and manual verification of encrypted DB access.

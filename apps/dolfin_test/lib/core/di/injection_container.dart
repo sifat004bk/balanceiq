@@ -1,4 +1,6 @@
 import 'package:get_it/get_it.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:dolfin_core/analytics/analytics_service.dart';
 
 import 'package:feature_auth/feature_auth.dart';
 import 'package:feature_chat/feature_chat.dart';
@@ -44,6 +46,9 @@ Future<void> init() async {
   sl.registerLazySingleton<SubscriptionStrings>(
       () => const SubscriptionStringsImpl());
 
+  // Register mock analytics service
+  sl.registerLazySingleton<AnalyticsService>(() => MockAnalyticsService());
+
   //! Features - Auth
   await initAuthFeature(
     sl,
@@ -78,6 +83,24 @@ Future<void> init() async {
       appConstants: sl(),
       uuid: sl(),
       useMockDataSource: true, // Test app uses mock
+      analyticsService: sl(),
     ),
   );
+}
+
+class MockAnalyticsService extends Mock implements AnalyticsService {
+  @override
+  Future<void> logEvent({
+    required String name,
+    Map<String, dynamic>? parameters,
+  }) async {}
+
+  @override
+  Future<void> setUserId(String userId) async {}
+
+  @override
+  Future<void> setUserProperty({
+    required String name,
+    required String value,
+  }) async {}
 }

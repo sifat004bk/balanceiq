@@ -8,6 +8,8 @@ import 'package:dolfin_core/constants/app_constants.dart';
 import 'package:dolfin_core/error/failures.dart';
 import 'package:dolfin_core/storage/secure_storage_service.dart';
 import 'package:dolfin_core/currency/currency_cubit.dart';
+import 'package:dolfin_core/analytics/analytics_service.dart';
+import 'dart:async';
 
 // Feature dependencies
 import 'package:feature_auth/domain/usecases/get_current_user.dart';
@@ -35,6 +37,7 @@ class ChatCubit extends Cubit<ChatState> {
   final Uuid uuid;
   final GetCurrentUser getCurrentUser;
   final GetSubscriptionStatus getSubscriptionStatus;
+  final AnalyticsService analyticsService;
 
   String? currentBotId;
   int _apiPage = 0;
@@ -53,6 +56,7 @@ class ChatCubit extends Cubit<ChatState> {
     required this.uuid,
     required this.getCurrentUser,
     required this.getSubscriptionStatus,
+    required this.analyticsService,
   }) : super(ChatInitial()); // Removed const
 
   Future<void> loadMessageUsage() async {
@@ -303,6 +307,16 @@ class ChatCubit extends Cubit<ChatState> {
           imagePath: imagePath,
           audioPath: audioPath,
         );
+
+        // Log analytics event
+        unawaited(analyticsService.logEvent(
+          name: 'send_message',
+          parameters: {
+            'bot_id': botId,
+            'has_image': imagePath != null,
+            'has_audio': audioPath != null,
+          },
+        ));
 
         if (!isClosed) {
           result.fold((failure) {

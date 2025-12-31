@@ -4,6 +4,8 @@ import 'package:balance_iq/features/home/domain/entities/transaction.dart';
 import 'package:balance_iq/features/home/presentation/widgets/transaction_detail_widgets/transaction_detail_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:balance_iq/core/di/injection_container.dart';
+import 'package:dolfin_core/analytics/analytics_service.dart';
 
 /// A professional modal for viewing, updating, and deleting transactions
 class TransactionDetailModal extends StatefulWidget {
@@ -114,6 +116,23 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
       totalMatches: widget.transaction.totalMatches,
     );
 
+    // Track detailed transaction update/add
+    try {
+      final analytics =
+          sl.isRegistered<AnalyticsService>() ? sl<AnalyticsService>() : null;
+      analytics?.logEvent(
+        name: 'modify_transaction',
+        parameters: {
+          'action': 'update',
+          'type': _selectedType,
+          'category': _selectedCategory,
+          'amount': updatedTransaction.amount,
+        },
+      );
+    } catch (_) {
+      // Ignore analytics failures
+    }
+
     widget.onUpdate?.call(updatedTransaction);
     Navigator.pop(context);
   }
@@ -161,6 +180,17 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
 
               // Simulate delete with delay
               Future.delayed(const Duration(milliseconds: 500), () {
+                final analytics = sl.isRegistered<AnalyticsService>()
+                    ? sl<AnalyticsService>()
+                    : null;
+                analytics?.logEvent(
+                  name: 'modify_transaction',
+                  parameters: {
+                    'action': 'delete',
+                    'id': widget.transaction.transactionId.toString(),
+                  },
+                );
+
                 widget.onDelete?.call(widget.transaction);
                 if (!mounted) return;
                 navigator.pop(); // Close modal

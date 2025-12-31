@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:dolfin_core/currency/currency_cubit.dart';
 import 'package:balance_iq/core/di/injection_container.dart';
+import 'package:dolfin_core/analytics/analytics_service.dart';
 import 'package:balance_iq/core/tour/tour.dart';
 import 'package:feature_auth/data/datasources/auth_local_datasource.dart';
 import 'package:balance_iq/features/home/presentation/cubit/dashboard_state.dart';
@@ -68,6 +69,16 @@ class _DashboardViewState extends State<DashboardView> {
     _endDate = now;
 
     _loadDashboard();
+
+    // Log screen view
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (sl.isRegistered<AnalyticsService>()) {
+        sl<AnalyticsService>().logEvent(
+          name: 'screen_view',
+          parameters: {'screen_name': 'dashboard'},
+        );
+      }
+    });
   }
 
   @override

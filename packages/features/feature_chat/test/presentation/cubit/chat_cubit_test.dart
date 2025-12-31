@@ -1,7 +1,8 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dolfin_core/constants/app_constants.dart';
-import 'package:dolfin_core/error/failures.dart';
+
+import 'package:dolfin_core/analytics/analytics_service.dart';
 import 'package:dolfin_core/storage/secure_storage_service.dart';
 import 'package:feature_auth/domain/entities/user.dart';
 import 'package:feature_auth/domain/usecases/get_current_user.dart';
@@ -29,6 +30,8 @@ class MockGetCurrentUser extends Mock implements GetCurrentUser {}
 
 class MockGetSubscriptionStatus extends Mock implements GetSubscriptionStatus {}
 
+class MockAnalyticsService extends Mock implements AnalyticsService {}
+
 void main() {
   late ChatCubit chatCubit;
   late MockGetMessages mockGetMessages;
@@ -42,6 +45,7 @@ void main() {
   late MockAppConstants mockAppConstants;
   late MockGetCurrentUser mockGetCurrentUser;
   late MockGetSubscriptionStatus mockGetSubscriptionStatus;
+  late MockAnalyticsService mockAnalyticsService;
 
   setUp(() {
     mockGetMessages = MockGetMessages();
@@ -55,6 +59,13 @@ void main() {
     mockAppConstants = MockAppConstants();
     mockGetCurrentUser = MockGetCurrentUser();
     mockGetSubscriptionStatus = MockGetSubscriptionStatus();
+    mockAnalyticsService = MockAnalyticsService();
+
+    // Stub generic logEvent to avoid null errors during tests
+    when(() => mockAnalyticsService.logEvent(
+          name: any(named: 'name'),
+          parameters: any(named: 'parameters'),
+        )).thenAnswer((_) async {});
 
     GetIt.instance.registerSingleton<AppConstants>(mockAppConstants);
     when(() => mockAppConstants.senderBot).thenReturn('bot');
@@ -72,6 +83,7 @@ void main() {
       uuid: mockUuid,
       getCurrentUser: mockGetCurrentUser,
       getSubscriptionStatus: mockGetSubscriptionStatus,
+      analyticsService: mockAnalyticsService,
     );
   });
 

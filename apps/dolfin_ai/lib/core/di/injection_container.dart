@@ -29,6 +29,7 @@ import 'modules/storage_module.dart';
 import 'modules/network_module.dart';
 import 'modules/core_module.dart';
 import 'modules/dashboard_module.dart';
+import 'package:dolfin_core/analytics/analytics_service.dart';
 // import 'modules/chat_module.dart';
 // import 'modules/subscription_module.dart';
 
@@ -95,6 +96,7 @@ Future<void> init() async {
       appConstants: appConstants,
       uuid: sl(),
       useMockDataSource: appConstants.isMockMode,
+      analyticsService: sl<AnalyticsService>(),
     ),
   );
 

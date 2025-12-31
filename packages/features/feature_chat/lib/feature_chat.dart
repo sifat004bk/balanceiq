@@ -65,6 +65,9 @@ class ChatFeatureConfig {
   /// Use mock data instead of real API
   final bool useMockDataSource;
 
+  /// Analytics service for tracking events
+  final AnalyticsService analyticsService;
+
   const ChatFeatureConfig({
     required this.chatConfig,
     required this.dio,
@@ -72,8 +75,9 @@ class ChatFeatureConfig {
     required this.sharedPreferences,
     required this.databaseHelper,
     required this.appConstants,
-    required this.uuid,
+    this.uuid = const Uuid(),
     this.useMockDataSource = false,
+    required this.analyticsService,
   });
 }
 
@@ -101,6 +105,7 @@ Future<void> initChatFeature(GetIt sl, ChatFeatureConfig config) async {
       uuid: config.uuid,
       getCurrentUser: sl(),
       getSubscriptionStatus: sl(),
+      analyticsService: config.analyticsService,
     ),
   );
 

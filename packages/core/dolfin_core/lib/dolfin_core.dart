@@ -9,6 +9,9 @@ export 'error/app_exception.dart';
 export 'error/error_handler.dart';
 export 'error/failures.dart';
 
+// Analytics
+export 'analytics/analytics_service.dart';
+
 // Network
 export 'network/logging_interceptor.dart';
 

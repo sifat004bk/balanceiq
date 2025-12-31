@@ -101,6 +101,8 @@ dependencies:
     path: ../../packages/features/feature_subscription
   liquid_pull_to_refresh: ^3.0.1
   dio_smart_retry: ^7.0.1
+  firebase_analytics: ^11.6.0
+  firebase_crashlytics: ^4.3.10
 
 dev_dependencies:
   flutter_test:

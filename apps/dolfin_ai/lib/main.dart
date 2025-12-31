@@ -8,6 +8,10 @@ import 'package:dolfin_core/utils/app_logger.dart';
 
 import 'package:balance_iq/core/config/app_network_config.dart';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'firebase_options.dart';
+
 import 'core/di/injection_container.dart' as di;
 import 'core/navigation/navigator_service.dart';
 import 'package:get_it/get_it.dart';
@@ -48,10 +52,16 @@ void main() async {
 
   AppNetworkConfig.init();
 
+  // 1. Initialize Firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   await di.init();
 
   // Handle Flutter framework errors
   FlutterError.onError = (FlutterErrorDetails details) {
+    FirebaseCrashlytics.instance.recordFlutterFatalError(details);
     FlutterError.presentError(details);
     AppLogger.error(
       'Flutter Error',
@@ -63,6 +73,7 @@ void main() async {
 
   // Handle async platform errors
   PlatformDispatcher.instance.onError = (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
     AppLogger.error(
       'Platform Error',
       error: error,

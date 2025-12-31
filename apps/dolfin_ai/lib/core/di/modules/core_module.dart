@@ -13,6 +13,8 @@ import '../../tour/tour_widget_factory_impl.dart';
 
 import "package:dolfin_core/currency/currency_cubit.dart";
 import '../../../features/home/data/datasource/remote_datasource/dashboard_remote_datasource.dart';
+import 'package:dolfin_core/analytics/analytics_service.dart';
+import '../../services/firebase_analytics_service.dart';
 
 void registerCoreModule(GetIt sl) {
   //! Core
@@ -46,4 +48,7 @@ void registerCoreModule(GetIt sl) {
       scopes: ['email', 'profile'],
     );
   });
+
+  //! Core - Analytics
+  sl.registerLazySingleton<AnalyticsService>(() => FirebaseAnalyticsService());
 }

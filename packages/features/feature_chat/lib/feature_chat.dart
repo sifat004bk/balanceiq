@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:dolfin_core/analytics/analytics_service.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';

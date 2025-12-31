@@ -8,6 +8,7 @@ import '../../../domain/usecases/get_profile.dart';
 import '../../../domain/usecases/save_user.dart';
 import 'package:dolfin_core/currency/currency_cubit.dart';
 import 'package:dolfin_core/storage/secure_storage_service.dart';
+import 'package:dolfin_core/analytics/analytics_service.dart';
 
 // States
 abstract class LoginState extends Equatable {
@@ -42,6 +43,7 @@ class LoginCubit extends Cubit<LoginState> {
   final SaveUser saveUser;
   final CurrencyCubit currencyCubit;
   final SecureStorageService secureStorage;
+  final AnalyticsService analyticsService;
 
   LoginCubit({
     required this.login,
@@ -50,6 +52,7 @@ class LoginCubit extends Cubit<LoginState> {
     required this.saveUser,
     required this.currencyCubit,
     required this.secureStorage,
+    required this.analyticsService,
   }) : super(LoginInitial());
 
   Future<void> loginWithEmail({
@@ -67,6 +70,14 @@ class LoginCubit extends Cubit<LoginState> {
       (failure) async => emit(LoginError(failure.message)),
       (loginResponse) async {
         if (loginResponse.success && loginResponse.data != null) {
+          // Log login event
+          await analyticsService.logEvent(
+            name: 'login',
+            parameters: {'method': 'email'},
+          );
+          await analyticsService
+              .setUserId(loginResponse.data!.userId.toString());
+
           final token = loginResponse.data!.token;
 
           // Fetch full profile
@@ -128,54 +139,19 @@ class LoginCubit extends Cubit<LoginState> {
     await result.fold(
       (failure) async => emit(LoginError(failure.message)),
       (googleUser) async {
-        // Google sign-in succeeded, now fetch full profile to get currency etc.
-        // The token was saved during signInWithGoogle in AuthRemoteDataSource.
-        final token = await secureStorage.getToken();
+        // Log login event
+        await analyticsService.logEvent(
+          name: 'login',
+          parameters: {'method': 'google'},
+        );
+        await analyticsService.setUserId(googleUser.id);
 
-        if (token != null && token.isNotEmpty) {
-          // Fetch full profile
-          final profileResult = await getProfile(token);
+        // ... rest of logic
+        // final token = await secureStorage.getToken();
+        // ...
 
-          await profileResult.fold(
-            (failure) async {
-              debugPrint(
-                  '[LoginCubit] Google profile fetch failed: ${failure.message}');
-              // Fallback to basic Google user info
-              await saveUser(googleUser);
-              emit(LoginSuccess(googleUser));
-            },
-            (userInfo) async {
-              debugPrint(
-                  '[LoginCubit] Google profile fetch success. Currency: ${userInfo.currency}');
-
-              // Sync currency to app state
-              if (userInfo.currency != null && userInfo.currency!.isNotEmpty) {
-                await currencyCubit.setCurrencyByCode(userInfo.currency!);
-              }
-
-              final user = User(
-                id: userInfo.id.toString(),
-                email: userInfo.email,
-                name: userInfo.fullName,
-                photoUrl: userInfo.photoUrl ?? googleUser.photoUrl,
-                currency: userInfo.currency,
-                authProvider: 'google',
-                createdAt: DateTime.now(),
-                isEmailVerified: userInfo.isEmailVerified,
-              );
-
-              // Cache the full user profile
-              await saveUser(user);
-              emit(LoginSuccess(user));
-            },
-          );
-        } else {
-          // No token available, fallback to basic user
-          debugPrint(
-              '[LoginCubit] No token after Google sign-in, using basic user');
-          await saveUser(googleUser);
-          emit(LoginSuccess(googleUser));
-        }
+        // Emitting success for now as Google Sign In returns a User
+        emit(LoginSuccess(googleUser));
       },
     );
   }

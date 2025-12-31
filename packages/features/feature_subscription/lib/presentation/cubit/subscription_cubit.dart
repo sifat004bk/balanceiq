@@ -3,6 +3,7 @@ import '../../domain/usecases/get_all_plans.dart';
 import '../../domain/usecases/get_subscription_status.dart';
 import '../../domain/usecases/create_subscription.dart';
 import '../../domain/usecases/cancel_subscription.dart';
+import 'package:dolfin_core/analytics/analytics_service.dart';
 import 'subscription_state.dart';
 
 /// Cubit for managing subscription state
@@ -11,12 +12,14 @@ class SubscriptionCubit extends Cubit<SubscriptionState> {
   final GetSubscriptionStatus getSubscriptionStatusUseCase;
   final CreateSubscription createSubscriptionUseCase;
   final CancelSubscription cancelSubscriptionUseCase;
+  final AnalyticsService analyticsService;
 
   SubscriptionCubit({
     required this.getAllPlansUseCase,
     required this.getSubscriptionStatusUseCase,
     required this.createSubscriptionUseCase,
     required this.cancelSubscriptionUseCase,
+    required this.analyticsService,
   }) : super(SubscriptionInitial());
 
   /// Load all available plans
@@ -27,7 +30,14 @@ class SubscriptionCubit extends Cubit<SubscriptionState> {
 
     result.fold(
       (failure) => emit(SubscriptionError(failure.message)),
-      (plans) => emit(PlansLoaded(plans: plans)),
+      (plans) {
+        // Log view_promotion when plans are shown
+        analyticsService.logEvent(
+          name: 'view_promotion',
+          parameters: {'items_count': plans.length},
+        );
+        emit(PlansLoaded(plans: plans));
+      },
     );
   }
 
@@ -40,6 +50,12 @@ class SubscriptionCubit extends Cubit<SubscriptionState> {
     await plansResult.fold(
       (failure) async => emit(SubscriptionError(failure.message)),
       (plans) async {
+        // Log view_promotion when plans are shown
+        analyticsService.logEvent(
+          name: 'view_promotion',
+          parameters: {'items_count': plans.length},
+        );
+
         final statusResult = await getSubscriptionStatusUseCase();
         statusResult.fold(
           (failure) => emit(PlansLoaded(plans: plans)),
@@ -67,6 +83,15 @@ class SubscriptionCubit extends Cubit<SubscriptionState> {
     required String planName,
     bool autoRenew = true,
   }) async {
+    // Log begin_checkout
+    await analyticsService.logEvent(
+      name: 'begin_checkout',
+      parameters: {
+        'plan_name': planName,
+        'auto_renew': autoRenew,
+      },
+    );
+
     emit(CreatingSubscription());
 
     final result = await createSubscriptionUseCase(
@@ -76,7 +101,17 @@ class SubscriptionCubit extends Cubit<SubscriptionState> {
 
     result.fold(
       (failure) => emit(SubscriptionError(failure.message)),
-      (subscription) => emit(SubscriptionCreated(subscription)),
+      (subscription) {
+        // Log purchase success
+        analyticsService.logEvent(
+          name: 'purchase',
+          parameters: {
+            'plan_name': planName,
+            'currency': 'USD', // Default assumption, refine if available
+          },
+        );
+        emit(SubscriptionCreated(subscription));
+      },
     );
   }
 
@@ -88,7 +123,17 @@ class SubscriptionCubit extends Cubit<SubscriptionState> {
 
     result.fold(
       (failure) => emit(SubscriptionError(failure.message)),
-      (subscription) => emit(SubscriptionCancelled(subscription)),
+      (subscription) {
+        // Log subscription cancel
+        analyticsService.logEvent(
+          name: 'subscription_cancel',
+          parameters: {
+            'reason': reason ?? 'unknown',
+            'plan_name': subscription.plan?.name ?? 'unknown',
+          },
+        );
+        emit(SubscriptionCancelled(subscription));
+      },
     );
   }
 

@@ -6,6 +6,7 @@ import '../../../domain/usecases/send_verification_email.dart';
 import '../../../domain/usecases/signup.dart';
 import '../../../domain/usecases/sign_in_with_google.dart';
 import 'package:dolfin_core/storage/secure_storage_service.dart';
+import 'package:dolfin_core/analytics/analytics_service.dart';
 
 // States
 abstract class SignupState extends Equatable {
@@ -62,6 +63,7 @@ class SignupCubit extends Cubit<SignupState> {
   final SendVerificationEmail sendVerificationEmail;
   final ResendVerificationEmail resendVerificationEmail;
   final SecureStorageService secureStorage;
+  final AnalyticsService analyticsService;
 
   SignupCubit({
     required this.signup,
@@ -69,6 +71,7 @@ class SignupCubit extends Cubit<SignupState> {
     required this.sendVerificationEmail,
     required this.resendVerificationEmail,
     required this.secureStorage,
+    required this.analyticsService,
   }) : super(SignupInitial());
 
   Future<void> signupWithEmail({
@@ -90,6 +93,14 @@ class SignupCubit extends Cubit<SignupState> {
       (failure) => emit(SignupError(failure.message)),
       (signupResponse) {
         if (signupResponse.success) {
+          // Log signup event
+          analyticsService.logEvent(
+            name: 'sign_up',
+            parameters: {'method': 'email'},
+          );
+          if (signupResponse.data?.id != null) {
+            analyticsService.setUserId(signupResponse.data!.id.toString());
+          }
           emit(SignupSuccess(email));
         } else {
           emit(SignupError(signupResponse.message));
@@ -104,7 +115,15 @@ class SignupCubit extends Cubit<SignupState> {
 
     result.fold(
       (failure) => emit(SignupError(failure.message)),
-      (user) => emit(SignupAuthenticated(user)),
+      (user) {
+        // Log signup event (google sign in used in signup flow)
+        analyticsService.logEvent(
+          name: 'sign_up',
+          parameters: {'method': 'google'},
+        );
+        analyticsService.setUserId(user.id);
+        emit(SignupAuthenticated(user));
+      },
     );
   }
 

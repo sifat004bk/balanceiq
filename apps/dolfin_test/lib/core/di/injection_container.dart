@@ -60,6 +60,7 @@ Future<void> init() async {
       googleSignIn: sl(),
       uuid: sl(),
       useMockDataSource: true, // Test app uses mock
+      analyticsService: sl(),
     ),
   );
 
@@ -69,6 +70,7 @@ Future<void> init() async {
       SubscriptionFeatureConfig(
         dio: sl(),
         secureStorage: sl(),
+        analyticsService: sl(),
       ));
 
   //! Features - Chat
@@ -78,12 +80,12 @@ Future<void> init() async {
       chatConfig: TestChatConfig(),
       dio: sl(),
       secureStorage: sl(),
+      analyticsService: sl(),
       sharedPreferences: sl(),
       databaseHelper: sl(),
       appConstants: sl(),
       uuid: sl(),
       useMockDataSource: true, // Test app uses mock
-      analyticsService: sl(),
     ),
   );
 }

@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../analytics/analytics_service.dart';
 import 'product_tour_service.dart';
 import 'product_tour_state.dart';
 
@@ -12,9 +13,13 @@ import 'product_tour_state.dart';
 /// - Completing or skipping the tour via API
 class ProductTourCubit extends Cubit<ProductTourState> {
   final ProductTourService _tourService;
+  final AnalyticsService _analyticsService;
 
-  ProductTourCubit({required ProductTourService tourService})
-      : _tourService = tourService,
+  ProductTourCubit({
+    required ProductTourService tourService,
+    required AnalyticsService analyticsService,
+  })  : _tourService = tourService,
+        _analyticsService = analyticsService,
         super(const TourInactive());
 
   /// Check if tour should start based on the onboarded status from dashboard API.
@@ -43,6 +48,10 @@ class ProductTourCubit extends Cubit<ProductTourState> {
 
     const firstStep = TourStep.dashboardProfileIcon;
     await _tourService.saveTourStep(firstStep);
+
+    // Log tutorial_begin
+    _analyticsService.logEvent(name: 'tutorial_begin');
+
     emit(const TourActive(currentStep: firstStep));
   }
 
@@ -113,12 +122,26 @@ class ProductTourCubit extends Cubit<ProductTourState> {
   /// Complete the tour successfully (calls API to mark as onboarded)
   Future<void> completeTour() async {
     await _tourService.markTourCompleted();
+
+    // Log tutorial_complete with skipped=false
+    _analyticsService.logEvent(
+      name: 'tutorial_complete',
+      parameters: {'skipped': false},
+    );
+
     emit(const TourCompleted());
   }
 
   /// Skip the entire tour (calls API to mark as onboarded)
   Future<void> skipTour() async {
     await _tourService.markTourSkipped();
+
+    // Log tutorial_complete with skipped=true
+    _analyticsService.logEvent(
+      name: 'tutorial_complete',
+      parameters: {'skipped': true},
+    );
+
     emit(const TourSkipped());
   }
 

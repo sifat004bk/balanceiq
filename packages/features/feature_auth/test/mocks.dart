@@ -15,6 +15,7 @@ import 'package:feature_auth/domain/usecases/signup.dart';
 import 'package:feature_auth/domain/usecases/save_user.dart';
 import 'package:feature_auth/domain/usecases/update_profile.dart';
 import 'package:dolfin_core/currency/currency_cubit.dart';
+import 'package:dolfin_core/analytics/analytics_service.dart';
 import 'package:mocktail/mocktail.dart';
 
 // Data Sources
@@ -62,3 +63,5 @@ class FakeCurrencyCubit extends Fake implements CurrencyCubit {
   @override
   Future<void> reset() async {}
 }
+
+class MockAnalyticsService extends Mock implements AnalyticsService {}

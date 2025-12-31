@@ -24,7 +24,9 @@ void registerCoreModule(GetIt sl) {
   sl.registerFactory(() => ThemeCubit(sl()));
 
   //! Core - Currency
-  sl.registerLazySingleton(() => CurrencyCubit());
+  sl.registerLazySingleton<CurrencyCubit>(
+    () => CurrencyCubit(analyticsService: sl<AnalyticsService>()),
+  );
 
   //! Core - Product Tour
   sl.registerLazySingleton<ProductTourService>(
@@ -32,7 +34,10 @@ void registerCoreModule(GetIt sl) {
         dashboardDataSource: sl<DashboardRemoteDataSource>()),
   );
   sl.registerFactory(
-    () => ProductTourCubit(tourService: sl()),
+    () => ProductTourCubit(
+      tourService: sl(),
+      analyticsService: sl<AnalyticsService>(),
+    ),
   );
   sl.registerLazySingleton<TourWidgetFactory>(() => TourWidgetFactoryImpl());
 

@@ -17,18 +17,26 @@ void main() {
   late MockGetSubscriptionStatus mockGetSubscriptionStatus;
   late MockCreateSubscription mockCreateSubscription;
   late MockCancelSubscription mockCancelSubscription;
+  late MockAnalyticsService mockAnalyticsService;
 
   setUp(() {
     mockGetAllPlans = MockGetAllPlans();
     mockGetSubscriptionStatus = MockGetSubscriptionStatus();
     mockCreateSubscription = MockCreateSubscription();
     mockCancelSubscription = MockCancelSubscription();
+    mockAnalyticsService = MockAnalyticsService();
+
+    when(() => mockAnalyticsService.logEvent(
+          name: any(named: 'name'),
+          parameters: any(named: 'parameters'),
+        )).thenAnswer((_) async {});
 
     subscriptionCubit = SubscriptionCubit(
       getAllPlansUseCase: mockGetAllPlans,
       getSubscriptionStatusUseCase: mockGetSubscriptionStatus,
       createSubscriptionUseCase: mockCreateSubscription,
       cancelSubscriptionUseCase: mockCancelSubscription,
+      analyticsService: mockAnalyticsService,
     );
   });
 
@@ -504,10 +512,10 @@ void main() {
         act: (cubit) => cubit.loadPlansAndStatus(),
         expect: () => [
           isA<PlansLoading>(),
-          isA<PlansLoaded>()
-              .having((s) => s.plans, 'plans', testPlans)
-              .having((s) => s.subscriptionStatus?.hasActiveSubscription,
-                  'hasActiveSubscription', false),
+          isA<PlansLoaded>().having((s) => s.plans, 'plans', testPlans).having(
+              (s) => s.subscriptionStatus?.hasActiveSubscription,
+              'hasActiveSubscription',
+              false),
         ],
       );
 

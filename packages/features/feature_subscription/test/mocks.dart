@@ -5,6 +5,7 @@ import 'package:feature_subscription/domain/usecases/create_subscription.dart';
 import 'package:feature_subscription/domain/usecases/get_all_plans.dart';
 import 'package:feature_subscription/domain/usecases/get_subscription_status.dart';
 import 'package:feature_subscription/presentation/cubit/subscription_cubit.dart';
+import 'package:dolfin_core/analytics/analytics_service.dart';
 import 'package:mocktail/mocktail.dart';
 
 // Data Sources
@@ -26,3 +27,5 @@ class MockCancelSubscription extends Mock implements CancelSubscription {}
 
 // Cubits
 class MockSubscriptionCubit extends Mock implements SubscriptionCubit {}
+
+class MockAnalyticsService extends Mock implements AnalyticsService {}

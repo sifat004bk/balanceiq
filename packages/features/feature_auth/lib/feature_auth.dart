@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:dolfin_core/storage/secure_storage_service.dart';
+import 'package:dolfin_core/analytics/analytics_service.dart';
 
 import 'package:feature_auth/domain/auth_config.dart';
 import 'package:feature_auth/data/datasources/auth_remote_datasource.dart';
@@ -87,6 +88,9 @@ class AuthFeatureConfig {
   /// Default: false
   final bool useMockDataSource;
 
+  /// Analytics service for tracking events
+  final AnalyticsService analyticsService;
+
   const AuthFeatureConfig({
     required this.authConfig,
     required this.secureStorage,
@@ -95,6 +99,7 @@ class AuthFeatureConfig {
     required this.googleSignIn,
     this.uuid,
     this.useMockDataSource = false,
+    required this.analyticsService,
   });
 }
 
@@ -163,6 +168,7 @@ Future<void> initAuthFeature(GetIt sl, AuthFeatureConfig config) async {
         sendVerificationEmail: sl(),
         resendVerificationEmail: sl(),
         secureStorage: config.secureStorage,
+        analyticsService: config.analyticsService,
       ));
 
   sl.registerFactory(() => LoginCubit(
@@ -172,6 +178,7 @@ Future<void> initAuthFeature(GetIt sl, AuthFeatureConfig config) async {
         saveUser: sl(),
         currencyCubit: sl(),
         secureStorage: config.secureStorage,
+        analyticsService: config.analyticsService,
       ));
 
   sl.registerFactory(() => SessionCubit(

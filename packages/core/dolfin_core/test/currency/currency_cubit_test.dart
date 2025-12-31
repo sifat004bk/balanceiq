@@ -2,6 +2,10 @@ import 'package:currency_picker/currency_picker.dart';
 import 'package:dolfin_core/currency/currency_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:dolfin_core/analytics/analytics_service.dart';
+
+class MockAnalyticsService extends Mock implements AnalyticsService {}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -24,13 +28,21 @@ void main() {
   }
 
   group('CurrencyCubit', () {
+    late MockAnalyticsService mockAnalyticsService;
+
     setUp(() {
       SharedPreferences.setMockInitialValues({});
+      mockAnalyticsService = MockAnalyticsService();
+      when(() => mockAnalyticsService.logEvent(
+            name: any(named: 'name'),
+            parameters: any(named: 'parameters'),
+          )).thenAnswer((_) async {});
     });
 
     group('Initial State', () {
       test('should have null as initial currency', () async {
-        final currencyCubit = CurrencyCubit();
+        final currencyCubit =
+            CurrencyCubit(analyticsService: mockAnalyticsService);
         await Future.delayed(const Duration(milliseconds: 50));
 
         expect(currencyCubit.state.currencyCode, isNull);
@@ -49,7 +61,8 @@ void main() {
           'selected_currency_name': 'United States Dollar',
         });
 
-        final currencyCubit = CurrencyCubit();
+        final currencyCubit =
+            CurrencyCubit(analyticsService: mockAnalyticsService);
         await Future.delayed(const Duration(milliseconds: 100));
 
         expect(currencyCubit.state.currencyCode, equals('USD'));
@@ -61,7 +74,8 @@ void main() {
       });
 
       test('should use null when no currency is saved', () async {
-        final currencyCubit = CurrencyCubit();
+        final currencyCubit =
+            CurrencyCubit(analyticsService: mockAnalyticsService);
         await Future.delayed(const Duration(milliseconds: 50));
 
         expect(currencyCubit.state.currencyCode, isNull);
@@ -73,7 +87,8 @@ void main() {
 
     group('Set Currency', () {
       test('should emit new state when currency is set', () async {
-        final currencyCubit = CurrencyCubit();
+        final currencyCubit =
+            CurrencyCubit(analyticsService: mockAnalyticsService);
         await Future.delayed(const Duration(milliseconds: 50));
 
         final states = <CurrencyState>[];
@@ -81,6 +96,11 @@ void main() {
 
         await currencyCubit.setCurrency(createCurrency('EUR', '€', 'Euro'));
         await Future.delayed(const Duration(milliseconds: 50));
+
+        verify(() => mockAnalyticsService.logEvent(
+              name: 'select_currency',
+              parameters: {'currency_code': 'EUR'},
+            )).called(1);
 
         expect(states.length, equals(1));
         expect(states.first.currencyCode, equals('EUR'));
@@ -91,7 +111,8 @@ void main() {
       });
 
       test('should save currency to SharedPreferences', () async {
-        final currencyCubit = CurrencyCubit();
+        final currencyCubit =
+            CurrencyCubit(analyticsService: mockAnalyticsService);
         await Future.delayed(const Duration(milliseconds: 50));
 
         await currencyCubit
@@ -107,7 +128,8 @@ void main() {
 
     group('Format Amount', () {
       test('should format amount with currency symbol', () async {
-        final currencyCubit = CurrencyCubit();
+        final currencyCubit =
+            CurrencyCubit(analyticsService: mockAnalyticsService);
         await Future.delayed(const Duration(milliseconds: 50));
         // Set currency first
         await currencyCubit
@@ -121,7 +143,8 @@ void main() {
       });
 
       test('should handle zero amount', () async {
-        final currencyCubit = CurrencyCubit();
+        final currencyCubit =
+            CurrencyCubit(analyticsService: mockAnalyticsService);
         await Future.delayed(const Duration(milliseconds: 50));
 
         final formatted = currencyCubit.formatAmount(0);
@@ -131,7 +154,8 @@ void main() {
       });
 
       test('should handle large amounts with commas', () async {
-        final currencyCubit = CurrencyCubit();
+        final currencyCubit =
+            CurrencyCubit(analyticsService: mockAnalyticsService);
         await Future.delayed(const Duration(milliseconds: 50));
 
         final formatted = currencyCubit.formatAmount(1000000.50);
@@ -141,7 +165,8 @@ void main() {
       });
 
       test('should handle negative amounts', () async {
-        final currencyCubit = CurrencyCubit();
+        final currencyCubit =
+            CurrencyCubit(analyticsService: mockAnalyticsService);
         await Future.delayed(const Duration(milliseconds: 50));
 
         final formatted = currencyCubit.formatAmount(-500.25);
@@ -153,7 +178,8 @@ void main() {
 
     group('Format Amount With Sign', () {
       test('should format income with + sign', () async {
-        final currencyCubit = CurrencyCubit();
+        final currencyCubit =
+            CurrencyCubit(analyticsService: mockAnalyticsService);
         await Future.delayed(const Duration(milliseconds: 50));
 
         final formatted =
@@ -165,7 +191,8 @@ void main() {
       });
 
       test('should format expense with - sign', () async {
-        final currencyCubit = CurrencyCubit();
+        final currencyCubit =
+            CurrencyCubit(analyticsService: mockAnalyticsService);
         await Future.delayed(const Duration(milliseconds: 50));
 
         final formatted =
@@ -179,7 +206,8 @@ void main() {
 
     group('Format Compact', () {
       test('should format millions with M suffix', () async {
-        final currencyCubit = CurrencyCubit();
+        final currencyCubit =
+            CurrencyCubit(analyticsService: mockAnalyticsService);
         await Future.delayed(const Duration(milliseconds: 50));
         await currencyCubit
             .setCurrency(createCurrency('BDT', '৳', 'Bangladeshi Taka'));
@@ -191,7 +219,8 @@ void main() {
       });
 
       test('should format thousands with K suffix', () async {
-        final currencyCubit = CurrencyCubit();
+        final currencyCubit =
+            CurrencyCubit(analyticsService: mockAnalyticsService);
         await Future.delayed(const Duration(milliseconds: 50));
         await currencyCubit
             .setCurrency(createCurrency('BDT', '৳', 'Bangladeshi Taka'));
@@ -203,7 +232,8 @@ void main() {
       });
 
       test('should format small amounts normally', () async {
-        final currencyCubit = CurrencyCubit();
+        final currencyCubit =
+            CurrencyCubit(analyticsService: mockAnalyticsService);
         await Future.delayed(const Duration(milliseconds: 50));
 
         final formatted = currencyCubit.formatCompact(999);
@@ -217,7 +247,8 @@ void main() {
 
     group('Symbol Getter', () {
       test('should return empty string if currency unset', () async {
-        final currencyCubit = CurrencyCubit();
+        final currencyCubit =
+            CurrencyCubit(analyticsService: mockAnalyticsService);
         await Future.delayed(const Duration(milliseconds: 50));
 
         expect(currencyCubit.symbol, equals(''));
@@ -226,7 +257,8 @@ void main() {
       });
 
       test('should return updated symbol after currency change', () async {
-        final currencyCubit = CurrencyCubit();
+        final currencyCubit =
+            CurrencyCubit(analyticsService: mockAnalyticsService);
         await Future.delayed(const Duration(milliseconds: 50));
 
         await currencyCubit
@@ -239,7 +271,8 @@ void main() {
 
     group('Has Currency Been Set', () {
       test('should return false when no currency has been saved', () async {
-        final currencyCubit = CurrencyCubit();
+        final currencyCubit =
+            CurrencyCubit(analyticsService: mockAnalyticsService);
         final hasBeenSet = await currencyCubit.hasCurrencyBeenSet();
 
         expect(hasBeenSet, isFalse);
@@ -250,7 +283,8 @@ void main() {
         SharedPreferences.setMockInitialValues(
             {'selected_currency_code': 'EUR'});
 
-        final currencyCubit = CurrencyCubit();
+        final currencyCubit =
+            CurrencyCubit(analyticsService: mockAnalyticsService);
         final hasBeenSet = await currencyCubit.hasCurrencyBeenSet();
 
         expect(hasBeenSet, isTrue);
@@ -261,13 +295,13 @@ void main() {
     group('Integration Tests', () {
       test('should persist and reload currency across cubit instances',
           () async {
-        var cubit1 = CurrencyCubit();
+        var cubit1 = CurrencyCubit(analyticsService: mockAnalyticsService);
         await Future.delayed(const Duration(milliseconds: 50));
 
         await cubit1.setCurrency(createCurrency('JPY', '¥', 'Japanese Yen'));
         await cubit1.close();
 
-        var cubit2 = CurrencyCubit();
+        var cubit2 = CurrencyCubit(analyticsService: mockAnalyticsService);
         await Future.delayed(const Duration(milliseconds: 100));
 
         expect(cubit2.state.currencyCode, equals('JPY'));
@@ -277,7 +311,8 @@ void main() {
       });
 
       test('should handle formatting with different currencies', () async {
-        final currencyCubit = CurrencyCubit();
+        final currencyCubit =
+            CurrencyCubit(analyticsService: mockAnalyticsService);
         await Future.delayed(const Duration(milliseconds: 50));
 
         // Set BDT first

@@ -2,6 +2,7 @@ import 'package:currency_picker/currency_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../analytics/analytics_service.dart';
 
 /// Currency state
 class CurrencyState {
@@ -43,7 +44,12 @@ class CurrencyCubit extends Cubit<CurrencyState> {
   static const String _currencySymbolKey = 'selected_currency_symbol';
   static const String _currencyNameKey = 'selected_currency_name';
 
-  CurrencyCubit() : super(CurrencyState.initial()) {
+  final AnalyticsService _analyticsService;
+
+  CurrencyCubit({
+    required AnalyticsService analyticsService,
+  })  : _analyticsService = analyticsService,
+        super(CurrencyState.initial()) {
     _loadSavedCurrency();
   }
 
@@ -75,6 +81,12 @@ class CurrencyCubit extends Cubit<CurrencyState> {
       currencySymbol: currency.symbol,
       currencyName: currency.name,
     ));
+
+    // Log select_currency
+    await _analyticsService.logEvent(
+      name: 'select_currency',
+      parameters: {'currency_code': currency.code},
+    );
   }
 
   /// Set currency by code string (e.g., 'USD', 'BDT')

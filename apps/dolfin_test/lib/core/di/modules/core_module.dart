@@ -1,5 +1,6 @@
 import 'package:dolfin_ui_kit/theme/app_palette.dart';
 import 'package:get_it/get_it.dart';
+import 'package:dolfin_core/analytics/analytics_service.dart';
 
 import 'package:dolfin_ui_kit/theme/theme_cubit.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -19,14 +20,19 @@ void registerCoreModule(GetIt sl) {
   sl.registerFactory(() => ThemeCubit(sl()));
 
   //! Core - Currency
-  sl.registerLazySingleton(() => CurrencyCubit());
+  sl.registerLazySingleton<CurrencyCubit>(
+    () => CurrencyCubit(analyticsService: sl<AnalyticsService>()),
+  );
 
   //! Core - Product Tour (simplified for test app)
   sl.registerLazySingleton<ProductTourService>(
     () => TestProductTourService(),
   );
   sl.registerFactory(
-    () => ProductTourCubit(tourService: sl()),
+    () => ProductTourCubit(
+      tourService: sl(),
+      analyticsService: sl<AnalyticsService>(),
+    ),
   );
   sl.registerLazySingleton<TourWidgetFactory>(() => TestTourWidgetFactory());
 

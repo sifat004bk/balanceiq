@@ -25,6 +25,7 @@ void main() {
   late MockGetProfile mockGetProfile;
   late MockSaveUser mockSaveUser;
   late MockSecureStorageService mockSecureStorage;
+  late MockAnalyticsService mockAnalyticsService;
 
   setUp(() {
     mockLogin = MockLogin();
@@ -32,6 +33,14 @@ void main() {
     mockGetProfile = MockGetProfile();
     mockSaveUser = MockSaveUser();
     mockSecureStorage = MockSecureStorageService();
+    mockAnalyticsService = MockAnalyticsService();
+
+    when(() => mockAnalyticsService.logEvent(
+          name: any(named: 'name'),
+          parameters: any(named: 'parameters'),
+        )).thenAnswer((_) async {});
+
+    when(() => mockAnalyticsService.setUserId(any())).thenAnswer((_) async {});
 
     loginCubit = LoginCubit(
       login: mockLogin,
@@ -40,6 +49,7 @@ void main() {
       saveUser: mockSaveUser,
       currencyCubit: FakeCurrencyCubit(),
       secureStorage: mockSecureStorage,
+      analyticsService: mockAnalyticsService,
     );
   });
 

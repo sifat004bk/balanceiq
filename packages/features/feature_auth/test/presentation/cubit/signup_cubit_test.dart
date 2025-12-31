@@ -19,6 +19,7 @@ void main() {
   late MockSendVerificationEmail mockSendVerificationEmail;
   late MockResendVerificationEmail mockResendVerificationEmail;
   late MockSecureStorageService mockSecureStorage;
+  late MockAnalyticsService mockAnalyticsService;
 
   setUp(() {
     mockSignup = MockSignup();
@@ -26,6 +27,14 @@ void main() {
     mockSendVerificationEmail = MockSendVerificationEmail();
     mockResendVerificationEmail = MockResendVerificationEmail();
     mockSecureStorage = MockSecureStorageService();
+    mockAnalyticsService = MockAnalyticsService();
+
+    when(() => mockAnalyticsService.logEvent(
+          name: any(named: 'name'),
+          parameters: any(named: 'parameters'),
+        )).thenAnswer((_) async {});
+
+    when(() => mockAnalyticsService.setUserId(any())).thenAnswer((_) async {});
 
     signupCubit = SignupCubit(
       signup: mockSignup,
@@ -33,6 +42,7 @@ void main() {
       sendVerificationEmail: mockSendVerificationEmail,
       resendVerificationEmail: mockResendVerificationEmail,
       secureStorage: mockSecureStorage,
+      analyticsService: mockAnalyticsService,
     );
   });
 

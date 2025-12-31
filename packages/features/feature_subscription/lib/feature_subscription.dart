@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:dolfin_core/storage/secure_storage_service.dart';
+import 'package:dolfin_core/analytics/analytics_service.dart';
 
 import 'package:feature_subscription/data/datasources/subscription_datasource.dart';
 import 'package:feature_subscription/data/repositories/subscription_repository_impl.dart';
@@ -27,9 +28,13 @@ class SubscriptionFeatureConfig {
   /// Secure storage for auth tokens
   final SecureStorageService secureStorage;
 
+  /// Analytics service
+  final AnalyticsService analyticsService;
+
   const SubscriptionFeatureConfig({
     required this.dio,
     required this.secureStorage,
+    required this.analyticsService,
   });
 }
 
@@ -61,6 +66,7 @@ Future<void> initSubscriptionFeature(
       getSubscriptionStatusUseCase: sl(),
       createSubscriptionUseCase: sl(),
       cancelSubscriptionUseCase: sl(),
+      analyticsService: config.analyticsService,
     ),
   );
 }

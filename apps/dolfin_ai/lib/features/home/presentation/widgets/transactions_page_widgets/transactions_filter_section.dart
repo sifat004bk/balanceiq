@@ -38,7 +38,6 @@ class _TransactionsFilterSectionState extends State<TransactionsFilterSection> {
         currentLabel:
             null, // Logic for this screen needs separate handling if needed, passing null for now
         onDateSelected: (start, end, label) {
-          Navigator.pop(bottomSheetContext);
           context.read<TransactionFilterCubit>().updateDateRange(start, end);
         },
         onCustomRangePressed: () async {

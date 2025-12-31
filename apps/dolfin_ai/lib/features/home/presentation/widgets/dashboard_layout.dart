@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
 import '../../domain/entities/dashbaord_summary.dart';
 import 'analysis_widgets/accounts_breakdown_widget.dart';
 import 'analysis_widgets/analysis_carousel.dart';
 import 'analysis_widgets/category_breakdown_widget.dart';
-import 'analysis_widgets/spending_trend_chart.dart';
 import 'dashboard_widgets/balance_card_widget.dart';
 import 'dashboard_widgets/biggest_expense_widget.dart';
 import 'dashboard_widgets/biggest_income_widget.dart';
@@ -75,15 +73,7 @@ class DashboardLayout extends StatelessWidget {
                   totalIncome: summary.totalIncome,
                   totalExpense: summary.totalExpense,
                   period: summary.period,
-                )
-                    .animate()
-                    .fadeIn(duration: 500.ms, curve: Curves.easeOutCubic)
-                    .slideY(
-                      begin: 0.1,
-                      end: 0,
-                      duration: 500.ms,
-                      curve: Curves.easeOutCubic,
-                    ),
+                ),
               ),
 
               SliverToBoxAdapter(
@@ -97,20 +87,7 @@ class DashboardLayout extends StatelessWidget {
                 SliverToBoxAdapter(
                   child: AnalysisCarousel(
                     summary: summary,
-                  )
-                      .animate()
-                      .fadeIn(
-                        delay: 150.ms,
-                        duration: 500.ms,
-                        curve: Curves.easeOutCubic,
-                      )
-                      .scaleXY(
-                        begin: 0.95,
-                        end: 1,
-                        delay: 150.ms,
-                        duration: 500.ms,
-                        curve: Curves.easeOutCubic,
-                      ),
+                  ),
                 ),
                 SliverToBoxAdapter(
                   child: const SizedBox(height: 16),
@@ -125,20 +102,7 @@ class DashboardLayout extends StatelessWidget {
                     expenseRatio: summary.expenseRatio,
                     savingsRate: summary.savingsRate,
                   ),
-                )
-                    .animate()
-                    .fadeIn(
-                      delay: 250.ms,
-                      duration: 500.ms,
-                      curve: Curves.easeOutCubic,
-                    )
-                    .slideX(
-                      begin: -0.05,
-                      end: 0,
-                      delay: 250.ms,
-                      duration: 500.ms,
-                      curve: Curves.easeOutCubic,
-                    ),
+                ),
               ),
 
               SliverToBoxAdapter(
@@ -150,20 +114,7 @@ class DashboardLayout extends StatelessWidget {
                 SliverToBoxAdapter(
                   child: AccountsBreakdownWidget(
                     accountsBreakdown: summary.accountsBreakdown,
-                  )
-                      .animate()
-                      .fadeIn(
-                        delay: 350.ms,
-                        duration: 500.ms,
-                        curve: Curves.easeOutCubic,
-                      )
-                      .slideY(
-                        begin: 0.05,
-                        end: 0,
-                        delay: 350.ms,
-                        duration: 500.ms,
-                        curve: Curves.easeOutCubic,
-                      ),
+                  ),
                 ),
                 SliverToBoxAdapter(
                   child: const SizedBox(height: 16),
@@ -179,20 +130,7 @@ class DashboardLayout extends StatelessWidget {
                       BiggestIncomeWidget(
                         amount: summary.biggestIncomeAmount,
                         description: summary.biggestIncomeDescription,
-                      )
-                          .animate()
-                          .fadeIn(
-                            delay: 450.ms,
-                            duration: 500.ms,
-                            curve: Curves.easeOutCubic,
-                          )
-                          .slideX(
-                            begin: 0.05,
-                            end: 0,
-                            delay: 450.ms,
-                            duration: 500.ms,
-                            curve: Curves.easeOutCubic,
-                          ),
+                      ),
                       if (summary.biggestIncomeAmount > 0)
                         const SizedBox(height: 16),
                       BiggestExpenseWidget(
@@ -200,20 +138,7 @@ class DashboardLayout extends StatelessWidget {
                         description: summary.biggestExpenseDescription,
                         category: summary.expenseCategory,
                         account: summary.expenseAccount,
-                      )
-                          .animate()
-                          .fadeIn(
-                            delay: 550.ms,
-                            duration: 500.ms,
-                            curve: Curves.easeOutCubic,
-                          )
-                          .slideX(
-                            begin: -0.05,
-                            end: 0,
-                            delay: 550.ms,
-                            duration: 500.ms,
-                            curve: Curves.easeOutCubic,
-                          ),
+                      ),
                     ],
                   ),
                 ),
@@ -230,20 +155,7 @@ class DashboardLayout extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: CategoryBreakdownWidget(
                       categories: summary.categories,
-                    )
-                        .animate()
-                        .fadeIn(
-                          delay: 650.ms,
-                          duration: 500.ms,
-                          curve: Curves.easeOutCubic,
-                        )
-                        .slideY(
-                          begin: 0.05,
-                          end: 0,
-                          delay: 650.ms,
-                          duration: 500.ms,
-                          curve: Curves.easeOutCubic,
-                        ),
+                    ),
                   ),
                 ),
                 SliverToBoxAdapter(
@@ -254,24 +166,11 @@ class DashboardLayout extends StatelessWidget {
               // Transaction History
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.only(bottom: 120), // Bottom spacer
+                  padding: const EdgeInsets.only(bottom: 120),
                   child: TransactionHistoryWidget(
                     onViewAll: () =>
                         Navigator.pushNamed(context, '/transactions'),
-                  )
-                      .animate()
-                      .fadeIn(
-                        delay: 750.ms,
-                        duration: 500.ms,
-                        curve: Curves.easeOutCubic,
-                      )
-                      .slideY(
-                        begin: 0.05,
-                        end: 0,
-                        delay: 750.ms,
-                        duration: 500.ms,
-                        curve: Curves.easeOutCubic,
-                      ),
+                  ),
                 ),
               ),
             ],

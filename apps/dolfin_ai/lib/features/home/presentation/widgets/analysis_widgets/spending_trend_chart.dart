@@ -176,7 +176,6 @@ class SpendingTrendChart extends StatelessWidget {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(22.5),
             child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
               child: Container(
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
                 decoration: BoxDecoration(

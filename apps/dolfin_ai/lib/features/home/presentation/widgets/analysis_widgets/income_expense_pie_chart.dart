@@ -52,90 +52,95 @@ class _IncomeExpensePieChartState extends State<IncomeExpensePieChart> {
           ],
         ),
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(22.5),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: colorScheme.surface.withValues(alpha: isDark ? 0.4 : 0.7),
-              borderRadius: BorderRadius.circular(22.5),
-              border: Border.all(
-                color: Colors.white.withValues(alpha: 0.1),
-                width: 0.5,
+      child: RepaintBoundary(
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(22.5),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color:
+                    colorScheme.surface.withValues(alpha: isDark ? 0.4 : 0.7),
+                borderRadius: BorderRadius.circular(22.5),
+                border: Border.all(
+                  color: Colors.white.withValues(alpha: 0.1),
+                  width: 0.5,
+                ),
               ),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: AspectRatio(
-                    aspectRatio: 1,
-                    child: PieChart(
-                      PieChartData(
-                        pieTouchData: PieTouchData(
-                          touchCallback:
-                              (FlTouchEvent event, pieTouchResponse) {
-                            setState(() {
-                              if (!event.isInterestedForInteractions ||
-                                  pieTouchResponse == null ||
-                                  pieTouchResponse.touchedSection == null) {
-                                touchedIndex = -1;
-                                return;
-                              }
-                              touchedIndex = pieTouchResponse
-                                  .touchedSection!.touchedSectionIndex;
-                            });
-                          },
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: AspectRatio(
+                      aspectRatio: 1,
+                      child: PieChart(
+                        PieChartData(
+                          pieTouchData: PieTouchData(
+                            touchCallback:
+                                (FlTouchEvent event, pieTouchResponse) {
+                              setState(() {
+                                if (!event.isInterestedForInteractions ||
+                                    pieTouchResponse == null ||
+                                    pieTouchResponse.touchedSection == null) {
+                                  touchedIndex = -1;
+                                  return;
+                                }
+                                touchedIndex = pieTouchResponse
+                                    .touchedSection!.touchedSectionIndex;
+                              });
+                            },
+                          ),
+                          borderData: FlBorderData(
+                            show: false,
+                          ),
+                          sectionsSpace: 2,
+                          centerSpaceRadius: 20,
+                          sections: showingSections(
+                              colorScheme, income, expense, total),
                         ),
-                        borderData: FlBorderData(
-                          show: false,
-                        ),
-                        sectionsSpace: 2,
-                        centerSpaceRadius: 20,
-                        sections: showingSections(
-                            colorScheme, income, expense, total),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  flex: 3,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Cash Flow',
-                        style: textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 0.5,
+                  const SizedBox(width: 16),
+                  Expanded(
+                    flex: 3,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Cash Flow',
+                          style: textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.5,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 12),
-                      _buildLegendItem(
-                        context,
-                        color: const Color(0xFF4CAF50), // Income Green
-                        label: 'Income',
-                        amount: currencyCubit.formatAmount(income),
-                        percentage: total > 0 ? (income / total * 100) : 0,
-                        isTouched: touchedIndex == 0,
-                      ),
-                      const SizedBox(height: 8),
-                      _buildLegendItem(
-                        context,
-                        color: const Color(0xFFF44336), // Expense Red
-                        label: 'Expense',
-                        amount: currencyCubit.formatAmount(expense),
-                        percentage: total > 0 ? (expense / total * 100) : 0,
-                        isTouched: touchedIndex == 1,
-                      ),
-                    ],
+                        const SizedBox(height: 12),
+                        _buildLegendItem(
+                          context,
+                          color: const Color(0xFF4CAF50),
+                          // Income Green
+                          label: 'Income',
+                          amount: currencyCubit.formatAmount(income),
+                          percentage: total > 0 ? (income / total * 100) : 0,
+                          isTouched: touchedIndex == 0,
+                        ),
+                        const SizedBox(height: 8),
+                        _buildLegendItem(
+                          context,
+                          color: const Color(0xFFF44336),
+                          // Expense Red
+                          label: 'Expense',
+                          amount: currencyCubit.formatAmount(expense),
+                          percentage: total > 0 ? (expense / total * 100) : 0,
+                          isTouched: touchedIndex == 1,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

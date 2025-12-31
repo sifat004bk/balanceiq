@@ -160,273 +160,278 @@ class SpendingTrendChart extends StatelessWidget {
     }
 
     return Container(
-      padding: const EdgeInsets.all(1.5),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            colorScheme.primary.withValues(alpha: 0.4),
-            colorScheme.primary.withValues(alpha: 0.1),
-          ],
+        padding: const EdgeInsets.all(1.5),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(24),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              colorScheme.primary.withValues(alpha: 0.4),
+              colorScheme.primary.withValues(alpha: 0.1),
+            ],
+          ),
         ),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(22.5),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
-          child: Container(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-            decoration: BoxDecoration(
-              color: colorScheme.surface.withValues(alpha: isDark ? 0.4 : 0.7),
-              borderRadius: BorderRadius.circular(22.5),
-              border: Border.all(
-                color: Colors.white.withValues(alpha: 0.1),
-                width: 0.5,
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: RepaintBoundary(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(22.5),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+                decoration: BoxDecoration(
+                  color:
+                      colorScheme.surface.withValues(alpha: isDark ? 0.4 : 0.7),
+                  borderRadius: BorderRadius.circular(22.5),
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.1),
+                    width: 0.5,
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          GetIt.I<DashboardStrings>().spendingTrend,
-                          style: textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 0.5,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Row(
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Legend: Spending
-                            Container(
-                              width: 8,
-                              height: 8,
-                              decoration: BoxDecoration(
-                                color: colorScheme.primary,
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                            const SizedBox(width: 4),
                             Text(
-                              'Spending',
-                              style: textTheme.bodySmall?.copyWith(
-                                color: Theme.of(context).hintColor,
-                                fontSize: 10,
+                              GetIt.I<DashboardStrings>().spendingTrend,
+                              style: textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 0.5,
                               ),
                             ),
-                            const SizedBox(width: 12),
-                            // Legend: Average
-                            Container(
-                              width:
-                                  12, // slightly wider for dash effect representation
-                              height: 2,
-                              color: colorScheme.tertiary,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              'Avg: ${currencyCubit.formatAmount(averageAmount)}$frequencyLabel',
-                              style: textTheme.bodySmall?.copyWith(
-                                color: Theme.of(context).hintColor,
-                                fontSize: 10,
-                              ),
+                            const SizedBox(height: 4),
+                            Row(
+                              children: [
+                                // Legend: Spending
+                                Container(
+                                  width: 8,
+                                  height: 8,
+                                  decoration: BoxDecoration(
+                                    color: colorScheme.primary,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  'Spending',
+                                  style: textTheme.bodySmall?.copyWith(
+                                    color: Theme.of(context).hintColor,
+                                    fontSize: 10,
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                // Legend: Average
+                                Container(
+                                  width:
+                                      12, // slightly wider for dash effect representation
+                                  height: 2,
+                                  color: colorScheme.tertiary,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  'Avg: ${currencyCubit.formatAmount(averageAmount)}$frequencyLabel',
+                                  style: textTheme.bodySmall?.copyWith(
+                                    color: Theme.of(context).hintColor,
+                                    fontSize: 10,
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
+                        // Optional: Add trend indicator here later
                       ],
                     ),
-                    // Optional: Add trend indicator here later
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Expanded(
-                  child: LineChart(
-                    LineChartData(
-                      gridData: const FlGridData(show: false),
-                      titlesData: FlTitlesData(
-                        show: true,
-                        rightTitles: const AxisTitles(
-                          sideTitles: SideTitles(showTitles: false),
-                        ),
-                        topTitles: const AxisTitles(
-                          sideTitles: SideTitles(showTitles: false),
-                        ),
-                        leftTitles: const AxisTitles(
-                          sideTitles: SideTitles(showTitles: false),
-                        ),
-                        bottomTitles: AxisTitles(
-                          sideTitles: SideTitles(
-                            showTitles: true,
-                            interval: 1,
-                            getTitlesWidget: (value, meta) {
-                              final index = value.toInt();
-                              if (index < 0 ||
-                                  index >= aggregatedPoints.length) {
-                                return const SizedBox.shrink();
-                              }
+                    const SizedBox(height: 12),
+                    Expanded(
+                      child: LineChart(
+                        LineChartData(
+                          gridData: const FlGridData(show: false),
+                          titlesData: FlTitlesData(
+                            show: true,
+                            rightTitles: const AxisTitles(
+                              sideTitles: SideTitles(showTitles: false),
+                            ),
+                            topTitles: const AxisTitles(
+                              sideTitles: SideTitles(showTitles: false),
+                            ),
+                            leftTitles: const AxisTitles(
+                              sideTitles: SideTitles(showTitles: false),
+                            ),
+                            bottomTitles: AxisTitles(
+                              sideTitles: SideTitles(
+                                showTitles: true,
+                                interval: 1,
+                                getTitlesWidget: (value, meta) {
+                                  final index = value.toInt();
+                                  if (index < 0 ||
+                                      index >= aggregatedPoints.length) {
+                                    return const SizedBox.shrink();
+                                  }
 
-                              if (visibleIndices.contains(index)) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(top: 8),
-                                  child: Text(
-                                    aggregatedPoints[index].label,
-                                    style: textTheme.bodySmall?.copyWith(
-                                      color: Theme.of(context)
-                                          .hintColor
-                                          .withValues(alpha: 0.8),
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                );
-                              }
-                              return const SizedBox.shrink();
-                            },
-                          ),
-                        ),
-                      ),
-                      borderData: FlBorderData(show: false),
-                      minX: 0,
-                      maxX: xMax,
-                      minY: 0,
-                      maxY: maxAmount * 1.05,
-                      extraLinesData: ExtraLinesData(
-                        horizontalLines: [
-                          HorizontalLine(
-                            y: averageAmount,
-                            color: colorScheme.tertiary.withValues(alpha: 0.5),
-                            strokeWidth: 1.5,
-                            dashArray: [5, 5],
-                            label: HorizontalLineLabel(
-                              show: true,
-                              alignment: Alignment.topRight,
-                              padding:
-                                  const EdgeInsets.only(right: 5, bottom: 2),
-                              style: textTheme.labelSmall?.copyWith(
-                                color: colorScheme.tertiary,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 10,
+                                  if (visibleIndices.contains(index)) {
+                                    return Padding(
+                                      padding: const EdgeInsets.only(top: 8),
+                                      child: Text(
+                                        aggregatedPoints[index].label,
+                                        style: textTheme.bodySmall?.copyWith(
+                                          color: Theme.of(context)
+                                              .hintColor
+                                              .withValues(alpha: 0.8),
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                  return const SizedBox.shrink();
+                                },
                               ),
-                              labelResolver: (line) => 'Avg',
                             ),
                           ),
-                        ],
-                      ),
-                      lineBarsData: [
-                        LineChartBarData(
-                          spots: aggregatedPoints
-                              .asMap()
-                              .entries
-                              .map((e) =>
-                                  FlSpot(e.key.toDouble(), e.value.amount))
-                              .toList(),
-                          isCurved: true,
-                          curveSmoothness: 0.35,
-                          color: colorScheme.primary,
-                          barWidth: 3,
-                          isStrokeCapRound: true,
-                          dotData: FlDotData(
-                            show: true,
-                            checkToShowDot: (spot, barData) {
-                              return spot.y == maxAmount;
-                            },
-                            getDotPainter: (spot, percent, barData, index) {
-                              return FlDotCirclePainter(
-                                radius: 4,
-                                color: colorScheme.surface,
-                                strokeWidth: 2,
-                                strokeColor: colorScheme.primary,
-                              );
-                            },
-                          ),
-                          belowBarData: BarAreaData(
-                            show: true,
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [
-                                colorScheme.primary.withValues(alpha: 0.3),
-                                colorScheme.primary.withValues(alpha: 0.05),
-                                Colors.transparent,
-                              ],
-                              stops: const [0, 0.7, 1],
-                            ),
-                          ),
-                        ),
-                      ],
-                      lineTouchData: LineTouchData(
-                        touchTooltipData: LineTouchTooltipData(
-                          getTooltipColor: (spot) =>
-                              colorScheme.inverseSurface.withValues(alpha: 0.9),
-                          tooltipRoundedRadius: 16,
-                          tooltipPadding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 8),
-                          getTooltipItems: (touchedSpots) {
-                            if (touchedSpots.isNotEmpty) {
-                              HapticFeedback.lightImpact();
-                            }
-                            return touchedSpots.map((spot) {
-                              return LineTooltipItem(
-                                currencyCubit.formatAmount(spot.y),
-                                textTheme.labelLarge!.copyWith(
-                                  color: colorScheme.onInverseSurface,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                children: [
-                                  TextSpan(
-                                    text:
-                                        '\n${aggregatedPoints[spot.x.toInt()].label}',
-                                    style: textTheme.labelSmall?.copyWith(
-                                      color: colorScheme.onInverseSurface
-                                          .withValues(alpha: 0.7),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }).toList();
-                          },
-                        ),
-                        getTouchedSpotIndicator: (barData, spotIndexes) {
-                          return spotIndexes.map((spotIndex) {
-                            return TouchedSpotIndicatorData(
-                              FlLine(
+                          borderData: FlBorderData(show: false),
+                          minX: 0,
+                          maxX: xMax,
+                          minY: 0,
+                          maxY: maxAmount * 1.05,
+                          extraLinesData: ExtraLinesData(
+                            horizontalLines: [
+                              HorizontalLine(
+                                y: averageAmount,
                                 color:
-                                    colorScheme.primary.withValues(alpha: 0.5),
-                                strokeWidth: 2,
+                                    colorScheme.tertiary.withValues(alpha: 0.5),
+                                strokeWidth: 1.5,
                                 dashArray: [5, 5],
+                                label: HorizontalLineLabel(
+                                  show: true,
+                                  alignment: Alignment.topRight,
+                                  padding: const EdgeInsets.only(
+                                      right: 5, bottom: 2),
+                                  style: textTheme.labelSmall?.copyWith(
+                                    color: colorScheme.tertiary,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 10,
+                                  ),
+                                  labelResolver: (line) => 'Avg',
+                                ),
                               ),
-                              FlDotData(
+                            ],
+                          ),
+                          lineBarsData: [
+                            LineChartBarData(
+                              spots: aggregatedPoints
+                                  .asMap()
+                                  .entries
+                                  .map((e) =>
+                                      FlSpot(e.key.toDouble(), e.value.amount))
+                                  .toList(),
+                              isCurved: true,
+                              curveSmoothness: 0.35,
+                              color: colorScheme.primary,
+                              barWidth: 3,
+                              isStrokeCapRound: true,
+                              dotData: FlDotData(
+                                show: true,
+                                checkToShowDot: (spot, barData) {
+                                  return spot.y == maxAmount;
+                                },
                                 getDotPainter: (spot, percent, barData, index) {
                                   return FlDotCirclePainter(
-                                    radius: 6,
+                                    radius: 4,
                                     color: colorScheme.surface,
-                                    strokeWidth: 3,
-                                    strokeColor: colorScheme.secondary,
+                                    strokeWidth: 2,
+                                    strokeColor: colorScheme.primary,
                                   );
                                 },
                               ),
-                            );
-                          }).toList();
-                        },
+                              belowBarData: BarAreaData(
+                                show: true,
+                                gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [
+                                    colorScheme.primary.withValues(alpha: 0.3),
+                                    colorScheme.primary.withValues(alpha: 0.05),
+                                    Colors.transparent,
+                                  ],
+                                  stops: const [0, 0.7, 1],
+                                ),
+                              ),
+                            ),
+                          ],
+                          lineTouchData: LineTouchData(
+                            touchTooltipData: LineTouchTooltipData(
+                              getTooltipColor: (spot) => colorScheme
+                                  .inverseSurface
+                                  .withValues(alpha: 0.9),
+                              tooltipRoundedRadius: 16,
+                              tooltipPadding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
+                              getTooltipItems: (touchedSpots) {
+                                if (touchedSpots.isNotEmpty) {
+                                  HapticFeedback.lightImpact();
+                                }
+                                return touchedSpots.map((spot) {
+                                  return LineTooltipItem(
+                                    currencyCubit.formatAmount(spot.y),
+                                    textTheme.labelLarge!.copyWith(
+                                      color: colorScheme.onInverseSurface,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    children: [
+                                      TextSpan(
+                                        text:
+                                            '\n${aggregatedPoints[spot.x.toInt()].label}',
+                                        style: textTheme.labelSmall?.copyWith(
+                                          color: colorScheme.onInverseSurface
+                                              .withValues(alpha: 0.7),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                }).toList();
+                              },
+                            ),
+                            getTouchedSpotIndicator: (barData, spotIndexes) {
+                              return spotIndexes.map((spotIndex) {
+                                return TouchedSpotIndicatorData(
+                                  FlLine(
+                                    color: colorScheme.primary
+                                        .withValues(alpha: 0.5),
+                                    strokeWidth: 2,
+                                    dashArray: [5, 5],
+                                  ),
+                                  FlDotData(
+                                    getDotPainter:
+                                        (spot, percent, barData, index) {
+                                      return FlDotCirclePainter(
+                                        radius: 6,
+                                        color: colorScheme.surface,
+                                        strokeWidth: 3,
+                                        strokeColor: colorScheme.secondary,
+                                      );
+                                    },
+                                  ),
+                                );
+                              }).toList();
+                            },
+                          ),
+                        ),
+                        duration: const Duration(milliseconds: 250),
+                        curve: Curves.easeInOutCubic,
                       ),
                     ),
-                    duration: const Duration(milliseconds: 250),
-                    curve: Curves.easeInOutCubic,
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 
   String _getMonthName(int month) {

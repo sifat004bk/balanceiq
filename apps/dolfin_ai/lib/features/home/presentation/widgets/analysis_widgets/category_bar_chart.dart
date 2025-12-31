@@ -49,6 +49,7 @@ class CategoryBarChart extends StatelessWidget {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(22.5),
             child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
               child: Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(

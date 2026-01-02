@@ -4,6 +4,8 @@ import '../../network/auth_interceptor.dart';
 import '../../network/logging_interceptor.dart';
 import 'package:dio_smart_retry/dio_smart_retry.dart';
 import 'package:dolfin_core/utils/app_logger.dart';
+import 'package:dolfin_core/constants/app_constants.dart';
+import 'package:dolfin_core/network/interceptors/certificate_pinning_interceptor.dart';
 
 void registerNetworkModule(GetIt sl) {
   // Configure Dio with logging interceptor (only logs in debug mode)
@@ -31,10 +33,17 @@ void registerNetworkModule(GetIt sl) {
       ],
     ));
 
-    // Add AuthInterceptor - Instantiate directly to pass the dio instance and avoid circular dependency
+    // Add AuthInterceptor
     dio.interceptors.add(AuthInterceptor(
       secureStorage: sl(),
       dio: dio,
+    ));
+
+    // Add Certificate Pinning Interceptor
+    // sl<AppConstants>() must be registered in CoreModule or similar.
+    // Assuming AppConstants is available via sl()
+    dio.interceptors.add(CertificatePinningInterceptor(
+      sl<AppConstants>(),
     ));
 
     return dio;

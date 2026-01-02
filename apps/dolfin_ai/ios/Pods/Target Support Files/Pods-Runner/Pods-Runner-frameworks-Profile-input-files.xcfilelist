@@ -1,6 +1,8 @@
 ${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh
+${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework
 ${BUILT_PRODUCTS_DIR}/AppAuth/AppAuth.framework
 ${BUILT_PRODUCTS_DIR}/AppCheckCore/AppCheckCore.framework
+${BUILT_PRODUCTS_DIR}/CryptoSwift/CryptoSwift.framework
 ${BUILT_PRODUCTS_DIR}/FirebaseAppCheckInterop/FirebaseAppCheckInterop.framework
 ${BUILT_PRODUCTS_DIR}/FirebaseAuth/FirebaseAuth.framework
 ${BUILT_PRODUCTS_DIR}/FirebaseAuthInterop/FirebaseAuthInterop.framework
@@ -23,6 +25,7 @@ ${BUILT_PRODUCTS_DIR}/RecaptchaInterop/RecaptchaInterop.framework
 ${BUILT_PRODUCTS_DIR}/RevenueCat/RevenueCat.framework
 ${BUILT_PRODUCTS_DIR}/connectivity_plus/connectivity_plus.framework
 ${BUILT_PRODUCTS_DIR}/flutter_secure_storage/flutter_secure_storage.framework
+${BUILT_PRODUCTS_DIR}/http_certificate_pinning/http_certificate_pinning.framework
 ${BUILT_PRODUCTS_DIR}/image_picker_ios/image_picker_ios.framework
 ${BUILT_PRODUCTS_DIR}/integration_test/integration_test.framework
 ${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework

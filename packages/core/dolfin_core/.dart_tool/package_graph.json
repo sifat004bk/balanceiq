@@ -23,6 +23,7 @@
         "get_it",
         "google_fonts",
         "google_sign_in",
+        "http_certificate_pinning",
         "intl",
         "logger",
         "path",
@@ -82,6 +83,15 @@
         "test_api",
         "vector_math",
         "vm_service"
+      ]
+    },
+    {
+      "name": "http_certificate_pinning",
+      "version": "3.0.1",
+      "dependencies": [
+        "dio",
+        "flutter",
+        "http"
       ]
     },
     {
@@ -318,6 +328,7 @@
       "name": "dolfin_ui_kit",
       "version": "1.0.0",
       "dependencies": [
+        "cached_network_image",
         "dolfin_core",
         "equatable",
         "flutter",
@@ -498,6 +509,16 @@
       ]
     },
     {
+      "name": "http",
+      "version": "1.6.0",
+      "dependencies": [
+        "async",
+        "http_parser",
+        "meta",
+        "web"
+      ]
+    },
+    {
       "name": "markdown",
       "version": "7.3.0",
       "dependencies": [
@@ -592,16 +613,6 @@
       "version": "3.0.7",
       "dependencies": [
         "typed_data"
-      ]
-    },
-    {
-      "name": "http",
-      "version": "1.6.0",
-      "dependencies": [
-        "async",
-        "http_parser",
-        "meta",
-        "web"
       ]
     },
     {

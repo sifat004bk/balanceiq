@@ -101,6 +101,12 @@ class AppConstantsImpl implements AppConstants {
 
   // Auth
   @override
-  String get serverClientId =>
-      dotenv.get('GOOGLE_SERVER_CLIENT_ID', fallback: '');
+  String get serverClientId => dotenv.env['SERVER_CLIENT_ID'] ?? '';
+
+  @override
+  List<String> get pinnedCertificateHashes =>
+      []; // Empty by default (Safe Mode)
+
+  @override
+  List<String> get pinnedDomains => [];
 }

@@ -98,5 +98,11 @@ class TestAppConstantsImpl implements AppConstants {
 
   // Auth
   @override
-  String get serverClientId => '';
+  String get serverClientId => 'test_client_id';
+
+  @override
+  List<String> get pinnedCertificateHashes => [];
+
+  @override
+  List<String> get pinnedDomains => [];
 }

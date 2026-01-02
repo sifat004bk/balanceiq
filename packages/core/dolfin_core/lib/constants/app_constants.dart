@@ -60,4 +60,8 @@ abstract class AppConstants {
 
   // Auth
   String get serverClientId;
+
+  // Security - Certificate Pinning
+  List<String> get pinnedCertificateHashes;
+  List<String> get pinnedDomains;
 }

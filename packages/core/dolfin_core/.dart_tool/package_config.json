@@ -566,6 +566,12 @@
       "languageVersion": "3.5"
     },
     {
+      "name": "sqflite_sqlcipher",
+      "rootUri": "file:///Users/sifatullahchowdhury/.pub-cache/hosted/pub.dev/sqflite_sqlcipher-3.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
       "name": "stack_trace",
       "rootUri": "file:///Users/sifatullahchowdhury/.pub-cache/hosted/pub.dev/stack_trace-1.12.1",
       "packageUri": "lib/",

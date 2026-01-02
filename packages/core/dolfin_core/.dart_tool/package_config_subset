@@ -354,6 +354,10 @@ sqflite_platform_interface
 3.5
 file:///Users/sifatullahchowdhury/.pub-cache/hosted/pub.dev/sqflite_platform_interface-2.4.0/
 file:///Users/sifatullahchowdhury/.pub-cache/hosted/pub.dev/sqflite_platform_interface-2.4.0/lib/
+sqflite_sqlcipher
+3.3
+file:///Users/sifatullahchowdhury/.pub-cache/hosted/pub.dev/sqflite_sqlcipher-3.3.0/
+file:///Users/sifatullahchowdhury/.pub-cache/hosted/pub.dev/sqflite_sqlcipher-3.3.0/lib/
 stack_trace
 3.4
 file:///Users/sifatullahchowdhury/.pub-cache/hosted/pub.dev/stack_trace-1.12.1/

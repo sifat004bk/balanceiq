@@ -39,6 +39,16 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>FMDB-FMDB_Privacy.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>FMDB.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Firebase.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -254,6 +264,16 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>SQLCipher-SQLCipher.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>SQLCipher.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>connectivity_plus-connectivity_plus_privacy.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -385,6 +405,16 @@
 			<false/>
 		</dict>
 		<key>sqflite_darwin.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>sqflite_sqlcipher-sqflite_sqlcipher_ios_privacy.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>sqflite_sqlcipher.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>

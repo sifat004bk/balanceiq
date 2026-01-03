@@ -1,4 +1,3 @@
-import 'package:dolfin_core/utils/app_logger.dart';
 import 'package:flutter/material.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
@@ -19,6 +18,7 @@ class DashboardLayout extends StatelessWidget {
   final Future<void> Function() onRefresh;
   final VoidCallback onTapProfileIcon;
   final VoidCallback onTapDateRange;
+  final VoidCallback onViewAll;
   final VoidCallback? onChatReturn;
   final String profileUrl;
   final String userName;
@@ -31,6 +31,7 @@ class DashboardLayout extends StatelessWidget {
     required this.onRefresh,
     required this.onTapProfileIcon,
     required this.onTapDateRange,
+    required this.onViewAll,
     this.onChatReturn,
     required this.profileUrl,
     required this.userName,
@@ -169,21 +170,7 @@ class DashboardLayout extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 120),
                   child: TransactionHistoryWidget(
-                    onViewAll: () async {
-                      AppLogger.debug('DashboardLayout: Navigating to View All',
-                          name: 'DashboardDebug');
-                      final hasChanges =
-                          await Navigator.pushNamed(context, '/transactions');
-                      AppLogger.debug(
-                          'DashboardLayout: Returned from View All. hasChanges=$hasChanges, mounted=${context.mounted}',
-                          name: 'DashboardDebug');
-                      if (hasChanges == true && context.mounted) {
-                        AppLogger.debug(
-                            'DashboardLayout: Triggering onRefresh form View All return',
-                            name: 'DashboardDebug');
-                        onRefresh();
-                      }
-                    },
+                    onViewAll: onViewAll,
                     onRefresh: onRefresh,
                   ),
                 ),

@@ -243,6 +243,16 @@ class _DashboardViewState extends State<DashboardView> {
     return '${DateFormat('MMM d, yyyy').format(start)} - ${DateFormat('MMM d, yyyy').format(end)}';
   }
 
+  Future<void> _onViewAllTransactions() async {
+    // Navigate to transactions page and wait for result (hasChanges)
+    final hasChanges = await Navigator.pushNamed(context, '/transactions');
+
+    // If changes were made and we are still mounted, refresh the dashboard
+    if (hasChanges == true && mounted) {
+      await _refreshDashboard();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<ProductTourCubit, ProductTourState>(
@@ -344,6 +354,7 @@ class _DashboardViewState extends State<DashboardView> {
                         }
                         Navigator.pushNamed(context, '/profile');
                       },
+                      onViewAll: _onViewAllTransactions,
                       onChatReturn: _loadDashboard,
                       profileUrl: _profileUrl ?? '',
                       userName: _userName,

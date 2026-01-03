@@ -19,6 +19,7 @@ import "package:feature_auth/presentation/cubit/signup/signup_cubit.dart";
 import 'package:dolfin_ui_kit/theme/theme_cubit.dart';
 import 'package:dolfin_ui_kit/theme/theme_state.dart';
 import '../widgets/profile/profile_widgets.dart';
+import '../widgets/profile/currency_selector_sheet.dart';
 import '../mixins/profile_tour_mixin.dart';
 import '../widgets/profile/subscription_card_states.dart';
 import 'webview_page.dart';
@@ -146,31 +147,8 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
   void _showCurrencyPicker(BuildContext context, {bool returnToChat = false}) {
-    showCurrencyPicker(
-      context: context,
-      theme: CurrencyPickerThemeData(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        titleTextStyle: TextStyle(
-          fontWeight: FontWeight.w600,
-          fontSize: 18,
-          color: Theme.of(context).colorScheme.onSurface,
-        ),
-        subtitleTextStyle: TextStyle(
-          fontSize: 14,
-          color: Theme.of(context).hintColor,
-        ),
-        flagSize: 28,
-        inputDecoration: InputDecoration(
-          hintText: 'Search currency',
-          prefixIcon: Icon(LucideIcons.search),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
-      ),
-      showFlag: true,
-      showCurrencyName: true,
-      showCurrencyCode: true,
+    CurrencySelectorSheet.show(
+      context,
       onSelect: (Currency currency) {
         GetIt.instance<CurrencyCubit>().setCurrency(currency);
         // Sync with backend
@@ -186,7 +164,6 @@ class _ProfilePageState extends State<ProfilePage>
           Navigator.pop(context);
         }
       },
-      favorite: ['BDT', 'USD', 'EUR', 'GBP', 'INR'],
     );
   }
 

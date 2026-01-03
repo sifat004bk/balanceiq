@@ -383,7 +383,7 @@ class AuthMockDataSource implements AuthRemoteDataSource {
   }
 
   @override
-  Future<UserModel> signInWithGoogle() async {
+  Future<LoginResponse> signInWithGoogle() async {
     await _simulateDelay();
 
     // Mock Google Sign-In
@@ -407,7 +407,29 @@ class AuthMockDataSource implements AuthRemoteDataSource {
       roles: ['user'],
     );
 
-    return mockGoogleUser;
+    final token = _generateMockToken(mockGoogleUser.id);
+
+    return LoginResponse(
+      success: true,
+      message: 'Google Sign In Successful',
+      timestamp: DateTime.now().millisecondsSinceEpoch,
+      data: LoginData(
+        token: token,
+        refreshToken: 'mock_refresh_token_${mockGoogleUser.id}',
+        userId: int.parse(mockGoogleUser
+            .id), // Mock ID might be uuid string, causing parse error if backend expects int.
+        // Real backend returns Int ID usually. UUID is used in mock.
+        // Let's use hashcode or force generic int for mock to satisfy type.
+        // Or if UserModel.id is string, but LoginData.userId is int?
+        // LoginData definition (Step 2977) says userId is int.
+        // UserModel definition (Step 2972) says id is String.
+        // So we must convert.
+        username: mockGoogleUser.name,
+        email: mockGoogleUser.email,
+        role: 'USER',
+        isEmailVerified: true,
+      ),
+    );
   }
 
   @override

@@ -9,7 +9,7 @@ import 'package:balance_iq/features/home/presentation/cubit/transactions_state.d
 import 'package:balance_iq/features/home/presentation/widgets/transaction_detail_widgets/transaction_detail_modal.dart';
 import 'package:balance_iq/core/strings/dashboard_strings.dart';
 import 'package:get_it/get_it.dart';
-import 'package:dolfin_core/utils/app_logger.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -26,6 +26,10 @@ class TransactionHistoryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Capture parent context to ensure we have a stable context
+    // that survives existing list items being unmounted during loading state
+    final parentContext = context;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -92,9 +96,9 @@ class TransactionHistoryWidget extends StatelessWidget {
                     : state.transactions.length,
                 separatorBuilder: (context, index) =>
                     const SizedBox(height: 12),
-                itemBuilder: (context, index) {
+                itemBuilder: (itemContext, index) {
                   return _buildTransactionItem(
-                      context, state.transactions[index]);
+                      parentContext, state.transactions[index]);
                 },
               );
             }
@@ -111,47 +115,33 @@ class TransactionHistoryWidget extends StatelessWidget {
       context,
       transaction: transaction,
       onUpdate: (updatedTransaction) async {
-        AppLogger.debug(
-            'TransactionHistoryWidget: Inline update started for ${updatedTransaction.transactionId}',
-            name: 'DashboardDebug');
-        // First update the specific transaction to ensure backend is updated
+        if (!context.mounted) {
+          return;
+        }
+
         await context
             .read<TransactionsCubit>()
             .updateTransaction(updatedTransaction);
 
         if (context.mounted) {
-          // Then trigger full dashboard refresh if available (like pull-to-refresh)
           if (onRefresh != null) {
-            AppLogger.debug('TransactionHistoryWidget: calling onRefresh()',
-                name: 'DashboardDebug');
             await onRefresh!();
           } else {
-            AppLogger.debug(
-                'TransactionHistoryWidget: calling fallback refreshDashboard()',
-                name: 'DashboardDebug');
-            // Fallback
             context.read<DashboardCubit>().refreshDashboard();
           }
         }
       },
       onDelete: (deletedTransaction) async {
-        AppLogger.debug(
-            'TransactionHistoryWidget: Inline delete started for ${deletedTransaction.transactionId}',
-            name: 'DashboardDebug');
+        if (!context.mounted) return;
+
         await context
             .read<TransactionsCubit>()
             .deleteTransaction(deletedTransaction.transactionId);
 
         if (context.mounted) {
           if (onRefresh != null) {
-            AppLogger.debug(
-                'TransactionHistoryWidget: calling onRefresh() for delete',
-                name: 'DashboardDebug');
             await onRefresh!();
           } else {
-            AppLogger.debug(
-                'TransactionHistoryWidget: calling fallback refreshDashboard() for delete',
-                name: 'DashboardDebug');
             context.read<DashboardCubit>().refreshDashboard();
           }
         }

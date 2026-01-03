@@ -88,7 +88,7 @@ class SubscriptionCubit extends Cubit<SubscriptionState> {
       name: 'begin_checkout',
       parameters: {
         'plan_name': planName,
-        'auto_renew': autoRenew,
+        'auto_renew': autoRenew.toString(),
       },
     );
 

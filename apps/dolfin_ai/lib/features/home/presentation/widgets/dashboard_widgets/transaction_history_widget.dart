@@ -3,6 +3,7 @@ import 'package:dolfin_core/currency/currency_cubit.dart';
 import 'package:balance_iq/core/di/injection_container.dart';
 import 'package:balance_iq/core/icons/app_icons.dart';
 import 'package:balance_iq/features/home/domain/entities/transaction.dart';
+import 'package:balance_iq/features/home/presentation/cubit/dashboard_cubit.dart';
 import 'package:balance_iq/features/home/presentation/cubit/transactions_cubit.dart';
 import 'package:balance_iq/features/home/presentation/cubit/transactions_state.dart';
 import 'package:balance_iq/features/home/presentation/widgets/transaction_detail_widgets/transaction_detail_modal.dart';
@@ -106,13 +107,21 @@ class TransactionHistoryWidget extends StatelessWidget {
     TransactionDetailModal.show(
       context,
       transaction: transaction,
-      onUpdate: (updatedTransaction) {
-        context.read<TransactionsCubit>().updateTransaction(updatedTransaction);
+      onUpdate: (updatedTransaction) async {
+        await context
+            .read<TransactionsCubit>()
+            .updateTransaction(updatedTransaction);
+        if (context.mounted) {
+          context.read<DashboardCubit>().refreshDashboard();
+        }
       },
-      onDelete: (deletedTransaction) {
-        context
+      onDelete: (deletedTransaction) async {
+        await context
             .read<TransactionsCubit>()
             .deleteTransaction(deletedTransaction.transactionId);
+        if (context.mounted) {
+          context.read<DashboardCubit>().refreshDashboard();
+        }
       },
     );
   }

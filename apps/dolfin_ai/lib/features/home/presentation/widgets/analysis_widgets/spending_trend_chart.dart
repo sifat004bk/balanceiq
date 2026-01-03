@@ -32,24 +32,17 @@ class SpendingTrendChart extends StatelessWidget {
     // 2. Determine aggregation strategy
     if (sortedTrend.isEmpty) return const SizedBox.shrink();
 
-    // Calculate total spending to check if we should show chart at all
-    // User requested not to show points when there is no expense.
-    // If total expense is 0, we hide the entire chart.
-    double totalSpendingCheck = 0;
-    for (var point in sortedTrend) {
-      totalSpendingCheck += point.amount;
-    }
-    if (totalSpendingCheck == 0) return const SizedBox.shrink();
+    // Previous "Hide if 0" logic removed as per user request.
 
     final startDate = sortedTrend.first.date;
     final endDate = sortedTrend.last.date;
     final totalDays = endDate.difference(startDate).inDays;
 
     List<_ChartPoint> aggregatedPoints = [];
+    // ... (rest of aggregation logic remains same)
 
     if (totalDays <= 35) {
       // Daily: Show all points as is (mapped to dates)
-      // Check if we need to fill gaps? For now, let's just plot available data to avoid 0-value noise if not desired.
       aggregatedPoints = sortedTrend.map((e) {
         return _ChartPoint(
           amount: e.amount,
@@ -58,51 +51,33 @@ class SpendingTrendChart extends StatelessWidget {
         );
       }).toList();
     } else if (totalDays <= 120) {
-      // Weekly: Group by ISO week (roughly)
-      // Simple way: Key = "Year-Week"
+      // Weekly logic ...
       Map<String, _ChartPoint> groups = {};
       for (var p in sortedTrend) {
-        // W1, W2 format
-        // Reset week number relative to start? Or just global week?
-        // Let's make it relative to the dataset for "W1, W2" feel
-        // Or simpler: "W{index + 1}"
-        // But we need to group by actual week first.
-        // Let's use the group key index for labeling.
-
         final daysSinceEpoch = p.date.difference(DateTime(1970, 1, 1)).inDays;
         final weekNum = (daysSinceEpoch / 7).floor();
         final key = weekNum.toString();
 
         if (!groups.containsKey(key)) {
-          // We will fix labels later based on group index in list
-          // For now, store a placeholder or the week start date
           groups[key] =
               _ChartPoint(amount: 0, label: '', date: p.date, count: 0);
         }
         final current = groups[key]!;
-
         groups[key] = _ChartPoint(
           amount: current.amount + p.amount,
-          label: '', // Will update
+          label: '',
           date: current.date,
           count: current.count + 1,
         );
       }
-
-      // Post-process labels for Weekly to be "W1", "W2"...
+      // Post-process labels
       int wIndex = 1;
       aggregatedPoints = groups.values.map((p) {
-        // Option 1: W1, W2...
-        // Option 2: Jan W1, Jan W2... (More informative)
-        // User asked for "w1, w2 or jan, feb".
-        // Let's go with "Mmm Wn" if month changes, else "Wn"?
-        // Or strictly "W1, W2" as requested.
-        // Let's use simple tight "W$wIndex"
         final label = 'W${wIndex++}';
         return _ChartPoint(amount: p.amount, label: label, date: p.date);
       }).toList();
     } else {
-      // Monthly: Group by Year-Month
+      // Monthly logic ...
       Map<String, _ChartPoint> groups = {};
       for (var p in sortedTrend) {
         final key = '${p.date.year}-${p.date.month}';
@@ -113,7 +88,7 @@ class SpendingTrendChart extends StatelessWidget {
         final current = groups[key]!;
         groups[key] = _ChartPoint(
           amount: current.amount + p.amount,
-          label: current.label, // Month name already set
+          label: current.label,
           date: current.date,
         );
       }
@@ -123,17 +98,15 @@ class SpendingTrendChart extends StatelessWidget {
     // Double check we have points
     if (aggregatedPoints.isEmpty) return const SizedBox.shrink();
 
-    // Fix for sparse data (single point typically looks weird)
-    // If we only have 1 point, add a preceding 0-point to create a line
+    // Fix for sparse data: Add preceding 0-point if only 1 point exists
     if (aggregatedPoints.length == 1) {
       final first = aggregatedPoints.first;
-      // Determine invalid previous date based on estimation
       final prevDate = first.date.subtract(const Duration(days: 1));
       aggregatedPoints.insert(
         0,
         _ChartPoint(
-          amount: 0,
-          label: '${_getMonthName(prevDate.month)} ${prevDate.day}',
+          amount: 0, 
+          label: '${_getMonthName(prevDate.month)} ${prevDate.day}', 
           date: prevDate,
         ),
       );
@@ -149,7 +122,7 @@ class SpendingTrendChart extends StatelessWidget {
       frequencyLabel = ' (per month)';
     }
 
-    // Calculate chart stats based on AGGREGATED data
+    // Calculate chart stats
     double totalAmount = 0;
     double maxAmount = 0;
 
@@ -158,26 +131,20 @@ class SpendingTrendChart extends StatelessWidget {
       if (p.amount > maxAmount) maxAmount = p.amount;
     }
 
-    final averageAmount = totalAmount / aggregatedPoints.length;
-    final xMax = (aggregatedPoints.length - 1).toDouble(); // 0-based index
+    final averageAmount = aggregatedPoints.isEmpty ? 0.0 : totalAmount / aggregatedPoints.length;
+    final xMax = (aggregatedPoints.length - 1).toDouble();
     final currencyCubit = sl<CurrencyCubit>();
 
-    // Calculate visible indices for labels (Prioritize Last)
+    // Calculate visible indices
     final Set<int> visibleIndices = {};
     if (aggregatedPoints.isNotEmpty) {
       if (aggregatedPoints.length <= 7) {
-        // Show all
         for (int i = 0; i < aggregatedPoints.length; i++) {
           visibleIndices.add(i);
         }
       } else {
-        // Show ~5 labels, prioritizing the last one
-        // Step size
         final step = (aggregatedPoints.length / 5).ceil();
-        // Always add last
         visibleIndices.add(aggregatedPoints.length - 1);
-
-        // Add others backwards
         for (int i = aggregatedPoints.length - 1 - step; i >= 0; i -= step) {
           visibleIndices.add(i);
         }
@@ -249,27 +216,27 @@ class SpendingTrendChart extends StatelessWidget {
                                     fontSize: 10,
                                   ),
                                 ),
-                                const SizedBox(width: 12),
-                                // Legend: Average
-                                Container(
-                                  width:
-                                      12, // slightly wider for dash effect representation
-                                  height: 2,
-                                  color: colorScheme.tertiary,
-                                ),
-                                const SizedBox(width: 4),
-                                Text(
-                                  'Avg: ${currencyCubit.formatAmount(averageAmount)}$frequencyLabel',
-                                  style: textTheme.bodySmall?.copyWith(
-                                    color: Theme.of(context).hintColor,
-                                    fontSize: 10,
+                                if (averageAmount > 0) ...[
+                                  const SizedBox(width: 12),
+                                  // Legend: Average
+                                  Container(
+                                    width: 12,
+                                    height: 2,
+                                    color: colorScheme.tertiary,
                                   ),
-                                ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    'Avg: ${currencyCubit.formatAmount(averageAmount)}$frequencyLabel',
+                                    style: textTheme.bodySmall?.copyWith(
+                                      color: Theme.of(context).hintColor,
+                                      fontSize: 10,
+                                    ),
+                                  ),
+                                ],
                               ],
                             ),
                           ],
                         ),
-                        // Optional: Add trend indicator here later
                       ],
                     ),
                     const SizedBox(height: 12),
@@ -323,9 +290,9 @@ class SpendingTrendChart extends StatelessWidget {
                           minX: 0,
                           maxX: xMax,
                           minY: 0,
-                          maxY: maxAmount * 1.05,
+                          maxY: maxAmount == 0 ? 100 : maxAmount * 1.05, // Prevent flat 0 line issue?
                           extraLinesData: ExtraLinesData(
-                            horizontalLines: [
+                            horizontalLines: averageAmount > 0 ? [
                               HorizontalLine(
                                 y: averageAmount,
                                 color:
@@ -345,7 +312,7 @@ class SpendingTrendChart extends StatelessWidget {
                                   labelResolver: (line) => 'Avg',
                                 ),
                               ),
-                            ],
+                            ] : [],
                           ),
                           lineBarsData: [
                             LineChartBarData(
@@ -363,7 +330,8 @@ class SpendingTrendChart extends StatelessWidget {
                               dotData: FlDotData(
                                 show: true,
                                 checkToShowDot: (spot, barData) {
-                                  return spot.y == maxAmount;
+                                  // Only show dots for peaks AND if value is non-zero
+                                  return spot.y == maxAmount && maxAmount > 0;
                                 },
                                 getDotPainter: (spot, percent, barData, index) {
                                   return FlDotCirclePainter(
@@ -456,7 +424,7 @@ class SpendingTrendChart extends StatelessWidget {
               ),
             ),
           ),
-        ));
+        ););
   }
 
   String _getMonthName(int month) {

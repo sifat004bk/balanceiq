@@ -8,6 +8,7 @@ class ProfileSubMenuItem {
   final VoidCallback onTap;
   final Color? iconColor;
   final Color? titleColor;
+  final Widget? trailing;
 
   const ProfileSubMenuItem({
     required this.icon,
@@ -15,6 +16,7 @@ class ProfileSubMenuItem {
     required this.onTap,
     this.iconColor,
     this.titleColor,
+    this.trailing,
   });
 }
 
@@ -206,11 +208,14 @@ class _ExpandableProfileMenuItemState extends State<ExpandableProfileMenuItem>
                 ),
               ),
             ),
-            Icon(
-              LucideIcons.chevronRight,
-              color: Theme.of(context).hintColor,
-              size: 18,
-            ),
+            if (subItem.trailing != null)
+              subItem.trailing!
+            else
+              Icon(
+                LucideIcons.chevronRight,
+                color: Theme.of(context).hintColor,
+                size: 18,
+              ),
           ],
         ),
       ),

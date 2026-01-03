@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:dolfin_core/services/biometric_auth_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:feature_auth/constants/auth_strings.dart';
 import 'package:dolfin_core/currency/currency_cubit.dart';
@@ -32,6 +34,11 @@ class _ProfilePageState extends State<ProfilePage>
     with ProfileTourMixin, WidgetsBindingObserver {
   bool _hasOpenedCurrencyPicker = false;
 
+  // App Lock Logic
+  bool _isAppLockEnabled = false;
+  final _biometricService = GetIt.instance<BiometricAuthService>();
+  bool _canCheckBiometrics = false;
+
   @override
   void initState() {
     super.initState();
@@ -40,7 +47,47 @@ class _ProfilePageState extends State<ProfilePage>
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       checkAndShowTour();
+      _checkBiometrics();
     });
+  }
+
+  Future<void> _checkBiometrics() async {
+    final available = await _biometricService.isBiometricAvailable;
+    final prefs = await SharedPreferences.getInstance();
+    final enabled = prefs.getBool('is_app_lock_enabled') ?? false;
+
+    if (mounted) {
+      setState(() {
+        _canCheckBiometrics = available;
+        _isAppLockEnabled = enabled;
+      });
+    }
+  }
+
+  Future<void> _toggleAppLock(bool value) async {
+    if (value) {
+      // Enabling: Require auth
+      final authenticated = await _biometricService.authenticate(
+        localizedReason: 'Authenticate to enable App Lock',
+      );
+      if (authenticated) {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('is_app_lock_enabled', true);
+        setState(() => _isAppLockEnabled = true);
+        SnackbarUtils.showSuccess(context, 'App Lock Enabled');
+      }
+    } else {
+      // Disabling: Require auth
+      final authenticated = await _biometricService.authenticate(
+        localizedReason: 'Authenticate to disable App Lock',
+      );
+      if (authenticated) {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('is_app_lock_enabled', false);
+        setState(() => _isAppLockEnabled = false);
+        SnackbarUtils.showSuccess(context, 'App Lock Disabled');
+      }
+    }
   }
 
   @override
@@ -344,6 +391,19 @@ class _ProfilePageState extends State<ProfilePage>
                             Navigator.pushNamed(context, '/change-password');
                           },
                         ),
+                        // ADDED APP LOCK HERE (during restoration to save a step)
+                        if (_canCheckBiometrics)
+                          ProfileSubMenuItem(
+                            icon: Icons.fingerprint,
+                            title: 'App Lock',
+                            onTap: () => _toggleAppLock(!_isAppLockEnabled),
+                            trailing: Switch(
+                              value: _isAppLockEnabled,
+                              onChanged: (val) => _toggleAppLock(val),
+                              activeColor:
+                                  Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
                       ],
                     ),
                     const SizedBox(height: 12),

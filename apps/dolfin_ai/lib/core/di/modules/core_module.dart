@@ -15,6 +15,7 @@ import "package:dolfin_core/currency/currency_cubit.dart";
 import '../../../features/home/data/datasource/remote_datasource/dashboard_remote_datasource.dart';
 import 'package:dolfin_core/analytics/analytics_service.dart';
 import '../../services/firebase_analytics_service.dart';
+import 'package:dolfin_core/services/biometric_auth_service.dart';
 
 void registerCoreModule(GetIt sl) {
   //! Core
@@ -56,4 +57,9 @@ void registerCoreModule(GetIt sl) {
 
   //! Core - Analytics
   sl.registerLazySingleton<AnalyticsService>(() => FirebaseAnalyticsService());
+
+  //! Core - Biometric Auth
+  sl.registerLazySingleton<BiometricAuthService>(
+    () => BiometricAuthServiceImpl(),
+  );
 }

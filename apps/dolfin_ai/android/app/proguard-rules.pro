@@ -22,3 +22,17 @@
 -dontwarn com.google.android.play.core.splitcompat.**
 -dontwarn com.google.android.play.core.splitinstall.**
 -dontwarn com.google.android.play.core.tasks.**
+
+# SQLCipher
+-keep class net.zetetic.database.sqlcipher.** { *; }
+-keep class org.sqlite.database.sqlite.** { *; }
+
+# Flutter Secure Storage
+-keep class com.it_nomads.fluttersecurestorage.** { *; }
+
+# R8/ProGuard rules for Coroutines (if used by libraries)
+-keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
+-keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
+-keepclassmembers class kotlinx.coroutines.CoroutineExceptionHandler {
+    <init>(...);
+}

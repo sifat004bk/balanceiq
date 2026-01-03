@@ -20,9 +20,48 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Either<Failure, User>> signInWithGoogle() async {
     try {
-      final user = await remoteDataSource.signInWithGoogle();
-      await localDataSource.saveUser(user);
-      return Right(user);
+      final loginResponse = await remoteDataSource.signInWithGoogle();
+
+      if (loginResponse.success && loginResponse.data != null) {
+        final data = loginResponse.data!;
+
+        // 1. Save Token and Refresh Token
+        if (data.token.isNotEmpty) {
+          await localDataSource.saveAuthToken(data.token);
+        }
+        if (data.refreshToken.isNotEmpty) {
+          await localDataSource.saveRefreshToken(data.refreshToken);
+        }
+
+        // 2. Create User Model
+        final userModel = UserModel(
+          id: data.userId.toString(),
+          email: data.email,
+          name: data.username,
+          // Note: LoginResponse data might not have photoUrl,
+          // defaulting to null as it will be fetched via getProfile later if needed
+          photoUrl: null,
+          authProvider: 'google',
+          createdAt: DateTime.now(),
+          isEmailVerified: data.isEmailVerified,
+        );
+
+        // 3. Save User Locally
+        await localDataSource.saveUser(userModel);
+
+        // 4. Return Domain User
+        return Right(User(
+          id: userModel.id,
+          email: userModel.email,
+          name: userModel.name,
+          photoUrl: userModel.photoUrl,
+          authProvider: userModel.authProvider,
+          createdAt: userModel.createdAt,
+          isEmailVerified: userModel.isEmailVerified,
+        ));
+      } else {
+        return Left(AuthFailure(loginResponse.message));
+      }
     } on AppException catch (e) {
       return Left(_mapExceptionToFailure(e));
     } catch (e) {

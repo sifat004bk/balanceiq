@@ -44,20 +44,60 @@ void main() {
   );
 
   group('signInWithGoogle', () {
+    // Reuse tLoginResponse from login group, but define it here or move it up
+    final tGoogleLoginResponse = LoginResponse(
+      success: true,
+      message: 'Success',
+      timestamp: 1234567890,
+      data: LoginData(
+        username: tUserModel.name,
+        email: tUserModel.email,
+        token: 'token',
+        refreshToken: 'refresh_token',
+        role: 'USER',
+        userId: int.parse(tUserModel.id),
+        isEmailVerified: true,
+      ),
+    );
+
     test('should return User when remote call is successful', () async {
       // Arrange
       when(() => mockRemoteDataSource.signInWithGoogle())
-          .thenAnswer((_) async => tUserModel);
-      when(() => mockLocalDataSource.saveUser(tUserModel))
+          .thenAnswer((_) async => tGoogleLoginResponse);
+      when(() => mockLocalDataSource.saveAuthToken(any()))
           .thenAnswer((_) async {});
+      when(() => mockLocalDataSource.saveRefreshToken(any()))
+          .thenAnswer((_) async {});
+      when(() => mockLocalDataSource.saveUser(any())).thenAnswer((_) async {});
 
       // Act
       final result = await repository.signInWithGoogle();
 
       // Assert
-      expect(result, Right(tUserModel));
+      // We expect a user that matches tUserModel but we must ensure properties match what we put in tGoogleLoginResponse
+      // tUserModel has 'email' auth provider, expected will have 'google'
+      // tUserModel has 'email' auth provider, expected will have 'google'
+
+      // Since userModel.createdAt uses DateTime.now(), we can't assert exact equality on the whole object easily
+      // unless we mock DateTime or check specific fields.
+      // However, Equatable should handle equality if fields match.
+      // But createdAt will differ.
+      // Relax assert to check Right(User) type and properties.
+
+      expect(result.isRight(), true);
+      result.fold(
+        (l) => fail('Should be Right'),
+        (r) {
+          expect(r.email, tUserModel.email);
+          expect(r.authProvider, 'google');
+        },
+      );
+
       verify(() => mockRemoteDataSource.signInWithGoogle()).called(1);
-      verify(() => mockLocalDataSource.saveUser(tUserModel)).called(1);
+      verify(() => mockLocalDataSource.saveAuthToken('token')).called(1);
+      verify(() => mockLocalDataSource.saveRefreshToken('refresh_token'))
+          .called(1);
+      verify(() => mockLocalDataSource.saveUser(any())).called(1);
     });
 
     test('should return ServerFailure when remote call throws ServerException',

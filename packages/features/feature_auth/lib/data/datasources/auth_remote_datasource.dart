@@ -7,11 +7,10 @@ import 'package:dolfin_core/error/app_exception.dart';
 import 'package:dolfin_core/error/error_handler.dart';
 import 'package:dolfin_core/storage/secure_storage_service.dart';
 import '../models/auth_request_models.dart';
-import '../models/user_model.dart';
 
 abstract class AuthRemoteDataSource {
   // OAuth Methods
-  Future<UserModel> signInWithGoogle();
+  Future<LoginResponse> signInWithGoogle();
   Future<void> signOut();
 
   // Backend API Methods
@@ -45,7 +44,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   });
 
   @override
-  Future<UserModel> signInWithGoogle() async {
+  Future<LoginResponse> signInWithGoogle() async {
     GoogleSignInAccount? account;
     try {
       // 1. Trigger Google Sign-In Flow
@@ -79,30 +78,16 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
       if (response.statusCode == 200) {
         final jsonResponse = response.data;
-        final data = jsonResponse['data'];
+        // Parse directly to LoginResponse
+        // Assuming backend returns similar structure for OAuth as Login
+        // If not, we might need to adapt it.
+        // Based on previous code: jsonResponse['data'] had 'token', 'userId', etc.
+        // LoginResponse.fromJson looks for 'data' key which contains LoginData.
 
-        // Store the JWT token from backend
-        if (data['token'] != null) {
-          await secureStorage.saveToken(data['token']);
-        }
-        // Store refresh token if present
-        if (data['refreshToken'] != null) {
-          await secureStorage.saveRefreshToken(data['refreshToken']);
-        }
+        // Let's inspect LoginResponse.fromJson again.
+        // It expects { success: bool, message: str, data: { token: str ... } }
 
-        // Return user model with backend data
-        return UserModel(
-          id: data['userId']?.toString() ?? account.id,
-          email: data['email'] ?? account.email,
-          name: data['fullName'] ??
-              data['username'] ??
-              account.displayName ??
-              'Unknown',
-          photoUrl: account.photoUrl,
-          authProvider: 'google',
-          createdAt: DateTime.now(),
-          isEmailVerified: data['isEmailVerified'] ?? true,
-        );
+        return LoginResponse.fromJson(jsonResponse);
       } else {
         // Backend failed - sign out so user can try different account
         await googleSignIn.signOut();

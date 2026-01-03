@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-class TransactionHistoryWidget extends StatelessWidget {
+  final VoidCallback onViewAll;
   final Future<void> Function()? onRefresh;
 
   const TransactionHistoryWidget({

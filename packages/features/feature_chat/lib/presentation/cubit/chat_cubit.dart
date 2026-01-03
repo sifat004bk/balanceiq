@@ -313,8 +313,8 @@ class ChatCubit extends Cubit<ChatState> {
           name: 'send_message',
           parameters: {
             'bot_id': botId,
-            'has_image': imagePath != null,
-            'has_audio': audioPath != null,
+            'has_image': (imagePath != null).toString(),
+            'has_audio': (audioPath != null).toString(),
           },
         ));
 

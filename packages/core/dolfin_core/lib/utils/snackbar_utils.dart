@@ -175,8 +175,9 @@ class SnackbarUtils {
             fontWeight: FontWeight.w500,
           ),
         ),
-        backgroundColor: backgroundColor?.withValues(alpha: isDark ? 0.3 : 0.4) ??
-            Theme.of(context).colorScheme.surface.withValues(alpha: 0.3),
+        backgroundColor:
+            backgroundColor?.withValues(alpha: isDark ? 0.9 : 0.95) ??
+                Theme.of(context).colorScheme.surface.withValues(alpha: 0.9),
         duration: duration,
         behavior: behavior,
         elevation: 0,

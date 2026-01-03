@@ -108,16 +108,16 @@ class DatabaseHelper {
       List<Map<String, dynamic>> messagesBackup = [];
 
       try {
-        usersBackup = await unencryptedDb!
+        usersBackup = await unencryptedDb
             .query(GetIt.instance<AppConstants>().usersTable);
       } catch (_) {} // Might not exist
 
       try {
-        messagesBackup = await unencryptedDb!
+        messagesBackup = await unencryptedDb
             .query(GetIt.instance<AppConstants>().messagesTable);
       } catch (_) {} // Might not exist
 
-      await unencryptedDb!.close();
+      await unencryptedDb.close();
 
       // 3. Delete unencrypted file
       AppLogger.info('Deleting unencrypted database...', name: 'Database');

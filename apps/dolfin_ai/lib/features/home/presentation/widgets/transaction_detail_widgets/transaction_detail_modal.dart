@@ -178,23 +178,20 @@ class _TransactionDetailModalState extends State<TransactionDetailModal> {
               navigator.pop(); // Close dialog
               setState(() => _isDeleting = true);
 
-              // Simulate delete with delay
-              Future.delayed(const Duration(milliseconds: 500), () {
-                final analytics = sl.isRegistered<AnalyticsService>()
-                    ? sl<AnalyticsService>()
-                    : null;
-                analytics?.logEvent(
-                  name: 'modify_transaction',
-                  parameters: {
-                    'action': 'delete',
-                    'id': widget.transaction.transactionId.toString(),
-                  },
-                );
+              final analytics = sl.isRegistered<AnalyticsService>()
+                  ? sl<AnalyticsService>()
+                  : null;
+              analytics?.logEvent(
+                name: 'modify_transaction',
+                parameters: {
+                  'action': 'delete',
+                  'id': widget.transaction.transactionId.toString(),
+                },
+              );
 
-                widget.onDelete?.call(widget.transaction);
-                if (!mounted) return;
-                navigator.pop(); // Close modal
-              });
+              widget.onDelete?.call(widget.transaction);
+              if (!mounted) return;
+              navigator.pop(); // Close modal
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Theme.of(context).colorScheme.error,

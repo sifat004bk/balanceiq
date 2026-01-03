@@ -32,6 +32,15 @@ class SpendingTrendChart extends StatelessWidget {
     // 2. Determine aggregation strategy
     if (sortedTrend.isEmpty) return const SizedBox.shrink();
 
+    // Calculate total spending to check if we should show chart at all
+    // User requested not to show points when there is no expense.
+    // If total expense is 0, we hide the entire chart.
+    double totalSpendingCheck = 0;
+    for (var point in sortedTrend) {
+      totalSpendingCheck += point.amount;
+    }
+    if (totalSpendingCheck == 0) return const SizedBox.shrink();
+
     final startDate = sortedTrend.first.date;
     final endDate = sortedTrend.last.date;
     final totalDays = endDate.difference(startDate).inDays;

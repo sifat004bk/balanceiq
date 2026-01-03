@@ -114,6 +114,22 @@ class SpendingTrendChart extends StatelessWidget {
     // Double check we have points
     if (aggregatedPoints.isEmpty) return const SizedBox.shrink();
 
+    // Fix for sparse data (single point typically looks weird)
+    // If we only have 1 point, add a preceding 0-point to create a line
+    if (aggregatedPoints.length == 1) {
+      final first = aggregatedPoints.first;
+      // Determine invalid previous date based on estimation
+      final prevDate = first.date.subtract(const Duration(days: 1));
+      aggregatedPoints.insert(
+        0,
+        _ChartPoint(
+          amount: 0,
+          label: '${_getMonthName(prevDate.month)} ${prevDate.day}',
+          date: prevDate,
+        ),
+      );
+    }
+
     // Determine frequency label
     String frequencyLabel = '';
     if (totalDays <= 35) {

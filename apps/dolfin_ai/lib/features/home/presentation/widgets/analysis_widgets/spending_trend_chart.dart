@@ -105,8 +105,8 @@ class SpendingTrendChart extends StatelessWidget {
       aggregatedPoints.insert(
         0,
         _ChartPoint(
-          amount: 0, 
-          label: '${_getMonthName(prevDate.month)} ${prevDate.day}', 
+          amount: 0,
+          label: '${_getMonthName(prevDate.month)} ${prevDate.day}',
           date: prevDate,
         ),
       );
@@ -131,7 +131,8 @@ class SpendingTrendChart extends StatelessWidget {
       if (p.amount > maxAmount) maxAmount = p.amount;
     }
 
-    final averageAmount = aggregatedPoints.isEmpty ? 0.0 : totalAmount / aggregatedPoints.length;
+    final averageAmount =
+        aggregatedPoints.isEmpty ? 0.0 : totalAmount / aggregatedPoints.length;
     final xMax = (aggregatedPoints.length - 1).toDouble();
     final currencyCubit = sl<CurrencyCubit>();
 
@@ -290,29 +291,33 @@ class SpendingTrendChart extends StatelessWidget {
                           minX: 0,
                           maxX: xMax,
                           minY: 0,
-                          maxY: maxAmount == 0 ? 100 : maxAmount * 1.05, // Prevent flat 0 line issue?
+                          maxY: maxAmount == 0
+                              ? 100
+                              : maxAmount * 1.05, // Prevent flat 0 line issue?
                           extraLinesData: ExtraLinesData(
-                            horizontalLines: averageAmount > 0 ? [
-                              HorizontalLine(
-                                y: averageAmount,
-                                color:
-                                    colorScheme.tertiary.withValues(alpha: 0.5),
-                                strokeWidth: 1.5,
-                                dashArray: [5, 5],
-                                label: HorizontalLineLabel(
-                                  show: true,
-                                  alignment: Alignment.topRight,
-                                  padding: const EdgeInsets.only(
-                                      right: 5, bottom: 2),
-                                  style: textTheme.labelSmall?.copyWith(
-                                    color: colorScheme.tertiary,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 10,
-                                  ),
-                                  labelResolver: (line) => 'Avg',
-                                ),
-                              ),
-                            ] : [],
+                            horizontalLines: averageAmount > 0
+                                ? [
+                                    HorizontalLine(
+                                      y: averageAmount,
+                                      color: colorScheme.tertiary
+                                          .withValues(alpha: 0.5),
+                                      strokeWidth: 1.5,
+                                      dashArray: [5, 5],
+                                      label: HorizontalLineLabel(
+                                        show: true,
+                                        alignment: Alignment.topRight,
+                                        padding: const EdgeInsets.only(
+                                            right: 5, bottom: 2),
+                                        style: textTheme.labelSmall?.copyWith(
+                                          color: colorScheme.tertiary,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 10,
+                                        ),
+                                        labelResolver: (line) => 'Avg',
+                                      ),
+                                    ),
+                                  ]
+                                : [],
                           ),
                           lineBarsData: [
                             LineChartBarData(
@@ -424,7 +429,7 @@ class SpendingTrendChart extends StatelessWidget {
               ),
             ),
           ),
-        ););
+        ));
   }
 
   String _getMonthName(int month) {

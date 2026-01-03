@@ -1,6 +1,9 @@
-import 'package:balance_iq/features/home/domain/usecase/get_user_dashbaord.dart';
+import 'package:dolfin_core/utils/app_logger.dart';
+import 'package:bloc/bloc.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../domain/usecase/get_user_dashbaord.dart';
 import 'dashboard_state.dart';
 
 class DashboardCubit extends Cubit<DashboardState> {
@@ -13,6 +16,9 @@ class DashboardCubit extends Cubit<DashboardState> {
   String? _currentEndDate;
 
   Future<void> loadDashboard({String? startDate, String? endDate}) async {
+    AppLogger.debug(
+        'DashboardCubit.loadDashboard called. Args: start=$startDate, end=$endDate. Cached: start=$_currentStartDate, end=$_currentEndDate',
+        name: 'DashboardDebug');
     emit(DashboardLoading());
 
     // Update cached dates if provided
@@ -53,6 +59,9 @@ class DashboardCubit extends Cubit<DashboardState> {
   }
 
   Future<void> refreshDashboard({String? startDate, String? endDate}) {
+    AppLogger.debug(
+        'DashboardCubit.refreshDashboard called. Args: start=$startDate, end=$endDate',
+        name: 'DashboardDebug');
     // If args provided, update cache and load.
     // If not, loadDashboard will use cache.
     if (startDate != null && endDate != null) {

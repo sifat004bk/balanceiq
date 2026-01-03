@@ -11,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
+import 'package:dolfin_core/utils/app_logger.dart';
 import '../cubit/dashboard_cubit.dart';
 import '../cubit/transactions_cubit.dart';
 import '../widgets/calendar_widgets/date_selector_bottom_sheet.dart';
@@ -136,6 +137,8 @@ class _DashboardViewState extends State<DashboardView> {
   }
 
   Future<void> _refreshDashboard() async {
+    AppLogger.debug('HomePage._refreshDashboard called',
+        name: 'DashboardDebug');
     String? startDateStr;
     String? endDateStr;
 

@@ -8,6 +8,7 @@ import 'package:balance_iq/features/home/presentation/cubit/transactions_cubit.d
 import 'package:balance_iq/features/home/presentation/widgets/transaction_detail_widgets/transaction_detail_modal.dart';
 import 'package:balance_iq/features/home/presentation/widgets/transactions_page_widgets/transactions_filter_section.dart';
 import 'package:balance_iq/features/home/presentation/widgets/transactions_page_widgets/transactions_list.dart';
+import 'package:dolfin_core/utils/app_logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -61,6 +62,9 @@ class _TransactionsViewState extends State<TransactionsView> {
             .read<TransactionsCubit>()
             .updateTransaction(updatedTransaction);
         if (context.mounted) {
+          AppLogger.debug(
+              'TransactionsPage: Transaction updated. Setting _hasChanges=true',
+              name: 'DashboardDebug');
           setState(() {
             _hasChanges = true;
           });
@@ -72,6 +76,9 @@ class _TransactionsViewState extends State<TransactionsView> {
             .read<TransactionsCubit>()
             .deleteTransaction(deletedTransaction.transactionId);
         if (context.mounted) {
+          AppLogger.debug(
+              'TransactionsPage: Transaction deleted. Setting _hasChanges=true',
+              name: 'DashboardDebug');
           setState(() {
             _hasChanges = true;
           });
@@ -103,6 +110,9 @@ class _TransactionsViewState extends State<TransactionsView> {
           canPop: false,
           onPopInvokedWithResult: (didPop, result) {
             if (didPop) return;
+            AppLogger.debug(
+                'TransactionsPage: Popping with hasChanges=$_hasChanges',
+                name: 'DashboardDebug');
             Navigator.pop(context, _hasChanges);
           },
           child: Scaffold(

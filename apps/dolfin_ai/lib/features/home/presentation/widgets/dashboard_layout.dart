@@ -1,3 +1,4 @@
+import 'package:dolfin_core/utils/app_logger.dart';
 import 'package:flutter/material.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
@@ -169,9 +170,17 @@ class DashboardLayout extends StatelessWidget {
                   padding: const EdgeInsets.only(bottom: 120),
                   child: TransactionHistoryWidget(
                     onViewAll: () async {
+                      AppLogger.debug('DashboardLayout: Navigating to View All',
+                          name: 'DashboardDebug');
                       final hasChanges =
                           await Navigator.pushNamed(context, '/transactions');
+                      AppLogger.debug(
+                          'DashboardLayout: Returned from View All. hasChanges=$hasChanges, mounted=${context.mounted}',
+                          name: 'DashboardDebug');
                       if (hasChanges == true && context.mounted) {
+                        AppLogger.debug(
+                            'DashboardLayout: Triggering onRefresh form View All return',
+                            name: 'DashboardDebug');
                         onRefresh();
                       }
                     },

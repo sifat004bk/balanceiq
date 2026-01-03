@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:dolfin_core/error/failures.dart';
+import 'package:dolfin_core/utils/snackbar_utils.dart';
 import 'package:feature_chat/domain/entities/message_usage.dart';
 import 'package:feature_chat/domain/usecases/get_message_usage.dart';
 import 'package:feature_chat/domain/usecases/send_message.dart';
@@ -173,9 +174,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
         : _selectedCategory;
 
     if (category == null || category.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a category')),
-      );
+      SnackbarUtils.showError(context, 'Please select a category');
       return;
     }
 
@@ -207,22 +206,12 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
           if (failure is ChatApiFailure) {
             _handleChatError(failure.failureType, failure.message);
           } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(failure.message),
-                backgroundColor: Colors.red,
-              ),
-            );
+            SnackbarUtils.showError(context, failure.message);
           }
         },
         (response) {
           Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Transaction added successfully!'),
-              backgroundColor: Colors.green,
-            ),
-          );
+          SnackbarUtils.showSuccess(context, 'Transaction added successfully!');
           widget.onSuccess();
         },
       );
@@ -231,12 +220,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
       setState(() {
         _isLoading = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error: ${e.toString()}'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      SnackbarUtils.showError(context, 'Error: ${e.toString()}');
     }
   }
 

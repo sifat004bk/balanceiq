@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:dolfin_core/error/failures.dart';
 import 'package:feature_chat/domain/entities/message_usage.dart';
 import 'package:feature_chat/domain/usecases/get_message_usage.dart';
 import 'package:feature_chat/domain/usecases/send_message.dart';
@@ -191,7 +192,7 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
     try {
       final sendMessage = GetIt.I<SendMessage>();
       final result = await sendMessage(
-        botId: 'nai kichu',
+        botId: 'nai kichu', // Placeholder bot ID for manual transaction
         content: message,
       );
 
@@ -202,12 +203,17 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
           setState(() {
             _isLoading = false;
           });
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(failure.message),
-              backgroundColor: Colors.red,
-            ),
-          );
+
+          if (failure is ChatApiFailure) {
+            _handleChatError(failure.failureType, failure.message);
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(failure.message),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
         },
         (response) {
           Navigator.pop(context);
@@ -232,6 +238,167 @@ class _AddTransactionBottomSheetState extends State<AddTransactionBottomSheet> {
         ),
       );
     }
+  }
+
+  void _handleChatError(ChatFailureType type, String message) {
+    String title;
+    String description;
+    String buttonText;
+    IconData icon;
+    Color color;
+    VoidCallback onButtonPressed;
+
+    switch (type) {
+      case ChatFailureType.emailNotVerified:
+        title = 'Email Verification Required';
+        description =
+            'Please verify your email address to add transactions via AI.';
+        buttonText = 'Verify Email';
+        icon = LucideIcons.mailWarning;
+        color = Colors.orange;
+        onButtonPressed = () => Navigator.pushNamed(context, '/profile');
+        break;
+
+      case ChatFailureType.subscriptionRequired:
+        title = 'Subscription Required';
+        description =
+            'You need an active subscription plan to use this feature.';
+        buttonText = 'View Plans';
+        icon = LucideIcons.crown;
+        color = Colors.blue;
+        onButtonPressed =
+            () => Navigator.pushNamed(context, '/subscription-plans');
+        break;
+
+      case ChatFailureType.subscriptionExpired:
+        title = 'Subscription Expired';
+        description =
+            'Your subscription has expired. Please renew to continue using this feature.';
+        buttonText = 'Renew Subscription';
+        icon = LucideIcons.calendarOff;
+        color = Colors.red;
+        onButtonPressed =
+            () => Navigator.pushNamed(context, '/manage-subscription');
+        break;
+
+      case ChatFailureType.tokenLimitExceeded:
+        title = 'Message Limit Exceeded';
+        description =
+            'You have reached your daily message limit. Resets at midnight.';
+        buttonText = 'Upgrade Plan';
+        icon = LucideIcons.messageSquareOff;
+        color = Colors.purple;
+        onButtonPressed =
+            () => Navigator.pushNamed(context, '/subscription-plans');
+        break;
+
+      case ChatFailureType.rateLimitExceeded:
+        title = 'Too Many Requests';
+        description = 'Please wait a moment before trying again.';
+        buttonText = 'Got it';
+        icon = LucideIcons.clock;
+        color = Colors.orange;
+        onButtonPressed = () => Navigator.pop(context); // Just close dialog
+        break;
+
+      case ChatFailureType.currencyRequired:
+        title = 'Currency Required';
+        description =
+            'Please set your preferred currency in your profile settings.';
+        buttonText = 'Set Currency';
+        icon = LucideIcons.coins;
+        color = Colors.green;
+        onButtonPressed = () => Navigator.pushNamed(context, '/profile',
+            arguments: {'action': 'open_currency_selector'});
+        break;
+
+      case ChatFailureType.general:
+        title = 'Something Went Wrong';
+        description = message.isNotEmpty ? message : 'Please try again later.';
+        buttonText = 'Retry';
+        icon = LucideIcons.circleAlert;
+        color = Colors.red;
+        onButtonPressed = _submit;
+        break;
+    }
+
+    // Since we are likely in a bottom sheet, showing a dialog on top is appropriate.
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(icon, color: color, size: 32),
+              ),
+              const SizedBox(height: 24),
+              Text(
+                title,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 12),
+              Text(
+                description,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context).hintColor,
+                    ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 32),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context); // Close dialog
+                    if (type != ChatFailureType.rateLimitExceeded &&
+                        type != ChatFailureType.general) {
+                      // For navigation actions, we might also want to close the bottom sheet?
+                      // The user might want to come back to their input though.
+                      // Let's keep the sheet open so they don't lose input.
+                      onButtonPressed();
+                    } else if (type == ChatFailureType.general) {
+                      onButtonPressed(); // Retry
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: color,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: Text(buttonText),
+                ),
+              ),
+              if (type != ChatFailureType.rateLimitExceeded &&
+                  type != ChatFailureType.general) ...[
+                const SizedBox(height: 12),
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(color: Theme.of(context).hintColor),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   @override

@@ -12,12 +12,12 @@ This plan outlines the specific tasks required to bridge the gap from the curren
 - [ ] **Certificate Pinning**
   - Implement SHA-256 certificate pinning in `DioClient`.
   - Configurable for different environments (strict in production).
-- [ ] **Database Encryption**
+- [x] **Database Encryption**
   - Migrate from standard `sqflite` to `sqflite_sqlcipher`.
   - Securely manage encryption keys using `flutter_secure_storage`.
-- [ ] **Biometric Authentication**
+- [x] **Biometric Authentication**
   - Implement `local_auth` for sensitive actions (e.g., viewing card details, large transactions).
-- [ ] **Code Obfuscation & Hardening**
+- [x] **Code Obfuscation & Hardening**
   - Configure `ProGuard` rules for Android.
   - Verify symbolication setup for crash reporting.
 

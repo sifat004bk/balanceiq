@@ -81,7 +81,24 @@ class DatabaseHelper {
   Future<Database> _migrateToEncrypted(String path, String key) async {
     try {
       // 1. Open unencrypted (legacy)
-      final unencryptedDb = await openDatabase(path); // No password
+      Database? unencryptedDb;
+      try {
+        unencryptedDb = await openDatabase(path); // No password
+      } catch (e) {
+        AppLogger.error(
+            'Failed to open as unencrypted. Database might be encrypted with lost key or corrupted. Resetting database.',
+            name: 'Database');
+        await deleteDatabase(path);
+
+        // Create new fresh encrypted DB
+        return await openDatabase(
+          path,
+          password: key,
+          version: GetIt.instance<AppConstants>().databaseVersion,
+          onCreate: _createDB,
+          onUpgrade: _upgradeDB,
+        );
+      }
 
       AppLogger.info('Backing up data for encryption migration...',
           name: 'Database');
@@ -91,16 +108,16 @@ class DatabaseHelper {
       List<Map<String, dynamic>> messagesBackup = [];
 
       try {
-        usersBackup = await unencryptedDb
+        usersBackup = await unencryptedDb!
             .query(GetIt.instance<AppConstants>().usersTable);
       } catch (_) {} // Might not exist
 
       try {
-        messagesBackup = await unencryptedDb
+        messagesBackup = await unencryptedDb!
             .query(GetIt.instance<AppConstants>().messagesTable);
       } catch (_) {} // Might not exist
 
-      await unencryptedDb.close();
+      await unencryptedDb!.close();
 
       // 3. Delete unencrypted file
       AppLogger.info('Deleting unencrypted database...', name: 'Database');

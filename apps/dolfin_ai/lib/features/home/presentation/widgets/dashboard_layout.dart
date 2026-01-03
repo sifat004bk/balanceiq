@@ -168,8 +168,14 @@ class DashboardLayout extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 120),
                   child: TransactionHistoryWidget(
-                    onViewAll: () =>
-                        Navigator.pushNamed(context, '/transactions'),
+                    onViewAll: () async {
+                      final hasChanges =
+                          await Navigator.pushNamed(context, '/transactions');
+                      if (hasChanges == true && context.mounted) {
+                        onRefresh();
+                      }
+                    },
+                    onRefresh: onRefresh,
                   ),
                 ),
               ),

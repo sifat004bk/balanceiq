@@ -45,6 +45,8 @@ class TransactionsView extends StatefulWidget {
 }
 
 class _TransactionsViewState extends State<TransactionsView> {
+  bool _hasChanges = false;
+
   @override
   void initState() {
     super.initState();
@@ -59,6 +61,9 @@ class _TransactionsViewState extends State<TransactionsView> {
             .read<TransactionsCubit>()
             .updateTransaction(updatedTransaction);
         if (context.mounted) {
+          setState(() {
+            _hasChanges = true;
+          });
           context.read<DashboardCubit>().refreshDashboard();
         }
       },
@@ -67,6 +72,9 @@ class _TransactionsViewState extends State<TransactionsView> {
             .read<TransactionsCubit>()
             .deleteTransaction(deletedTransaction.transactionId);
         if (context.mounted) {
+          setState(() {
+            _hasChanges = true;
+          });
           context.read<DashboardCubit>().refreshDashboard();
         }
       },
@@ -91,34 +99,41 @@ class _TransactionsViewState extends State<TransactionsView> {
             );
       },
       builder: (context, state) {
-        return Scaffold(
-          body: NestedScrollView(
-            headerSliverBuilder: (context, innerBoxIsScrolled) {
-              return [
-                SliverAppBar(
-                  title: Text(AppStrings.transactions.title),
-                  centerTitle: true,
-                  floating: true,
-                  snap: true,
-                  elevation: 0,
-                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                  foregroundColor:
-                      Theme.of(context).textTheme.titleLarge?.color,
-                  bottom: PreferredSize(
-                    preferredSize: const Size.fromHeight(120),
-                    child: Column(
-                      children: [
-                        const TransactionsFilterSection(),
-                        Divider(
-                            height: 1, color: Theme.of(context).dividerColor),
-                      ],
+        return PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, result) {
+            if (didPop) return;
+            Navigator.pop(context, _hasChanges);
+          },
+          child: Scaffold(
+            body: NestedScrollView(
+              headerSliverBuilder: (context, innerBoxIsScrolled) {
+                return [
+                  SliverAppBar(
+                    title: Text(AppStrings.transactions.title),
+                    centerTitle: true,
+                    floating: true,
+                    snap: true,
+                    elevation: 0,
+                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                    foregroundColor:
+                        Theme.of(context).textTheme.titleLarge?.color,
+                    bottom: PreferredSize(
+                      preferredSize: const Size.fromHeight(120),
+                      child: Column(
+                        children: [
+                          const TransactionsFilterSection(),
+                          Divider(
+                              height: 1, color: Theme.of(context).dividerColor),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ];
-            },
-            body: TransactionsList(
-              onTransactionTap: _showTransactionDetail,
+                ];
+              },
+              body: TransactionsList(
+                onTransactionTap: _showTransactionDetail,
+              ),
             ),
           ),
         );

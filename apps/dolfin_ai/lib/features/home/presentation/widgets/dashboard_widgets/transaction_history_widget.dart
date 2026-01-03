@@ -14,11 +14,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 class TransactionHistoryWidget extends StatelessWidget {
-  final VoidCallback onViewAll;
+  final Future<void> Function()? onRefresh;
 
   const TransactionHistoryWidget({
     super.key,
     required this.onViewAll,
+    this.onRefresh,
   });
 
   @override
@@ -108,19 +109,32 @@ class TransactionHistoryWidget extends StatelessWidget {
       context,
       transaction: transaction,
       onUpdate: (updatedTransaction) async {
+        // First update the specific transaction to ensure backend is updated
         await context
             .read<TransactionsCubit>()
             .updateTransaction(updatedTransaction);
+
         if (context.mounted) {
-          context.read<DashboardCubit>().refreshDashboard();
+          // Then trigger full dashboard refresh if available (like pull-to-refresh)
+          if (onRefresh != null) {
+            await onRefresh!();
+          } else {
+            // Fallback
+            context.read<DashboardCubit>().refreshDashboard();
+          }
         }
       },
       onDelete: (deletedTransaction) async {
         await context
             .read<TransactionsCubit>()
             .deleteTransaction(deletedTransaction.transactionId);
+
         if (context.mounted) {
-          context.read<DashboardCubit>().refreshDashboard();
+          if (onRefresh != null) {
+            await onRefresh!();
+          } else {
+            context.read<DashboardCubit>().refreshDashboard();
+          }
         }
       },
     );
